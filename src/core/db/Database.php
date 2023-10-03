@@ -3,11 +3,13 @@
 namespace app\src\core\db;
 
 
+use App\SAE\Model\Repository\ConnexionBaseDeDonnee;
 use PDO;
 
 class Database
 {
-    public PDO $pdo;
+    private static ?Database $instance = null;
+    private $pdo;
 
     public function __construct()
     {
@@ -23,6 +25,25 @@ class Database
     public function prepare($sql): \PDOStatement
     {
         return $this->pdo->prepare($sql);
+    }
+
+    /**
+     * @return PDO
+     */
+    public static function getPdo(): PDO
+    {
+        return self::getInstance()->pdo;
+    }
+
+    /**
+     * @return ?Database
+     */
+    private static function getInstance(): ?Database
+    {
+        if (is_null(self::$instance)) {
+            self::$instance = new Database();
+        }
+        return self::$instance;
     }
 
 }

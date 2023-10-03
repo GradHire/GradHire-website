@@ -6,10 +6,10 @@ class Configuration
 {
     static private array $databaseConfiguration = array(
         'hostname' => 'webinfo.iutmontp.univ-montp2.fr',
-        'database' => 'hirchytsd',
+        'database' => 'gozzog',
         'port' => '3316',
-        'login' => 'hirchytsd',
-        'password' => '20032002'
+        'login' => 'gozzog',
+        'password' => '03032003'
     );
 
     static public function getLogin(): string
