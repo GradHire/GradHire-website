@@ -1,18 +1,18 @@
 <?php
 
-use app\controllers\AboutController;
-use app\controllers\SiteController;
-use app\core\Application;
-use app\core\lib\Psr4AutoloaderClass;
+use app\src\controller\MainController;
+use app\src\controller\OpenController;
+use app\src\core\lib\Psr4AutoloaderClass;
+use app\src\model\Application;
 
-require_once __DIR__ . '/../core/lib/Psr4AutoloaderClass.php';
+require_once __DIR__ . '/../src/core/lib/Psr4AutoloaderClass.php';
 
 $loader = new Psr4AutoloaderClass();
 $loader->register();
 $loader->addNamespace('app', __DIR__ . '/../');
 
 
-$config = ['userClass' => \app\models\User::class];
+$config = ['userClass' => \app\src\model\User::class];
 
 $app = new Application(dirname(__DIR__), $config);
 
@@ -24,15 +24,15 @@ $app = new Application(dirname(__DIR__), $config);
 //    echo "After request";
 //});
 
-$app->router->get('/', [SiteController::class, 'home']);
-$app->router->get('/register', [SiteController::class, 'register']);
-$app->router->post('/register', [SiteController::class, 'register']);
-$app->router->get('/login', [SiteController::class, 'login']);
-$app->router->get('/login/{id}', [SiteController::class, 'login']);
-$app->router->post('/login', [SiteController::class, 'login']);
-$app->router->get('/logout', [SiteController::class, 'logout']);
-$app->router->get('/contact', [SiteController::class, 'contact']);
-$app->router->get('/about', [AboutController::class, 'index']);
-$app->router->get('/profile', [SiteController::class, 'profile']);
-$app->router->get('/profile/{id:\d+}/{username}', [SiteController::class, 'login']);
+$app->router->get('/', [MainController::class, 'home']);
+$app->router->get('/register', [MainController::class, 'register']);
+$app->router->post('/register', [MainController::class, 'register']);
+$app->router->get('/login', [MainController::class, 'login']);
+$app->router->get('/login/{id}', [MainController::class, 'login']);
+$app->router->post('/login', [MainController::class, 'login']);
+$app->router->get('/logout', [MainController::class, 'logout']);
+$app->router->get('/contact', [MainController::class, 'contact']);
+$app->router->get('/about', [OpenController::class, 'index']);
+$app->router->get('/profile', [MainController::class, 'profile']);
+$app->router->get('/profile/{id:\d+}/{username}', [MainController::class, 'login']);
 $app->run();
