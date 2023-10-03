@@ -58,24 +58,6 @@ class MainController extends Controller
         ]);
     }
 
-    public function readAll()
-    {
-        $offres = (new OffresRepository())->recuperer();
-        return $this->render('listeOffres', ['offres' => $offres]);
-    }
-
-    public function search()
-    {
-        $search = $_POST['search'];
-        $filter = $_POST['filter'];
-        if ($search=="" && $filter==null) {
-            return $this->readAll();
-        }
-        $offres = (new OffresRepository())->search($search, $filter);
-        return $this->render('listeOffres', ['$offres' => $offres,]);
-    }
-
-
     public function logout(Request $request, Response $response)
     {
         Application::$app->logout();
@@ -91,4 +73,23 @@ class MainController extends Controller
     {
         return $this->render('profile');
     }
+
+    public function offres()
+    {
+        $offres = (new OffresRepository())->recuperer();
+        return $this->render('offres/listOffres', ['offres' => $offres]);
+    }
+
+    public function search()
+    {
+        $search = $_POST['search'];
+        $filter = $_POST['filter'];
+        if ($search=="" && $filter==null) {
+            return $this->readAll();
+        }
+        $offres = (new OffresRepository())->search($search, $filter);
+        return $this->render('listeOffres', ['$offres' => $offres,]);
+    }
+
+
 }
