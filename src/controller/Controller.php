@@ -1,7 +1,6 @@
 <?php
 
 namespace app\src\controller;
-
 use app\src\core\middlewares\BaseMiddleware;
 use app\src\model\Application;
 

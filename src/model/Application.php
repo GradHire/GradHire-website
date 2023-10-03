@@ -3,7 +3,6 @@
 namespace app\src\model;
 
 use app\src\controller\Controller;
-
 class Application
 {
 	const EVENT_BEFORE_REQUEST = 'beforeRequest';

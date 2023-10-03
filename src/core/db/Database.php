@@ -42,5 +42,4 @@ class Database
 
 		return self::$connexion;
 	}
-
 }
