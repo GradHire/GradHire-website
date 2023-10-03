@@ -11,65 +11,65 @@ use app\src\model\User;
 
 class MainController extends Controller
 {
-    public function __construct()
-    {
-        $this->registerMiddleware(new AuthMiddleware(['profile']));
-    }
+	public function __construct()
+	{
+		$this->registerMiddleware(new AuthMiddleware(['profile']));
+	}
 
-    public function home()
-    {
-        return $this->render('home', [
-            'name' => 'GradHire'
-        ]);
-    }
+	public function home(): string
+	{
+		return $this->render('home', [
+			'name' => 'GradHire'
+		]);
+	}
 
-    public function login(Request $request)
-    {
-        $loginForm = new LoginForm();
-        if ($request->getMethod() === 'post') {
-            $loginForm->loadData($request->getBody());
-            if ($loginForm->validate() && $loginForm->login()) {
-                Application::$app->response->redirect('/');
-                return;
-            }
-        }
-        $this->setLayout('auth');
-        return $this->render('login', [
-            'model' => $loginForm
-        ]);
-    }
+	public function login(Request $request): string|null
+	{
+		$loginForm = new LoginForm();
+		if ($request->getMethod() === 'post') {
+			$loginForm->loadData($request->getBody());
+			if ($loginForm->validate() && $loginForm->login()) {
+				Application::$app->response->redirect('/');
+				return null;
+			}
+		}
+		$this->setLayout('auth');
+		return $this->render('login', [
+			'model' => $loginForm
+		]);
+	}
 
-    public function register(Request $request)
-    {
-        $registerModel = new User();
-        if ($request->getMethod() === 'post') {
-            $registerModel->loadData($request->getBody());
-            if ($registerModel->validate() && $registerModel->save()) {
-                Application::$app->session->setFlash('success', 'Thanks for registering');
-                Application::$app->response->redirect('/');
-                return 'Show success page';
-            }
+	public function register(Request $request): string
+	{
+		$registerModel = new User();
+		if ($request->getMethod() === 'post') {
+			$registerModel->loadData($request->getBody());
+			if ($registerModel->validate() && $registerModel->save()) {
+				Application::$app->session->setFlash('success', 'Thanks for registering');
+				Application::$app->response->redirect('/');
+				return 'Show success page';
+			}
 
-        }
-        $this->setLayout('auth');
-        return $this->render('register', [
-            'model' => $registerModel
-        ]);
-    }
+		}
+		$this->setLayout('auth');
+		return $this->render('register', [
+			'model' => $registerModel
+		]);
+	}
 
-    public function logout(Request $request, Response $response)
-    {
-        Application::$app->logout();
-        $response->redirect('/');
-    }
+	public function logout(Request $request, Response $response): void
+	{
+		Application::$app->logout();
+		$response->redirect('/');
+	}
 
-    public function contact()
-    {
-        return $this->render('contact');
-    }
+	public function contact(): string
+	{
+		return $this->render('contact');
+	}
 
-    public function profile()
-    {
-        return $this->render('profile');
-    }
+	public function profile(): string
+	{
+		return $this->render('profile');
+	}
 }
