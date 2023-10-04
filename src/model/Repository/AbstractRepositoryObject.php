@@ -33,6 +33,7 @@ abstract class AbstractRepositoryObject
     if ($search == "") {
       return $this->recuperer();
     }
+
     //requete prepare stp
     $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE sujet =: Tag";
       if ($filter!=null){
