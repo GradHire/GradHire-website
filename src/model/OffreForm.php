@@ -24,9 +24,6 @@ class OffreForm extends Model{
             "idUtilisateurTag" => $offre->getIdUtilisateur(),
             "descriptionTag" => $offre->getDescription(),
         );
-        if($offre->getSujet() == "test") {
-            $this->addError('sujet', 'Sujet is incorrect');
-        }
         try {
             $pdoStatement->execute($values);
             $id= Database::get_conn()->lastInsertId();
