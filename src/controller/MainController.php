@@ -72,4 +72,9 @@ class MainController extends Controller
 	{
 		return $this->render('profile');
 	}
+
+    public function creeroffre(): string
+    {
+        return $this->render('creeroffre');
+    }
 }
