@@ -6,7 +6,7 @@ use app\src\core\lib\Psr4AutoloaderClass;
 use app\src\model\Application;
 
 require_once __DIR__ . '/../src/core/lib/Psr4AutoloaderClass.php';
-require_once __DIR__ . '/../src/Configuration.php';
+require_once __DIR__ . '/../src/configuration.php';
 
 session_start();
 
@@ -41,4 +41,6 @@ $app->router->post('/creeroffre', [MainController::class, 'creeroffre']);
 $app->router->get('/profile/{id:\d+}/{username}', [MainController::class, 'login']);
 $app->router->get('/search', [MainController::class, 'search']);
 $app->router->get('/readAll', [MainController::class, 'readAll']);
+$app->router->get('/mailtest', [MainController::class, 'mailtest']);
+
 $app->run();
