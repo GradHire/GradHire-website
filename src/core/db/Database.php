@@ -11,7 +11,10 @@ class Database
 {
 	private static PDO $connexion;
 
-	public function prepare($sql): \PDOStatement
+    /**
+     * @throws ServerErrorException
+     */
+    public function prepare($sql): \PDOStatement
 	{
 		return self::get_conn()->prepare($sql);
 	}
