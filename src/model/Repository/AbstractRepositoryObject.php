@@ -12,25 +12,33 @@ abstract class AbstractRepositoryObject
     /**
      * @throws ServerErrorException
      */
-    public function search(string $search, array|null $filter): array
+    public function search(string $search, array $filter): array
     {
-        //filtre but 2eme, 3eme; theme; gratification;
-        if ($search == "") {
-            return $this->recuperer();
-        }
         //requete prepare stp
-        $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE sujet =: Tag";
-        if ($filter != null) {
+        echo $this->getNomTable();
+        echo $search;
+        $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE sujet = :sujetTag";
+        if (!empty($filter)) {
+            print_r($filter);
             foreach ($filter as $key => $value) {
                 if ($value == true) {
-                    $sql .= " AND " . $key . " = 1";
+                    $sql .= " AND " . $key . " = :" . $key . "Tag";
                 }
             }
         }
+
         $pdoStatement = Database::get_conn()->prepare($sql);
-        $values = array(
-            "Tag" => $search,
-        );
+        print_r($pdoStatement);
+        $values = [];
+        foreach ($filter as $key => $value) {
+            if ($value == true) {
+                echo $key . ' : ' . $value . ' ';
+                $values[$key . "Tag"] = $value;
+            }
+        }
+        echo 'rechercher : ' . $search . ' ';
+        $values["sujetTag"] = $search;
+
         $pdoStatement->execute($values);
         $dataObjects = [];
         foreach ($pdoStatement as $dataObjectFormatTableau) {

@@ -76,19 +76,33 @@ class MainController extends Controller
 
     public function offres(): string
     {
-        $offres = (new OffresRepository())->recuperer();
+        $search = $_GET['search'] ?? "";
+        $filter = array();
+        if (isset($_GET['anneeVisee'])) {
+            $filter['anneeVisee'] = $_GET['anneeVisee'];
+        }
+//        echo $_GET['thematique'];
+//        if (isset($_GET['thematique'])) {
+//            $filter['thematique'] = $_GET['thematique'];
+//        }
+        if (empty($search) && !self::checkFilterEmpty($filter)) {
+            $offres = (new OffresRepository())->recuperer();
+            return $this->render('offres/listOffres', ['offres' => $offres]);
+        }
+        $offres = (new OffresRepository())->search($search, $filter);
+        if ($offres == null) {
+            return $this->render('offres/listOffres', ['offres' => $offres]);
+        }
         return $this->render('offres/listOffres', ['offres' => $offres]);
     }
 
-    public function search(): string
+    private static function checkFilterEmpty(array $filter): bool
     {
-        $search = $_POST['search'];
-        $filter = $_POST['filter'];
-        if ($search=="" && $filter==null) {
-            $offres = (new OffresRepository())->recuperer();
-            return $this->render('listeOffres', ['$offres' => $offres,]);
+        foreach ($filter as $key => $value) {
+            if ($value == null) {
+                return false;
+            }
         }
-        $offres = (new OffresRepository())->search($search, $filter);
-        return $this->render('listeOffres', ['$offres' => $offres,]);
+        return true;
     }
 }
