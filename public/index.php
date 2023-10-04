@@ -35,5 +35,6 @@ $app->router->get('/contact', [MainController::class, 'contact']);
 $app->router->get('/about', [OpenController::class, 'index']);
 $app->router->get('/profile', [MainController::class, 'profile']);
 $app->router->get('/creeroffre', [MainController::class, 'creeroffre']);
+$app->router->post('/creeroffre', [MainController::class, 'creeroffre']);
 $app->router->get('/profile/{id:\d+}/{username}', [MainController::class, 'login']);
 $app->run();

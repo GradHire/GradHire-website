@@ -5,9 +5,11 @@ namespace app\src\controller;
 use app\src\core\middlewares\AuthMiddleware;
 use app\src\model\Application;
 use app\src\model\LoginForm;
+use app\src\model\Offre;
 use app\src\model\Request;
 use app\src\model\Response;
 use app\src\model\User;
+use app\src\model\OffreForm;
 
 class MainController extends Controller
 {
@@ -73,8 +75,44 @@ class MainController extends Controller
 		return $this->render('profile');
 	}
 
-    public function creeroffre(): string
+    public function creeroffre(Request $request): string
     {
-        return $this->render('creeroffre');
+        if ($request->getMethod() === 'get') {
+            return $this->render('creeroffre');
+        }
+        else{
+            $type=$_POST['radios'];
+            $titre=$_POST['titre'];
+            $theme=$_POST['theme'];
+            $nbjour=$_POST['nbjour'];
+            $nbheure=$_POST['nbheure'];
+            if($type=="alternance"){
+                $distanciel=$_POST['distanciel'];
+            }
+            else{
+                $distanciel=null;
+            }
+            $salaire=$_POST['salaire'];
+            $unitesalaire="heures";
+            $statut="en attente";
+            $avantage=$_POST['avantage'];
+            $dated=$_POST['dated'];
+            $datef=$_POST['datef'];
+            $duree=$_POST['duree'];
+            $description=$_POST['description'];
+            $idUtilisateur= 51122324;
+            $idOffre=null;
+            if($duree==1){
+                $anneeVisee="2";
+            }
+            else{
+                $anneeVisee="3";
+            }
+            //idannee = annee courante
+            $idAnnee= date("Y");
+            $offre = new Offre($idOffre,$duree,$theme,$titre,$nbjour,$nbheure,$salaire,$unitesalaire,$avantage,$dated,$datef,$statut,$anneeVisee,$idAnnee,$idUtilisateur,$description,$distanciel);
+            OffreForm::creerOffre($offre);
+            return $this->render('/contact');
+        }
     }
 }
