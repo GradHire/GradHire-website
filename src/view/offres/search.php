@@ -49,23 +49,3 @@
         </div>
     </div>
 </form>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $("#dropdown-button").click(function () {
-            $("#dropdown").toggleClass("hidden");
-        });
-
-        $("#dropdown ul li").click(function () {
-            let text = $(this).text();
-            console.log(text);
-
-            // Do whatever you need with the clicked item's text here.
-            // For instance, changing the button text
-            $("#dropdown-button").text(text);
-
-            // And then hide dropdown
-            $("#dropdown").addClass("hidden");
-        });
-    });
-</script>
