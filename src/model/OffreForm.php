@@ -3,7 +3,7 @@ namespace app\src\model;
 use app\src\model\Offre;
 use app\src\core\db\Database;
 
-class OffreForm{
+class OffreForm extends Model{
     public static function creerOffre(Offre $offre){
         $sql = "INSERT INTO Offre VALUES (null ,:dureeTag, :thematiqueTag, :sujetTag, :nbJourTravailHebdoTag, :nbHeureTravailHebdoTag, :gratificationTag, :unitegratificationTag, :avantageNatureTag, :dateDebutTag, :dateFinTag, :statutTag, :anneeViseeTag, :idAnneeTag, :idUtilisateurTag, :descriptionTag)";
         $pdoStatement = Database::get_conn()->prepare($sql);
@@ -24,6 +24,9 @@ class OffreForm{
             "idUtilisateurTag" => $offre->getIdUtilisateur(),
             "descriptionTag" => $offre->getDescription(),
         );
+        if($offre->getSujet() == "test") {
+            $this->addError('sujet', 'Sujet is incorrect');
+        }
         try {
             $pdoStatement->execute($values);
             $id= Database::get_conn()->lastInsertId();
