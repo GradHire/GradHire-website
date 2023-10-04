@@ -17,28 +17,33 @@ abstract class AbstractRepositoryObject
         //requete prepare stp
         echo $this->getNomTable();
         echo $search;
-        $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE sujet = :sujetTag";
+        if ($search == "" && !empty($filter)) $sql = "SELECT * FROM " . $this->getNomTable();
+        else $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE sujet = :sujetTag ";
+
         if (!empty($filter)) {
-            print_r($filter);
-            foreach ($filter as $key => $value) {
-                if ($value == true) {
-                    $sql .= " AND " . $key . " = :" . $key . "Tag";
+            if ($search == "") $sql .= " WHERE ";
+            else $sql .= " AND ";
+
+            $values = array();
+            foreach ($filter as $key => $value) if ($value != "") $values[$key] = explode(',', $value);
+
+            foreach ($values as $key => $value) {
+                foreach ($value as $key2 => $value2) {
+                    if ($key2 == count($value) - 1) $sql .= $key . " = :" . $key . $key2 . "Tag AND ";
+                    else $sql .= $key . " = :" . $key . $key2 . "Tag OR ";
                 }
             }
+        $sql = substr($sql, 0, -4);
         }
 
         $pdoStatement = Database::get_conn()->prepare($sql);
-        print_r($pdoStatement);
-        $values = [];
-        foreach ($filter as $key => $value) {
-            if ($value == true) {
-                echo $key . ' : ' . $value . ' ';
-                $values[$key . "Tag"] = $value;
+        foreach ($values as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                $values[$key . $key2 . "Tag"] = $value2;
             }
+            unset($values[$key]);
         }
-        echo 'rechercher : ' . $search . ' ';
-        $values["sujetTag"] = $search;
-
+        if ($search != "") $values['sujetTag'] = $search;
         $pdoStatement->execute($values);
         $dataObjects = [];
         foreach ($pdoStatement as $dataObjectFormatTableau) {

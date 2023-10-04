@@ -9,28 +9,17 @@
                     <input type="radio" name="anneeVisee" value="3">BUT3
                 </label>
 <!--                drop down list for gestion, bdd, réseaux , secu, développement web, dev app where i can choose multiple thematique with just a click-->
-                <div id="list1" class="dropdown-check-list" tabindex="100">
-                    <span class="anchor">Select Fruits</span>
+                <div id="listThematique" class="dropdown-check-list" tabindex="100">
                     <ul class="items">
-                        <li><input type="checkbox" name="thematique" value="Caillou" />Caillou</li>
-                        <li><input type="checkbox" name="thematique" value="Eau" />Eau</li>
-                        <li><input type="checkbox" name="thematique" value="Gestion" />Gestion</li>
-                        <li><input type="checkbox" name="thematique" value="Reseaux" />Réseaux</li>
-                        <li><input type="checkbox" name="thematique" value="Securite" />Sécurité</li>
-                        <li><input type="checkbox" name="thematique" value="DevWeb" />Développement Web</li>
-                        <li><input type="checkbox" name="thematique" value="DevApp" />Développement d'application</li>
-
+                        <li><input type="checkbox" name="thematique[]" value="Caillou" />Caillou</li>
+                        <li><input type="checkbox" name="thematique[]" value="Eau" />Eau</li>
+                        <li><input type="checkbox" name="thematique[]" value="Gestion" />Gestion</li>
+                        <li><input type="checkbox" name="thematique[]" value="Reseaux" />Réseaux</li>
+                        <li><input type="checkbox" name="thematique[]" value="Securite" />Sécurité</li>
+                        <li><input type="checkbox" name="thematique[]" value="DevWeb" />Développement Web</li>
+                        <li><input type="checkbox" name="thematique[]" value="DevApp" />Développement d'application</li>
                     </ul>
                 </div>
-                <script>
-                    var checkList = document.getElementById('list1');
-                    checkList.getElementsByClassName('anchor')[0].onclick = function(evt) {
-                        if (checkList.classList.contains('visible'))
-                            checkList.classList.remove('visible');
-                        else
-                            checkList.classList.add('visible');
-                    }
-                </script>
             </div>
             <div class="flex flex-row w-full">
                 <input type="search" id="search-dropdown"

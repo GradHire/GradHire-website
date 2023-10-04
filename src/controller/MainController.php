@@ -77,15 +77,8 @@ class MainController extends Controller
     public function offres(): string
     {
         $search = $_GET['search'] ?? "";
-        $filter = array();
-        if (isset($_GET['anneeVisee'])) {
-            $filter['anneeVisee'] = $_GET['anneeVisee'];
-        }
-//        echo $_GET['thematique'];
-//        if (isset($_GET['thematique'])) {
-//            $filter['thematique'] = $_GET['thematique'];
-//        }
-        if (empty($search) && !self::checkFilterEmpty($filter)) {
+        $filter = self::constructFilter();
+        if (empty($search) && empty($filter)) {
             $offres = (new OffresRepository())->recuperer();
             return $this->render('offres/listOffres', ['offres' => $offres]);
         }
@@ -96,13 +89,24 @@ class MainController extends Controller
         return $this->render('offres/listOffres', ['offres' => $offres]);
     }
 
-    private static function checkFilterEmpty(array $filter): bool
-    {
-        foreach ($filter as $key => $value) {
-            if ($value == null) {
-                return false;
+    private static function constructFilter():array {
+        $filter = array("thematique" => "", "anneeVisee" => "");
+        if (isset($_GET['thematique'])) {
+            foreach ($_GET['thematique'] as $key => $value) {
+                if ($filter['thematique'] == null) {
+                    $filter['thematique'] = $value;
+                } else if ($filter['thematique'] != null){
+                    $filter['thematique'] .= ','. $value;
+                }
             }
+        } else {
+            $filter['thematique'] = "";
         }
-        return true;
+        if (isset($_GET['anneeVisee'])) {
+            $filter['anneeVisee'] = $_GET['anneeVisee'];
+        } else {
+            $filter['anneeVisee'] = "";
+        }
+        return $filter;
     }
 }
