@@ -179,7 +179,7 @@ abstract class AbstractRepositoryObject
         return " gratification BETWEEN :gratificationMinTag AND :gratificationMaxTag ";
     }
 
-    private static function rangeValueGratification(float $gratificationMin, float $gratificationMax): void
+    private static function rangeValueGratification(?float $gratificationMin, ?float $gratificationMax): void
     {
         if ($gratificationMin == null) {
             $gratificationMin = 4.05;

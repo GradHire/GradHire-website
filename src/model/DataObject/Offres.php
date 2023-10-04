@@ -21,6 +21,7 @@ class Offres extends AbstractDataObject
     private ?string $anneeVisee;
     private string $idAnnee;
     private int $idUtilisateur;
+    private ?string $description;
 
     public function __construct
     (
@@ -38,7 +39,8 @@ class Offres extends AbstractDataObject
         $statut,
         $anneeVisee,
         $idAnnee,
-        $idUtilisateur
+        $idUtilisateur,
+        $description
     )
     {
         $this->idOffre = $idOffre;
@@ -56,6 +58,7 @@ class Offres extends AbstractDataObject
         $this->anneeVisee = $anneeVisee;
         $this->idAnnee = $idAnnee;
         $this->idUtilisateur = $idUtilisateur;
+        $this->description = $description;
     }
 
     /**
@@ -91,8 +94,6 @@ class Offres extends AbstractDataObject
                 return $this->getDateDebut();
             case "dateFin":
                 return $this->getDateFin();
-            case "pourvue":
-                return $this->getPourvue();
             case "Statut":
                 return $this->getStatut();
             case "anneeVisee":
@@ -101,6 +102,8 @@ class Offres extends AbstractDataObject
                 return $this->getIdAnnee();
             case "idUtilisateur":
                 return $this->getIdUtilisateur();
+                case "description":
+                return $this->getDescription();
             default:
                 return "";
         }
@@ -312,5 +315,10 @@ class Offres extends AbstractDataObject
     public function getIdUtilisateur(): int
     {
         return $this->idUtilisateur;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

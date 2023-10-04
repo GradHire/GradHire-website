@@ -1,6 +1,7 @@
 <?php
 
 namespace app\src\model\Repository;
+use app\src\core\db\Database;
 use app\src\model\DataObject\Offres;
 
 class OffresRepository extends AbstractRepositoryObject
@@ -48,7 +49,20 @@ class OffresRepository extends AbstractRepositoryObject
       $dataObjectFormatTableau['Statut'],
       $dataObjectFormatTableau['anneeVisee'],
       $dataObjectFormatTableau['idAnnee'],
-      $dataObjectFormatTableau['idUtilisateur']
+      $dataObjectFormatTableau['idUtilisateur'],
+      $dataObjectFormatTableau['Description']
     );
+  }
+  public function recupererParId($idOffre): ?Offres
+  {
+    $sql = "SELECT * FROM $this->nomTable WHERE idOffre = :idOffre";
+    $requete = Database::get_conn()->prepare($sql);
+    $requete->execute(['idOffre' => $idOffre]);
+    $requete->setFetchMode(\PDO::FETCH_ASSOC);
+    $resultat = $requete->fetch();
+    if ($resultat == false) {
+      return null;
+    }
+    return $this->construireDepuisTableau($resultat);
   }
 }

@@ -36,4 +36,5 @@ $app->router->get('/about', [OpenController::class, 'index']);
 $app->router->get('/profile', [MainController::class, 'profile']);
 $app->router->get('/profile/{id:\d+}/{username}', [MainController::class, 'login']);
 $app->router->get('/offres', [MainController::class, 'offres']);
+$app->router->get('/detailOffre', [MainController::class, 'detailOffre']);
 $app->run();

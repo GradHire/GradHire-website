@@ -89,7 +89,12 @@ class MainController extends Controller
         }
         return $this->render('offres/listOffres', ['offres' => $offres]);
     }
-
+    public function detailOffre(): string
+    {
+        $idoffre = $_GET['idoffre'] ?? "";
+        $offre = (new OffresRepository())->recupererParId($idoffre);
+        return $this->render('offres/detailOffre', ['offre' => $offre]);
+    }
     private static function constructFilter():array {
         $filter = array();
         if (isset($_GET['thematique'])) {
