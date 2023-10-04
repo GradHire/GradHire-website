@@ -4,7 +4,6 @@ use app\src\controller\MainController;
 use app\src\controller\OpenController;
 use app\src\core\lib\Psr4AutoloaderClass;
 use app\src\model\Application;
-use app\src\model\User;
 
 require_once __DIR__ . '/../src/core/lib/Psr4AutoloaderClass.php';
 require_once __DIR__ . '/../src/Configuration.php';
@@ -15,8 +14,7 @@ $loader = new Psr4AutoloaderClass();
 $loader->register();
 $loader->addNamespace('app', __DIR__ . '/../');
 
-
-$config = [];
+$config = ['userClass' => \app\src\model\User::class];
 
 $app = new Application(dirname(__DIR__), $config);
 
