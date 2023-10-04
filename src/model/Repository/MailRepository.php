@@ -8,11 +8,11 @@ class MailRepository
     {
         $headers = "MIME-Version: 1.0" . "\r\n"
             . "Content-type:text/html;charset=UTF-8" . "\r\n"
-            . 'From: ' . smtp_username . "\r\n";
+            . 'From: ' . SMTP_USERNAME . "\r\n";
 
         foreach ($email as $to) {
             try {
-                $smtpConn = fsockopen(smtp_server, smtp_port, $errno, $errstr, 5);
+                $smtpConn = fsockopen(SMTP_SERVER, SMTP_PORT, $errno, $errstr, 5);
 
                 if (!$smtpConn) throw new \Exception("SMTP Connection Failed: $errstr ($errno)");
 
@@ -25,9 +25,9 @@ class MailRepository
                 }
 
                 self::sendCommand($smtpConn, "AUTH LOGIN");
-                self::sendCommand($smtpConn, base64_encode(smtp_username));
-                self::sendCommand($smtpConn, base64_encode(smtp_password));
-                self::sendCommand($smtpConn, "MAIL FROM:<" . smtp_username . ">");
+                self::sendCommand($smtpConn, base64_encode(SMTP_USERNAME));
+                self::sendCommand($smtpConn, base64_encode(SMTP_PASSWORD));
+                self::sendCommand($smtpConn, "MAIL FROM:<" . SMTP_USERNAME . ">");
                 self::sendCommand($smtpConn, "RCPT TO:<$to>");
                 self::sendCommand($smtpConn, "DATA");
                 self::sendCommand($smtpConn, "Subject: $subject");
