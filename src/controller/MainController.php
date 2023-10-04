@@ -124,6 +124,6 @@ class MainController extends Controller
 
         $message = $mailSent ? "Mail sent successfully" : "Mail sending failed";
 
-        return $this->render('offres/mailtest', compact('message'));
+        return $this->render('offre/mailtest', compact('message'));
     }
 }
