@@ -78,6 +78,7 @@ class MainController extends Controller
     {
         $search = $_GET['search'] ?? "";
         $filter = self::constructFilter();
+        print_r($filter);
         if (empty($search) && empty($filter)) {
             $offres = (new OffresRepository())->recuperer();
             return $this->render('offres/listOffres', ['offres' => $offres]);
@@ -90,8 +91,9 @@ class MainController extends Controller
     }
 
     private static function constructFilter():array {
-        $filter = array("thematique" => "", "anneeVisee" => "");
+        $filter = array();
         if (isset($_GET['thematique'])) {
+            $filter['thematique'] = "";
             foreach ($_GET['thematique'] as $key => $value) {
                 if ($filter['thematique'] == null) {
                     $filter['thematique'] = $value;
@@ -99,13 +101,42 @@ class MainController extends Controller
                     $filter['thematique'] .= ','. $value;
                 }
             }
-        } else {
-            $filter['thematique'] = "";
         }
         if (isset($_GET['anneeVisee'])) {
             $filter['anneeVisee'] = $_GET['anneeVisee'];
-        } else {
-            $filter['anneeVisee'] = "";
+        }
+        if (isset($_GET['duree'])) {
+            $filter['duree'] = $_GET['duree'];
+        }
+        if (isset($_GET['alternance'])) {
+            $filter['alternance'] = $_GET['alternance'];
+        }
+        if (isset($_GET['stage'])) {
+            $filter['stage'] = $_GET['stage'];
+        }
+        if (isset($_GET['gratificationMin'])) {
+            if ($_GET['gratificationMin']==""){
+                $filter['gratificationMin'] = null;
+            }
+            elseif ($_GET['gratificationMin'] < 4.05) {
+                $filter['gratificationMin'] = 4.05;
+            } else if ($_GET['gratificationMin'] > 15){
+                $filter['gratificationMin'] = 15;
+            } else {
+                $filter['gratificationMin'] = $_GET['gratificationMin'];
+            }
+        }
+        if (isset($_GET['gratificationMax'])) {
+            if ($_GET['gratificationMax']==""){
+                $filter['gratificationMax'] = null;
+            }
+            else if ($_GET['gratificationMax'] < 4.05) {
+                $filter['gratificationMax'] = 4.05;
+            } else if ($_GET['gratificationMax'] > 15){
+                $filter['gratificationMax'] = 15;
+            } else {
+                $filter['gratificationMax'] = $_GET['gratificationMax'];
+            }
         }
         return $filter;
     }
