@@ -47,12 +47,6 @@ class Application
     {
         self::$user = $user;
     }
-        $userId = Application::$app->session->get('user');
-        if ($userId) {
-            $key = $this->userClass::primaryKey();
-            $this->user = $this->userClass::findOne([$key => $userId]);
-        }
-    }
 
     public static function isGuest(): bool
     {

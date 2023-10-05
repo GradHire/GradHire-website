@@ -9,7 +9,7 @@ class Token
         $data['exp'] = $expiration + time();
         $header = base64_encode(json_encode(['alg' => 'HS256', 'typ' => 'JWT']));
         $payload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(json_encode($data)));
-        $signature = hash_hmac('sha256', "$header.$payload", jwt_key, true);
+        $signature = hash_hmac('sha256', "$header.$payload", JWT_TOKEN, true);
         $signature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
         return "$header.$payload.$signature";
     }
@@ -24,7 +24,7 @@ class Token
         list($header, $payload, $signature) = $parts;
 
         $payloadData = json_decode(base64_decode($payload), true);
-        $expectedSignature = hash_hmac('sha256', "$header.$payload", jwt_key, true);
+        $expectedSignature = hash_hmac('sha256', "$header.$payload", JWT_TOKEN, true);
         $expectedSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($expectedSignature));
 
         if ($signature === $expectedSignature && isset($payloadData['exp']) && $payloadData['exp'] >= time())
