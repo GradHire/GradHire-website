@@ -6,6 +6,8 @@ use app\src\controller\Controller;
 use app\src\core\exception\ForbiddenException;
 use app\src\model\Users\User;
 
+use app\src\core\db\Database;
+
 class Application
 {
     const EVENT_BEFORE_REQUEST = 'beforeRequest';
@@ -44,6 +46,12 @@ class Application
     public static function setUser(User $user)
     {
         self::$user = $user;
+    }
+        $userId = Application::$app->session->get('user');
+        if ($userId) {
+            $key = $this->userClass::primaryKey();
+            $this->user = $this->userClass::findOne([$key => $userId]);
+        }
     }
 
     public static function isGuest(): bool

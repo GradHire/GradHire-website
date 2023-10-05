@@ -2,11 +2,11 @@
 
 /** @var $model \app\src\model\LoginForm */
 
-use app\src\core\form\Form;
+use app\src\core\component\form\Form;
 
 ?>
 
-<div class="w-full md:max-w-[50%] gap-4 flex flex-col">
+<div class="w-full md:max-w-[75%] gap-4 flex flex-col">
 
 	<h1>Login</h1>
 

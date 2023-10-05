@@ -8,7 +8,7 @@ use app\src\model\Application;
 use app\src\model\User;
 
 require_once __DIR__ . '/../src/core/lib/Psr4AutoloaderClass.php';
-require_once __DIR__ . '/../src/Configuration.php';
+require_once __DIR__ . '/../src/config.php';
 
 session_start();
 
@@ -36,7 +36,27 @@ $app->router->get('/login', [AuthController::class, 'login']);
 $app->router->post('/login', [AuthController::class, 'login']);
 $app->router->get('/logout', [AuthController::class, 'logout']);
 $app->router->get('/contact', [MainController::class, 'contact']);
+
 $app->router->get('/about', [OpenController::class, 'index']);
+
 $app->router->get('/profile', [MainController::class, 'profile']);
 $app->router->get('/profile/{id:\d+}/{username}', [MainController::class, 'login']);
+
+$app->router->get('/creeroffre', [MainController::class, 'creeroffre']);
+$app->router->post('/creeroffre', [MainController::class, 'creeroffre']);
+
+$app->router->get('/search', [MainController::class, 'search']);
+
+$app->router->get('/readAll', [MainController::class, 'readAll']);
+
+$app->router->get('/mailtest', [MainController::class, 'mailtest']);
+
+$app->router->get('/offres', [MainController::class, 'offres']);
+$app->router->get('/offres/{id:\d+}', [MainController::class, 'offres']);
+
+$app->router->get('/detailOffre', [MainController::class, 'detailOffre']);
+
+$app->router->get('/dashboard', [MainController::class, 'dashboard']);
+
+
 $app->run();
