@@ -5,6 +5,9 @@ namespace app\src\controller;
 use app\src\core\middlewares\AuthMiddleware;
 use app\src\model\Application;
 use app\src\model\LoginForm;
+use app\src\model\Offre;
+use app\src\model\OffreForm;
+use app\src\model\Repository\MailRepository;
 use app\src\model\Repository\OffresRepository;
 use app\src\model\Request;
 use app\src\model\Response;
@@ -24,14 +27,14 @@ class MainController extends Controller
         ]);
     }
 
-    public function login(Request $request): string
+    public function login(Request $request): string|null
     {
         $loginForm = new LoginForm();
         if ($request->getMethod() === 'post') {
             $loginForm->loadData($request->getBody());
             if ($loginForm->validate() && $loginForm->login()) {
                 Application::$app->response->redirect('/');
-                return '';
+                return null;
             }
         }
         $this->setLayout('auth');
@@ -74,6 +77,55 @@ class MainController extends Controller
         return $this->render('profile');
     }
 
+    public function creeroffre(Request $request): string
+    {
+        if ($request->getMethod() === 'get') {
+            return $this->render('creeroffre');
+        } else {
+            $type = $_POST['radios'];
+            $titre = $_POST['titre'];
+            $theme = $_POST['theme'];
+            $nbjour = $_POST['nbjour'];
+            $nbheure = $_POST['nbheure'];
+            if ($type == "alternance") {
+                $distanciel = $_POST['distanciel'];
+            } else {
+                $distanciel = null;
+            }
+            $salaire = $_POST['salaire'];
+            $unitesalaire = "heures";
+            $statut = "en attente";
+            $avantage = $_POST['avantage'];
+            $dated = $_POST['dated'];
+            $datef = $_POST['datef'];
+            $duree = $_POST['duree'];
+            $description = $_POST['description'];
+            $idUtilisateur = 51122324;
+            $idOffre = null;
+            if ($duree == 1) {
+                $anneeVisee = "2";
+            } else {
+                $anneeVisee = "3";
+            }
+            //idannee = annee courante
+            $idAnnee = date("Y");
+            $offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef, $statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $distanciel);
+            OffreForm::creerOffre($offre);
+            return $this->render('/contact');
+        }
+    }
+
+    public function mailtest(): string
+    {
+        $to = ["hirchyts.daniil@gmail.com", "daniil.hirchyts@etu.umontpellier.fr"];
+        $subject = "Test mail subject";
+        $message = "This is a test message";
+
+        $mailSent = MailRepository::send_mail($to, $subject, $message);
+
+        $message = $mailSent ? "Mail sent successfully" : "Mail sending failed";
+
+        return $this->render('offre/mailtest', compact('message'));
     public function dashboard(): string
     {
         return $this->render('dashboard/dashboard');

@@ -703,6 +703,10 @@ video {
   margin-left: 0.625rem;
 }
 
+.ml-6 {
+  margin-left: 1.5rem;
+}
+
 .ml-auto {
   margin-left: auto;
 }
@@ -854,6 +858,10 @@ video {
   height: 1.25rem;
 }
 
+.max-h-\[100px\] {
+  max-height: 100px;
+}
+
 .w-10 {
   width: 2.5rem;
 }
@@ -886,6 +894,8 @@ video {
   width: 100%;
 }
 
+.max-w-\[50\%\] {
+  max-width: 50%;
 .max-w-\[220px\] {
   max-width: 220px;
 }

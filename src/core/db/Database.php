@@ -25,13 +25,13 @@ class Database
     {
         if (!isset(self::$connexion)) {
             try {
-                $dsn = "mysql:host=" . db_hostname . ";dbname=" . db_database . ";port=" . db_port;
+                $dsn = "mysql:host=" . DB_HOSTNAME . ";dbname=" . DB_DB . ";port=" . DB_PORT;
                 $options = [
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 ];
 
-                self::$connexion = new PDO($dsn, db_login, db_password, $options);
+                self::$connexion = new PDO($dsn, DB_LOGIN, DB_PASSWORD, $options);
             } catch (PDOException) {
                 throw new ServerErrorException();
             }

@@ -1,6 +1,7 @@
 <?php
 
 namespace app\src\model\Repository;
+
 use app\src\core\db\Database;
 use app\src\model\DataObject\Offres;
 
