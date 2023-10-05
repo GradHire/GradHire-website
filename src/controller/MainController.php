@@ -2,6 +2,7 @@
 
 namespace app\src\controller;
 
+use app\src\core\exception\NotFoundException;
 use app\src\core\middlewares\AuthMiddleware;
 use app\src\model\Application;
 use app\src\model\dataObject\Offre;
@@ -27,7 +28,7 @@ class MainController extends Controller
         ]);
     }
 
-    public function login(Request $request): string|null
+    public function login(Request $request): ?string
     {
         $loginForm = new LoginForm();
         if ($request->getMethod() === 'post') {
@@ -131,11 +132,15 @@ class MainController extends Controller
         return $this->render('dashboard/dashboard');
     }
 
-    public function offres(): string
+    public function offres(Request $request): string
     {
+        $id = $request->getRouteParams()['id'] ?? null;
+        $offre = (new OffresRepository())->recupererParId($id);
+        if ($offre == null && $id != null) throw new NotFoundException();
+        else if ($offre != null && $id != null) return $this->render('offres/detailOffre', ['offre' => $offre]);
+
         $search = $_GET['search'] ?? "";
         $filter = self::constructFilter();
-        print_r($filter);
         if (empty($search) && empty($filter)) {
             $offres = (new OffresRepository())->recuperer();
             return $this->render('offres/listOffres', ['offres' => $offres]);

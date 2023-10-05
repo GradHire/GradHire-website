@@ -324,9 +324,14 @@ class Offre extends AbstractDataObject
         return $this->description;
     }
 
-    public function getAlternance(): ?int
+//    public function getAlternance(): ?int
+//    {
+//        return $this->alternance;
+//    }
+
+    public function __toString(): string
     {
-        return $this->alternance;
+        return "Offre : " . $this->getSujet() . " " . $this->getThematique() . " " . $this->getDuree() . " " . $this->getNbJourTravailHebdo() . " " . $this->getNbHeureTravailHebdo() . " " . $this->getGratification() . " " . $this->getUnitegratification() . " " . $this->getAvantageNature() . " " . $this->getDateDebut() . " " . $this->getDateFin() . " " . $this->getStatut() . " " . $this->getAnneeVisee() . " " . $this->getIdAnnee() . " " . $this->getIdUtilisateur() . " " . $this->getDescription();
     }
 
 

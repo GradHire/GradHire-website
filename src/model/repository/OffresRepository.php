@@ -12,7 +12,7 @@ class OffresRepository extends AbstractRepositoryObject
 
     public function recupererParId($idOffre): ?Offre
     {
-        $sql = "SELECT * FROM $this->nomTable WHERE idoffre = :idOffre";
+        $sql = "SELECT * FROM $this->nomTable WHERE idoffre = :idoffre";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idoffre' => $idOffre]);
         $requete->setFetchMode(\PDO::FETCH_ASSOC);

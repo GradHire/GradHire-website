@@ -5,7 +5,7 @@ use app\src\core\component\form\Form;
 
 $form = new Form();
 ?>
-<div class="w-full md:max-w-[50%] gap-4 flex flex-col">
+<div class="w-full md:max-w-[75%] gap-4 flex flex-col">
 
     <h1>Register</h1>
 
@@ -17,7 +17,7 @@ $form = new Form();
         <?php echo $form->field($model, 'email') ?>
         <?php echo $form->field($model, 'password')->passwordField() ?>
         <?php echo $form->field($model, 'passwordConfirm')->passwordField() ?>
-        <button class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+        <button class="text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800">
             Submit
         </button>
     </div>

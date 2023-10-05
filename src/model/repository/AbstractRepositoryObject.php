@@ -19,9 +19,6 @@ abstract class AbstractRepositoryObject
         $values = array();
         $arraySearch = array();
         $sql = "";
-        print_r($filter);
-        //requete prepare stp
-        echo 'search : ' . $search . '<br>';
         if ($search == "" && !empty($filter)) {
             $sql = "SELECT * FROM " . $this->tableChecker($filter);
         } else {
@@ -34,31 +31,22 @@ abstract class AbstractRepositoryObject
                     else $sql .= "sujet LIKE " . ":sujet" . $key . "Tag OR ";
                 }
             }
-            echo 'arraySearch : ';
-            print_r($arraySearch);
-            echo '<br>';
         }
-        print_r($filter);
-        echo '<br>';
         if (array_key_exists('gratificationMin', $filter) && array_key_exists('gratificationMax', $filter)) {
            if($filter['gratificationMin']==null && $filter['gratificationMax']== null) unset($filter['gratificationMin'],$filter['gratificationMax']);
         }
         if (self::checkOnlyStageAletnance($filter)) {
-            echo 'only stage or alternance';
             $pdoStatement = Database::get_conn()->prepare($sql);
             $pdoStatement->execute();
         } else if (self::checkFilterNotEmpty($filter)) {
             if ($search == "") $sql .= " WHERE ";
             else $sql .= " AND ";
             if (array_key_exists('gratificationMin', $filter) || array_key_exists('gratificationMax', $filter)) {
-                echo $sql . '<br>';
                 //pour chaque valeur de prepareSQLGratification on AJOUTE LA KEY SQL A SQL ET on update les valeur du filter
                 foreach(self::prepareSQLGratification(sizeof($filter), $filter) as $key => $value) {
                     if ($key == 'sql') $sql .= $value;
                     else $filter[$key] = $value;
                 }
-                print_r($filter);
-                echo $sql . '<br>';
             }
             if (array_key_exists('alternance', $filter)) unset($filter['alternance']);
             if (array_key_exists('stage', $filter)) unset($filter['stage']);
@@ -88,10 +76,7 @@ abstract class AbstractRepositoryObject
             foreach ($arraySearch as $key => $value) {
                 $arraySearch['sujet' . $key . "Tag"] = '%' . $value . '%';
                 unset($arraySearch[$key]);
-                echo 'sujet' . $key . "Tag" . ' : ' . $value . '<br>';
             }
-            print_r($pdoStatement);
-            print_r($values);
             $values = array_merge($values, $arraySearch);
             $pdoStatement->execute($values);
         } else {
@@ -99,11 +84,7 @@ abstract class AbstractRepositoryObject
             foreach ($arraySearch as $key => $value) {
                 $arraySearch['sujet' . $key . "Tag"] = '%' . $value . '%';
                 unset($arraySearch[$key]);
-                echo 'sujet' . $key . "Tag" . ' : ' . $value . '<br>';
             }
-            print_r($pdoStatement);
-            echo '<br>';
-            print_r($arraySearch);
             $pdoStatement->execute($arraySearch);
         }
         $dataObjects = [];
@@ -189,9 +170,6 @@ abstract class AbstractRepositoryObject
 
         $sql['gratificationMin'] = $gratificationMinTemp;
         $sql['gratificationMax'] = $gratificationMaxTemp;
-
-        echo ' gratificationMax = ' . $sql['gratificationMax'] . ' gratificationMin = ' . $sql['gratificationMin'] . '<br>';
-        print_r($sql);
 
         return $sql;
     }

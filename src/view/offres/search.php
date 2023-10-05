@@ -1,62 +1,389 @@
-<form method="GET" action="offres">
-    <div class="flex flex-row w-full">
-        <div class="flex flex-col">
-            <div class="flex flex-row gap-2">
-                <label>
-                    <input type="radio" name="anneeVisee" value="2">BUT2
-                </label>
-                <label>
-                    <input type="radio" name="anneeVisee" value="3">BUT3
-                </label>
-                <!--                drop down list for gestion, bdd, réseaux , secu, développement web, dev app where i can choose multiple thematique with just a click-->
-                <div id="listThematique" class="dropdown-check-list" tabindex="100">
-                    <ul class="items">
-                        <li><input type="checkbox" name="thematique[]" value="Caillou"/>Caillou</li>
-                        <li><input type="checkbox" name="thematique[]" value="Eau"/>Eau</li>
-                        <li><input type="checkbox" name="thematique[]" value="Gestion"/>Gestion</li>
-                        <li><input type="checkbox" name="thematique[]" value="Reseaux"/>Réseaux</li>
-                        <li><input type="checkbox" name="thematique[]" value="Securite"/>Sécurité</li>
-                        <li><input type="checkbox" name="thematique[]" value="BDD"/>Base de Donnée</li>
-                        <li><input type="checkbox" name="thematique[]" value="DevWeb"/>Développement Web</li>
-                        <li><input type="checkbox" name="thematique[]" value="DevApp"/>Développement d'application</li>
-                    </ul>
-                </div>
-                <label>
-                    <input type="radio" name="duree" value="1">1 ans
-                </label>
-                <label>
-                    <input type="radio" name="duree" value="1.5">1 ans et demi
-                </label>
-                <label>
-                    <input type="radio" name="duree" value="2">2 ans
-                </label>
-                <label>
-                    <input type="checkbox" name="alternance" value="true">Alternance
-                </label>
-                <label>
-                    <input type="checkbox" name="stage" value="true">Stage
-                </label>
-                <label>
-                    <input type="number" name="gratificationMin" placeholder="Gratification min" max="15" min="4.05" step="0.01"> Gratification min
-                </label>
-                <label>
-                    <input type="number" name="gratificationMax" placeholder="Gratification max" min="4.05" max="15" step="0.01"> Gratification max
+<div class="flex flex-col w-full">
+    <div class="flex flex-col w-full gap-2">
+        <p class="text-md text-black font-bold">Filtres</p>
+
+        <div class="flex flex-row w-full gap-1">
+            <div class="w-full">
+                <input
+                        type="checkbox"
+                        name="stage"
+                        value="true"
+                        id="stage"
+                        class="peer hidden"
+                />
+
+                <label
+                        for="stage"
+                        class="flex cursor-pointer items-center justify-center rounded-md border border-zinc-100 bg-white px-3 py-2 text-zinc-700 hover:border-zinc-200 peer-checked:border-zinc-500 peer-checked:bg-zinc-500 peer-checked:text-white"
+                >
+                    <span class="text-sm font-medium">Stage</span>
                 </label>
             </div>
-            <div class="flex flex-row w-full">
-                <input type="search" id="search-dropdown"
-                       class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-r-none border-l-gray-50 border-l-2 border border-gray-300 focus:ring-gray-500 focus:border-gray-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-gray-500"
-                       placeholder="Search ..." name="search">
-                <button type="submit"
-                        class=" p-2.5 text-sm font-medium text-white bg-gray-700 rounded-r-lg border border-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
-                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                         viewBox="0 0 20 20">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+
+            <div class="w-full">
+                <input
+                        type="checkbox"
+                        name="alternance"
+                        value="true"
+                        id="alternance"
+                        class="peer hidden"
+                />
+
+                <label
+                        for="alternance"
+                        class="flex cursor-pointer items-center justify-center rounded-md border border-zinc-100 bg-white px-3 py-2 text-zinc-700 hover:border-zinc-200 peer-checked:border-zinc-500 peer-checked:bg-zinc-500 peer-checked:text-white"
+                >
+                    <span class="text-sm font-medium">Alternance</span>
+                </label>
+            </div>
+        </div>
+        <span class="w-full h-[1.5px] my-1 bg-zinc-100 rounded-full"></span>
+
+        <div class="flex flex-col gap-1">
+            <p class="text-xs text-zinc-500 font-bold">Annee Visee</p>
+            <div>
+                <label
+                        for="anneeVisee2"
+                        class="block cursor-pointer rounded-lg border border-zinc-100 bg-white text-sm font-medium hover:border-zinc-200 peer-checked:border-zinc-500 peer-checked:ring-1 peer-checked:ring-zinc-500"
+                >
+                    <select
+                            name="anneeVisee2"
+                            id="anneeVisee2"
+                            class=" w-full text-zinc-700 rounded-lg sm:text-sm p-2"
+                    >
+                        <option value="">All</option>
+                        <option value="2">BUT2</option>
+                        <option value="3">BUT3</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+        <span class="w-full h-[1.5px] my-1 bg-zinc-100 rounded-full"></span>
+
+        <div class="flex flex-col gap-1">
+            <p class="text-xs text-zinc-500 font-bold">Duree</p>
+            <div>
+                <label
+                        for="duree"
+                        class="block cursor-pointer rounded-lg border border-zinc-100 bg-white text-sm font-medium hover:border-zinc-200 peer-checked:border-zinc-500 peer-checked:ring-1 peer-checked:ring-zinc-500"
+                >
+                    <select
+                            name="duree"
+                            id="duree"
+                            class=" w-full text-zinc-700 rounded-lg sm:text-sm p-2"
+                    >
+                        <option value="">All</option>
+                        <option value="1">1 Ans</option>
+                        <option value="1.5">1 Ans et demie</option>
+                        <option value="2">2 Ans</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+        <span class="w-full h-[1.5px] my-1 bg-zinc-100 rounded-full"></span>
+
+        <div class="flex flex-col gap-1">
+            <p class="text-xs text-zinc-500 font-bold">Thematique</p>
+            <div>
+                <input
+                        type="checkbox"
+                        name="thematique[]"
+                        value="Caillou"
+                        id="Caillou"
+                        class="peer hidden [&:checked_+_label_svg]:block"
+                />
+
+                <label
+                        for="Caillou"
+                        class="block cursor-pointer rounded-lg border border-zinc-100 bg-white p-2 text-sm font-medium hover:border-zinc-200 peer-checked:border-zinc-500 peer-checked:ring-1 peer-checked:ring-zinc-500"
+                >
+                <span class="flex items-center justify-between">
+                    <span class="text-zinc-700">Caillou</span>
+
+                    <svg
+                            class="hidden h-5 w-5 text-zinc-600"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                    >
+                        <path
+                                fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd"
+                        />
                     </svg>
-                    <span class="sr-only">Search</span>
-                </button>
+                </span>
+                </label>
+            </div>
+            <div>
+                <input
+                        type="checkbox"
+                        name="thematique[]"
+                        value="Eau"
+                        id="Eau"
+                        class="peer hidden [&:checked_+_label_svg]:block"
+                />
+
+                <label
+                        for="Eau"
+                        class="block cursor-pointer rounded-lg border border-zinc-100 bg-white p-2 text-sm font-medium hover:border-zinc-200 peer-checked:border-zinc-500 peer-checked:ring-1 peer-checked:ring-zinc-500"
+                >
+                <span class="flex items-center justify-between">
+                    <span class="text-zinc-700">Eau</span>
+
+                    <svg
+                            class="hidden h-5 w-5 text-zinc-600"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                    >
+                        <path
+                                fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd"
+                        />
+                    </svg>
+                </span>
+                </label>
+            </div>
+            <div>
+                <input
+                        type="checkbox"
+                        name="thematique[]"
+                        value="Gestion"
+                        id="Gestion"
+                        class="peer hidden [&:checked_+_label_svg]:block"
+                />
+
+                <label
+                        for="Gestion"
+                        class="block cursor-pointer rounded-lg border border-zinc-100 bg-white p-2 text-sm font-medium hover:border-zinc-200 peer-checked:border-zinc-500 peer-checked:ring-1 peer-checked:ring-zinc-500"
+                >
+                <span class="flex items-center justify-between">
+                    <span class="text-zinc-700">Gestion</span>
+
+                    <svg
+                            class="hidden h-5 w-5 text-zinc-600"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                    >
+                        <path
+                                fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd"
+                        />
+                    </svg>
+                </span>
+                </label>
+            </div>
+            <div>
+                <input
+                        type="checkbox"
+                        name="thematique[]"
+                        value="Reseaux"
+                        id="Reseaux"
+                        class="peer hidden [&:checked_+_label_svg]:block"
+                />
+
+                <label
+                        for="Reseaux"
+                        class="block cursor-pointer rounded-lg border border-zinc-100 bg-white p-2 text-sm font-medium hover:border-zinc-200 peer-checked:border-zinc-500 peer-checked:ring-1 peer-checked:ring-zinc-500"
+                >
+                <span class="flex items-center justify-between">
+                    <span class="text-zinc-700">Reseaux</span>
+
+                    <svg
+                            class="hidden h-5 w-5 text-zinc-600"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                    >
+                        <path
+                                fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd"
+                        />
+                    </svg>
+                </span>
+                </label>
+            </div>
+            <div>
+                <input
+                        type="checkbox"
+                        name="thematique[]"
+                        value="Securite"
+                        id="Securite"
+                        class="peer hidden [&:checked_+_label_svg]:block"
+                />
+
+                <label
+                        for="Securite"
+                        class="block cursor-pointer rounded-lg border border-zinc-100 bg-white p-2 text-sm font-medium hover:border-zinc-200 peer-checked:border-zinc-500 peer-checked:ring-1 peer-checked:ring-zinc-500"
+                >
+                <span class="flex items-center justify-between">
+                    <span class="text-zinc-700">Securite</span>
+
+                    <svg
+                            class="hidden h-5 w-5 text-zinc-600"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                    >
+                        <path
+                                fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd"
+                        />
+                    </svg>
+                </span>
+                </label>
+            </div>
+            <div>
+                <input
+                        type="checkbox"
+                        name="thematique[]"
+                        value="BDD"
+                        id="BDD"
+                        class="peer hidden [&:checked_+_label_svg]:block"
+                />
+
+                <label
+                        for="BDD"
+                        class="block cursor-pointer rounded-lg border border-zinc-100 bg-white p-2 text-sm font-medium hover:border-zinc-200 peer-checked:border-zinc-500 peer-checked:ring-1 peer-checked:ring-zinc-500"
+                >
+                <span class="flex items-center justify-between">
+                    <span class="text-zinc-700">Base de Donnée</span>
+
+                    <svg
+                            class="hidden h-5 w-5 text-zinc-600"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                    >
+                        <path
+                                fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd"
+                        />
+                    </svg>
+                </span>
+                </label>
+            </div>
+            <div>
+                <input
+                        type="checkbox"
+                        name="thematique[]"
+                        value="DevWeb"
+                        id="DevWeb"
+                        class="peer hidden [&:checked_+_label_svg]:block"
+                />
+
+                <label
+                        for="DevWeb"
+                        class="block cursor-pointer rounded-lg border border-zinc-100 bg-white p-2 text-sm font-medium hover:border-zinc-200 peer-checked:border-zinc-500 peer-checked:ring-1 peer-checked:ring-zinc-500"
+                >
+                <span class="flex items-center justify-between">
+                    <span class="text-zinc-700">Développement Web</span>
+
+                    <svg
+                            class="hidden h-5 w-5 text-zinc-600"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                    >
+                        <path
+                                fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd"
+                        />
+                    </svg>
+                </span>
+                </label>
+            </div>
+            <div>
+                <input
+                        type="checkbox"
+                        name="thematique[]"
+                        value="DevApp"
+                        id="DevApp"
+                        class="peer hidden [&:checked_+_label_svg]:block"
+                />
+
+                <label
+                        for="DevApp"
+                        class="block cursor-pointer rounded-lg border border-zinc-100 bg-white p-2 text-sm font-medium hover:border-zinc-200 peer-checked:border-zinc-500 peer-checked:ring-1 peer-checked:ring-zinc-500"
+                >
+                <span class="flex items-center justify-between">
+                    <span class="text-zinc-700">Développement d'application</span>
+
+                    <svg
+                            class="hidden h-5 w-5 text-zinc-600"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                    >
+                        <path
+                                fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd"
+                        />
+                    </svg>
+                </span>
+                </label>
+            </div>
+        </div>
+        <span class="w-full h-[1.5px] my-1 bg-zinc-100 rounded-full"></span>
+        <div class="flex flex-col gap-1">
+            <p class="text-xs text-zinc-500 font-bold">Gratification</p>
+            <div class="flex w-full flex-row justify-between items-center text-xs text-zinc-500">
+                <span id="range1">0</span>
+                <span id="range2">100</span>
+            </div>
+            <div class="relative w-full h-[25px]">
+                <div class="slider-track"></div>
+                <input type="range" min="4.05" name="gratificationMin" max="15" value="4.05" step="0.01"
+                       id="slider-1" oninput="slideOne()">
+                <input type="range" min="4.05" name="gratificationMax" max="15" value="12" step="0.01" id="slider-2"
+                       oninput="slideTwo()">
+
             </div>
         </div>
     </div>
-</form>
+</div>
+<script>
+    window.onload = function () {
+        slideOne();
+        slideTwo();
+    }
+
+    let sliderOne = document.getElementById("slider-1");
+    let sliderTwo = document.getElementById("slider-2");
+    let displayValOne = document.getElementById("range1");
+    let displayValTwo = document.getElementById("range2");
+    let minGap = 0;
+    let sliderTrack = document.querySelector(".slider-track");
+    let sliderMaxValue = document.getElementById("slider-1").max;
+
+    function slideOne() {
+        if (parseInt(sliderTwo.value) - parseInt(sliderOne.value) <= minGap) {
+            sliderOne.value = parseInt(sliderTwo.value) - minGap;
+        }
+        displayValOne.textContent = sliderOne.value;
+        fillColor();
+    }
+
+    function slideTwo() {
+        if (parseInt(sliderTwo.value) - parseInt(sliderOne.value) <= minGap) {
+            sliderTwo.value = parseInt(sliderOne.value) + minGap;
+        }
+        displayValTwo.textContent = sliderTwo.value;
+        fillColor();
+    }
+
+    function fillColor() {
+        percent1 = (sliderOne.value - 4.05) / (sliderMaxValue - 4.05) * 100;
+        percent2 = (sliderTwo.value - 4.05) / (sliderMaxValue - 4.05) * 100;
+        sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}% , #71717a ${percent1}% , #71717a ${percent2}%, #dadae5 ${percent2}%)`;
+    }
+</script>
