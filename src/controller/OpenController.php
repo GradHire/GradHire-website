@@ -4,8 +4,8 @@ namespace app\src\controller;
 
 class OpenController extends Controller
 {
-	public function index(): string
-	{
-		return $this->render('about');
-	}
+    public function index()
+    {
+        return $this->render('about');
+    }
 }
