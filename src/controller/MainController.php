@@ -74,6 +74,11 @@ class MainController extends Controller
         return $this->render('profile');
     }
 
+    public function dashboard(): string
+    {
+        return $this->render('dashboard/dashboard');
+    }
+
     public function offres(): string
     {
         $search = $_GET['search'] ?? "";
