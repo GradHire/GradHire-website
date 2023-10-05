@@ -1,11 +1,11 @@
 <?php
-/** @var $offre \app\src\model\DataObject\Offres */
+/** @var $offre \app\src\model\dataObject\Offre */
 
 ?>
     <a href="detailOffre?idoffre=<?php echo $offre->getIdOffre(); ?>"
        class="rounded-[10px] cursor-pointer group bg-white p-4 !pt-10 sm:p-6 shadow-lg hover:shadow-sm w-full max-w-[220px] duration-150 border-2 border-gray-200 hover:border-gray-300">
         <?php echo sprintf('<time datetime="%s" class="block text-xs text-gray-500">
-    </time>', $offre->getDateDebut(), $offre->getDateDebut()) ?>
+    </time>', $offre->getDateDebut()) ?>
         <span>
         <h3 class="mt-0.5 text-lg font-medium text-gray-900">
             <?php echo $offre->getSujet() ?>

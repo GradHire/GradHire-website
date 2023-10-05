@@ -1,7 +1,7 @@
 <?php
 namespace app\src\model;
-use app\src\model\Offre;
 use app\src\core\db\Database;
+use app\src\model\dataObject\Offre;
 
 class OffreForm extends Model{
     public static function creerOffre(Offre $offre){

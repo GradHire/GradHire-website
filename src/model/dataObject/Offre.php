@@ -1,52 +1,10 @@
 <?php
 
-namespace app\src\model\DataObject;
+namespace app\src\model\dataObject;
 
-use app\src\model\DataObject\AbstractDataObject;
-
-class Offres extends AbstractDataObject
+class Offre extends AbstractDataObject
 {
-
-  protected function getValueColonne(string $nomColonne): string
-  {
-    switch ($nomColonne) {
-      case "idOffre":
-        return $this->getIdOffre();
-      case "durée":
-        return $this->getDurée();
-      case "thematique":
-        return $this->getThematique();
-      case "sujet":
-        return $this->getSujet();
-      case "nbJourTravailHebdo":
-        return $this->getNbJourTravailHebdo();
-      case "nbHeureTravailHebdo":
-        return $this->getNbHeureTravailHebdo();
-      case "Gratification":
-        return $this->getGratification();
-      case "unitegratification":
-        return $this->getUnitegratification();
-      case "avantageNature":
-        return $this->getAvantageNature();
-      case "dateDebut":
-        return $this->getDateDebut();
-      case "dateFin":
-        return $this->getDateFin();
-      case "pourvue":
-        return $this->getPourvue();
-      case "Statut":
-        return $this->getStatut();
-      case "anneeVisee":
-        return $this->getAnneeVisee();
-        case "idAnnee":
-        return $this->getIdAnnee();
-        case "idUtilisateur":
-        return $this->getIdUtilisateur();
-      default:
-        return "";
-    }
-  }
-    private int $idOffre;
+    private ?int $idOffre;
     private ?string $duree;
     private string $thematique;
     private string $sujet;
@@ -61,8 +19,8 @@ class Offres extends AbstractDataObject
     private ?string $anneeVisee;
     private string $idAnnee;
     private int $idUtilisateur;
-    private ?string $description;
-
+    private string $description;
+//    private ?int $alternance;
     public function __construct
     (
         $idOffre,
@@ -80,7 +38,8 @@ class Offres extends AbstractDataObject
         $anneeVisee,
         $idAnnee,
         $idUtilisateur,
-        $description
+        $description,
+//        $alternance
     )
     {
         $this->idOffre = $idOffre;
@@ -99,6 +58,7 @@ class Offres extends AbstractDataObject
         $this->idAnnee = $idAnnee;
         $this->idUtilisateur = $idUtilisateur;
         $this->description = $description;
+//        $this->alternance = $alternance;
     }
 
     /**
@@ -143,7 +103,9 @@ class Offres extends AbstractDataObject
             case "idUtilisateur":
                 return $this->getIdUtilisateur();
                 case "description":
-                return $this->getDescription();
+                    return $this->getDescription();
+                    case "alternance":
+                        return $this->getAlternance();
             default:
                 return "";
         }
@@ -152,7 +114,7 @@ class Offres extends AbstractDataObject
     /**
      * @return int
      */
-    public function getIdOffre(): int
+    public function getIdOffre(): ?int
     {
         return $this->idOffre;
     }
@@ -357,8 +319,15 @@ class Offres extends AbstractDataObject
         return $this->idUtilisateur;
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
+
+    public function getAlternance(): ?int
+    {
+        return $this->alternance;
+    }
+
+
 }

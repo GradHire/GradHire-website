@@ -1,6 +1,6 @@
 <?php
 
-namespace app\src\model\Repository;
+namespace app\src\model\repository;
 
 class MailRepository
 {

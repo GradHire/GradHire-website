@@ -1,6 +1,6 @@
 <?php
 
-namespace app\src\model\DataObject;
+namespace app\src\model\dataObject;
 
 abstract class AbstractDataObject
 {

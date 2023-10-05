@@ -1,11 +1,11 @@
 <?php
 
 
-namespace app\src\model\Repository;
+namespace app\src\model\repository;
 
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
-use app\src\model\DataObject\AbstractDataObject;
+use app\src\model\dataObject\AbstractDataObject;
 
 abstract class AbstractRepositoryObject
 {
@@ -136,9 +136,9 @@ abstract class AbstractRepositoryObject
     public function tableChecker($filter): string
     {
         if (array_key_exists('alternance', $filter) && $filter['alternance'] != "") {
-            return "offreAlternance JOIN Offre ON offreAlternance.idOffre = Offre.idOffre";
+            return "Offrealternance JOIN Offre ON Offrealternance.idoffre = Offre.idoffre";
         } else if (array_key_exists('stage', $filter) && $filter['stage'] != "") {
-            return "offreStage JOIN Offre ON offreStage.idOffre = Offre.idOffre";
+            return "Offrestage JOIN Offre ON Offrestage.idoffre = Offre.idoffre";
         } else {
             return $this->getNomTable();
         }

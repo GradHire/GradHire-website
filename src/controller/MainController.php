@@ -4,11 +4,11 @@ namespace app\src\controller;
 
 use app\src\core\middlewares\AuthMiddleware;
 use app\src\model\Application;
+use app\src\model\dataObject\Offre;
 use app\src\model\LoginForm;
-use app\src\model\Offre;
 use app\src\model\OffreForm;
-use app\src\model\Repository\MailRepository;
-use app\src\model\Repository\OffresRepository;
+use app\src\model\repository\MailRepository;
+use app\src\model\repository\OffresRepository;
 use app\src\model\Request;
 use app\src\model\Response;
 use app\src\model\User;
@@ -107,7 +107,6 @@ class MainController extends Controller
             } else {
                 $anneeVisee = "3";
             }
-            //idannee = annee courante
             $idAnnee = date("Y");
             $offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef, $statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $distanciel);
             OffreForm::creerOffre($offre);
@@ -126,6 +125,7 @@ class MainController extends Controller
         $message = $mailSent ? "Mail sent successfully" : "Mail sending failed";
 
         return $this->render('offre/mailtest', compact('message'));
+    }
     public function dashboard(): string
     {
         return $this->render('dashboard/dashboard');

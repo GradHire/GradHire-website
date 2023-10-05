@@ -1,5 +1,5 @@
 <?php
-/** @var $offres \app\src\model\DataObject\Offres */
+/** @var $offres \app\src\model\dataObject\Offre */
 
 ?>
 
