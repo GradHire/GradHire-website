@@ -6,6 +6,7 @@ namespace app\src\model\repository;
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\AbstractDataObject;
+use Cassandra\Map;
 
 abstract class AbstractRepositoryObject
 {
@@ -37,6 +38,11 @@ abstract class AbstractRepositoryObject
             print_r($arraySearch);
             echo '<br>';
         }
+        print_r($filter);
+        echo '<br>';
+        if (array_key_exists('gratificationMin', $filter) && array_key_exists('gratificationMax', $filter)) {
+           if($filter['gratificationMin']==null && $filter['gratificationMax']== null) unset($filter['gratificationMin'],$filter['gratificationMax']);
+        }
         if (self::checkOnlyStageAletnance($filter)) {
             echo 'only stage or alternance';
             $pdoStatement = Database::get_conn()->prepare($sql);
@@ -45,10 +51,14 @@ abstract class AbstractRepositoryObject
             if ($search == "") $sql .= " WHERE ";
             else $sql .= " AND ";
             if (array_key_exists('gratificationMin', $filter) || array_key_exists('gratificationMax', $filter)) {
-                if (sizeof($filter) == 1) $sql .= self::prepareSQLGratification($filter['gratificationMin'], $filter['gratificationMax']);
-                else if (sizeof($filter) > 1) {
-                    $sql .= self::prepareSQLGratification($filter['gratificationMin'], $filter['gratificationMax']) . " AND ";
+                echo $sql . '<br>';
+                //pour chaque valeur de prepareSQLGratification on AJOUTE LA KEY SQL A SQL ET on update les valeur du filter
+                foreach(self::prepareSQLGratification(sizeof($filter), $filter) as $key => $value) {
+                    if ($key == 'sql') $sql .= $value;
+                    else $filter[$key] = $value;
                 }
+                print_r($filter);
+                echo $sql . '<br>';
             }
             if (array_key_exists('alternance', $filter)) unset($filter['alternance']);
             if (array_key_exists('stage', $filter)) unset($filter['stage']);
@@ -61,7 +71,7 @@ abstract class AbstractRepositoryObject
                     }
                 }
             }
-            $sql = substr($sql, 0, -4);
+            if (substr($sql, -4) == "AND " || substr($sql, -3) == "OR ") $sql = substr($sql, 0, -4);
             $pdoStatement = Database::get_conn()->prepare($sql);
             foreach ($values as $key => $value) {
                 if ($key != 'gratificationMin' && $key != 'gratificationMax') {
@@ -157,36 +167,37 @@ abstract class AbstractRepositoryObject
         return false;
     }
 
-    private static function prepareSQLGratification(): string
+    private static function prepareSQLGratification(int $size, array $filter): array
     {
-//        if ($gratificationMin == null) {
-//            $gratificationMin = 4.05;
-//        }
-//        if ($gratificationMax == null) {
-//            $gratificationMax = 15;
-//        }
-//        //si la gratification min est plus grande que la max alors on inverse les deux
-//        if ($gratificationMin > $gratificationMax) {
-//            $temp = $gratificationMin;
-//            $gratificationMin = $gratificationMax;
-//            $gratificationMax = $temp;
-//        }
-//        if ($gratificationMax < $gratificationMin) {
-//            $temp = $gratificationMin;
-//            $gratificationMin = $gratificationMax;
-//            $gratificationMax = $temp;
-//        }
-        return " gratification BETWEEN :gratificationMinTag AND :gratificationMaxTag ";
+        $sql = array();
+        $sql = array_merge($sql, $filter);
+
+
+        $gratificationMaxTemp = $sql['gratificationMax'];
+        $gratificationMinTemp = $sql['gratificationMin'];
+
+        if ($sql['gratificationMin'] == null && $sql['gratificationMax'] == null) {
+            return $sql;
+        }
+        else if ($sql['gratificationMin'] != null && $sql['gratificationMax'] == null) {
+            $gratificationMaxTemp = 15;
+        }
+        else if ($sql['gratificationMin'] == null && $sql['gratificationMax'] != null) $gratificationMinTemp = 4.05;
+
+        if ($size > 1) $sql['sql'] = " gratification BETWEEN :gratificationMinTag AND :gratificationMaxTag AND ";
+        else $sql['sql'] =" gratification BETWEEN :gratificationMinTag AND :gratificationMaxTag ";
+
+        $sql['gratificationMin'] = $gratificationMinTemp;
+        $sql['gratificationMax'] = $gratificationMaxTemp;
+
+        echo ' gratificationMax = ' . $sql['gratificationMax'] . ' gratificationMin = ' . $sql['gratificationMin'] . '<br>';
+        print_r($sql);
+
+        return $sql;
     }
 
-    private static function rangeValueGratification(?float $gratificationMin, ?float $gratificationMax): void
+    private static function rangeValueGratification(float $gratificationMin, float $gratificationMax): void
     {
-        if ($gratificationMin == null) {
-            $gratificationMin = 4.05;
-        }
-        if ($gratificationMax == null) {
-            $gratificationMax = 15;
-        }
         //si la gratification min est plus grande que la max alors on inverse les deux
         if ($gratificationMin > $gratificationMax) {
             $temp = $gratificationMin;
