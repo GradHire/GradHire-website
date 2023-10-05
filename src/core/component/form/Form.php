@@ -2,7 +2,6 @@
 
 namespace app\src\core\component\form;
 
-
 use app\src\model\Model;
 
 class Form
