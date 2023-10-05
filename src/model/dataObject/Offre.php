@@ -258,7 +258,7 @@ class Offre extends AbstractDataObject
     /**
      * @return string
      */
-    public function getDateFin(): string
+    public function getDateFin(): ?string
     {
         return $this->dateFin;
     }
