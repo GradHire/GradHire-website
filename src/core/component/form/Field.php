@@ -27,11 +27,11 @@ class Field extends BaseField
         );
     }
 
-    public function passwordField()
-    {
-        $this->type = self::TYPE_PASSWORD;
-        return $this;
-    }
+	public function passwordField()
+	{
+		$this->type = self::TYPE_PASSWORD;
+		return $this;
+	}
 
     public function fileField()
     {

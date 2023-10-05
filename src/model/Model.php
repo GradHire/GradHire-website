@@ -4,16 +4,16 @@ namespace app\src\model;
 
 class Model
 {
-    const RULE_REQUIRED = 'required';
-    const RULE_EMAIL = 'email';
-    const RULE_MIN = 'min';
-    const RULE_MAX = 'max';
-    const RULE_MATCH = 'match';
-    const RULE_UNIQUE = 'unique';
+	const RULE_REQUIRED = 'required';
+	const RULE_EMAIL = 'email';
+	const RULE_MIN = 'min';
+	const RULE_MAX = 'max';
+	const RULE_MATCH = 'match';
+	const RULE_UNIQUE = 'unique';
 
-    public array $errors = [];
+	public array $errors = [];
 
-    public function loadData($data)
+    public function loadData($data): void
     {
         foreach ($data as $key => $value) {
             if (property_exists($this, $key)) {
@@ -22,12 +22,7 @@ class Model
         }
     }
 
-    public function attributes()
-    {
-        return [];
-    }
-
-    public function labels()
+    public function attributes(): array
     {
         return [];
     }
@@ -37,12 +32,12 @@ class Model
         return $this->labels()[$attribute] ?? $attribute;
     }
 
-    public function rules()
+    public function labels(): array
     {
         return [];
     }
 
-    public function validate()
+    public function validate(): bool
     {
         foreach ($this->rules() as $attribute => $rules) {
             $value = $this->{$attribute};
@@ -84,24 +79,12 @@ class Model
         return empty($this->errors);
     }
 
-    public function errorMessages()
+    public function rules(): array
     {
-        return [
-            self::RULE_REQUIRED => 'This field is required',
-            self::RULE_EMAIL => 'This field must be valid email address',
-            self::RULE_MIN => 'Min length of this field must be {min}',
-            self::RULE_MAX => 'Max length of this field must be {max}',
-            self::RULE_MATCH => 'This field must be the same as {match}',
-            self::RULE_UNIQUE => 'Record with with this {field} already exists',
-        ];
+        return [];
     }
 
-    public function errorMessage($rule)
-    {
-        return $this->errorMessages()[$rule];
-    }
-
-    protected function addErrorByRule(string $attribute, string $rule, $params = [])
+    protected function addErrorByRule(string $attribute, string $rule, $params = []): void
     {
         $params['field'] ??= $attribute;
         $errorMessage = $this->errorMessage($rule);
@@ -111,7 +94,24 @@ class Model
         $this->errors[$attribute][] = $errorMessage;
     }
 
-    public function addError(string $attribute, string $message)
+    public function errorMessage($rule): string
+    {
+        return $this->errorMessages()[$rule];
+    }
+
+    public function errorMessages(): array
+    {
+        return [
+            self::RULE_REQUIRED => 'Ce champs est requis',
+            self::RULE_EMAIL => 'Veuillez renseigner une adresse mail valide',
+            self::RULE_MIN => 'La longueur minimum doit être de {min}',
+            self::RULE_MAX => 'La longueur maximum doit être de {max}',
+            self::RULE_MATCH => 'Ce champs doit être égale à la règle {match}',
+            self::RULE_UNIQUE => 'Le champs {field} existe déjà',
+        ];
+    }
+
+    public function addError(string $attribute, string $message): void
     {
         $this->errors[$attribute][] = $message;
     }

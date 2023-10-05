@@ -3,71 +3,57 @@
 namespace app\src\model;
 
 use app\src\controller\Controller;
+use app\src\core\exception\ForbiddenException;
+use app\src\model\Users\User;
+
 use app\src\core\db\Database;
 
 class Application
 {
     const EVENT_BEFORE_REQUEST = 'beforeRequest';
     const EVENT_AFTER_REQUEST = 'afterRequest';
-
-    protected array $eventListeners = [];
-
     public static Application $app;
     public static string $ROOT_DIR;
-    public string $userClass;
+    public static ?User $user = null;
     public string $layout = 'main';
     public Router $router;
     public Request $request;
     public Response $response;
     public ?Controller $controller = null;
-    public Database $db;
-    public Session $session;
     public View $view;
-    public ?UserModel $user;
+    protected array $eventListeners = [];
 
     public function __construct($rootDir, $config)
     {
-        $this->user = null;
-        $this->userClass = $config['userClass'];
         self::$ROOT_DIR = $rootDir;
         self::$app = $this;
         $this->request = new Request();
         $this->response = new Response();
         $this->router = new Router($this->request, $this->response);
-        $this->db = new Database();
-        $this->session = new Session();
         $this->view = new View();
 
-        $userId = Application::$app->session->get('user');
-        if ($userId) {
-            $key = $this->userClass::primaryKey();
-            $this->user = $this->userClass::findOne([$key => $userId]);
+        if (isset($_COOKIE["token"])) {
+            $user_token = Token::verify($_COOKIE["token"]);
+            if (!is_null($user_token)) {
+                $_SESSION["role"] = $user_token["role"];
+                $_SESSION["user_id"] = $user_token["id"];
+            } else session_destroy();
+        } else {
+            session_destroy();
         }
     }
 
-    public static function isGuest()
+    public static function setUser(User $user)
     {
-        return !self::$app->user;
+        self::$user = $user;
     }
 
-    public function login(UserModel $user)
+    public static function isGuest(): bool
     {
-        $this->user = $user;
-        $className = get_class($user);
-        $primaryKey = $className::primaryKey();
-        $value = $user->{$primaryKey};
-        Application::$app->session->set('user', $value);
-
-        return true;
+        return !isset($_COOKIE["token"]) || !isset($_SESSION["user_id"]);
     }
 
-    public function logout()
-    {
-        $this->user = null;
-        self::$app->session->remove('user');
-    }
-
-    public function run()
+    public function run(): void
     {
         $this->triggerEvent(self::EVENT_BEFORE_REQUEST);
         try {
@@ -79,7 +65,7 @@ class Application
         }
     }
 
-    public function triggerEvent($eventName)
+    public function triggerEvent($eventName): void
     {
         $callbacks = $this->eventListeners[$eventName] ?? [];
         foreach ($callbacks as $callback) {
@@ -87,7 +73,7 @@ class Application
         }
     }
 
-    public function on($eventName, $callback)
+    public function on($eventName, $callback): void
     {
         $this->eventListeners[$eventName][] = $callback;
     }

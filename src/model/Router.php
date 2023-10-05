@@ -16,22 +16,47 @@ class Router
         $this->response = $response;
     }
 
-    public function get(string $url, $callback)
+    public function get(string $url, $callback): void
     {
         $this->routeMap['get'][$url] = $callback;
     }
 
-    public function post(string $url, $callback)
+    public function post(string $url, $callback): void
     {
         $this->routeMap['post'][$url] = $callback;
     }
 
     /**
-     * @return array
+     * @throws NotFoundException
      */
-    public function getRouteMap($method): array
+    public function resolve()
     {
-        return $this->routeMap[$method] ?? [];
+        $method = $this->request->getMethod();
+        $url = $this->request->getUrl();
+        $callback = $this->routeMap[$method][$url] ?? false;
+        if (!$callback) {
+
+            $callback = $this->getCallback();
+
+            if ($callback === false) {
+                throw new NotFoundException();
+            }
+        }
+        if (is_string($callback)) {
+            return $this->renderView($callback);
+        }
+        if (is_array($callback)) {
+
+            $controller = new $callback[0];
+            $controller->action = $callback[1];
+            Application::$app->controller = $controller;
+            $middlewares = $controller->getMiddlewares();
+            foreach ($middlewares as $middleware) {
+                $middleware->execute();
+            }
+            $callback[0] = $controller;
+        }
+        return call_user_func($callback, $this->request, $this->response);
     }
 
     public function getCallback()
@@ -61,41 +86,17 @@ class Router
         return false;
     }
 
-    public function resolve()
+    public function getRouteMap($method): array
     {
-        $method = $this->request->getMethod();
-        $url = $this->request->getUrl();
-        $callback = $this->routeMap[$method][$url] ?? false;
-        if (!$callback) {
-
-            $callback = $this->getCallback();
-
-            if ($callback === false) {
-                throw new NotFoundException();
-            }
-        }
-        if (is_string($callback)) {
-            return $this->renderView($callback);
-        }
-        if (is_array($callback)) {
-            $controller = new $callback[0];
-            $controller->action = $callback[1];
-            Application::$app->controller = $controller;
-            $middlewares = $controller->getMiddlewares();
-            foreach ($middlewares as $middleware) {
-                $middleware->execute();
-            }
-            $callback[0] = $controller;
-        }
-        return call_user_func($callback, $this->request, $this->response);
+        return $this->routeMap[$method] ?? [];
     }
 
-    public function renderView($view, $params = [])
+    public function renderView($view, $params = []): string
     {
         return Application::$app->view->renderView($view, $params);
     }
 
-    public function renderViewOnly($view, $params = [])
+    public function renderViewOnly($view, $params = []): string
     {
         return Application::$app->view->renderViewOnly($view, $params);
     }
