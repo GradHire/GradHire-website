@@ -4,6 +4,7 @@ namespace app\src\core\middlewares;
 
 use app\src\core\exception\ForbiddenException;
 use app\src\model\Application;
+use app\src\model\Token;
 
 class AuthMiddleware extends BaseMiddleware
 {
@@ -14,12 +15,11 @@ class AuthMiddleware extends BaseMiddleware
         $this->actions = $actions;
     }
 
-    public function execute()
+    /**
+     * @throws ForbiddenException
+     */
+    public function execute(): void
     {
-        if (Application::isGuest()) {
-            if (empty($this->actions) || in_array(Application::$app->controller->action, $this->actions)) {
-                throw new ForbiddenException();
-            }
-        }
+        if (Application::isGuest()) throw new ForbiddenException();
     }
 }

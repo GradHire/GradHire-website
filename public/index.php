@@ -1,5 +1,6 @@
 <?php
 
+use app\src\controller\AuthController;
 use app\src\controller\MainController;
 use app\src\controller\OpenController;
 use app\src\core\lib\Psr4AutoloaderClass;
@@ -28,13 +29,12 @@ $app = new Application(dirname(__DIR__), $config);
 //    echo "After request";
 //});
 
-$app->router->get('/', [MainController::class, 'home']);
-$app->router->get('/register', [MainController::class, 'register']);
-$app->router->post('/register', [MainController::class, 'register']);
-$app->router->get('/login', [MainController::class, 'login']);
-$app->router->get('/login/{id}', [MainController::class, 'login']);
-$app->router->post('/login', [MainController::class, 'login']);
-$app->router->get('/logout', [MainController::class, 'logout']);
+$app->router->get('/', 'home');
+$app->router->get('/register', [AuthController::class, 'register']);
+$app->router->post('/register', [AuthController::class, 'register']);
+$app->router->get('/login', [AuthController::class, 'login']);
+$app->router->post('/login', [AuthController::class, 'login']);
+$app->router->get('/logout', [AuthController::class, 'logout']);
 $app->router->get('/contact', [MainController::class, 'contact']);
 $app->router->get('/about', [OpenController::class, 'index']);
 $app->router->get('/profile', [MainController::class, 'profile']);
