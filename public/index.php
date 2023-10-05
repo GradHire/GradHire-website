@@ -42,5 +42,7 @@ $app->router->get('/profile/{id:\d+}/{username}', [MainController::class, 'login
 $app->router->get('/search', [MainController::class, 'search']);
 $app->router->get('/readAll', [MainController::class, 'readAll']);
 $app->router->get('/mailtest', [MainController::class, 'mailtest']);
-
+$app->router->get('/offres', [MainController::class, 'offres']);
+$app->router->get('/detailOffre', [MainController::class, 'detailOffre']);
+$app->router->get('/dashboard', [MainController::class, 'dashboard']);
 $app->run();
