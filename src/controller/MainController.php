@@ -95,7 +95,7 @@ class MainController extends Controller
     public function creeroffre(Request $request): string
     {
         if ($request->getMethod() === 'get') {
-            return $this->render('/offres/creeroffre');
+            return $this->render('/offres/create');
         } else {
             $type = $_POST['radios'];
             $titre = $_POST['titre'];
@@ -120,9 +120,9 @@ class MainController extends Controller
                 $anneeVisee = "3";
             }
             $idAnnee = date("Y");
-            $offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef, $statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $distanciel);
-            OffreForm::creerOffre($offre);
-            return $this->render('/contact');
+            $offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef, $statut, $anneeVisee, $idAnnee, $idUtilisateur, $description);
+            OffreForm::creerOffre($offre,$distanciel);
+            return $this->render('/offres/create');
         }
     }
     public function offres(Request $request): string
