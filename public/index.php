@@ -44,9 +44,6 @@ $app->router->get('/about', [OpenController::class, 'index']);
 $app->router->get('/profile', [MainController::class, 'profile']);
 $app->router->get('/profile/{id:\d+}/{username}', [MainController::class, 'login']);
 
-$app->router->get('/creeroffre', [MainController::class, 'creeroffre']);
-$app->router->post('/creeroffre', [MainController::class, 'creeroffre']);
-
 $app->router->get('/search', [MainController::class, 'search']);
 
 $app->router->get('/readAll', [MainController::class, 'readAll']);
@@ -54,9 +51,11 @@ $app->router->get('/readAll', [MainController::class, 'readAll']);
 $app->router->get('/mailtest', [MainController::class, 'mailtest']);
 
 $app->router->get('/offres', [MainController::class, 'offres']);
-$app->router->get('/offres/{id:\d+}', [MainController::class, 'offres']);
 
-$app->router->get('/detailOffre', [MainController::class, 'detailOffre']);
+$app->router->get('/offres/create', [MainController::class, 'creeroffre']);
+$app->router->post('/offres/create', [MainController::class, 'creeroffre']);
+
+$app->router->get('/offres/{id:\d+}', [MainController::class, 'offres']);
 
 $app->router->get('/dashboard', [MainController::class, 'dashboard']);
 
