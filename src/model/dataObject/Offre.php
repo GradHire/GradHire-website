@@ -122,7 +122,7 @@ class Offre extends AbstractDataObject
     /**
      * @return string
      */
-    public function getDuree(): string
+    public function getDuree(): ?string
     {
         return $this->duree;
     }
@@ -162,7 +162,7 @@ class Offre extends AbstractDataObject
     /**
      * @return int
      */
-    public function getNbJourTravailHebdo(): int
+    public function getNbJourTravailHebdo(): ?int
     {
         return $this->nbJourTravailHebdo;
     }
@@ -178,7 +178,7 @@ class Offre extends AbstractDataObject
     /**
      * @return float
      */
-    public function getNbHeureTravailHebdo(): float
+    public function getNbHeureTravailHebdo(): ?float
     {
         return $this->nbHeureTravailHebdo;
     }
@@ -194,7 +194,7 @@ class Offre extends AbstractDataObject
     /**
      * @return float
      */
-    public function getGratification(): float
+    public function getGratification(): ?float
     {
         return $this->gratification;
     }
@@ -210,7 +210,7 @@ class Offre extends AbstractDataObject
     /**
      * @return string
      */
-    public function getUnitegratification(): string
+    public function getUnitegratification(): ?string
     {
         return $this->unitegratification;
     }
@@ -226,7 +226,7 @@ class Offre extends AbstractDataObject
     /**
      * @return string
      */
-    public function getAvantageNature(): string
+    public function getAvantageNature(): ?string
     {
         return $this->avantageNature;
     }
@@ -258,7 +258,7 @@ class Offre extends AbstractDataObject
     /**
      * @return string
      */
-    public function getDateFin(): string
+    public function getDateFin(): ?string
     {
         return $this->dateFin;
     }
@@ -274,7 +274,7 @@ class Offre extends AbstractDataObject
     /**
      * @return string
      */
-    public function getStatut(): string
+    public function getStatut(): ?string
     {
         return $this->statut;
     }
@@ -290,7 +290,7 @@ class Offre extends AbstractDataObject
     /**
      * @return string
      */
-    public function getAnneeVisee(): string
+    public function getAnneeVisee(): ?string
     {
         return $this->anneeVisee;
     }
@@ -333,6 +333,5 @@ class Offre extends AbstractDataObject
     {
         return "Offre : " . $this->getSujet() . " " . $this->getThematique() . " " . $this->getDuree() . " " . $this->getNbJourTravailHebdo() . " " . $this->getNbHeureTravailHebdo() . " " . $this->getGratification() . " " . $this->getUnitegratification() . " " . $this->getAvantageNature() . " " . $this->getDateDebut() . " " . $this->getDateFin() . " " . $this->getStatut() . " " . $this->getAnneeVisee() . " " . $this->getIdAnnee() . " " . $this->getIdUtilisateur() . " " . $this->getDescription();
     }
-
 
 }
