@@ -19,79 +19,64 @@ abstract class AbstractRepositoryObject
         $values = array();
         $arraySearch = array();
         $sql = "";
+
         if ($search == "" && !empty($filter)) {
             $sql = "SELECT * FROM " . $this->tableChecker($filter);
         } else {
             $sql = "SELECT * FROM " . $this->tableChecker($filter) . " WHERE ";
             //            i need to explode the search for remove ' ' for place each of them into an array
             $arraySearch = explode(' ', $search);
-            {
-                foreach ($arraySearch as $key => $value) {
-                    if ($key == sizeof($arraySearch) - 1) $sql .= "sujet LIKE " . ":sujet" . $key . "Tag ";
-                    else $sql .= "sujet LIKE " . ":sujet" . $key . "Tag OR ";
-                }
-            }
+            $sql .= self::prepareSQLQSearch($arraySearch);
         }
+
         if (array_key_exists('gratificationMin', $filter) && array_key_exists('gratificationMax', $filter)) {
-           if($filter['gratificationMin']==null && $filter['gratificationMax']== null) unset($filter['gratificationMin'],$filter['gratificationMax']);
+            if ($filter['gratificationMin'] == null && $filter['gratificationMax'] == null) unset($filter['gratificationMin'], $filter['gratificationMax']);
         }
+
+
         if (self::checkOnlyStageAletnance($filter)) {
             $pdoStatement = Database::get_conn()->prepare($sql);
             $pdoStatement->execute();
+
         } else if (self::checkFilterNotEmpty($filter)) {
             if ($search == "") $sql .= " WHERE ";
             else $sql .= " AND ";
+
             if (array_key_exists('gratificationMin', $filter) || array_key_exists('gratificationMax', $filter)) {
                 //pour chaque valeur de prepareSQLGratification on AJOUTE LA KEY SQL A SQL ET on update les valeur du filter
-                foreach(self::prepareSQLGratification(sizeof($filter), $filter) as $key => $value) {
+                foreach (self::prepareSQLGratification(sizeof($filter), $filter) as $key => $value) {
                     if ($key == 'sql') $sql .= $value;
                     else $filter[$key] = $value;
                 }
             }
+
             if (array_key_exists('alternance', $filter)) unset($filter['alternance']);
             if (array_key_exists('stage', $filter)) unset($filter['stage']);
+
             foreach ($filter as $key => $value) if ($value != "") $values[$key] = explode(',', $value);
-            foreach ($values as $key => $value) {
-                if ($key != 'gratificationMin' && $key != 'gratificationMax') {
-                    foreach ($value as $key2 => $value2) {
-                        if ($key2 == count($value) - 1) $sql .= $key . " = :" . $key . $key2 . "Tag AND ";
-                        else $sql .= $key . " = :" . $key . $key2 . "Tag OR ";
-                    }
-                }
-            }
-            if (substr($sql, -4) == "AND " || substr($sql, -3) == "OR ") $sql = substr($sql, 0, -4);
+
+            $sql .= self::prepareSQLFilter($values);
+            $sql = self::removeEndifAlone($sql);
+
             $pdoStatement = Database::get_conn()->prepare($sql);
-            foreach ($values as $key => $value) {
-                if ($key != 'gratificationMin' && $key != 'gratificationMax') {
-                    foreach ($value as $key2 => $value2) {
-                        $values[$key . $key2 . "Tag"] = $value2;
-                    }
-                } else {
-                    self::rangeValueGratification($filter['gratificationMin'], $filter['gratificationMax']);
-                    $values['gratificationMinTag'] = $filter['gratificationMin'];
-                    $values['gratificationMaxTag'] = $filter['gratificationMax'];
-                }
-                unset($values[$key]);
-            }
-            foreach ($arraySearch as $key => $value) {
-                $arraySearch['sujet' . $key . "Tag"] = '%' . $value . '%';
-                unset($arraySearch[$key]);
-            }
-            $values = array_merge($values, $arraySearch);
+
+            $values = self::constructSQLValues($values, $arraySearch, $filter);
+
             $pdoStatement->execute($values);
         } else {
             $pdoStatement = Database::get_conn()->prepare($sql);
-            foreach ($arraySearch as $key => $value) {
-                $arraySearch['sujet' . $key . "Tag"] = '%' . $value . '%';
-                unset($arraySearch[$key]);
-            }
+
+            self::constructSQLValues(null, $arraySearch, null);
+
             $pdoStatement->execute($arraySearch);
         }
+
         $dataObjects = [];
         foreach ($pdoStatement as $dataObjectFormatTableau) {
             $dataObjects[] = $this->construireDepuisTableau($dataObjectFormatTableau);
         }
         return $dataObjects;
+
     }
 
     //pour le filtre il faut recuperer les case du filtre cocher pour apres les implementers dans la requete
@@ -159,14 +144,12 @@ abstract class AbstractRepositoryObject
 
         if ($sql['gratificationMin'] == null && $sql['gratificationMax'] == null) {
             return $sql;
-        }
-        else if ($sql['gratificationMin'] != null && $sql['gratificationMax'] == null) {
+        } else if ($sql['gratificationMin'] != null && $sql['gratificationMax'] == null) {
             $gratificationMaxTemp = 15;
-        }
-        else if ($sql['gratificationMin'] == null && $sql['gratificationMax'] != null) $gratificationMinTemp = 4.05;
+        } else if ($sql['gratificationMin'] == null && $sql['gratificationMax'] != null) $gratificationMinTemp = 4.05;
 
         if ($size > 1) $sql['sql'] = " gratification BETWEEN :gratificationMinTag AND :gratificationMaxTag AND ";
-        else $sql['sql'] =" gratification BETWEEN :gratificationMinTag AND :gratificationMaxTag ";
+        else $sql['sql'] = " gratification BETWEEN :gratificationMinTag AND :gratificationMaxTag ";
 
         $sql['gratificationMin'] = $gratificationMinTemp;
         $sql['gratificationMax'] = $gratificationMaxTemp;
@@ -174,18 +157,64 @@ abstract class AbstractRepositoryObject
         return $sql;
     }
 
-    private static function rangeValueGratification(float $gratificationMin, float $gratificationMax): void
+    private static function prepareSQLFilter(array $values): string
     {
-        //si la gratification min est plus grande que la max alors on inverse les deux
-        if ($gratificationMin > $gratificationMax) {
-            $temp = $gratificationMin;
-            $gratificationMin = $gratificationMax;
-            $gratificationMax = $temp;
+        $sql = "";
+        foreach ($values as $key => $value) {
+            if ($key != 'gratificationMin' && $key != 'gratificationMax') {
+                foreach ($value as $key2 => $value2) {
+                    if ($key2 == count($value) - 1) $sql .= $key . " = :" . $key . $key2 . "Tag AND ";
+                    else $sql .= $key . " = :" . $key . $key2 . "Tag OR ";
+                }
+            }
         }
-        if ($gratificationMax < $gratificationMin) {
-            $temp = $gratificationMax;
-            $gratificationMax = $gratificationMin;
-            $gratificationMin = $temp;
+        return $sql;
+    }
+
+    private static function prepareSQLQSearch(array $arraySearch): string
+    {
+        {
+            $sql = "";
+            foreach ($arraySearch as $key => $value) {
+                if ($key == sizeof($arraySearch) - 1) $sql .= "sujet LIKE " . ":sujet" . $key . "Tag ";
+                else $sql .= "sujet LIKE " . ":sujet" . $key . "Tag OR ";
+            }
+            return $sql;
         }
+    }
+
+    private static function removeEndifAlone(string $sql): string
+    {
+        if (substr($sql, -4) == "AND " || substr($sql, -3) == "OR ") $sql = substr($sql, 0, -4);
+        return $sql;
+    }
+
+    private static function constructSQLValues(?array $values, ?array $arraySearch, ?array $filter): array
+    {
+        if ($values != null) {
+            foreach ($values as $key => $value) {
+                if ($key != 'gratificationMin' && $key != 'gratificationMax') {
+                    if ($key == 'thematique') {
+                        foreach ($value as $key2 => $value2) {
+                            $values[$key . $key2 . "Tag"] = $value2;
+                        }
+                    } else {
+                        $values[$key . "Tag"] = $filter[$key];
+                    }
+                }
+                else {
+                    $values['gratificationMinTag'] = $filter['gratificationMin'];
+                    $values['gratificationMaxTag'] = $filter['gratificationMax'];
+                }
+                unset($values[$key]);
+            }
+        }
+        if ($arraySearch != null) {
+            foreach ($arraySearch as $key => $value) {
+                $arraySearch['sujet' . $key . "Tag"] = '%' . $value . '%';
+                unset($arraySearch[$key]);
+            }
+        }
+        return array_merge($values, $arraySearch);
     }
 }

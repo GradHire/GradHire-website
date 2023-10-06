@@ -18,10 +18,10 @@ use app\src\model\Users\User;
 
 class MainController extends Controller
 {
-    public function __construct()
-    {
-        $this->registerMiddleware(new AuthMiddleware());
-    }
+//    public function __construct()
+//    {
+//        $this->registerMiddleware(new AuthMiddleware());
+//    }
 
 
     public function contact(): string
