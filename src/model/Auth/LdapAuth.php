@@ -28,9 +28,9 @@ class LdapAuth extends Model
     public function labels(): array
     {
         return [
-            'username' => 'Your username',
-            'password' => 'Password',
-            'remember' => 'Remember'
+            'username' => "Login ldap",
+            'password' => 'Mot de passe',
+            'remember' => 'Rester connecté'
         ];
     }
 
@@ -77,7 +77,7 @@ class LdapAuth extends Model
                         $user->update(["annee" =>
                             $response->data->year]);
                     }
-                    $this->generate_token($user);
+                    Auth::generate_token($user, $this->remember);
                     Application::setUser($user);
                     return true;
                 } else {
@@ -86,17 +86,8 @@ class LdapAuth extends Model
                 return false;
             }
             return false;
-        } catch (\Exception $e) {
-            print_r($e);
+        } catch (\Exception) {
             throw new ServerErrorException();
         }
-    }
-
-    function generate_token(User $user): void
-    {
-        $_SESSION["role"] = $user->role();
-        $_SESSION["user_id"] = $user->id();
-        $duration = $this->remember === "true" ? 604800 : 3600;
-        setcookie("token", Token::generate(["id" => $user->id(), "role" => $user->role()], $duration), time() + $duration);
     }
 }

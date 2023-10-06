@@ -94,4 +94,6 @@ abstract class User
     {
         return '';
     }
+
+    abstract function full_name(): string;
 }
