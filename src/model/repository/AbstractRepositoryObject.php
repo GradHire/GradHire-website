@@ -13,19 +13,19 @@ abstract class AbstractRepositoryObject
     /**
      * @throws ServerErrorException
      */
-    public function search(string $search, array $filter): array
+    public function search(array $filter): array
     {
         $pdoStatement = null;
         $values = array();
         $arraySearch = array();
         $sql = "";
 
-        if ($search == "" && !empty($filter)) {
+        if ($filter['sujet'] == "" && !empty($filter)) {
             $sql = "SELECT * FROM " . $this->tableChecker($filter);
         } else {
             $sql = "SELECT * FROM " . $this->tableChecker($filter) . " WHERE ";
             //            i need to explode the search for remove ' ' for place each of them into an array
-            $arraySearch = explode(' ', $search);
+            $arraySearch = explode(' ', $filter['sujet']);
             $sql .= self::prepareSQLQSearch($arraySearch);
         }
 
@@ -39,7 +39,7 @@ abstract class AbstractRepositoryObject
             $pdoStatement->execute();
 
         } else if (self::checkFilterNotEmpty($filter)) {
-            if ($search == "") $sql .= " WHERE ";
+            if ($filter['sujet'] == "") $sql .= " WHERE ";
             else $sql .= " AND ";
 
             if (array_key_exists('gratificationMin', $filter) || array_key_exists('gratificationMax', $filter)) {
@@ -60,14 +60,15 @@ abstract class AbstractRepositoryObject
 
             $pdoStatement = Database::get_conn()->prepare($sql);
 
+            print_r($values);
+            print_r($arraySearch);
+            print_r($filter);
             $values = self::constructSQLValues($values, $arraySearch, $filter);
-
+            echo $sql;
             $pdoStatement->execute($values);
         } else {
             $pdoStatement = Database::get_conn()->prepare($sql);
-
-            self::constructSQLValues(null, $arraySearch, null);
-
+            echo $sql;
             $pdoStatement->execute($arraySearch);
         }
 
@@ -161,7 +162,7 @@ abstract class AbstractRepositoryObject
     {
         $sql = "";
         foreach ($values as $key => $value) {
-            if ($key != 'gratificationMin' && $key != 'gratificationMax') {
+            if ($key != 'gratificationMin' && $key != 'gratificationMax' && $key != 'sujet') {
                 foreach ($value as $key2 => $value2) {
                     if ($key2 == count($value) - 1) $sql .= $key . " = :" . $key . $key2 . "Tag AND ";
                     else $sql .= $key . " = :" . $key . $key2 . "Tag OR ";
@@ -193,7 +194,7 @@ abstract class AbstractRepositoryObject
     {
         if ($values != null) {
             foreach ($values as $key => $value) {
-                if ($key != 'gratificationMin' && $key != 'gratificationMax') {
+                if ($key != 'gratificationMin' && $key != 'gratificationMax' && $key != 'sujet') {
                     if ($key == 'thematique') {
                         foreach ($value as $key2 => $value2) {
                             $values[$key . $key2 . "Tag"] = $value2;
@@ -215,6 +216,9 @@ abstract class AbstractRepositoryObject
                 unset($arraySearch[$key]);
             }
         }
-        return array_merge($values, $arraySearch);
+        if ($values != null && $arraySearch != null) return array_merge($values, $arraySearch);
+        else if ($values != null) return $values;
+        else if ($arraySearch != null) return $arraySearch;
+        else return array();
     }
 }

@@ -89,14 +89,13 @@ class MainController extends Controller
         if ($offre == null && $id != null) throw new NotFoundException();
         else if ($offre != null && $id != null) return $this->render('offres/detailOffre', ['offre' => $offre]);
 
-        $search = $_GET['search'] ?? "";
         $filter = self::constructFilter();
         if (empty($search) && empty($filter)) {
             $offres = (new OffresRepository())->recuperer();
             return $this->render('offres/listOffres', ['offres' => $offres]);
         }
 
-        $offres = (new OffresRepository())->search($search, $filter);
+        $offres = (new OffresRepository())->search($filter);
         if ($offres == null) return $this->render('offres/listOffres', ['offres' => $offres]);
         return $this->render('offres/listOffres', ['offres' => $offres]);
     }
@@ -104,10 +103,15 @@ class MainController extends Controller
     //TODO: deplacer la logique de filtrage dans le repository @Clement !
     private static function constructFilter():array {
         $filter = array();
-        if (Auth::has_role(["student"])) {
-            if (isset($_GET['statut'])) $filter['statut'] = $_GET['statut'];
+//        if (Auth::has_role(["student"])) {
+//            if (isset($_GET['statut'])) $filter['statut'] = $_GET['statut'];
+//        } else {
+//            $filter['statut'] = "staff";
+//        }
+        if (isset($_GET['sujet'])){
+            $filter['sujet'] = $_GET['sujet'];
         } else {
-            $filter['statut'] = "publiée";
+            $filter['sujet'] = "";
         }
         if (isset($_GET['thematique'])) {
             $filter['thematique'] = "";

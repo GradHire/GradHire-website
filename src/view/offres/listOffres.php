@@ -29,7 +29,7 @@ HTML;
                               d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                     </svg>
                 </div>
-                <input type="search" id="default-search"
+                <input type="search" id="default-search" name="sujet"
                        class="block w-full p-4 pl-10 text-sm text-zinc-900 border-2 border-zinc-200 rounded-lg bg-zinc-50 focus:ring-zinc-500 focus:border-zinc-500 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500"
                        placeholder="Search Stages, Alternances...">
                 <button type="submit"
@@ -59,3 +59,111 @@ HTML;
             </div>
         </div>
 </form>
+<script>
+    window.addEventListener('DOMContentLoaded', function () {
+
+        const searchInput = document.getElementById('default-search');
+        searchInput.addEventListener('keyup', updateUrl);
+
+
+        const anneeViseeRadios = document.querySelectorAll('select[name="anneeVisee"]');
+        anneeViseeRadios.forEach(radio => {
+            radio.addEventListener('change', updateUrl);
+        });
+
+        const dureeRadios = document.querySelectorAll('select[name="duree"]');
+        dureeRadios.forEach(radio => {
+            radio.addEventListener('change', updateUrl);
+        });
+
+        const thematiqueCheckboxes = document.querySelectorAll('input[name="thematique[]"]');
+        thematiqueCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateUrl);
+        });
+
+        const gratificationMinSlider = document.getElementById("slider-1");
+        const gratificationMaxSlider = document.getElementById("slider-2");
+        gratificationMinSlider.addEventListener('change', updateUrl);
+        gratificationMaxSlider.addEventListener('change', updateUrl);
+    });
+
+    function updateUrl() {
+        const queryString = [];
+
+        const searchInput = document.getElementById('default-search');
+        if (searchInput.value && searchInput.value !== "") {
+            queryString.push(`sujet=${searchInput.value}`);
+        }
+
+        const selectedAnneeVisee = document.querySelector('select[name="anneeVisee"]');
+        if (selectedAnneeVisee.value && selectedAnneeVisee.value !== "") {
+            queryString.push(`anneeVisee=${selectedAnneeVisee.value}`);
+        }
+
+        const selectedThematique = Array.from(document.querySelectorAll('input[name="thematique[]"]:checked')).map(checkbox => checkbox.value);
+        if (selectedThematique.length > 0) {
+            queryString.push(`thematique=${selectedThematique.join('&thematique=')}`);
+        }
+
+        const selectedDuree = document.querySelector('select[name="duree"]');
+        if (selectedDuree.value && selectedDuree.value !== "") {
+            queryString.push(`duree=${selectedDuree.value}`);
+        }
+
+        const gratificationMinSlider = document.getElementById("slider-1");
+        const gratificationMaxSlider = document.getElementById("slider-2");
+
+        if (gratificationMinSlider.value !== null && gratificationMaxSlider.value !== null) {
+            queryString.push(`gratificationMin=${gratificationMinSlider.value}`, `gratificationMax=${gratificationMaxSlider.value}`);
+        }
+
+        const newUrl = window.location.origin + window.location.pathname + (queryString.length > 0 ? '?' + queryString.join('&') : '');
+        window.history.pushState(null, document.title, newUrl);
+    }
+
+    // Rest of your code...
+
+
+    window.onload = function () {
+        slideOne();
+        slideTwo();
+    };
+
+    let sliderOne = document.getElementById("slider-1");
+    let sliderTwo = document.getElementById("slider-2");
+    let displayValOne = document.getElementById("range1");
+    let displayValTwo = document.getElementById("range2");
+    let minGap = 0;
+    let sliderTrack = document.querySelector(".slider-track");
+    let sliderMaxValue = document.getElementById("slider-1").max;
+
+    function slideOne() {
+        if (sliderTwo && parseInt(sliderTwo.value) - parseInt(sliderOne.value) <= minGap) {
+            sliderOne.value = parseInt(sliderTwo.value) - minGap;
+        }
+        if (displayValOne) {
+            displayValOne.textContent = sliderOne.value;
+        }
+        fillColor();
+    }
+
+    function slideTwo() {
+        if (sliderTwo && parseInt(sliderTwo.value) - parseInt(sliderOne.value) <= minGap) {
+            sliderTwo.value = parseInt(sliderOne.value) + minGap;
+        }
+        if (displayValTwo) {
+            displayValTwo.textContent = sliderTwo.value;
+        }
+        fillColor();
+    }
+
+    function fillColor() {
+        if (sliderTrack) {
+            percent1 = (sliderOne.value - 4.05) / (sliderMaxValue - 4.05) * 100;
+            percent2 = (sliderTwo.value - 4.05) / (sliderMaxValue - 4.05) * 100;
+            sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}%, #71717a ${percent1}%, #71717a ${percent2}%, #dadae5 ${percent2}%)`;
+        }
+    }
+
+
+</script>
