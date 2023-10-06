@@ -32,7 +32,7 @@
                     </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="/logout">
-                            Welcome (Logout)
+                            Welcome <?= $_SESSION["full_name"] ?> (Logout)
                         </a>
                     </li>
                 </ul>
