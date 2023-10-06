@@ -122,8 +122,10 @@
         </div>
     </div>
 </nav>
-<div class="w-full p-4 flex justify-center items-center">
-    {{content}}
+<div class="w-full flex justify-center items-center">
+    <div class="md:w-[75%] w-full max-w-[1200px] p-4 flex justify-center items-center">
+        {{content}}
+    </div>
 </div>
 </body>
 </html>
