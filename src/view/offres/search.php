@@ -43,12 +43,12 @@
             <p class="text-xs text-zinc-500 font-bold">Annee Visee</p>
             <div>
                 <label
-                        for="anneeVisee2"
+                        for="anneeVisee"
                         class="block cursor-pointer rounded-lg border border-zinc-100 bg-white text-sm font-medium hover:border-zinc-200 peer-checked:border-zinc-500 peer-checked:ring-1 peer-checked:ring-zinc-500"
                 >
                     <select
-                            name="anneeVisee2"
-                            id="anneeVisee2"
+                            name="anneeVisee"
+                            id="anneeVisee"
                             class=" w-full text-zinc-700 rounded-lg sm:text-sm p-2"
                     >
                         <option value="">All</option>
@@ -309,7 +309,6 @@
                         id="DevApp"
                         class="peer hidden [&:checked_+_label_svg]:block"
                 />
-
                 <label
                         for="DevApp"
                         class="block cursor-pointer rounded-lg border border-zinc-100 bg-white p-2 text-sm font-medium hover:border-zinc-200 peer-checked:border-zinc-500 peer-checked:ring-1 peer-checked:ring-zinc-500"
@@ -334,6 +333,7 @@
             </div>
         </div>
         <span class="w-full h-[1.5px] my-1 bg-zinc-100 rounded-full"></span>
+
         <div class="flex flex-col gap-1">
             <p class="text-xs text-zinc-500 font-bold">Gratification</p>
             <div class="flex w-full flex-row justify-between items-center text-xs text-zinc-500">
@@ -352,10 +352,65 @@
     </div>
 </div>
 <script>
+    window.addEventListener('DOMContentLoaded', function () {
+
+        const anneeViseeRadios = document.querySelectorAll('select[name="anneeVisee"]');
+        anneeViseeRadios.forEach(radio => {
+            radio.addEventListener('change', updateUrl);
+        });
+
+        const dureeRadios = document.querySelectorAll('select[name="duree"]');
+        dureeRadios.forEach(radio => {
+            radio.addEventListener('change', updateUrl);
+        });
+
+        const thematiqueCheckboxes = document.querySelectorAll('input[name="thematique[]"]');
+        thematiqueCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateUrl);
+        });
+
+        const gratificationMinSlider = document.getElementById("slider-1");
+        const gratificationMaxSlider = document.getElementById("slider-2");
+        gratificationMinSlider.addEventListener('change', updateUrl);
+        gratificationMaxSlider.addEventListener('change', updateUrl);
+    });
+
+    function updateUrl() {
+        const queryString = [];
+
+        const selectedAnneeVisee = document.querySelector('select[name="anneeVisee"]');
+        if (selectedAnneeVisee.value && selectedAnneeVisee.value !== "") {
+            queryString.push(`anneeVisee=${selectedAnneeVisee.value}`);
+        }
+
+        const selectedThematique = Array.from(document.querySelectorAll('input[name="thematique[]"]:checked')).map(checkbox => checkbox.value);
+        if (selectedThematique.length > 0) {
+            queryString.push(`thematique=${selectedThematique.join('&thematique=')}`);
+        }
+
+        const selectedDuree = document.querySelector('select[name="duree"]');
+        if (selectedDuree.value && selectedDuree.value !== "") {
+            queryString.push(`duree=${selectedDuree.value}`);
+        }
+
+        const gratificationMinSlider = document.getElementById("slider-1");
+        const gratificationMaxSlider = document.getElementById("slider-2");
+
+        if (gratificationMinSlider.value !== null && gratificationMaxSlider.value !== null) {
+            queryString.push(`gratificationMin=${gratificationMinSlider.value}`, `gratificationMax=${gratificationMaxSlider.value}`);
+        }
+
+        const newUrl = window.location.origin + window.location.pathname + (queryString.length > 0 ? '?' + queryString.join('&') : '');
+        window.history.pushState(null, document.title, newUrl);
+    }
+
+    // Rest of your code...
+
+
     window.onload = function () {
         slideOne();
         slideTwo();
-    }
+    };
 
     let sliderOne = document.getElementById("slider-1");
     let sliderTwo = document.getElementById("slider-2");
@@ -366,24 +421,32 @@
     let sliderMaxValue = document.getElementById("slider-1").max;
 
     function slideOne() {
-        if (parseInt(sliderTwo.value) - parseInt(sliderOne.value) <= minGap) {
+        if (sliderTwo && parseInt(sliderTwo.value) - parseInt(sliderOne.value) <= minGap) {
             sliderOne.value = parseInt(sliderTwo.value) - minGap;
         }
-        displayValOne.textContent = sliderOne.value;
+        if (displayValOne) {
+            displayValOne.textContent = sliderOne.value;
+        }
         fillColor();
     }
 
     function slideTwo() {
-        if (parseInt(sliderTwo.value) - parseInt(sliderOne.value) <= minGap) {
+        if (sliderTwo && parseInt(sliderTwo.value) - parseInt(sliderOne.value) <= minGap) {
             sliderTwo.value = parseInt(sliderOne.value) + minGap;
         }
-        displayValTwo.textContent = sliderTwo.value;
+        if (displayValTwo) {
+            displayValTwo.textContent = sliderTwo.value;
+        }
         fillColor();
     }
 
     function fillColor() {
-        percent1 = (sliderOne.value - 4.05) / (sliderMaxValue - 4.05) * 100;
-        percent2 = (sliderTwo.value - 4.05) / (sliderMaxValue - 4.05) * 100;
-        sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}% , #71717a ${percent1}% , #71717a ${percent2}%, #dadae5 ${percent2}%)`;
+        if (sliderTrack) {
+            percent1 = (sliderOne.value - 4.05) / (sliderMaxValue - 4.05) * 100;
+            percent2 = (sliderTwo.value - 4.05) / (sliderMaxValue - 4.05) * 100;
+            sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}%, #71717a ${percent1}%, #71717a ${percent2}%, #dadae5 ${percent2}%)`;
+        }
     }
+
+
 </script>

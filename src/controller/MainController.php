@@ -6,6 +6,7 @@ use app\src\core\exception\NotFoundException;
 use app\src\core\middlewares\AuthMiddleware;
 use app\src\model\Application;
 use app\src\model\Auth\LdapAuth;
+use app\src\model\Auth\Auth;
 use app\src\model\dataObject\Offre;
 use app\src\model\LoginForm;
 use app\src\model\OffreForm;
@@ -13,7 +14,7 @@ use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\Request;
 use app\src\model\Response;
-use app\src\model\User;
+use app\src\model\Users\User;
 
 class MainController extends Controller
 {
@@ -103,6 +104,11 @@ class MainController extends Controller
     //TODO: deplacer la logique de filtrage dans le repository @Clement !
     private static function constructFilter():array {
         $filter = array();
+        if (Auth::has_role(["student"])) {
+            if (isset($_GET['statut'])) $filter['statut'] = $_GET['statut'];
+        } else {
+            $filter['statut'] = "publiée";
+        }
         if (isset($_GET['thematique'])) {
             $filter['thematique'] = "";
             foreach ($_GET['thematique'] as $key => $value) {
