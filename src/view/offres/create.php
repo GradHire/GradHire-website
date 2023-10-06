@@ -1,3 +1,7 @@
+
+<?php use app\src\model\Auth\Auth;
+
+Auth::check_role(["entreprise", "responsable", "secretariat"]); ?>
 <div class="w-full flex flex-col">
     <form action="create" method="post" class="w-full flex flex-col">
         <div class="w-full gap-4 flex flex-col">

@@ -1,16 +1,24 @@
 <?php
 /** @var $offres \app\src\model\dataObject\Offre */
 
+use app\src\model\Auth\Auth;
+
 ?>
 
 <form method="GET" action="offres" class="w-full gap-4 flex flex-col">
     <div class="flex flex-row gap-2 w-full">
+        <?php
+        $roles = ["student"];
+        if (!Auth::has_role($roles)) {
+            echo <<<HTML
         <a href="/offres/create" class="border-2 border-zinc-200 rounded-lg bg-zinc-50 p-3 px-4 flex justify-center items-center cursor-pointer">
             <svg class="w-5 h-5 text-zinc-500 dark:text-zinc-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
-
         </a>
+HTML;
+        }
+        ?>
         <div class="w-full">
             <label for="default-search" class="text-sm font-medium text-zinc-900 sr-only dark:text-white">Search</label>
             <div class="relative">
