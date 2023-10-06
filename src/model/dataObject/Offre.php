@@ -58,7 +58,6 @@ class Offre extends AbstractDataObject
         $this->idAnnee = $idAnnee;
         $this->idUtilisateur = $idUtilisateur;
         $this->description = $description;
-//        $this->alternance = $alternance;
     }
 
     /**
