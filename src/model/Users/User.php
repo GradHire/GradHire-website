@@ -13,17 +13,16 @@ abstract class User
     protected int $id;
     protected array $attributes;
 
-    public function __construct(array $attributes)
-    {
+    public function __construct(array $attributes) {
         if (count($attributes) == 0) return;
         $this->attributes = $attributes;
-        $this->id = $attributes["idUtilisateur"];
+        $this->id = $attributes["idUtilisateur"] ?? 0;  // Use a default value of 0
     }
 
     public static function find_by_id(string $id): null|static
     {
         try {
-            $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE idUtilisateur = ?");
+            $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE idutilisateur = ?");
             $statement->execute([$id]);
             $user = $statement->fetch();
             if (is_null($user)) return null;
@@ -42,7 +41,7 @@ abstract class User
             $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE " . static::$id_attributes . " = ?");
             $statement->execute([$value]);
             $user = $statement->fetch();
-            if (is_null($user)) return null;
+            if (is_null($user) || $user === false) return null;
             return new static($user);
         } catch (\Exception) {
             throw new ServerErrorException();
@@ -70,8 +69,8 @@ abstract class User
     {
         try {
             $paramBindings = implode(",", array_map(fn($attr) => "$attr = :param_$attr", array_keys($values)));
-            $statement = Database::get_conn()->prepare("UPDATE " . static::$view . " SET $paramBindings WHERE idUtilisateur=:param_idUtilisateur");
-            $values["idUtilisateur"] = $this->id;
+            $statement = Database::get_conn()->prepare("UPDATE " . static::$view . " SET $paramBindings WHERE idutilisateur=:param_idutilisateur");
+            $values["idutilisateur"] = $this->id;
             foreach ($values as $key => $item)
                 $statement->bindValue(":param_$key", $item);
             $statement->execute();
