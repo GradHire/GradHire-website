@@ -10,6 +10,6 @@ class StudentUser extends LdapUser
 
     public function role(): string
     {
-        return 'student';
+        return Roles::Student->value;
     }
 }

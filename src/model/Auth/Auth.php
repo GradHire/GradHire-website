@@ -4,19 +4,24 @@ namespace app\src\model\Auth;
 
 use app\src\core\exception\ForbiddenException;
 use app\src\model\Application;
+use app\src\model\Users\Roles;
+
 
 class Auth
 {
     /**
      * @throws ForbiddenException
      */
-    public static function check_role(array $roles)
+    public static function check_role(Roles ...$roles): void
     {
-        if (!self::has_role($roles)) throw new ForbiddenException();
+        $role = Roles::tryFrom($_SESSION["role"]);
+        if (!$role || Application::isGuest() || !in_array($role, $roles)) throw new ForbiddenException();
     }
 
-    public static function has_role(array $roles): bool
+    public static function has_role(Roles ...$roles): bool
     {
-        return !Application::isGuest() && in_array($_SESSION["role"], $roles);
+        $role = Roles::tryFrom($_SESSION["role"]);
+        if (!$role) return false;
+        return !Application::isGuest() && in_array($role, $roles);
     }
 }
