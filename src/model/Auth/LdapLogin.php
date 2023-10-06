@@ -3,15 +3,11 @@
 namespace app\src\model\Auth;
 
 use app\src\core\exception\ServerErrorException;
-use app\src\model\Application;
 use app\src\model\Model;
-use app\src\model\Token;
-use app\src\model\Users\LdapUser;
 use app\src\model\Users\StaffUser;
 use app\src\model\Users\StudentUser;
-use app\src\model\Users\User;
 
-class LdapAuth extends Model
+class LdapLogin extends Model
 {
     public string $username = '';
     public string $password = '';
@@ -78,7 +74,6 @@ class LdapAuth extends Model
                             $response->data->year]);
                     }
                     Auth::generate_token($user, $this->remember);
-                    Application::setUser($user);
                     return true;
                 } else {
                     $this->addError("credentials", "Mauvais nom d'utilisateur ou mot de passe");

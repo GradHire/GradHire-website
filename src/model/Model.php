@@ -4,14 +4,15 @@ namespace app\src\model;
 
 class Model
 {
-	const RULE_REQUIRED = 'required';
-	const RULE_EMAIL = 'email';
-	const RULE_MIN = 'min';
-	const RULE_MAX = 'max';
-	const RULE_MATCH = 'match';
-	const RULE_UNIQUE = 'unique';
+    const RULE_REQUIRED = 'required';
+    const RULE_EMAIL = 'email';
+    const RULE_MIN = 'min';
+    const RULE_MAX = 'max';
+    const RULE_MATCH = 'match';
+    const RULE_UNIQUE = 'unique';
+    const RULE_INT = 'int';
 
-	public array $errors = [];
+    public array $errors = [];
 
     public function loadData($data): void
     {
@@ -45,6 +46,9 @@ class Model
                 $ruleName = $rule;
                 if (!is_string($rule)) {
                     $ruleName = $rule[0];
+                }
+                if ($ruleName === self::RULE_INT && !ctype_digit($value)) {
+                    $this->addErrorByRule($attribute, self::RULE_INT);
                 }
                 if ($ruleName === self::RULE_REQUIRED && !$value) {
                     $this->addErrorByRule($attribute, self::RULE_REQUIRED);
@@ -106,8 +110,9 @@ class Model
             self::RULE_EMAIL => 'Veuillez renseigner une adresse mail valide',
             self::RULE_MIN => 'La longueur minimum doit être de {min}',
             self::RULE_MAX => 'La longueur maximum doit être de {max}',
-            self::RULE_MATCH => 'Ce champs doit être égale à la règle {match}',
+            self::RULE_MATCH => 'Ce champs doit correspondre au champs {match}',
             self::RULE_UNIQUE => 'Le champs {field} existe déjà',
+            self::RULE_INT => "Veuillez renseigner un nombre"
         ];
     }
 

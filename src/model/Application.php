@@ -3,10 +3,13 @@
 namespace app\src\model;
 
 use app\src\controller\Controller;
-use app\src\core\exception\ForbiddenException;
+use app\src\core\exception\ServerErrorException;
+use app\src\model\Auth\Auth;
+use app\src\model\Users\EnterpriseUser;
+use app\src\model\Users\StaffUser;
+use app\src\model\Users\StudentUser;
+use app\src\model\Users\TutorUser;
 use app\src\model\Users\User;
-
-use app\src\core\db\Database;
 
 class Application
 {
@@ -14,7 +17,7 @@ class Application
     const EVENT_AFTER_REQUEST = 'afterRequest';
     public static Application $app;
     public static string $ROOT_DIR;
-    public static ?User $user = null;
+    private static ?User $user = null;
     public string $layout = 'main';
     public Router $router;
     public Request $request;
@@ -37,13 +40,46 @@ class Application
             if (!is_null($user_token)) {
                 $_SESSION["role"] = $user_token["role"];
                 $_SESSION["user_id"] = $user_token["id"];
+                $_SESSION["full_name"] = $user_token["name"];
             } else session_destroy();
         } else {
             session_destroy();
         }
     }
 
-    public static function setUser(User $user)
+    public static function go_home(): void
+    {
+        header("Location: /");
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getUser(): User|null
+    {
+        if (!is_null(self::$user))
+            return self::$user;
+        if (self::isGuest()) return null;
+        $role = Auth::get_role_from_id($_SESSION["user_id"]);
+        if (is_null($role)) return null;
+        switch ($role) {
+            case "tuteur":
+                self::$user = TutorUser::find_by_id($_SESSION["user_id"]);
+                break;
+            case "etudiant":
+                self::$user = StudentUser::find_by_id($_SESSION["user_id"]);
+                break;
+            case "entreprise":
+                self::$user = EnterpriseUser::find_by_id($_SESSION["user_id"]);
+                break;
+            case "staff":
+                self::$user = StaffUser::find_by_id($_SESSION["user_id"]);
+                break;
+        }
+        return self::$user;
+    }
+
+    public static function setUser(User $user): void
     {
         self::$user = $user;
     }

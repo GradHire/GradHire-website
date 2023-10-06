@@ -21,8 +21,7 @@ class EnterpriseUser extends ProUser
             $count = $statement->rowCount();
             if ($count == 0) return false;
             return true;
-        } catch (\Exception $e) {
-            print_r($e);
+        } catch (\Exception) {
             throw new ServerErrorException();
         }
     }

@@ -1,5 +1,5 @@
 <?php
-/** @var $model app\src\model\Model */
+/** @var $model app\src\model\Auth\EnterpriseRegister */
 
 use app\src\core\component\form\Form;
 

@@ -22,7 +22,7 @@ class EnterpriseRegister extends Model
             'password' => [self::RULE_REQUIRED, [self::RULE_MIN, 'min' => 8]],
             'password2' => [[self::RULE_MATCH, 'match' => 'password']],
             'phone' => [self::RULE_REQUIRED],
-            'siret' => [self::RULE_REQUIRED],
+            'siret' => [self::RULE_REQUIRED, self::RULE_INT],
             'name' => [self::RULE_REQUIRED]
         ];
     }
