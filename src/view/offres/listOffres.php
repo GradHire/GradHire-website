@@ -49,7 +49,8 @@ HTML;
                 <?php
                 if ($offres != null) {
                     foreach ($offres as $offre) {
-                        require __DIR__ . '/offre.php';
+                        if($offre->getStatut() != "en attente")
+                            require __DIR__ . '/offre.php';
                     }
                 } else {
                     require __DIR__ . '/errorOffre.php';
