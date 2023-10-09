@@ -1,6 +1,7 @@
 <?php
 /** @var $offres \app\src\model\dataObject\Offre */
 
+use app\src\model\Application;
 use app\src\model\Auth\Auth;
 use app\src\model\Users\Roles;
 
@@ -49,7 +50,11 @@ HTML;
                 <?php
                 if ($offres != null) {
                     foreach ($offres as $offre) {
-                        //mettre ici le if qui check si c un personnel de l'iut ou un etudient ou une entrerpise
+//                        if (Auth::has_role(Roles::Student) && $offre->getStatut() === "Validé") {
+//                            require __DIR__ . '/offre.php';
+//                        } else if (!Auth::has_role(Roles::Student)) {
+//                            require __DIR__ . '/offre.php';
+//                        }
                         require __DIR__ . '/offre.php';
                     }
                 } else {
@@ -139,8 +144,10 @@ HTML;
         window.history.pushState(null, document.title, newUrl);
 
         //reload the page sauf si c un update de search
+        if (event.target.id !== 'default-search') {
+            window.location.reload();
+        }
     }
-
 
     window.onload = function () {
         slideOne();
