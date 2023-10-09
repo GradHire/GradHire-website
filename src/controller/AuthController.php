@@ -35,7 +35,6 @@ class AuthController extends Controller
                 Application::$app->response->redirect('/');
                 return 'Show success page';
             }
-
         }
         $this->setLayout('auth');
         return $this->render('register', [
