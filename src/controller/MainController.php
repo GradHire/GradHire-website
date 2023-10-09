@@ -17,12 +17,10 @@ use app\src\model\User;
 
 class MainController extends Controller
 {
-//    public function __construct()
-//    {
-//        $this->registerMiddleware(new AuthMiddleware());
-//    }
-
-
+    public function __construct()
+    {
+        $this->registerMiddleware(new AuthMiddleware());
+    }
     public function contact(): string
     {
         return $this->render('contact');
@@ -95,7 +93,7 @@ class MainController extends Controller
         $search = $_GET['search'] ?? "";
         $filter = self::constructFilter();
         if (empty($search) && empty($filter)) {
-            $offres = (new OffresRepository())->recuperer();
+            $offres = (new OffresRepository())->getAll();
             return $this->render('offres/listOffres', ['offres' => $offres]);
         }
 

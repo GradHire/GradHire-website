@@ -9,18 +9,19 @@ use app\src\model\Users\User;
 
 class Application
 {
-	const EVENT_BEFORE_REQUEST = 'beforeRequest';
-	const EVENT_AFTER_REQUEST = 'afterRequest';
-	public static Application $app;
-	public static string $ROOT_DIR;
-	private static ?User $user = null;
-	public string $layout = 'main';
-	public Router $router;
-	public Request $request;
-	public Response $response;
-	public ?Controller $controller = null;
-	public View $view;
-	protected array $eventListeners = [];
+    const EVENT_BEFORE_REQUEST = 'beforeRequest';
+    const EVENT_AFTER_REQUEST = 'afterRequest';
+    public static Application $app;
+    public static string $ROOT_DIR;
+    private static ?User $user = null;
+    public string $layout = 'main';
+    public Router $router;
+    public Request $request;
+    public Response $response;
+    public ?Controller $controller = null;
+    public View $view;
+    public $db;
+    protected array $eventListeners = [];
 
 	/**
 	 * @throws ServerErrorException
