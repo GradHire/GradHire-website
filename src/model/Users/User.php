@@ -17,7 +17,7 @@ abstract class User
     {
         if (count($attributes) == 0) return;
         $this->attributes = $attributes;
-        $this->id = $attributes["idUtilisateur"] ?? 0;  // Use a default value of 0
+        $this->id = $attributes["idutilisateur"] ?? 0;  // Use a default value of 0
     }
 
     public static function find_by_id(string $id): null|static
@@ -26,7 +26,7 @@ abstract class User
             $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE idutilisateur = ?");
             $statement->execute([$id]);
             $user = $statement->fetch();
-            if (is_null($user)) return null;
+            if (is_null($user) || $user === false) return null;
             return new static($user);
         } catch (\Exception) {
             throw new ServerErrorException();
