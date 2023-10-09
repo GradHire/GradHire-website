@@ -2,6 +2,7 @@
 
 namespace app\src\controller;
 
+use app\src\core\exception\ForbiddenException;
 use app\src\core\exception\NotFoundException;
 use app\src\model\Application;
 use app\src\model\Auth\Auth;
@@ -33,9 +34,19 @@ class MainController extends Controller
         return $this->render('contact');
     }
 
-    public function profile(): string
+    public function profile(Request $req): string
     {
-        return $this->render('profile');
+        $id = $req->getRouteParams()["id"] ?? null;
+        if (!is_null($id)) {
+            $user = Auth::load_user_by_id($id);
+            if (is_null($user)) throw new NotFoundException();
+        } else {
+            $user = Application::getUser();
+            if (is_null($user)) throw new ForbiddenException();
+        }
+        return $this->render('profile', [
+            'user' => $user
+        ]);
     }
 
     public function dashboard(): string

@@ -4,6 +4,7 @@ namespace app\src\model\Users;
 
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
+use app\src\model\Application;
 
 abstract class User
 {
@@ -80,11 +81,6 @@ abstract class User
         }
     }
 
-    public function id(): int
-    {
-        return $this->id;
-    }
-
     public function attributes(): array
     {
         return $this->attributes;
@@ -96,4 +92,16 @@ abstract class User
     }
 
     abstract function full_name(): string;
+
+    public function is_me(): bool
+    {
+        if (Application::isGuest()) return false;
+        if (is_null(Application::getUser())) return false;
+        return Application::getUser()->id() === $this->id;
+    }
+
+    public function id(): int
+    {
+        return $this->id;
+    }
 }
