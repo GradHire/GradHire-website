@@ -5,11 +5,11 @@ namespace app\src\model\Users;
 
 class StudentUser extends LdapUser
 {
-    protected static string $view = "EtudiantVue";
-    protected static string $create_function = "creerEtu";
+	protected static string $view = "EtudiantVue";
+	protected static string $create_function = "creerEtu";
 
-    public function role(): string
-    {
-        return Roles::Student->value;
-    }
+	public function role(): Roles
+	{
+		return Roles::Student;
+	}
 }

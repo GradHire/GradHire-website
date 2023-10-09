@@ -4,10 +4,10 @@ namespace app\src\model\Users;
 
 class StaffUser extends LdapUser
 {
-    protected static string $view = "StaffVue";
+	protected static string $view = "StaffVue";
 
-    public function role(): string
-    {
-        return $this->attributes["role"];
-    }
+	public function role(): Roles
+	{
+		return Roles::tryFrom($this->attributes["role"]);
+	}
 }

@@ -10,8 +10,8 @@ if (is_null($user)) Application::go_home();
 
 <div>
 
-    <h1>Profile page</h1>
-    <p><?= $user->full_name() ?></p>
-    <p><?= $user->attributes()["emailutilisateur"] ?></p>
-    <p><?= $user->role() ?></p>
+	<h1>Profile page</h1>
+	<p><?= $user->full_name() ?></p>
+	<p><?= $user->attributes()["emailutilisateur"] ?></p>
+	<p><?= $user->role()->value ?></p>
 </div>
