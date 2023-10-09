@@ -3,24 +3,21 @@
 namespace app\src\controller;
 
 use app\src\core\exception\NotFoundException;
-use app\src\core\middlewares\AuthMiddleware;
-use app\src\model\Application;
-use app\src\model\Auth\LdapLogin;
 use app\src\model\dataObject\Offre;
 use app\src\model\LoginForm;
 use app\src\model\OffreForm;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\Request;
-use app\src\model\Response;
 use app\src\model\User;
 
 class MainController extends Controller
 {
     public function __construct()
     {
-        $this->registerMiddleware(new AuthMiddleware());
+        //$this->registerMiddleware(new AuthMiddleware());
     }
+
     public function contact(): string
     {
         return $this->render('contact');
