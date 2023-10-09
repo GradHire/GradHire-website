@@ -101,12 +101,17 @@ class Offre extends AbstractDataObject
                 return $this->getIdUtilisateur();
             case "description":
                 return $this->getDescription();
-            case "alternance":
-                return $this->getAlternance();
+//            case "alternance":
+//                return $this->getAlternance();
             default:
                 return "";
         }
     }
+
+//    public function getAlternance(): ?int
+//    {
+//        return $this->alternance;
+//    }
 
     /**
      * @return int
