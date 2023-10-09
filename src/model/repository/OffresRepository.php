@@ -11,7 +11,7 @@ class OffresRepository extends AbstractRepository
 
     private string $nomTable = "Offre";
 
-    public function recupererParId($idOffre): ?Offre
+    public function getById($idOffre): ?Offre
     {
         $sql = "SELECT * FROM $this->nomTable WHERE idoffre = :idoffre";
         $requete = Database::get_conn()->prepare($sql);

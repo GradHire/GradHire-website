@@ -6,8 +6,8 @@ use app\src\core\exception\NotFoundException;
 use app\src\model\Application;
 use app\src\model\Auth\Auth;
 use app\src\model\dataObject\Offre;
-use app\src\model\LoginForm;
 use app\src\model\OffreForm;
+use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\Request;
@@ -56,61 +56,15 @@ class MainController extends Controller
         return $this->render('test/mailtest', compact('message'));
     }
 
-    public function creeroffre(Request $request): string
-    {
-        if ($request->getMethod() === 'get') {
-            return $this->render('/offres/create');
-        } else {
-            $type = $_POST['radios'];
-            $titre = $_POST['titre'];
-            $theme = $_POST['theme'];
-            $nbjour = $_POST['nbjour'];
-            $nbheure = $_POST['nbheure'];
-            if ($type == "alternance") $distanciel = $_POST['distanciel'];
-            else $distanciel = null;
-            $salaire = $_POST['salaire'];
-            $unitesalaire = "heures";
-            $statut = "en attente";
-            $avantage = $_POST['avantage'];
-            $dated = $_POST['dated'];
-            $datef = $_POST['datef'];
-            $duree = $_POST['duree'];
-            $description = $_POST['description'];
-            $idUtilisateur = 51122324;
-            $idOffre = null;
-            if ($duree == 1) {
-                $anneeVisee = "2";
-            } else {
-                $anneeVisee = "3";
-            }
-            $idAnnee = date("Y");
-            //get current timestamp
-            $datecreation = date("Y-m-d H:i:s");
-            $offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef, $statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation);
-            print_r($offre);
-            OffreForm::creerOffre($offre, $distanciel);
-            return $this->render('/offres/create');
-        }
-    }
-
-    //TODO: deplacer la logique de filtrage dans le repository @Clement !
-
-    public function offres(Request $request): string
+    public function entreprises(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
-        $offre = (new OffresRepository())->recupererParId($id);
-        if ($offre == null && $id != null) throw new NotFoundException();
-        else if ($offre != null && $id != null) return $this->render('offres/detailOffre', ['offre' => $offre]);
+        $entreprise = (new EntrepriseRepository())->getById($id);
+        if ($entreprise == null && $id != null) throw new NotFoundException();
+        else if ($entreprise != null && $id != null) return $this->render('entreprises/detailEntreprise', ['entreprise' => $entreprise]);
 
-        $filter = self::constructFilter();
-        if (empty($search) && empty($filter)) {
-            $offres = (new OffresRepository())->getAll();
-            return $this->render('offres/listOffres', ['offres' => $offres]);
-        }
-
-        $offres = (new OffresRepository())->search($filter);
-        if ($offres == null) return $this->render('offres/listOffres', ['offres' => $offres]);
-        return $this->render('offres/listOffres', ['offres' => $offres]);
+        $entreprises = (new EntrepriseRepository())->getAll();
+        return $this->render('entreprise/entreprise', ['entreprises' => $entreprises]);
     }
 
     private static function constructFilter(): array
@@ -150,5 +104,60 @@ class MainController extends Controller
             else $filter['gratificationMax'] = $_GET['gratificationMax'];
         }
         return $filter;
+    }
+
+    public function creeroffre(Request $request): string
+    {
+        if ($request->getMethod() === 'get') {
+            return $this->render('/offres/create');
+        } else {
+            $type = $_POST['radios'];
+            $titre = $_POST['titre'];
+            $theme = $_POST['theme'];
+            $nbjour = $_POST['nbjour'];
+            $nbheure = $_POST['nbheure'];
+            if ($type == "alternance") $distanciel = $_POST['distanciel'];
+            else $distanciel = null;
+            $salaire = $_POST['salaire'];
+            $unitesalaire = "heures";
+            $statut = "en attente";
+            $avantage = $_POST['avantage'];
+            $dated = $_POST['dated'];
+            $datef = $_POST['datef'];
+            $duree = $_POST['duree'];
+            $description = $_POST['description'];
+            $idUtilisateur = 51122324;
+            $idOffre = null;
+            if ($duree == 1) {
+                $anneeVisee = "2";
+            } else {
+                $anneeVisee = "3";
+            }
+            $idAnnee = date("Y");
+            //get current timestamp
+            $datecreation = date("Y-m-d H:i:s");
+            $offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef, $statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation);
+            print_r($offre);
+            OffreForm::creerOffre($offre, $distanciel);
+            return $this->render('/offres/create');
+        }
+    }
+
+    public function offres(Request $request): string
+    {
+        $id = $request->getRouteParams()['id'] ?? null;
+        $offre = (new OffresRepository())->getById($id);
+        if ($offre == null && $id != null) throw new NotFoundException();
+        else if ($offre != null && $id != null) return $this->render('offres/detailOffre', ['offre' => $offre]);
+
+        $filter = self::constructFilter();
+        if (empty($search) && empty($filter)) {
+            $offres = (new OffresRepository())->getAll();
+            return $this->render('offres/listOffres', ['offres' => $offres]);
+        }
+
+        $offres = (new OffresRepository())->search($filter);
+        if ($offres == null) return $this->render('offres/listOffres', ['offres' => $offres]);
+        return $this->render('offres/listOffres', ['offres' => $offres]);
     }
 }
