@@ -3,15 +3,11 @@
 namespace app\src\model\Auth;
 
 use app\src\core\exception\ServerErrorException;
-use app\src\model\Application;
 use app\src\model\Model;
-use app\src\model\Token;
-use app\src\model\Users\LdapUser;
 use app\src\model\Users\StaffUser;
 use app\src\model\Users\StudentUser;
-use app\src\model\Users\User;
 
-class LdapAuth extends Model
+class LdapLogin extends Model
 {
     public string $username = '';
     public string $password = '';
@@ -28,9 +24,9 @@ class LdapAuth extends Model
     public function labels(): array
     {
         return [
-            'username' => 'Your username',
-            'password' => 'Password',
-            'remember' => 'Remember'
+            'username' => "Login ldap",
+            'password' => 'Mot de passe',
+            'remember' => 'Rester connecté'
         ];
     }
 
@@ -77,8 +73,7 @@ class LdapAuth extends Model
                         $user->update(["annee" =>
                             $response->data->year]);
                     }
-                    $this->generate_token($user);
-                    Application::setUser($user);
+                    Auth::generate_token($user, $this->remember);
                     return true;
                 } else {
                     $this->addError("credentials", "Mauvais nom d'utilisateur ou mot de passe");
@@ -86,17 +81,8 @@ class LdapAuth extends Model
                 return false;
             }
             return false;
-        } catch (\Exception $e) {
-            print_r($e);
+        } catch (\Exception) {
             throw new ServerErrorException();
         }
-    }
-
-    function generate_token(User $user): void
-    {
-        $_SESSION["role"] = $user->role();
-        $_SESSION["user_id"] = $user->id();
-        $duration = $this->remember === "true" ? 604800 : 3600;
-        setcookie("token", Token::generate(["id" => $user->id(), "role" => $user->role()], $duration), time() + $duration);
     }
 }

@@ -5,8 +5,7 @@ namespace app\src\controller;
 use app\src\core\exception\NotFoundException;
 use app\src\core\middlewares\AuthMiddleware;
 use app\src\model\Application;
-use app\src\model\Auth\LdapAuth;
-use app\src\model\Auth\Auth;
+use app\src\model\Auth\LdapLogin;
 use app\src\model\dataObject\Offre;
 use app\src\model\LoginForm;
 use app\src\model\OffreForm;
@@ -18,24 +17,25 @@ use app\src\model\Users\User;
 
 class MainController extends Controller
 {
-//    public function __construct()
-//    {
-//        $this->registerMiddleware(new AuthMiddleware());
-//    }
-
-
+    public function __construct()
+    {
+        $this->registerMiddleware(new AuthMiddleware());
+    }
     public function contact(): string
     {
         return $this->render('contact');
     }
+
     public function profile(): string
     {
         return $this->render('profile');
     }
+
     public function dashboard(): string
     {
         return $this->render('dashboard/dashboard');
     }
+
     public function mailtest(): string
     {
         $to = ["hirchyts.daniil@gmail.com", "daniil.hirchyts@etu.umontpellier.fr"];
@@ -78,10 +78,11 @@ class MainController extends Controller
             }
             $idAnnee = date("Y");
             $offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef, $statut, $anneeVisee, $idAnnee, $idUtilisateur, $description);
-            OffreForm::creerOffre($offre,$distanciel);
+            OffreForm::creerOffre($offre, $distanciel);
             return $this->render('/offres/create');
         }
     }
+
     public function offres(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
@@ -91,7 +92,7 @@ class MainController extends Controller
 
         $filter = self::constructFilter();
         if (empty($search) && empty($filter)) {
-            $offres = (new OffresRepository())->recuperer();
+            $offres = (new OffresRepository())->getAll();
             return $this->render('offres/listOffres', ['offres' => $offres]);
         }
 
@@ -101,7 +102,8 @@ class MainController extends Controller
     }
 
     //TODO: deplacer la logique de filtrage dans le repository @Clement !
-    private static function constructFilter():array {
+    private static function constructFilter(): array
+    {
         $filter = array();
 //        if (Auth::has_role(["student"])) {
 //            if (isset($_GET['statut'])) $filter['statut'] = $_GET['statut'];
@@ -117,7 +119,7 @@ class MainController extends Controller
             $filter['thematique'] = "";
             foreach ($_GET['thematique'] as $key => $value) {
                 if ($filter['thematique'] == null) $filter['thematique'] = $value;
-                else if ($filter['thematique'] != null) $filter['thematique'] .= ','. $value;
+                else if ($filter['thematique'] != null) $filter['thematique'] .= ',' . $value;
             }
         }
         if (isset($_GET['anneeVisee'])) $filter['anneeVisee'] = $_GET['anneeVisee'];
@@ -125,13 +127,13 @@ class MainController extends Controller
         if (isset($_GET['alternance'])) $filter['alternance'] = $_GET['alternance'];
         if (isset($_GET['stage'])) $filter['stage'] = $_GET['stage'];
         if (isset($_GET['gratificationMin'])) {
-            if ($_GET['gratificationMin']=="")$filter['gratificationMin'] = null;
+            if ($_GET['gratificationMin'] == "") $filter['gratificationMin'] = null;
             else if ($_GET['gratificationMin'] < 4.05) $filter['gratificationMin'] = 4.05;
-            else if ($_GET['gratificationMin'] > 15)$filter['gratificationMin'] = 15;
+            else if ($_GET['gratificationMin'] > 15) $filter['gratificationMin'] = 15;
             else $filter['gratificationMin'] = $_GET['gratificationMin'];
         }
         if (isset($_GET['gratificationMax'])) {
-            if ($_GET['gratificationMax']=="") $filter['gratificationMax'] = null;
+            if ($_GET['gratificationMax'] == "") $filter['gratificationMax'] = null;
             else if ($_GET['gratificationMax'] < 4.05) $filter['gratificationMax'] = 4.05;
             else if ($_GET['gratificationMax'] > 15) $filter['gratificationMax'] = 15;
             else $filter['gratificationMax'] = $_GET['gratificationMax'];

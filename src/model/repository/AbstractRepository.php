@@ -6,9 +6,8 @@ namespace app\src\model\repository;
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\AbstractDataObject;
-use Cassandra\Map;
 
-abstract class AbstractRepositoryObject
+abstract class AbstractRepository
 {
     /**
      * @throws ServerErrorException
@@ -83,33 +82,6 @@ abstract class AbstractRepositoryObject
     //pour le filtre il faut recuperer les case du filtre cocher pour apres les implementers dans la requete
     //pour cela il faut faire une barre de recherche avec des switch case pour chaque filtre possbile (sujet, durée du stage/alternance, localisation, etc)
 
-    /**
-     * @throws ServerErrorException
-     */
-    public function recuperer(): array
-    {
-        $sql = Database::get_conn()->query("SELECT * FROM " . $this->getNomTable());
-        $dataObjects = [];
-        foreach ($sql as $dataObjectFormatTableau) {
-            $dataObjects[] = $this->construireDepuisTableau($dataObjectFormatTableau);
-        }
-        return $dataObjects;
-    }
-
-    protected abstract function getNomTable(): string;
-
-    protected abstract function construireDepuisTableau(array $dataObjectFormatTableau): AbstractDataObject;
-
-    protected abstract function getNomColonnes(): array;
-
-    private static function checkFilterNotEmpty(array $filter): bool
-    {
-        foreach ($filter as $key => $value) {
-            if ($value != "") return true;
-        }
-        return false;
-    }
-
     public function tableChecker($filter): string
     {
         if (array_key_exists('alternance', $filter) && $filter['alternance'] != "") {
@@ -118,6 +90,20 @@ abstract class AbstractRepositoryObject
             return "Offrestage JOIN Offre ON Offrestage.idoffre = Offre.idoffre";
         } else {
             return $this->getNomTable();
+        }
+    }
+
+    protected abstract function getNomTable(): string;
+
+    private static function prepareSQLQSearch(array $arraySearch): string
+    {
+        {
+            $sql = "";
+            foreach ($arraySearch as $key => $value) {
+                if ($key == sizeof($arraySearch) - 1) $sql .= "sujet LIKE " . ":sujet" . $key . "Tag ";
+                else $sql .= "sujet LIKE " . ":sujet" . $key . "Tag OR ";
+            }
+            return $sql;
         }
     }
 
@@ -131,6 +117,12 @@ abstract class AbstractRepositoryObject
         } else if (array_key_exists('stage', $filter)) {
             if (sizeof($filter) == 1) return true;
         }
+        return false;
+    }
+
+    private static function checkFilterNotEmpty(array $filter): bool
+    {
+        foreach ($filter as $key => $value) if ($value != "") return true;
         return false;
     }
 
@@ -172,18 +164,6 @@ abstract class AbstractRepositoryObject
         return $sql;
     }
 
-    private static function prepareSQLQSearch(array $arraySearch): string
-    {
-        {
-            $sql = "";
-            foreach ($arraySearch as $key => $value) {
-                if ($key == sizeof($arraySearch) - 1) $sql .= "sujet LIKE " . ":sujet" . $key . "Tag ";
-                else $sql .= "sujet LIKE " . ":sujet" . $key . "Tag OR ";
-            }
-            return $sql;
-        }
-    }
-
     private static function removeEndifAlone(string $sql): string
     {
         if (substr($sql, -4) == "AND " || substr($sql, -3) == "OR ") $sql = substr($sql, 0, -4);
@@ -202,8 +182,7 @@ abstract class AbstractRepositoryObject
                     } else {
                         $values[$key . "Tag"] = $filter[$key];
                     }
-                }
-                else {
+                } else {
                     $values['gratificationMinTag'] = $filter['gratificationMin'];
                     $values['gratificationMaxTag'] = $filter['gratificationMax'];
                 }
@@ -221,4 +200,29 @@ abstract class AbstractRepositoryObject
         else if ($arraySearch != null) return $arraySearch;
         else return array();
     }
+
+    protected abstract function construireDepuisTableau(array $dataObjectFormatTableau): AbstractDataObject;
+
+    public function getAll(): ?array
+    {
+        $sql = Database::get_conn()->query("SELECT * FROM " . $this->getNomTable());
+        $dataObjects = [];
+        foreach ($sql as $dataObjectFormatTableau) {
+            $dataObjects[] = $this->construireDepuisTableau($dataObjectFormatTableau);
+        }
+        return $dataObjects;
+    }
+
+    public function getSql($sql): ?array
+    {
+        $sql = Database::get_conn()->prepare($sql);
+        $sql->execute();
+        $dataObjects = [];
+        foreach ($sql as $dataObjectFormatTableau) {
+            $dataObjects[] = $this->construireDepuisTableau($dataObjectFormatTableau);
+        }
+        return $dataObjects;
+    }
+
+    protected abstract function getNomColonnes(): array;
 }
