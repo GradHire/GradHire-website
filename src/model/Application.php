@@ -24,6 +24,7 @@ class Application
     public Response $response;
     public ?Controller $controller = null;
     public View $view;
+    public $db;
     protected array $eventListeners = [];
 
     public function __construct($rootDir, $config)

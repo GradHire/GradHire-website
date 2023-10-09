@@ -13,14 +13,6 @@ class Database
     /**
      * @throws ServerErrorException
      */
-    public function prepare($sql): \PDOStatement
-    {
-        return self::get_conn()->prepare($sql);
-    }
-
-    /**
-     * @throws ServerErrorException
-     */
     public static function get_conn(): PDO
     {
         if (!isset(self::$connexion)) {
