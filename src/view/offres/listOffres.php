@@ -79,7 +79,7 @@ HTML;
                     <?php
                     if ($offres != null) {
                         foreach ($offres as $offre) {
-                            if ($offre->getStatut() === "pendingj" && Auth::has_role(Roles::Manager, Roles::Staff)) {
+                            if ($offre->getStatut() === "pending" && Auth::has_role(Roles::Manager, Roles::Staff)) {
                                 require __DIR__ . '/offre.php';
                             }
                         }
