@@ -4,6 +4,7 @@ namespace app\src\controller;
 
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
+use app\src\model\Auth\Auth;
 use app\src\model\Auth\EnterpriseRegister;
 use app\src\model\Auth\LdapLogin;
 use app\src\model\Auth\ProLogin;
@@ -71,9 +72,7 @@ class AuthController extends Controller
 
     public function logout(Request $request, Response $response): void
     {
-        unset($_COOKIE["token"]);
-        setcookie('token', '', -1);
-        session_destroy();
+        Auth::logout();
         $response->redirect('/');
     }
 }

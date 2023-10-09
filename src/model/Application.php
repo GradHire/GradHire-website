@@ -4,11 +4,7 @@ namespace app\src\model;
 
 use app\src\controller\Controller;
 use app\src\core\exception\ServerErrorException;
-use app\src\model\Users\EnterpriseUser;
-use app\src\model\Users\Roles;
-use app\src\model\Users\StaffUser;
-use app\src\model\Users\StudentUser;
-use app\src\model\Users\TutorUser;
+use app\src\model\Auth\Auth;
 use app\src\model\Users\User;
 
 class Application
@@ -24,10 +20,12 @@ class Application
     public Response $response;
     public ?Controller $controller = null;
     public View $view;
-    public $db;
     protected array $eventListeners = [];
 
-    public function __construct($rootDir, $config)
+    /**
+     * @throws ServerErrorException
+     */
+    public function __construct($rootDir)
     {
         self::$ROOT_DIR = $rootDir;
         self::$app = $this;
@@ -39,13 +37,12 @@ class Application
         if (isset($_COOKIE["token"])) {
             $user_token = Token::verify($_COOKIE["token"]);
             if (!is_null($user_token)) {
-                $_SESSION["role"] = $user_token["role"];
-                $_SESSION["user_id"] = $user_token["id"];
-                $_SESSION["full_name"] = $user_token["name"];
-            } else session_destroy();
-        } else {
+                if (!isset($_SESSION["user"]))
+                    self::setUser(Auth::load_user_by_id($user_token["id"]));
+            } else
+                session_destroy();
+        } else
             session_destroy();
-        }
     }
 
     public static function go_home(): void
@@ -53,43 +50,27 @@ class Application
         header("Location: /");
     }
 
-    /**
-     * @throws ServerErrorException
-     */
     public static function getUser(): User|null
     {
         if (!is_null(self::$user))
             return self::$user;
         if (self::isGuest()) return null;
-        $role = $_SESSION["role"];
-        if (is_null($role)) return null;
-        switch ($role) {
-            case Roles::Tutor->value:
-                self::$user = TutorUser::find_by_id($_SESSION["user_id"]);
-                break;
-            case Roles::Student->value:
-                self::$user = StudentUser::find_by_id($_SESSION["user_id"]);
-                break;
-            case Roles::Enterprise->value:
-                self::$user = EnterpriseUser::find_by_id($_SESSION["user_id"]);
-                break;
-            case Roles::Teacher->value:
-            case Roles::Staff->value:
-            case Roles::Manager->value:
-                self::$user = StaffUser::find_by_id($_SESSION["user_id"]);
-                break;
-        }
-        return self::$user;
+        return unserialize($_SESSION["user"]);
     }
 
-    public static function setUser(User $user): void
+    public static function setUser(User|null $user): void
     {
+        if (is_null($user)) {
+            Auth::logout();
+            return;
+        }
+        $_SESSION["user"] = serialize($user);
         self::$user = $user;
     }
 
     public static function isGuest(): bool
     {
-        return !isset($_COOKIE["token"]) || !isset($_SESSION["user_id"]);
+        return !isset($_COOKIE["token"]) || !isset($_SESSION["user"]);
     }
 
     public function run(): void

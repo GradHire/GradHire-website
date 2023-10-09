@@ -3,9 +3,6 @@
 namespace app\src\controller;
 
 use app\src\core\exception\NotFoundException;
-use app\src\core\middlewares\AuthMiddleware;
-use app\src\model\Application;
-use app\src\model\Auth\LdapLogin;
 use app\src\model\dataObject\Offre;
 use app\src\model\LoginForm;
 use app\src\model\OffreForm;
@@ -19,8 +16,9 @@ class MainController extends Controller
 {
     public function __construct()
     {
-        $this->registerMiddleware(new AuthMiddleware());
+        //$this->registerMiddleware(new AuthMiddleware());
     }
+
     public function contact(): string
     {
         return $this->render('contact');

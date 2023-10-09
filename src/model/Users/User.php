@@ -20,19 +20,6 @@ abstract class User
         $this->id = $attributes["idutilisateur"] ?? 0;  // Use a default value of 0
     }
 
-    public static function find_by_id(string $id): null|static
-    {
-        try {
-            $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE idutilisateur = ?");
-            $statement->execute([$id]);
-            $user = $statement->fetch();
-            if (is_null($user) || $user === false) return null;
-            return new static($user);
-        } catch (\Exception) {
-            throw new ServerErrorException();
-        }
-    }
-
     /**
      * @throws ServerErrorException
      */
@@ -52,12 +39,25 @@ abstract class User
     /**
      * @throws ServerErrorException
      */
-    public static function save(array $values): int
+    public static function save(array $values): static
     {
         try {
             $statement = Database::get_conn()->prepare("SELECT " . static::$create_function . "(" . ltrim(str_repeat(",?", count($values)), ",") . ") FROM DUAL");
             $statement->execute($values);
-            return $statement->fetchColumn();
+            return static::find_by_id(intval($statement->fetchColumn()));
+        } catch (\Exception) {
+            throw new ServerErrorException();
+        }
+    }
+
+    public static function find_by_id(string $id): null|static
+    {
+        try {
+            $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE idutilisateur = ?");
+            $statement->execute([$id]);
+            $user = $statement->fetch();
+            if (is_null($user) || $user === false) return null;
+            return new static($user);
         } catch (\Exception) {
             throw new ServerErrorException();
         }
@@ -90,9 +90,9 @@ abstract class User
         return $this->attributes;
     }
 
-    public function role(): string
+    public function role(): Roles|null
     {
-        return '';
+        return null;
     }
 
     abstract function full_name(): string;

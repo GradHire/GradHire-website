@@ -62,7 +62,7 @@ class LdapLogin extends Model
                             $response->data->lastname,
                             $response->data->email,
                             $response->data->uid
-                        ]) : new StudentUser([
+                        ]) : StudentUser::save([
                             $response->data->name,
                             $response->data->lastname,
                             $response->data->email,
@@ -81,7 +81,8 @@ class LdapLogin extends Model
                 return false;
             }
             return false;
-        } catch (\Exception) {
+        } catch (\Exception $e) {
+            print_r($e);
             throw new ServerErrorException();
         }
     }
