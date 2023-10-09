@@ -43,6 +43,7 @@ class OffresRepository extends AbstractRepository
             $dataObjectFormatTableau['idannee'],
             $dataObjectFormatTableau['idutilisateur'],
             $dataObjectFormatTableau['description'],
+            $dataObjectFormatTableau['datecreation']
 //            $dataObjectFormatTableau['alternance']
         );
     }
@@ -61,7 +62,8 @@ class OffresRepository extends AbstractRepository
             "datedebut",
             "datefin",
             "statut",
-            "anneevisee"
+            "anneevisee",
+            "datecreation"
         ];
     }
 
