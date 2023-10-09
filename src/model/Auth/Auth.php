@@ -37,7 +37,7 @@ class Auth
             session_start();
         Application::setUser($user);
         $duration = $remember === "true" ? 604800 : 3600;
-        setcookie("token", Token::generate(["id" => $user->id()], $duration), time() + $duration);
+        setcookie("token", Token::generate(["id" => $user->id()], $duration), time() + $duration, "/");
     }
 
     /**
@@ -49,18 +49,16 @@ class Auth
             $statement = Database::get_conn()->prepare("SELECT getRole(?) FROM DUAL");
             $statement->execute([$id]);
             $role = $statement->fetchColumn();
-            if (!$role) return null;
-            $role = Roles::tryFrom($role);
+            if (!$role)
+                return null;
             switch ($role) {
-                case Roles::Tutor:
+                case Roles::Tutor->value:
                     return TutorUser::find_by_id($id);
-                case Roles::Student:
+                case Roles::Student->value:
                     return StudentUser::find_by_id($id);
-                case Roles::Enterprise:
+                case Roles::Enterprise->value:
                     return EnterpriseUser::find_by_id($id);
-                case Roles::Manager:
-                case Roles::Staff:
-                case Roles::Teacher:
+                case "staff";
                     return StaffUser::find_by_id($id);
             }
         } catch (\Exception) {

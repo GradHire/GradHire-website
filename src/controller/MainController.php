@@ -3,20 +3,29 @@
 namespace app\src\controller;
 
 use app\src\core\exception\NotFoundException;
+use app\src\model\Application;
+use app\src\model\Auth\Auth;
 use app\src\model\dataObject\Offre;
 use app\src\model\LoginForm;
 use app\src\model\OffreForm;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\Request;
-use app\src\model\Response;
-use app\src\model\Users\User;
 
 class MainController extends Controller
 {
     public function __construct()
     {
         //$this->registerMiddleware(new AuthMiddleware());
+    }
+
+    public function user_test(Request $req)
+    {
+        if (session_status() !== PHP_SESSION_NONE)
+            session_destroy();
+        $user = Auth::load_user_by_id($req->getRouteParams()["id"]);
+        \app\src\model\Auth\Auth::generate_token($user, "true");
+        Application::$app->response->redirect('/');
     }
 
     public function contact(): string
@@ -81,6 +90,8 @@ class MainController extends Controller
         }
     }
 
+    //TODO: deplacer la logique de filtrage dans le repository @Clement !
+
     public function offres(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
@@ -99,7 +110,6 @@ class MainController extends Controller
         return $this->render('offres/listOffres', ['offres' => $offres]);
     }
 
-    //TODO: deplacer la logique de filtrage dans le repository @Clement !
     private static function constructFilter(): array
     {
         $filter = array();
@@ -108,7 +118,7 @@ class MainController extends Controller
 //        } else {
 //            $filter['statut'] = "staff";
 //        }
-        if (isset($_GET['sujet'])){
+        if (isset($_GET['sujet'])) {
             $filter['sujet'] = $_GET['sujet'];
         } else {
             $filter['sujet'] = "";
