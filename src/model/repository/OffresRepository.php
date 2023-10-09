@@ -38,7 +38,7 @@ class OffresRepository extends AbstractRepository
             $dataObjectFormatTableau['avantagenature'],
             $dataObjectFormatTableau['datedebut'],
             $dataObjectFormatTableau['datefin'],
-            $dataObjectFormatTableau['statut'],
+            $dataObjectFormatTableau['status'],
             $dataObjectFormatTableau['anneevisee'],
             $dataObjectFormatTableau['idannee'],
             $dataObjectFormatTableau['idutilisateur'],

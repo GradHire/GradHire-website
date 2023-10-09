@@ -55,7 +55,7 @@ HTML;
                     <?php
                     if ($offres != null) {
                         foreach ($offres as $offre) {
-                            if ($offre->getStatut() === "Validé") {
+                            if ($offre->getStatut() === "approved") {
                                 if (Auth::has_role(Roles::Manager, Roles::Staff)) {
                                     require __DIR__ . '/offre.php';
                                 } else if (!Auth::has_role(Roles::Manager, Roles::Staff)) {
@@ -79,7 +79,7 @@ HTML;
                     <?php
                     if ($offres != null) {
                         foreach ($offres as $offre) {
-                            if ($offre->getStatut() === "en attente" && Auth::has_role(Roles::Manager, Roles::Staff)) {
+                            if ($offre->getStatut() === "pendingj" && Auth::has_role(Roles::Manager, Roles::Staff)) {
                                 require __DIR__ . '/offre.php';
                             }
                         }
