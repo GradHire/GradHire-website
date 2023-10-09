@@ -1,7 +1,8 @@
 
 <?php use app\src\model\Auth\Auth;
+use app\src\model\Users\Roles;
 
-Auth::check_role(["entreprise", "responsable", "secretariat"]); ?>
+Auth::check_role(Roles::Enterprise, Roles::Manager, Roles::Staff); ?>
 <div class="w-full flex flex-col">
     <form action="create" method="post" class="w-full flex flex-col">
         <div class="w-full gap-4 flex flex-col">

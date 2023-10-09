@@ -20,6 +20,7 @@ class Offre extends AbstractDataObject
     private string $idAnnee;
     private int $idUtilisateur;
     private string $description;
+    private string $datecreation;
 
 //    private ?int $alternance;
     public function __construct
@@ -40,6 +41,7 @@ class Offre extends AbstractDataObject
         $idAnnee,
         $idUtilisateur,
         $description,
+        $datecreation
 //        $alternance
     )
     {
@@ -59,6 +61,7 @@ class Offre extends AbstractDataObject
         $this->idAnnee = $idAnnee;
         $this->idUtilisateur = $idUtilisateur;
         $this->description = $description;
+        $this->datecreation = $datecreation;
     }
 
     public function __toString(): string
@@ -101,12 +104,19 @@ class Offre extends AbstractDataObject
                 return $this->getIdUtilisateur();
             case "description":
                 return $this->getDescription();
-            case "alternance":
-                return $this->getAlternance();
+                case "datecreation":
+                return $this->getDatecreation();
+//            case "alternance":
+//                return $this->getAlternance();
             default:
                 return "";
         }
     }
+
+//    public function getAlternance(): ?int
+//    {
+//        return $this->alternance;
+//    }
 
     /**
      * @return int
@@ -333,5 +343,14 @@ class Offre extends AbstractDataObject
     {
         return $this->description;
     }
+
+    public function getDatecreation(): string
+    {
+        return $this->datecreation;
+    }
+
+
+
+
 
 }
