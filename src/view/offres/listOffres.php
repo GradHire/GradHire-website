@@ -50,12 +50,13 @@ HTML;
                 <?php
                 if ($offres != null) {
                     foreach ($offres as $offre) {
-                        if (Auth::has_role(Roles::Manager, Roles::Staff) && $offre->getStatut() === "Validé" && $offre->getStatut() === "En attente") {
-                            require __DIR__ . '/offre.php';
-                        } else if (!Auth::has_role(Roles::Manager, Roles::Staff) && $offre->getStatut() === "Validé") {
-                            require __DIR__ . '/offre.php';
+                        if ($offre->getStatut() === "Validé") {
+                            if (Auth::has_role(Roles::Manager, Roles::Staff)) {
+                                require __DIR__ . '/offre.php';
+                            } else if (!Auth::has_role(Roles::Manager, Roles::Staff)) {
+                                require __DIR__ . '/offre.php';
+                            }
                         }
-//                        require __DIR__ . '/offre.php';
                     }
                 } else {
                     require __DIR__ . '/errorOffre.php';
@@ -63,6 +64,23 @@ HTML;
                 echo "</div>"; ?>
             </div>
         </div>
+
+        <div class="grid grid-cols-1 gap-4 lg:grid-cols-4 ">
+            <div class="lg:col-span-3 rounded-lg">
+                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
+                    <?php
+                    if ($offres != null) {
+                        foreach ($offres as $offre) {
+                            if ($offre->getStatut() === "en attente" && Auth::has_role(Roles::Manager, Roles::Staff)) {
+                                require __DIR__ . '/offre.php';
+                            }
+                        }
+                    } else {
+                        require __DIR__ . '/errorOffre.php';
+                    }
+                    echo "</div>"; ?>
+                </div>
+            </div>
 </form>
 <script>
     window.addEventListener('DOMContentLoaded', function () {
@@ -170,7 +188,7 @@ HTML;
         const thematiques = searchParams.getAll('thematique[]');
         console.log(thematiques);
 
-        if (sujet!==""){
+        if (sujet !== "") {
             document.getElementById('default-search').value = sujet;
         }
 
