@@ -7,6 +7,7 @@ use app\src\core\middlewares\AuthMiddleware;
 use app\src\model\Application;
 use app\src\model\Auth\LdapAuth;
 use app\src\model\Auth\Auth;
+use app\src\model\Auth\LdapLogin;
 use app\src\model\dataObject\Offre;
 use app\src\model\LoginForm;
 use app\src\model\OffreForm;
@@ -18,12 +19,10 @@ use app\src\model\Users\User;
 
 class MainController extends Controller
 {
-//    public function __construct()
-//    {
-//        $this->registerMiddleware(new AuthMiddleware());
-//    }
-
-
+    public function __construct()
+    {
+        $this->registerMiddleware(new AuthMiddleware());
+    }
     public function contact(): string
     {
         return $this->render('contact');
@@ -78,7 +77,7 @@ class MainController extends Controller
             }
             $idAnnee = date("Y");
             $offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef, $statut, $anneeVisee, $idAnnee, $idUtilisateur, $description);
-            OffreForm::creerOffre($offre,$distanciel);
+            OffreForm::creerOffre($offre, $distanciel);
             return $this->render('/offres/create');
         }
     }
