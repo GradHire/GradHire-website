@@ -5,9 +5,8 @@ namespace app\src\model\repository;
 use app\src\core\db\Database;
 use app\src\model\dataObject\Offre;
 
-class OffresRepository extends AbstractRepositoryObject
+class OffresRepository extends AbstractRepository
 {
-
     private string $nomTable = "Offre";
 
     public function recupererParId($idOffre): ?Offre
@@ -52,15 +51,15 @@ class OffresRepository extends AbstractRepositoryObject
             "duree",
             "thematique",
             "sujet",
-            "nbJourTravailHebdo",
-            "nbHeureTravailHebdo",
-            "Gratification",
-            "uniteGratification",
-            "avantageNature",
-            "dateDebut",
-            "dateFin",
-            "Statut",
-            "anneeVisee"
+            "nbjourtravailhebdo",
+            "nbheureTravailhebdo",
+            "gratification",
+            "unitegratification",
+            "avantagenature",
+            "datedebut",
+            "datefin",
+            "statut",
+            "anneevisee"
         ];
     }
 
@@ -68,4 +67,5 @@ class OffresRepository extends AbstractRepositoryObject
     {
         return $this->nomTable;
     }
+
 }

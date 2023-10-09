@@ -4,8 +4,8 @@ namespace app\src\model;
 
 use app\src\controller\Controller;
 use app\src\core\exception\ServerErrorException;
-use app\src\model\Auth\Auth;
 use app\src\model\Users\EnterpriseUser;
+use app\src\model\Users\Roles;
 use app\src\model\Users\StaffUser;
 use app\src\model\Users\StudentUser;
 use app\src\model\Users\TutorUser;
@@ -24,6 +24,7 @@ class Application
     public Response $response;
     public ?Controller $controller = null;
     public View $view;
+    public $db;
     protected array $eventListeners = [];
 
     public function __construct($rootDir, $config)
@@ -60,19 +61,21 @@ class Application
         if (!is_null(self::$user))
             return self::$user;
         if (self::isGuest()) return null;
-        $role = Auth::get_role_from_id($_SESSION["user_id"]);
+        $role = $_SESSION["role"];
         if (is_null($role)) return null;
         switch ($role) {
-            case "tuteur":
+            case Roles::Tutor->value:
                 self::$user = TutorUser::find_by_id($_SESSION["user_id"]);
                 break;
-            case "etudiant":
+            case Roles::Student->value:
                 self::$user = StudentUser::find_by_id($_SESSION["user_id"]);
                 break;
-            case "entreprise":
+            case Roles::Enterprise->value:
                 self::$user = EnterpriseUser::find_by_id($_SESSION["user_id"]);
                 break;
-            case "staff":
+            case Roles::Teacher->value:
+            case Roles::Staff->value:
+            case Roles::Manager->value:
                 self::$user = StaffUser::find_by_id($_SESSION["user_id"]);
                 break;
         }

@@ -20,6 +20,7 @@ class Offre extends AbstractDataObject
     private string $idAnnee;
     private int $idUtilisateur;
     private string $description;
+
 //    private ?int $alternance;
     public function __construct
     (
@@ -60,18 +61,15 @@ class Offre extends AbstractDataObject
         $this->description = $description;
     }
 
-    /**
-     * @param string $duree
-     */
-    public function setDuree(string $duree): void
+    public function __toString(): string
     {
-        $this->duree = $duree;
+        return "Offre : " . $this->getSujet() . " " . $this->getThematique() . " " . $this->getDuree() . " " . $this->getNbJourTravailHebdo() . " " . $this->getNbHeureTravailHebdo() . " " . $this->getGratification() . " " . $this->getUnitegratification() . " " . $this->getAvantageNature() . " " . $this->getDateDebut() . " " . $this->getDateFin() . " " . $this->getStatut() . " " . $this->getAnneeVisee() . " " . $this->getIdAnnee() . " " . $this->getIdUtilisateur() . " " . $this->getDescription();
     }
 
     protected function getValueColonne(string $nomColonne): string
     {
         switch ($nomColonne) {
-            case "idOffre":
+            case "idoffre":
                 return $this->getIdOffre();
             case "duree":
                 return $this->getDuree();
@@ -79,32 +77,32 @@ class Offre extends AbstractDataObject
                 return $this->getThematique();
             case "sujet":
                 return $this->getSujet();
-            case "nbJourTravailHebdo":
+            case "nbjourtravailHebdo":
                 return $this->getNbJourTravailHebdo();
-            case "nbHeureTravailHebdo":
+            case "nbheuretravailHebdo":
                 return $this->getNbHeureTravailHebdo();
-            case "Gratification":
+            case "gratification":
                 return $this->getGratification();
             case "unitegratification":
                 return $this->getUnitegratification();
             case "avantageNature":
                 return $this->getAvantageNature();
-            case "dateDebut":
+            case "datedebut":
                 return $this->getDateDebut();
-            case "dateFin":
+            case "datefin":
                 return $this->getDateFin();
-            case "Statut":
+            case "statut":
                 return $this->getStatut();
-            case "anneeVisee":
+            case "anneevisee":
                 return $this->getAnneeVisee();
-            case "idAnnee":
+            case "idannee":
                 return $this->getIdAnnee();
-            case "idUtilisateur":
+            case "idutilisateur":
                 return $this->getIdUtilisateur();
-                case "description":
-                    return $this->getDescription();
-                    case "alternance":
-                        return $this->getAlternance();
+            case "description":
+                return $this->getDescription();
+            case "alternance":
+                return $this->getAlternance();
             default:
                 return "";
         }
@@ -124,6 +122,14 @@ class Offre extends AbstractDataObject
     public function getDuree(): ?string
     {
         return $this->duree;
+    }
+
+    /**
+     * @param string $duree
+     */
+    public function setDuree(string $duree): void
+    {
+        $this->duree = $duree;
     }
 
     /**
@@ -318,19 +324,14 @@ class Offre extends AbstractDataObject
         return $this->idUtilisateur;
     }
 
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
 //    public function getAlternance(): ?int
 //    {
 //        return $this->alternance;
 //    }
 
-    public function __toString(): string
+    public function getDescription(): string
     {
-        return "Offre : " . $this->getSujet() . " " . $this->getThematique() . " " . $this->getDuree() . " " . $this->getNbJourTravailHebdo() . " " . $this->getNbHeureTravailHebdo() . " " . $this->getGratification() . " " . $this->getUnitegratification() . " " . $this->getAvantageNature() . " " . $this->getDateDebut() . " " . $this->getDateFin() . " " . $this->getStatut() . " " . $this->getAnneeVisee() . " " . $this->getIdAnnee() . " " . $this->getIdUtilisateur() . " " . $this->getDescription();
+        return $this->description;
     }
 
 }
