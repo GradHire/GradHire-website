@@ -50,12 +50,12 @@ HTML;
                 <?php
                 if ($offres != null) {
                     foreach ($offres as $offre) {
-//                        if (Auth::has_role(Roles::Student) && $offre->getStatut() === "Validé") {
-//                            require __DIR__ . '/offre.php';
-//                        } else if (!Auth::has_role(Roles::Student)) {
-//                            require __DIR__ . '/offre.php';
-//                        }
-                        require __DIR__ . '/offre.php';
+                        if (Auth::has_role(Roles::Manager, Roles::Staff) && $offre->getStatut() === "Validé" && $offre->getStatut() === "En attente") {
+                            require __DIR__ . '/offre.php';
+                        } else if (!Auth::has_role(Roles::Manager, Roles::Staff) && $offre->getStatut() === "Validé") {
+                            require __DIR__ . '/offre.php';
+                        }
+//                        require __DIR__ . '/offre.php';
                     }
                 } else {
                     require __DIR__ . '/errorOffre.php';
