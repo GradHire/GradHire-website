@@ -65,9 +65,12 @@ HTML;
                     ?>
                 </div>
             </div>
-            <div class="w-full bg-zinc-200 h-[1px] rounded-full"></div>
-            <div class="flex flex-col gap-1 w-full">
-                <h2 class="font-bold text-lg">Offres en attente</h2>
+            <?php if (Auth::has_role(Roles::Manager, Roles::Staff)){
+                echo '<div class="w-full bg-zinc-200 h-[1px] rounded-full"></div>';
+                echo '<div class="flex flex-col gap-1 w-full">';
+                echo '<h2 class="font-bold text-lg">Offres en attente</h2>';
+            }
+            ?>
                 <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
                     <?php
                     if ($offres != null) {
