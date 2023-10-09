@@ -49,8 +49,8 @@ HTML;
                 <?php
                 if ($offres != null) {
                     foreach ($offres as $offre) {
-                        if($offre->getStatut() != "en attente")
-                            require __DIR__ . '/offre.php';
+                        //mettre ici le if qui check si c un personnel de l'iut ou un etudient ou une entrerpise
+                        require __DIR__ . '/offre.php';
                     }
                 } else {
                     require __DIR__ . '/errorOffre.php';
@@ -61,6 +61,13 @@ HTML;
 </form>
 <script>
     window.addEventListener('DOMContentLoaded', function () {
+
+
+        const alternanceInput = document.getElementById('alternance');
+        alternanceInput.addEventListener('change', updateUrl)
+
+        const stageInput = document.getElementById('stage');
+        stageInput.addEventListener('change', updateUrl)
 
         const searchInput = document.getElementById('default-search');
         searchInput.addEventListener('keyup', updateUrl);
@@ -90,6 +97,17 @@ HTML;
     function updateUrl() {
         const queryString = [];
 
+
+        const alternanceInput = document.getElementById('alternance');
+        if (alternanceInput.checked) {
+            queryString.push(`alternance=${alternanceInput.value}`);
+        }
+
+        const stageInput = document.getElementById('stage');
+        if (stageInput.checked) {
+            queryString.push(`stage=${stageInput.value}`);
+        }
+
         const searchInput = document.getElementById('default-search');
         if (searchInput.value && searchInput.value !== "") {
             queryString.push(`sujet=${searchInput.value}`);
@@ -102,7 +120,7 @@ HTML;
 
         const selectedThematique = Array.from(document.querySelectorAll('input[name="thematique[]"]:checked')).map(checkbox => checkbox.value);
         if (selectedThematique.length > 0) {
-            queryString.push(`thematique=${selectedThematique.join('&thematique=')}`);
+            queryString.push(`thematique[]=${selectedThematique.join('&thematique[]=')}`);
         }
 
         const selectedDuree = document.querySelector('select[name="duree"]');
@@ -119,15 +137,70 @@ HTML;
 
         const newUrl = window.location.origin + window.location.pathname + (queryString.length > 0 ? '?' + queryString.join('&') : '');
         window.history.pushState(null, document.title, newUrl);
-    }
 
-    // Rest of your code...
+        //reload the page sauf si c un update de search
+    }
 
 
     window.onload = function () {
         slideOne();
         slideTwo();
+
+        // Récupère les paramètres de recherche de l'URL
+        const searchParams = new URLSearchParams(window.location.search);
+
+        // Remplit les champs correspondants si leur paramètre est présent dans l'URL
+        fillFieldsBasedOnUrlParams(searchParams, 'alternance', 'checkbox');
+        fillFieldsBasedOnUrlParams(searchParams, 'stage', 'checkbox');
+        fillFieldsBasedOnUrlParams(searchParams, 'anneeVisee', 'select');
+        fillFieldsBasedOnUrlParams(searchParams, 'duree', 'select');
+        fillFieldsBasedOnUrlParams(searchParams, 'gratificationMin', 'range', 'slider-1');
+        fillFieldsBasedOnUrlParams(searchParams, 'gratificationMax', 'range', 'slider-2');
+
+        // Pour les cases à cocher de thématique, nous devrons effectuer un traitement particulier
+        const sujet = searchParams.get('sujet');
+        console.log(sujet);
+        const thematiques = searchParams.getAll('thematique[]');
+        console.log(thematiques);
+
+        if (sujet!==""){
+            document.getElementById('default-search').value = sujet;
+        }
+
+        thematiques.forEach(thematique => {
+            document.querySelectorAll('input[name="thematique[]"]').forEach(checkbox => {
+                if (checkbox.value === thematique) {
+                    checkbox.checked = true;
+                }
+            });
+        });
+
+        if (searchParams.has('gratificationMin')) {
+            const sliderOne = document.getElementById("slider-1");
+            sliderOne.value = searchParams.get('gratificationMin');
+            slideOne();  // Met à jour l'affichage du slider
+        }
+
+        // Vérifie si gratificationMax est dans l'URL et met à jour slider-2 si c'est le cas
+        if (searchParams.has('gratificationMax')) {
+            const sliderTwo = document.getElementById("slider-2");
+            sliderTwo.value = searchParams.get('gratificationMax');
+            slideTwo();  // Met à jour l'affichage du slider
+        }
     };
+
+    function fillFieldsBasedOnUrlParams(searchParams, param, type, elementId = null) {
+        // Si l'élément ID n'est pas passé, on suppose qu'il est le même que le paramètre
+        const element = document.getElementById(elementId || param);
+
+        if (searchParams.has(param)) {
+            if (type === 'checkbox') {
+                element.checked = searchParams.get(param) === 'true';
+            } else if (type === 'text' || type === 'select' || type === 'range') {
+                element.value = searchParams.get(param);
+            }
+        }
+    }
 
     let sliderOne = document.getElementById("slider-1");
     let sliderTwo = document.getElementById("slider-2");

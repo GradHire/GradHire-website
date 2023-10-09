@@ -334,4 +334,6 @@ class Offre extends AbstractDataObject
         return $this->description;
     }
 
+
+
 }
