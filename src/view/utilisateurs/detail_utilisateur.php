@@ -14,22 +14,25 @@ if(isset($_POST['save'])) {
 
     if (isset($_POST['emailutilisateur']) && $_POST['emailutilisateur'] != $utilisateur->getEmailutilisateur()) {
         $email = $_POST['emailutilisateur'];
+        $utilisateur->setEmailutilisateur($email);
     } else {
         $email = null;
     }
     if (isset($_POST['nomutilisateur']) && $_POST['nomutilisateur'] != $utilisateur->getNomutilisateur()) {
         $nom = $_POST['nomutilisateur'];
+           $utilisateur->setNomutilisateur($nom);
     } else {
         $nom = null;
     }
     if (isset($_POST['numtelutilisateur']) && $_POST['numtelutilisateur'] != $utilisateur->getNumtelutilisateur()) {
         $tel = $_POST['numtelutilisateur'];
+        $utilisateur->setNumtelutilisateur($tel);
     } else {
         $tel = null;
     }
 
     if ($email != null && $nom != null && $tel != null) {
-        $utilisateur = new Utilisateur(
+        $newutilisateur = new Utilisateur(
             $utilisateur->getIdutilisateur(),
             $_POST['emailutilisateur'],
             $_POST['nomutilisateur'],
