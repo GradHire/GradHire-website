@@ -48,8 +48,7 @@ class LdapUser extends User
 							$response->data->year
 						]);
 					} else if ($response->data->type !== "staff") {
-						$user->update(["annee" =>
-							$response->data->year]);
+						$user->update_year($response->data->year);
 					}
 					Auth::generate_token($user, $remember);
 					return true;

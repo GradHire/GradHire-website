@@ -11,15 +11,17 @@ abstract class User
 	protected static string $view = '';
 	protected static string $id_attributes = '';
 	protected static string $create_function = '';
+
+	protected static string $update_function = '';
 	protected int $id;
 	protected array $attributes;
 
-    public function __construct(array $attributes)
-    {
-        if (count($attributes) == 0) return;
-        $this->attributes = $attributes;
-        $this->id = $attributes["idutilisateur"] ?? 0;
-    }
+	public function __construct(array $attributes)
+	{
+		if (count($attributes) == 0) return;
+		$this->attributes = $attributes;
+		$this->id = $attributes["idutilisateur"] ?? 0;
+	}
 
 	/**
 	 * @throws ServerErrorException
@@ -67,15 +69,11 @@ abstract class User
 	/**
 	 * @throws ServerErrorException
 	 */
-	public function update(array $values)
+	public function update(array $values): void
 	{
 		try {
-			$paramBindings = implode(",", array_map(fn($attr) => "$attr = :param_$attr", array_keys($values)));
-			$statement = Database::get_conn()->prepare("UPDATE " . static::$view . " SET $paramBindings WHERE idutilisateur=:param_idutilisateur");
-			$values["idutilisateur"] = $this->id;
-			foreach ($values as $key => $item)
-				$statement->bindValue(":param_$key", $item);
-			$statement->execute();
+			$statement = Database::get_conn()->prepare("CALL " . static::$update_function . "(" . $this->id . ", " . ltrim(str_repeat(",?", count($values)), ",") . ")");
+			$statement->execute(array_values($values));
 			if ($this->is_me()) Application::setUser(static::find_by_id(Application::getUser()->id()));
 		} catch (\Exception $e) {
 			print_r($e);

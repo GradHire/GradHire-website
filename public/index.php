@@ -16,10 +16,7 @@ $loader = new Psr4AutoloaderClass();
 $loader->register();
 $loader->addNamespace('app', __DIR__ . '/../');
 
-
-$config = [];
-
-$app = new Application(dirname(__DIR__), $config);
+$app = new Application(dirname(__DIR__));
 
 //$app->on(Application::EVENT_BEFORE_REQUEST, function () {
 //    echo "Before request";

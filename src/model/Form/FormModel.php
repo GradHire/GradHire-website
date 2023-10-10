@@ -20,6 +20,31 @@ class FormModel
 		$this->success = '';
 	}
 
+	public function print_all_fields()
+	{
+		foreach ($this->attributes as $key => $value)
+			$this->field($key);
+	}
+
+	public function field(string $name): void
+	{
+		if ($this->attributes[$name] && $this->attributes[$name] instanceof FormModelAttribute) {
+			echo '<div class="form-group">
+                <label>' . $this->attributes[$name]->getLabel() . '</label>                
+			<div class="invalid-feedback">
+                    ' . $this->attributes[$name]->field($name) . '
+			</div>
+			' . $this->get_error($name) . '
+            </div>';
+		}
+		echo '';
+	}
+
+	private function get_error(string $name): string
+	{
+		return $this->errors[$name] ?? "";
+	}
+
 	public function setAction(string $action): void
 	{
 		$this->action = $action;
@@ -58,25 +83,6 @@ class FormModel
 			if ($value instanceof FormModelAttribute)
 				$res[$key] = array_key_exists($key, $this->data) ? $value->parse_value($this->data[$key]) : $value->getDefault();
 		return $res;
-	}
-
-	public function field(string $name): void
-	{
-		if ($this->attributes[$name] && $this->attributes[$name] instanceof FormModelAttribute) {
-			echo '<div class="form-group">
-                <label>' . $this->attributes[$name]->getLabel() . '</label>                
-			<div class="invalid-feedback">
-                    ' . $this->attributes[$name]->field($name) . '
-			</div>
-			' . $this->get_error($name) . '
-            </div>';
-		}
-		echo '';
-	}
-
-	private function get_error(string $name): string
-	{
-		return $this->errors[$name] ?? "";
 	}
 
 	public function submit(string $text = "Submit"): void

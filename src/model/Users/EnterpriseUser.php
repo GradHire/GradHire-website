@@ -10,6 +10,7 @@ class EnterpriseUser extends ProUser
 {
 	protected static string $view = "EntrepriseVue";
 	protected static string $create_function = "creerEntreprise";
+	protected static string $update_function = "updateEntreprise";
 
 	/**
 	 * @throws ServerErrorException

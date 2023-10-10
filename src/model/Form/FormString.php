@@ -21,7 +21,6 @@ class FormString extends FormModelAttribute
 	public function numeric(): FormString
 	{
 		$this->numeric = true;
-		$this->field_type = "number";
 		return $this;
 	}
 
@@ -39,7 +38,7 @@ class FormString extends FormModelAttribute
 
 	function field(string $name): string
 	{
-		return '<input type="' . $this->field_type . '" name="' . $name . '" value="" class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light %s">';
+		return '<input type="' . $this->field_type . '" name="' . $name . '" value="' . (is_null($this->default) ? "" : $this->default) . '" class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light %s">';
 	}
 
 	function get_type(): string
