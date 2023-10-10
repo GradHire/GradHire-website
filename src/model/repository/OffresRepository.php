@@ -9,7 +9,7 @@ use app\src\model\dataObject\Offre;
 class OffresRepository extends AbstractRepository
 {
 
-    private string $nomTable = "Offre";
+	private string $nomTable = "Offre";
 
     public function getAll(): ?array
     {
@@ -40,64 +40,64 @@ class OffresRepository extends AbstractRepository
         return false;
     }
 
-    protected static function prepareSQLGratification(int $size, array $filter): array
-    {
-        $sql = array();
-        $sql = array_merge($sql, $filter);
+	protected static function prepareSQLGratification(int $size, array $filter): array
+	{
+		$sql = array();
+		$sql = array_merge($sql, $filter);
 
 
-        $gratificationMaxTemp = $sql['gratificationMax'];
-        $gratificationMinTemp = $sql['gratificationMin'];
+		$gratificationMaxTemp = $sql['gratificationMax'];
+		$gratificationMinTemp = $sql['gratificationMin'];
 
         if ($sql['gratificationMin'] == null && $sql['gratificationMax'] == null) return $sql;
         else if ($sql['gratificationMin'] != null && $sql['gratificationMax'] == null) $gratificationMaxTemp = 15;
         else if ($sql['gratificationMin'] == null && $sql['gratificationMax'] != null) $gratificationMinTemp = 4.05;
 
-        if ($size > 1) $sql['sql'] = " gratification BETWEEN :gratificationMinTag AND :gratificationMaxTag AND ";
-        else $sql['sql'] = " gratification BETWEEN :gratificationMinTag AND :gratificationMaxTag ";
+		if ($size > 1) $sql['sql'] = " gratification BETWEEN :gratificationMinTag AND :gratificationMaxTag AND ";
+		else $sql['sql'] = " gratification BETWEEN :gratificationMinTag AND :gratificationMaxTag ";
 
-        $sql['gratificationMin'] = $gratificationMinTemp;
-        $sql['gratificationMax'] = $gratificationMaxTemp;
+		$sql['gratificationMin'] = $gratificationMinTemp;
+		$sql['gratificationMax'] = $gratificationMaxTemp;
 
-        return $sql;
-    }
+		return $sql;
+	}
 
-    protected static function prepareSQLFilter(array $values): string
-    {
-        $sql = "";
-        foreach ($values as $key => $value) {
-            if ($key != 'gratificationMin' && $key != 'gratificationMax' && $key != 'sujet') {
-                foreach ($value as $key2 => $value2) {
-                    if ($key == 'thematique') {
-                        if ($key2 == count($value) - 1) $sql .= $key . " = :" . $key . $key2 . "Tag AND ";
-                        else $sql .= $key . " = :" . $key . $key2 . "Tag OR ";
-                    } else {
-                        if ($key2 == count($value) - 1) $sql .= $key . " = :" . $key . "Tag AND ";
-                        else $sql .= $key . " = :" . $key . "Tag OR ";
-                    }
-                }
-            }
-        }
-        return $sql;
-    }
+	protected static function prepareSQLFilter(array $values): string
+	{
+		$sql = "";
+		foreach ($values as $key => $value) {
+			if ($key != 'gratificationMin' && $key != 'gratificationMax' && $key != 'sujet') {
+				foreach ($value as $key2 => $value2) {
+					if ($key == 'thematique') {
+						if ($key2 == count($value) - 1) $sql .= $key . " = :" . $key . $key2 . "Tag AND ";
+						else $sql .= $key . " = :" . $key . $key2 . "Tag OR ";
+					} else {
+						if ($key2 == count($value) - 1) $sql .= $key . " = :" . $key . "Tag AND ";
+						else $sql .= $key . " = :" . $key . "Tag OR ";
+					}
+				}
+			}
+		}
+		return $sql;
+	}
 
-    protected static function prepareSQLQSearch(array $arraySearch): string
-    {
-        {
-            $sql = "";
-            foreach ($arraySearch as $key => $value) {
-                if ($key == sizeof($arraySearch) - 1) $sql .= "sujet LIKE " . ":sujet" . $key . "Tag ";
-                else $sql .= "sujet LIKE " . ":sujet" . $key . "Tag OR ";
-            }
-            return $sql;
-        }
-    }
+	protected static function prepareSQLQSearch(array $arraySearch): string
+	{
+		{
+			$sql = "";
+			foreach ($arraySearch as $key => $value) {
+				if ($key == sizeof($arraySearch) - 1) $sql .= "sujet LIKE " . ":sujet" . $key . "Tag ";
+				else $sql .= "sujet LIKE " . ":sujet" . $key . "Tag OR ";
+			}
+			return $sql;
+		}
+	}
 
-    protected static function removeEndifAlone(string $sql): string
-    {
-        if (substr($sql, -4) == "AND " || substr($sql, -3) == "OR ") $sql = substr($sql, 0, -4);
-        return $sql;
-    }
+	protected static function removeEndifAlone(string $sql): string
+	{
+		if (substr($sql, -4) == "AND " || substr($sql, -3) == "OR ") $sql = substr($sql, 0, -4);
+		return $sql;
+	}
 
     protected static function constructSQLValues(?array $values, ?array $arraySearch, ?array $filter): array
     {

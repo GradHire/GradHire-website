@@ -1,26 +1,24 @@
 <?php
 
-/** @var $model LdapLogin */
+/** @var $form FormModel */
 
-use app\src\core\component\form\Form;
-use app\src\model\Auth\LdapLogin;
+use app\src\model\Form\FormModel;
 
 ?>
 
 <div class="w-full md:max-w-[75%] gap-4 flex flex-col">
 
-    <h1>Login</h1>
+	<h1>Login</h1>
 
-    <?php $form = Form::begin('', 'post') ?>
-    <div class="w-full gap-4 flex flex-col">
-
-        <?php echo $form->field($model, 'username') ?>
-        <?php echo $form->field($model, 'password')->passwordField() ?>
-        <?php echo $form->checkbox($model, 'remember') ?>
-        <button class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
-            Submit
-        </button>
-        <?= $model->getFirstError("credentials"); ?>
-    </div>
-    <?php Form::end() ?>
+	<?php $form->start(); ?>
+	<div class="w-full gap-4 flex flex-col">
+		<?php
+		$form->field("username");
+		$form->field("password");
+		$form->field("remember");
+		$form->submit("Se connecter");
+		echo $form->getError();
+		?>
+	</div>
+	<?php $form->end(); ?>
 </div>

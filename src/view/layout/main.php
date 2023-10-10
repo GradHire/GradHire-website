@@ -32,7 +32,7 @@
 					</li>
 					<li class="nav-item active">
 						<a class="nav-link" href="/logout">
-							Welcome <?= Application::getUser()->full_name() ?> (Logout)
+							Logout
 						</a>
 					</li>
 				</ul>
@@ -54,11 +54,6 @@
 					<a href="/"
 					   class="block py-2 pl-3 pr-4 text-zinc-600 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-zinc-500 md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700"
 					   aria-current="page">Home</a>
-				</li>
-				<li>
-					<a href="/dashboard"
-					   class="block py-2 pl-3 pr-4 text-zinc-600 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-zinc-500 md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700"
-					   aria-current="page">Dashboard</a>
 				</li>
 				<li>
 					<a href="/offres"
