@@ -4,11 +4,25 @@ namespace app\src\model\repository;
 
 use app\src\core\db\Database;
 use app\src\model\dataObject\Utilisateur;
+use mysql_xdevapi\DatabaseObject;
 
 class UtilisateurRepository extends AbstractRepository
 {
 
     private string $nomTable = "Utilisateur";
+
+    public function getAll(): ?array
+    {
+        $sql = "SELECT * FROM $this->nomTable";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute();
+        $resultat = $requete->fetchAll();
+        $utilisateurs = [];
+        foreach ($resultat as $utilisateur) {
+            $utilisateurs[] = $this->construireDepuisTableau($utilisateur);
+        }
+        return $utilisateurs;
+    }
 
     public function getUserById($idUtilisateur): ?Utilisateur
     {

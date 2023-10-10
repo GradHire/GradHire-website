@@ -65,4 +65,8 @@ $app->router->get('/offres/{id:\d+}', [MainController::class, 'offres']);
 $app->router->get('/dashboard', [MainController::class, 'dashboard']);
 $app->router->get('/user_test/{id}', [MainController::class, 'user_test']);
 
+$app->router->get('/utilisateurs', [MainController::class, 'utilisateurs']);
+$app->router->get('/utilisateurs/{id}', [MainController::class, 'utilisateurs']);
+$app->router->post('/utilisateurs/{id}', [MainController::class, 'utilisateurs']);
+
 $app->run();
