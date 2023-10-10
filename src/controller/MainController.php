@@ -147,7 +147,13 @@ class MainController extends Controller
         return $this->render('offres/listOffres', ['offres' => $offres, 'utilisateurs' => $utilisateurs]);
     }
 
-    public function candidatures(){
+    public function candidatures($request): string{
+        $id= $request->getRouteParams()['id'] ?? null;
+        $candidatures = (new CandidatureRepository())->getById($id);
+        if ($candidatures != null && $id != null) {
+            return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
+        }
+
         $candidaturesrepose= new CandidatureRepository();
         $candidatures = ($candidaturesrepose->getAll());
 
