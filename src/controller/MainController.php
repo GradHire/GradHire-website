@@ -146,7 +146,7 @@ class MainController extends Controller
     }
     public function postuler(Request $request): string {
         $id = $request->getRouteParams()['id'] ?? null;
-        $offre = (new OffresRepository())->recupererParId($id);
+        $offre = (new OffresRepository())->getById($id);
         if($request->getMethod()==='get'){
             return $this->render('candidature/postuler', ['offre' => $offre]);
         }
@@ -163,18 +163,9 @@ class MainController extends Controller
 
                 $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
                 $imageFileType2 = strtolower(pathinfo($target_file2, PATHINFO_EXTENSION));
-                if (isset($_POST["submit"])) {
-                    if (move_uploaded_file($_FILES["cv"]["tmp_name"], $target_file)) {
-                        echo "Le fichier " . htmlspecialchars(basename($_FILES["cv"]["name"])) . " a été téléversé.";
-                    } else {
-                        echo "Il y a eu une erreur lors du téléversement de votre fichier.";
-                    }
-                    if (move_uploaded_file($_FILES["ltm"]["tmp_name"], $target_file2)) {
-                        echo "Le fichier " . htmlspecialchars(basename($_FILES["ltm"]["name"])) . " a été téléversé.";
-                    } else {
-                        echo "Il y a eu une erreur lors du téléversement de votre fichier.";
-                    }
-                }
+
+                move_uploaded_file($_FILES["cv"]["tmp_name"], $target_file);
+                move_uploaded_file($_FILES["ltm"]["tmp_name"], $target_file2);
 
                 rename($target_file, $target_dir . "cv." . $imageFileType);
                 rename($target_file2, $target_dir . "ltm." . $imageFileType2);
@@ -187,8 +178,7 @@ class MainController extends Controller
             else {
                 echo "Vous avez déja postulé pour cette offre";
             }
-            $offres = (new OffresRepository())->getAll();
-            return $this->render('offres/listOffres', ['offres' => $offres]);
+            return Application::$app->response->redirect('/offres');
         }
 
     }

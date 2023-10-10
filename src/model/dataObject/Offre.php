@@ -305,7 +305,6 @@ class Offre extends AbstractDataObject
     }
 
 
-
     protected function getValueColonne(string $nomColonne): string
     {
         return $this->$nomColonne;
