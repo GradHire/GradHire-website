@@ -7,10 +7,11 @@ use app\src\core\exception\NotFoundException;
 use app\src\model\Application;
 use app\src\model\Auth\Auth;
 use app\src\model\dataObject\Offre;
-use app\src\model\LoginForm;
 use app\src\model\OffreForm;
+use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
+use app\src\model\repository\UtilisateurRepository;
 use app\src\model\Request;
 
 class MainController extends Controller
@@ -57,6 +58,20 @@ class MainController extends Controller
         return $this->render('test/mailtest', compact('message'));
     }
 
+    public function entreprises(Request $request): string
+    {
+        $id = $request->getRouteParams()['id'] ?? null;
+        $entreprise = (new EntrepriseRepository())->getByIdFull($id);
+        if ($entreprise == null && $id != null) throw new NotFoundException();
+        else if ($entreprise != null && $id != null) {
+            $offres = (new OffresRepository())->getOffresByIdEntreprise($id);
+            return $this->render('entreprise/detailEntreprise', ['entreprise' => $entreprise, 'offres' => $offres]);
+        }
+
+        $entreprises = (new EntrepriseRepository())->getAll();
+        return $this->render('entreprise/entreprise', ['entreprises' => $entreprises]);
+    }
+
     public function creeroffre(Request $request): string
     {
         if ($request->getMethod() === 'get') {
@@ -88,29 +103,46 @@ class MainController extends Controller
             //get current timestamp
             $datecreation = date("Y-m-d H:i:s");
             $offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef, $statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation);
+            print_r($offre);
             OffreForm::creerOffre($offre, $distanciel);
             return $this->render('/offres/create');
         }
     }
 
-    //TODO: deplacer la logique de filtrage dans le repository @Clement !
-
     public function offres(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
-        $offre = (new OffresRepository())->recupererParId($id);
-        if ($offre == null && $id != null) throw new NotFoundException();
-        else if ($offre != null && $id != null) return $this->render('offres/detailOffre', ['offre' => $offre]);
+        $offre = (new OffresRepository())->getByIdWithUser($id);
 
-        $filter = self::constructFilter();
-        if (empty($search) && empty($filter)) {
-            $offres = (new OffresRepository())->getAll();
-            return $this->render('offres/listOffres', ['offres' => $offres]);
+        if ($offre == null && $id != null) {
+            throw new NotFoundException();
+        } else if ($offre != null && $id != null) {
+            return $this->render('offres/detailOffre', ['offre' => $offre]);
         }
 
-        $offres = (new OffresRepository())->search($filter);
-        if ($offres == null) return $this->render('offres/listOffres', ['offres' => $offres]);
-        return $this->render('offres/listOffres', ['offres' => $offres]);
+        $filter = self::constructFilter();
+
+        if (empty($search) && empty($filter)) $offres = (new OffresRepository())->getAll();
+        else $offres = (new OffresRepository())->search($filter);
+
+        $userIdList = [];
+        foreach ($offres as $offre) {
+            $userIdList[] = $offre->getIdutilisateur();
+        }
+        $utilisateurRepository = new UtilisateurRepository();
+        $utilisateurs = array();
+
+        if (!empty($userIdList)) {
+            foreach ($userIdList as $userId) {
+                if (!isset($utilisateurs[$userId])) {
+                    $utilisateur = $utilisateurRepository->getUserById($userId);
+                    $utilisateurs[$userId] = $utilisateur->getNomutilisateur();
+                }
+            }
+        }
+
+        if ($offres == null) return $this->render('offres/listOffres', ['offres' => $offres, 'utilisateurs' => $utilisateurs]);
+        return $this->render('offres/listOffres', ['offres' => $offres, 'utilisateurs' => $utilisateurs]);
     }
     public function postuler(Request $request): string {
         $id = $request->getRouteParams()['id'] ?? null;
@@ -198,4 +230,5 @@ class MainController extends Controller
         }
         return $filter;
     }
+
 }

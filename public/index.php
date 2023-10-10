@@ -53,6 +53,9 @@ $app->router->get('/mailtest', [MainController::class, 'mailtest']);
 
 $app->router->get('/offres', [MainController::class, 'offres']);
 
+$app->router->get('/entreprises', [MainController::class, 'entreprises']);
+$app->router->get('/entreprises/{id:\d+}', [MainController::class, 'entreprises']);
+
 $app->router->get('/offres/create', [MainController::class, 'creeroffre']);
 $app->router->post('/offres/create', [MainController::class, 'creeroffre']);
 

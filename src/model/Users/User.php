@@ -17,7 +17,7 @@ abstract class User
     {
         if (count($attributes) == 0) return;
         $this->attributes = $attributes;
-        $this->id = $attributes["idutilisateur"] ?? 0;  // Use a default value of 0
+        $this->id = $attributes["idutilisateur"] ?? 0;
     }
 
     /**

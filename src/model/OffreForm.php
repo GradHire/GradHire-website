@@ -5,13 +5,14 @@ use app\src\model\dataObject\Offre;
 
 class OffreForm extends Model{
     public static function creerOffre(Offre $offre, ?float $distanciel){
-        $sql = "INSERT INTO Offre VALUES (null ,:dureeTag, :thematiqueTag, :sujetTag, :nbJourTravailHebdoTag, :nbHeureTravailHebdoTag, :gratificationTag, :unitegratificationTag, :avantageNatureTag, :dateDebutTag, :dateFinTag, :statutTag, :anneeViseeTag, :idAnneeTag, :idUtilisateurTag, :descriptionTag)";
+        $sql = "INSERT INTO Offre VALUES (null ,:dureeTag, :thematiqueTag, :sujetTag, :nbJourTravailHebdoTag, :nbHeureTravailHebdoTag, :gratificationTag, :unitegratificationTag, :avantageNatureTag, :dateDebutTag, :dateFinTag, :statutTag, :anneeViseeTag, :idAnneeTag, :idUtilisateurTag, :descriptionTag,null)";
+        echo $sql;
         $pdoStatement = Database::get_conn()->prepare($sql);
         $values = array(
             "dureeTag" => $offre->getDuree(),
             "thematiqueTag" => $offre->getThematique(),
             "sujetTag" => $offre->getSujet(),
-            "nbJourTravailHebdoTag" => $offre->getNbJourTravailHebdo(),
+            "nbJourTravailHebdoTag" => $offre->getNbjourtravailhebdo(),
             "nbHeureTravailHebdoTag" => $offre->getNbHeureTravailHebdo(),
             "gratificationTag" => $offre->getGratification(),
             "unitegratificationTag" => $offre->getUnitegratification(),
@@ -21,7 +22,7 @@ class OffreForm extends Model{
             "statutTag" => $offre->getStatut(),
             "anneeViseeTag" => $offre->getAnneeVisee(),
             "idAnneeTag" => $offre->getIdAnnee(),
-            "idUtilisateurTag" => $offre->getIdUtilisateur(),
+            "idUtilisateurTag" => $offre->getIdutilisateur(),
             "descriptionTag" => $offre->getDescription(),
         );
         try {
