@@ -2,6 +2,7 @@
 
 namespace app\src\controller;
 
+use app\src\core\db\Database;
 use app\src\core\exception\NotFoundException;
 use app\src\model\Application;
 use app\src\model\Auth\Auth;
@@ -125,6 +126,7 @@ class MainController extends Controller
 
                 $target_file = $target_dir . basename($_FILES["cv"]["name"]);
                 $target_file2 = $target_dir . basename($_FILES["ltm"]["name"]);
+
                 $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
                 $imageFileType2 = strtolower(pathinfo($target_file2, PATHINFO_EXTENSION));
                 if (isset($_POST["submit"])) {
@@ -140,6 +142,13 @@ class MainController extends Controller
                     }
                 }
 
+                rename($target_file, $target_dir . "cv." . $imageFileType);
+                rename($target_file2, $target_dir . "ltm." . $imageFileType2);
+
+                $datecourante=date("Y-m-d");
+                $sql = "INSERT INTO Candidature VALUES (NULL, '$datecourante', 'En attente', $idoffre, $iduser)";
+                $requete = Database::get_conn()->prepare($sql);
+                $requete->execute();
             }
             else {
                 echo "Vous avez déja postulé pour cette offre";
