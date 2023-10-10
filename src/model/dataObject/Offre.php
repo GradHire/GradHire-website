@@ -4,11 +4,11 @@ namespace app\src\model\dataObject;
 
 class Offre extends AbstractDataObject
 {
-    private ?int $idOffre;
+    private ?int $idoffre;
     private ?string $duree;
     private string $thematique;
     private string $sujet;
-    private ?int $nbJourTravailHebdo;
+    private ?int $nbjourtravailhebdo;
     private ?float $nbHeureTravailHebdo;
     private ?float $gratification;
     private ?string $unitegratification;
@@ -18,9 +18,10 @@ class Offre extends AbstractDataObject
     private ?string $statut;
     private ?string $anneeVisee;
     private string $idAnnee;
-    private int $idUtilisateur;
+    private int $idutilisateur;
     private string $description;
     private string $datecreation;
+    private ?string $nomutilisateur;
 
 //    private ?int $alternance;
     public function __construct
@@ -41,15 +42,16 @@ class Offre extends AbstractDataObject
         $idAnnee,
         $idUtilisateur,
         $description,
-        $datecreation
+        $datecreation,
+        $nomutilisateur
 //        $alternance
     )
     {
-        $this->idOffre = $idOffre;
+        $this->idoffre = $idOffre;
         $this->duree = $duree;
         $this->thematique = $thematique;
         $this->sujet = $sujet;
-        $this->nbJourTravailHebdo = $nbJourTravailHebdo;
+        $this->nbjourtravailhebdo = $nbJourTravailHebdo;
         $this->nbHeureTravailHebdo = $nbHeureTravailHebdo;
         $this->gratification = $gratification;
         $this->unitegratification = $unitegratification;
@@ -59,71 +61,23 @@ class Offre extends AbstractDataObject
         $this->statut = $statut;
         $this->anneeVisee = $anneeVisee;
         $this->idAnnee = $idAnnee;
-        $this->idUtilisateur = $idUtilisateur;
+        $this->idutilisateur = $idUtilisateur;
         $this->description = $description;
         $this->datecreation = $datecreation;
+        $this->nomutilisateur = $nomutilisateur;
     }
 
     public function __toString(): string
     {
-        return "Offre : " . $this->getSujet() . " " . $this->getThematique() . " " . $this->getDuree() . " " . $this->getNbJourTravailHebdo() . " " . $this->getNbHeureTravailHebdo() . " " . $this->getGratification() . " " . $this->getUnitegratification() . " " . $this->getAvantageNature() . " " . $this->getDateDebut() . " " . $this->getDateFin() . " " . $this->getStatut() . " " . $this->getAnneeVisee() . " " . $this->getIdAnnee() . " " . $this->getIdUtilisateur() . " " . $this->getDescription();
+        return "Offre : " . $this->getSujet() . " " . $this->getThematique() . " " . $this->getDuree() . " " . $this->getNbjourtravailhebdo() . " " . $this->getNbHeureTravailHebdo() . " " . $this->getGratification() . " " . $this->getUnitegratification() . " " . $this->getAvantageNature() . " " . $this->getDateDebut() . " " . $this->getDateFin() . " " . $this->getStatut() . " " . $this->getAnneeVisee() . " " . $this->getIdAnnee() . " " . $this->getIdutilisateur() . " " . $this->getDescription();
     }
-
-    protected function getValueColonne(string $nomColonne): string
-    {
-        switch ($nomColonne) {
-            case "idoffre":
-                return $this->getIdOffre();
-            case "duree":
-                return $this->getDuree();
-            case "thematique":
-                return $this->getThematique();
-            case "sujet":
-                return $this->getSujet();
-            case "nbjourtravailHebdo":
-                return $this->getNbJourTravailHebdo();
-            case "nbheuretravailHebdo":
-                return $this->getNbHeureTravailHebdo();
-            case "gratification":
-                return $this->getGratification();
-            case "unitegratification":
-                return $this->getUnitegratification();
-            case "avantageNature":
-                return $this->getAvantageNature();
-            case "datedebut":
-                return $this->getDateDebut();
-            case "datefin":
-                return $this->getDateFin();
-            case "statut":
-                return $this->getStatut();
-            case "anneevisee":
-                return $this->getAnneeVisee();
-            case "idannee":
-                return $this->getIdAnnee();
-            case "idutilisateur":
-                return $this->getIdUtilisateur();
-            case "description":
-                return $this->getDescription();
-                case "datecreation":
-                return $this->getDatecreation();
-//            case "alternance":
-//                return $this->getAlternance();
-            default:
-                return "";
-        }
-    }
-
-//    public function getAlternance(): ?int
-//    {
-//        return $this->alternance;
-//    }
 
     /**
      * @return int
      */
-    public function getIdOffre(): ?int
+    public function getIdoffre(): ?int
     {
-        return $this->idOffre;
+        return $this->idoffre;
     }
 
     /**
@@ -177,17 +131,17 @@ class Offre extends AbstractDataObject
     /**
      * @return int
      */
-    public function getNbJourTravailHebdo(): ?int
+    public function getNbjourtravailhebdo(): ?int
     {
-        return $this->nbJourTravailHebdo;
+        return $this->nbjourtravailhebdo;
     }
 
     /**
-     * @param int $nbJourTravailHebdo
+     * @param int $nbjourtravailhebdo
      */
-    public function setNbJourTravailHebdo(int $nbJourTravailHebdo): void
+    public function setNbjourtravailhebdo(int $nbjourtravailhebdo): void
     {
-        $this->nbJourTravailHebdo = $nbJourTravailHebdo;
+        $this->nbjourtravailhebdo = $nbjourtravailhebdo;
     }
 
     /**
@@ -329,15 +283,11 @@ class Offre extends AbstractDataObject
     /**
      * @return int
      */
-    public function getIdUtilisateur(): int
+    public function getIdutilisateur(): int
     {
-        return $this->idUtilisateur;
+        return $this->idutilisateur;
     }
 
-//    public function getAlternance(): ?int
-//    {
-//        return $this->alternance;
-//    }
 
     public function getDescription(): string
     {
@@ -349,8 +299,15 @@ class Offre extends AbstractDataObject
         return $this->datecreation;
     }
 
+    public function getNomutilisateur()
+    {
+        return $this->nomutilisateur;
+    }
 
 
 
-
+    protected function getValueColonne(string $nomColonne): string
+    {
+        return $this->$nomColonne;
+    }
 }
