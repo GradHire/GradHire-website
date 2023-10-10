@@ -2,8 +2,6 @@
 
 namespace app\src\core\component\form;
 
-use app\src\model\Model;
-
 class Form
 {
 	public static function begin($action, $method, $options = []): Form
@@ -21,7 +19,12 @@ class Form
 		echo '</form>';
 	}
 
-	public function field(Model $model, $attribute): Field
+	/*public function field(string $name, $attribute): Field
+	{
+		return new Field($model, $attribute);
+	}*/
+
+	/*public function field(Model $model, $attribute): Field
 	{
 		return new Field($model, $attribute);
 	}
@@ -29,5 +32,5 @@ class Form
 	public function checkbox(Model $model, $attribute): Checkbox
 	{
 		return new Checkbox($model, $attribute);
-	}
+	}*/
 }
