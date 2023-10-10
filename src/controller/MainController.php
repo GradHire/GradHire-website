@@ -9,7 +9,6 @@ use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth\Auth;
 use app\src\model\dataObject\Candidature;
-use app\src\model\Auth;
 use app\src\model\dataObject\Offre;
 use app\src\model\Form\FormModel;
 use app\src\model\Form\FormString;

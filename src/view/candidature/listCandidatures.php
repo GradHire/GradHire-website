@@ -5,8 +5,6 @@ use app\src\model\Auth\Auth;
 use app\src\model\Users\Roles;
 
 
-Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff,Roles::Teacher,Roles::Tutor);
-
 
 ?>
 
