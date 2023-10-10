@@ -33,6 +33,7 @@ if ($user->attributes()["validee"] == 0) throw new NotFoundException();
 				</div>
 				<!-- Bio -->
 				<div class="mt-2">
+					<p><?= $user->attributes()["bio"] ?></p>
 					<?php if ($user->attributes()["siteweb"]): ?>
 						<a href="<?= $user->attributes()["siteweb"] ?>" class="underline accent-blue-500"
 						   target="_blank">Site</a>

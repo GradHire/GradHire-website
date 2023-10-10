@@ -24,6 +24,12 @@ class FormString extends FormModelAttribute
 		return $this;
 	}
 
+	public function date(): FormString
+	{
+		$this->field_type = "date";
+		return $this;
+	}
+
 	public function password(): FormString
 	{
 		$this->field_type = "password";

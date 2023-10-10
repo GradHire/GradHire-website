@@ -68,7 +68,8 @@ class MainController extends Controller
 				$form = new FormModel([
 					"name" => FormString::New("Nom entreprise")->required()->default(Application::getUser()->attributes()["nomutilisateur"]),
 					"email" => FormString::New("Adresse mail")->email()->required()->default(Application::getUser()->attributes()["emailutilisateur"]),
-					"phone" => FormString::New("Téléphone")->required()->numeric()->default(Application::getUser()->attributes()["numtelutilisateur"])
+					"phone" => FormString::New("Téléphone")->required()->numeric()->default(Application::getUser()->attributes()["numtelutilisateur"]),
+					"bio" => FormString::New("Biographie")->required()->default(Application::getUser()->attributes()["bio"])
 				]);
 				break;
 			case Roles::Tutor:
@@ -76,22 +77,25 @@ class MainController extends Controller
 					"name" => FormString::New("Prénom")->required()->default(Application::getUser()->attributes()["nomutilisateur"]),
 					"surname" => FormString::New("Nom")->required()->default(Application::getUser()->attributes()["prenomtuteurp"]),
 					"email" => FormString::New("Adresse mail")->email()->required()->default(Application::getUser()->attributes()["emailutilisateur"]),
-					"fonction" => FormString::New("Fonction")->required()->default(Application::getUser()->attributes()["fonctiontuteurp"])
+					"fonction" => FormString::New("Fonction")->required()->default(Application::getUser()->attributes()["fonctiontuteurp"]),
+					"bio" => FormString::New("Biographie")->required()->default(Application::getUser()->attributes()["bio"])
 				]);
 				break;
 			case  Roles::Student:
 				$form = new FormModel([
-					"name" => FormString::New("Prénom")->required()->default(Application::getUser()->attributes()["nomutilisateur"]),
-					"surname" => FormString::New("Nom")->required()->default(Application::getUser()->attributes()["prenomutilisateurldap"]),
+					"email" => FormString::New("Adresse mail perso")->email()->required()->default(Application::getUser()->attributes()["mailperso"]),
+					"tel" => FormString::New("Téléphone")->numeric()->required()->default(Application::getUser()->attributes()["numtelutilisateur"]),
+					"date" => FormString::New("Date de naissance")->date()->required()->default(Application::getUser()->attributes()["datenaissance"]),
+					"studentnum" => FormString::New("Numéro Etudiant")->required()->default(Application::getUser()->attributes()["numetudiant"]),
+					"bio" => FormString::New("Biographie")->required()->default(Application::getUser()->attributes()["bio"]),
 				]);
 				break;
 			case  Roles::Teacher:
 			case Roles::Manager:
 			case Roles::Staff:
 				$form = new FormModel([
-					"name" => FormString::New("Prénom")->required()->default(Application::getUser()->attributes()["nomutilisateur"]),
-					"surname" => FormString::New("Nom")->required()->default(Application::getUser()->attributes()["prenomutilisateurldap"]),
 					"role" => FormString::New("Role")->required()->default(Application::getUser()->attributes()["role"]),
+					"bio" => FormString::New("Biographie")->required()->default(Application::getUser()->attributes()["bio"]),
 				]);
 				break;
 		}
