@@ -4,6 +4,12 @@
 
         <div class="flex flex-row w-full gap-1">
             <div class="w-full">
+                <button id="reset-button">Reset Filters</button>
+            </div>
+        </div>
+
+        <div class="flex flex-row w-full gap-1">
+            <div class="w-full">
                 <input
                         type="checkbox"
                         name="stage"
