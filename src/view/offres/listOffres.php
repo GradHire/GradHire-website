@@ -74,7 +74,7 @@ HTML;
                     ?>
                 </div>
             </div>
-            <?php if (Auth::has_role(Roles::Manager, Roles::Staff)){
+            <?php if (Auth::has_role(Roles::Manager, Roles::Staff)) {
                 echo '<div class="w-full bg-zinc-200 h-[1px] rounded-full"></div>';
                 echo '<div class="flex flex-col gap-1 w-full">';
                 echo '<h2 class="font-bold text-lg">Offres en attente</h2>';
@@ -314,6 +314,5 @@ HTML;
             sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}%, #71717a ${percent1}%, #71717a ${percent2}%, #dadae5 ${percent2}%)`;
         }
     }
-
 
 </script>
