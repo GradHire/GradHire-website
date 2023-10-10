@@ -119,5 +119,11 @@ abstract class User
 		return null;
 	}
 
+	public function get_picture(): string
+	{
+		if (file_exists("./pictures/" . $this->id . ".jpg")) return "pictures/" . $this->id . ".jpg";
+		return "https://as2.ftcdn.net/v2/jpg/00/64/67/63/1000_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg";
+	}
+
 	abstract function full_name(): string;
 }

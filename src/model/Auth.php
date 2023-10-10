@@ -65,7 +65,7 @@ class Auth
 		return null;
 	}
 
-	public static function logout()
+	public static function logout(): void
 	{
 		unset($_COOKIE["token"]);
 		setcookie('token', '', -1);

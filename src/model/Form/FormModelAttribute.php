@@ -9,7 +9,7 @@ abstract class FormModelAttribute
 	protected mixed $default = null;
 	protected array $values;
 	protected string $match_attribute = '';
-	protected bool $required = false;
+	protected bool $required = false, $empty = false;
 	protected int $min = -1, $max = -1;
 
 	/**
@@ -30,6 +30,12 @@ abstract class FormModelAttribute
 	public function default($value): static
 	{
 		$this->default = $value;
+		return $this;
+	}
+
+	public function empty(): static
+	{
+		$this->empty = true;
 		return $this;
 	}
 
@@ -95,6 +101,7 @@ abstract class FormModelAttribute
 
 	function parse_value($value): mixed
 	{
+		if ($value === "" && $this->empty && $this->get_type() === "date") return null;
 		return $value;
 	}
 }

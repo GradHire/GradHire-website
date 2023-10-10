@@ -11,6 +11,7 @@ class FormString extends FormModelAttribute
 	{
 		$result = parent::validate($value, $data);
 		if (!is_null($result)) return $result;
+		if ($value === "" && $this->empty) return null;
 		if ($this->min >= 0 && strlen($value) < $this->min) return "Le champs doit faire au moins $this->min charactères";
 		if ($this->max >= 0 && strlen($value) > $this->max) return "Le champs doit faire au maximum $this->max charactères";
 		if ($this->field_type == "email" && !filter_var($value, FILTER_VALIDATE_EMAIL)) return "Adresse mail invalide";
