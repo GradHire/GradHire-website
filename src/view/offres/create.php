@@ -102,11 +102,13 @@ Auth::check_role(Roles::Enterprise, Roles::Manager, Roles::Staff); ?>
     </form>
 </div>
 <script>
+
     function showDistanciel() {
-        var radios = document.getElementById("alternanceRadio");
-        var distancielDiv = document.getElementById('distancielDiv');
+        const radios = document.getElementById("alternanceRadio");
+        const distancielDiv = document.getElementById('distancielDiv');
         distancielDiv.style.display = radios.checked ? 'block' : 'none'
     }
+
     window.addEventListener('DOMContentLoaded', (event) => { // This is added to ensure the script runs after the DOM is ready.
         var datedElem = document.getElementById('dated');
         var datefElem = document.getElementById('datef');
@@ -130,20 +132,20 @@ Auth::check_role(Roles::Enterprise, Roles::Manager, Roles::Staff); ?>
             }
         });
 
-        nbjour.addEventListener(){
+        nbjour.addEventListener('change', function() {
             if (distanciel.value && (this.value < distanciel.value)) {
                 this.setCustomValidity("Nombre de jour a distanciel ne peut pas être supérieur au nombre de jour par semaine!");
             } else {
                 this.setCustomValidity("");
             }
-        }
-        distanciel.addEventListener(){
+        });
+        distanciel.addEventListener('change', function() {
             if (nbjour.value && (this.value > nbjour.value)) {
                 this.setCustomValidity("Nombre de jour a distanciel ne peut pas être supérieur au nombre de jour par semaine!");
             } else {
                 this.setCustomValidity("");
             }
-        }
+        });
 
     });
 
