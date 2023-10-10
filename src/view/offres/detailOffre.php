@@ -78,4 +78,7 @@
             </div>
         </dl>
     </div>
+    <a href="<?php echo $offre->getIdOffre(); ?>/postuler" class="mt-6 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-zinc-600 hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 sm:w-auto">
+        Postuler
+    </a>
 </div>
