@@ -68,4 +68,7 @@ $app->router->post('/offres/{id:\d+}/postuler', [MainController::class, 'postule
 $app->router->get('/dashboard', [MainController::class, 'dashboard']);
 $app->router->get('/user_test/{id}', [MainController::class, 'user_test']);
 
+$app->router->get('/candidatures', [MainController::class, 'candidatures']);
+
+
 $app->run();

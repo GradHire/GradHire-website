@@ -6,8 +6,10 @@ use app\src\core\db\Database;
 use app\src\core\exception\NotFoundException;
 use app\src\model\Application;
 use app\src\model\Auth\Auth;
+use app\src\model\dataObject\Candidature;
 use app\src\model\dataObject\Offre;
 use app\src\model\OffreForm;
+use app\src\model\repository\CandidatureRepository;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
@@ -144,6 +146,14 @@ class MainController extends Controller
         if ($offres == null) return $this->render('offres/listOffres', ['offres' => $offres, 'utilisateurs' => $utilisateurs]);
         return $this->render('offres/listOffres', ['offres' => $offres, 'utilisateurs' => $utilisateurs]);
     }
+
+    public function candidatures(){
+        $candidaturesrepose= new CandidatureRepository();
+        $candidatures = ($candidaturesrepose->getAll());
+
+        return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+    }
+
     public function postuler(Request $request): string {
         $id = $request->getRouteParams()['id'] ?? null;
         $offre = (new OffresRepository())->getById($id);
