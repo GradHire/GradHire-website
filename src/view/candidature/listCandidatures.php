@@ -30,13 +30,13 @@ Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff,Roles::Teacher,Rol
             <?php
                 echo '<div class="w-full bg-zinc-200 h-[1px] rounded-full"></div>';
                 echo '<div class="flex flex-col gap-1 w-full">';
-                echo '<h2 class="font-bold text-lg">Candidatures déja validé</h2>';
+                echo '<h2 class="font-bold text-lg">Candidatures déja Vue</h2>';
             ?>
             <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
                 <?php
                 if ($candidatures != null) {
-                    foreach ($candidatures as $offre)
-                        if ($offre["etatcandidature"] != "En attente")  require __DIR__ . '/candidature.php';
+                    foreach ($candidatures as $candidature)
+                        if ($candidature["etatcandidature"] != "En attente")  require __DIR__ . '/candidature.php';
                 } else require __DIR__ . '/errorCandidatures.php';
                 echo "</div>"; ?>
             </div>

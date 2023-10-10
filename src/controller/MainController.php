@@ -147,7 +147,9 @@ class MainController extends Controller
         return $this->render('offres/listOffres', ['offres' => $offres, 'utilisateurs' => $utilisateurs]);
     }
 
-    public function candidatures($request): string{
+    public function candidatures(Request $request): string{
+
+
         $id= $request->getRouteParams()['id'] ?? null;
         $candidatures = (new CandidatureRepository())->getById($id);
         if ($candidatures != null && $id != null) {
@@ -157,6 +159,25 @@ class MainController extends Controller
         $candidaturesrepose= new CandidatureRepository();
         $candidatures = ($candidaturesrepose->getAll());
 
+        if($request->getMethod()==='post'){
+            $id= $request->getBody()['idcandidature'] ?? null;
+            if($request->getBody()['action']==='Accepter'){
+                $sql= "UPDATE Candidature SET etatcandidature='Validé par secrétariat' WHERE idcandidature=$id";
+                $requete = Database::get_conn()->prepare($sql);
+                $requete->execute();
+                $candidaturesrepose= new CandidatureRepository();
+                $candidatures = ($candidaturesrepose->getAll());
+                return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+            }
+            else{
+                $sql= "UPDATE Candidature SET etatcandidature='Refusé' WHERE idcandidature=$id";
+                $requete = Database::get_conn()->prepare($sql);
+                $requete->execute();
+                $candidaturesrepose= new CandidatureRepository();
+                $candidatures = ($candidaturesrepose->getAll());
+                return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+            }
+        }
         return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
     }
 
