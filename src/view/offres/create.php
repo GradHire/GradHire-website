@@ -57,10 +57,10 @@ Auth::check_role(Roles::Enterprise, Roles::Manager, Roles::Staff); ?>
 
 			<div>
 
-				<label for="salaire">Tarif Horraire</label>
-				<input type="number" placeholder="4.05" name="salaire" id="salaire" min="4.05" required
-				       class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
-			</div>
+                <label for="salaire">Tarif Horraire</label>
+                <input type="number" placeholder="4.05" name="salaire" id="salaire" min="4.05" step="0.01" required
+                       class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
+            </div>
 
 			<div>
 				<label for="avantage">Avantage</label>

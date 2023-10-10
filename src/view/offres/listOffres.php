@@ -4,6 +4,10 @@
 use app\src\model\Auth;
 use app\src\model\Users\Roles;
 
+
+Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff,Roles::Teacher,Roles::Tutor);
+
+
 ?>
 
 <form method="GET" action="offres" class="w-full gap-4 flex flex-col">
@@ -40,53 +44,43 @@ HTML;
 		</div>
 	</div>
 
-	<div class="grid grid-cols-1 gap-4 lg:grid-cols-4 ">
-		<div class="rounded-lg p-4 border-2 border-zinc-200">
-			<?php require_once __DIR__ . '/search.php'; ?>
-		</div>
-		<div class="lg:col-span-3 rounded-lg flex flex-col gap-4">
-			<div class="flex flex-col gap-1 w-full">
-				<h2 class="font-bold text-lg">Offres validées</h2>
-				<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
-					<?php
-					if ($offres != null) {
-						foreach ($offres as $offre) {
-							if ($offre->getStatut() === "Validé") {
-								if (Auth::has_role(Roles::Manager, Roles::Staff)) {
-									require __DIR__ . '/offre.php';
-								} else if (!Auth::has_role(Roles::Manager, Roles::Staff)) {
-									require __DIR__ . '/offre.php';
-								}
-							}
-						}
-					} else {
-						require __DIR__ . '/errorOffre.php';
-					}
-					?>
-				</div>
-			</div>
-			<?php if (Auth::has_role(Roles::Manager, Roles::Staff)) {
-				echo '<div class="w-full bg-zinc-200 h-[1px] rounded-full"></div>';
-				echo '<div class="flex flex-col gap-1 w-full">';
-				echo '<h2 class="font-bold text-lg">Offres en attente</h2>';
-			}
-			?>
-			<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
-				<?php
-				if ($offres != null) {
-					foreach ($offres as $offre) {
-						if ($offre->getStatut() === "en attente" && Auth::has_role(Roles::Manager, Roles::Staff)) {
-							require __DIR__ . '/offre.php';
-						}
-					}
-				} else {
-					require __DIR__ . '/errorOffre.php';
-				}
-				echo "</div>"; ?>
-			</div>
-		</div>
-	</div>
-	</div>
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-4 ">
+        <div class="rounded-lg p-4 border-2 border-zinc-200">
+            <?php require_once __DIR__ . '/search.php'; ?>
+        </div>
+        <div class="lg:col-span-3 rounded-lg flex flex-col gap-4">
+            <div class="flex flex-col gap-1 w-full">
+                <h2 class="font-bold text-lg">Offres validées</h2>
+                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
+                    <?php
+                    if ($offres != null) {
+                        foreach ($offres as $offre) {
+                            if ($offre->getStatut() === "approved") {
+                                if (Auth::has_role(Roles::Manager, Roles::Staff)) require __DIR__ . '/offre.php';
+                                else if (!Auth::has_role(Roles::Manager, Roles::Staff)) require __DIR__ . '/offre.php';
+                            }
+                        }
+                    } else require __DIR__ . '/errorOffre.php';
+                    ?>
+                </div>
+            </div>
+            <?php if (Auth::has_role(Roles::Manager, Roles::Staff)){
+                echo '<div class="w-full bg-zinc-200 h-[1px] rounded-full"></div>';
+                echo '<div class="flex flex-col gap-1 w-full">';
+                echo '<h2 class="font-bold text-lg">Offres en attente</h2>';
+            }
+            ?>
+                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
+                    <?php
+                    if ($offres != null) {
+                        foreach ($offres as $offre)
+                            if ($offre->getStatut() === "pending" && Auth::has_role(Roles::Manager, Roles::Staff)) require __DIR__ . '/offre.php';
+                    } else require __DIR__ . '/errorOffre.php';
+                    echo "</div>"; ?>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
 <script>
     window.addEventListener('DOMContentLoaded', function () {

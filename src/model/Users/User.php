@@ -14,12 +14,12 @@ abstract class User
 	protected int $id;
 	protected array $attributes;
 
-	public function __construct(array $attributes)
-	{
-		if (count($attributes) == 0) return;
-		$this->attributes = $attributes;
-		$this->id = $attributes["idutilisateur"] ?? 0;  // Use a default value of 0
-	}
+    public function __construct(array $attributes)
+    {
+        if (count($attributes) == 0) return;
+        $this->attributes = $attributes;
+        $this->id = $attributes["idutilisateur"] ?? 0;
+    }
 
 	/**
 	 * @throws ServerErrorException
