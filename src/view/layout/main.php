@@ -24,12 +24,16 @@
 				   class="text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:ring-zinc-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 mr-1 md:mr-2 dark:bg-zinc-600 dark:hover:bg-zinc-700 focus:outline-none dark:focus:ring-zinc-800">Sign
 				                                                                                                                                                                                                                                                 up</a>
 			<?php else: ?>
-				<ul class="navbar-nav ml-auto">
+				<ul class="navbar-nav ml-auto flex gap-5">
 					<li class="nav-item active">
-						<a class="nav-link" href="/profile">
-							Profile
-						</a>
-					</li>
+						<a class="nav-link flex" href="/profile">
+							<?= Application::getUser()->full_name() ?>
+							<div class="rounded-full overflow-hidden h-8 w-8 ml-2">
+								<img src="<?= Application::getUser()->get_picture() ?>" alt="Photo de profil"
+								     class="w-full h-full object-cover rounded-full"/>
+							</div>
+
+						</a></li>
 					<li class="nav-item active">
 						<a class="nav-link" href="/logout">
 							Logout
