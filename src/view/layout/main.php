@@ -12,7 +12,7 @@
 <nav class="bg-white border-zinc-200 dark:bg-zinc-900 shadow">
 	<div class="flex flex-wrap items-center justify-between md:w-[75%] w-full max-w-[1200px] mx-auto p-4">
 		<a href="/" class="flex items-center">
-			<span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">GradHire</span>
+			<img src="/resources/images/logo.png" class="h-8">
 		</a>
 		<div class="flex items-center md:order-2">
 			<?php use app\src\model\Application;
