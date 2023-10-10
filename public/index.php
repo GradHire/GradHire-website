@@ -10,7 +10,7 @@ require_once __DIR__ . '/../src/core/lib/Psr4AutoloaderClass.php';
 require_once __DIR__ . '/../src/config.php';
 
 if (session_status() == PHP_SESSION_NONE)
-    session_start();
+	session_start();
 
 $loader = new Psr4AutoloaderClass();
 $loader->register();
@@ -30,20 +30,27 @@ $app = new Application(dirname(__DIR__), $config);
 //});
 
 $app->router->get('/', 'home');
+
 $app->router->get('/register', [AuthController::class, 'register']);
 $app->router->post('/register', [AuthController::class, 'register']);
+
 $app->router->get('/login', [AuthController::class, 'login']);
 $app->router->post('/login', [AuthController::class, 'login']);
+
 $app->router->get('/pro_login', [AuthController::class, 'pro_login']);
 $app->router->post('/pro_login', [AuthController::class, 'pro_login']);
-$app->router->post('/login', [AuthController::class, 'login']);
+
 $app->router->get('/logout', [AuthController::class, 'logout']);
+
 $app->router->get('/contact', [MainController::class, 'contact']);
 
 $app->router->get('/about', [OpenController::class, 'index']);
 
 $app->router->get('/profile', [MainController::class, 'profile']);
 $app->router->get('/profile/{id}', [MainController::class, 'profile']);
+
+$app->router->get('/edit_profile', [MainController::class, 'edit_profile']);
+$app->router->post('/edit_profile', [MainController::class, 'edit_profile']);
 
 $app->router->get('/search', [MainController::class, 'search']);
 

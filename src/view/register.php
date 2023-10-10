@@ -1,29 +1,26 @@
 <?php
-/** @var $model app\src\model\Auth\EnterpriseRegister */
+/** @var $form FormModel */
 
-use app\src\core\component\form\Form;
+use app\src\model\Form\FormModel;
 
-$form = new Form();
 ?>
 <div class="w-full md:max-w-[75%] gap-4 flex flex-col">
 
-    <h1>Pro Register</h1>
+	<h1>Pro Register</h1>
 
-    <?php $form = Form::begin('', 'post') ?>
-    <div class="w-full gap-4 flex flex-col">
-
-        <?php echo $form->field($model, 'name') ?>
-        <?php echo $form->field($model, 'phone') ?>
-        <?php echo $form->field($model, 'siret') ?>
-        <?php echo $form->field($model, 'email') ?>
-        <?php echo $form->field($model, 'password')->passwordField() ?>
-        <?php echo $form->field($model, 'password2')->passwordField() ?>
-        <button class="text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800">
-            Submit
-        </button>
-        <a href="pro_login">Connexion pro</a>
-        <?= $model->getFirstError("register"); ?>
-    </div>
-
-    <?php Form::end() ?>
+	<?php $form->start(); ?>
+	<div class="w-full gap-4 flex flex-col">
+		<?php
+		$form->field("name");
+		$form->field("email");
+		$form->field("siret");
+		$form->field("phone");
+		$form->field("password");
+		$form->field("password2");
+		$form->submit("Créer compte");
+		echo $form->getError();
+		?>
+		<a href="pro_login">Connexion pro</a>
+	</div>
+	<?php $form->end(); ?>
 </div>
