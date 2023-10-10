@@ -12,7 +12,7 @@ class OffreForm extends Model{
             "dureeTag" => $offre->getDuree(),
             "thematiqueTag" => $offre->getThematique(),
             "sujetTag" => $offre->getSujet(),
-            "nbJourTravailHebdoTag" => $offre->getNbJourTravailHebdo(),
+            "nbJourTravailHebdoTag" => $offre->getNbjourtravailhebdo(),
             "nbHeureTravailHebdoTag" => $offre->getNbHeureTravailHebdo(),
             "gratificationTag" => $offre->getGratification(),
             "unitegratificationTag" => $offre->getUnitegratification(),
@@ -22,7 +22,7 @@ class OffreForm extends Model{
             "statutTag" => $offre->getStatut(),
             "anneeViseeTag" => $offre->getAnneeVisee(),
             "idAnneeTag" => $offre->getIdAnnee(),
-            "idUtilisateurTag" => $offre->getIdUtilisateur(),
+            "idUtilisateurTag" => $offre->getIdutilisateur(),
             "descriptionTag" => $offre->getDescription(),
         );
         try {

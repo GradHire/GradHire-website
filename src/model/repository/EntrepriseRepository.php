@@ -4,7 +4,6 @@ namespace app\src\model\repository;
 
 use app\src\core\db\Database;
 use app\src\model\dataObject\Entreprise;
-use app\src\model\dataObject\Utilisateur;
 
 class EntrepriseRepository extends UtilisateurRepository
 {
@@ -24,10 +23,24 @@ class EntrepriseRepository extends UtilisateurRepository
         return $this->construireEntrepriseDepuisTableau($user, $resultat);
     }
 
-    protected function construireEntrepriseDepuisTableau(Utilisateur $utilisateur, array $entrepriseData): Entreprise
+    public function getByIdFull($idEntreprise): ?Entreprise
+    {
+        //Join with Utilisateur table
+        $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idutilisateur = Utilisateur.idutilisateur WHERE $this->nomTable.idutilisateur = :idutilisateur";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idutilisateur' => $idEntreprise]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetch();
+        if ($resultat == false) {
+            return null;
+        }
+        return $this->construireEntrepriseDepuisTableau($resultat);
+    }
+
+    protected function construireEntrepriseDepuisTableau(array $entrepriseData): Entreprise
     {
         return new Entreprise(
-            $utilisateur,
+            $entrepriseData['idutilisateur'],
             $entrepriseData['statutjuridique'] ?? "",
             $entrepriseData['typestructure'] ?? "",
             $entrepriseData['effectif'] ?? "",
@@ -35,21 +48,28 @@ class EntrepriseRepository extends UtilisateurRepository
             $entrepriseData['fax'] ?? "",
             $entrepriseData['siteweb'] ?? "",
             $entrepriseData['siret'] ?? 0,
-            $entrepriseData['validee'] ?? 0
+            $entrepriseData['validee'] ?? 0,
+            $entrepriseData['emailutilisateur'] ?? "",
+            $entrepriseData['nomutilisateur'] ?? "",
+            $entrepriseData['numtelutilisateur'] ?? ""
         );
     }
 
-    public function getOffresByEntreprise($idEntreprise): ?array
+    public function getAll(): ?array
     {
-        $sql = "SELECT * FROM Offre WHERE idutilisateur = :idutilisateur";
+        $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idutilisateur = Utilisateur.idutilisateur";
         $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idutilisateur' => $idEntreprise]);
+        $requete->execute();
         $requete->setFetchMode(\PDO::FETCH_ASSOC);
         $resultat = $requete->fetchAll();
         if ($resultat == false) {
             return null;
         }
-        return $resultat;
+        $entreprises = [];
+        foreach ($resultat as $entrepriseData) {
+            $entreprises[] = $this->construireEntrepriseDepuisTableau($entrepriseData);
+        }
+        return $entreprises;
     }
 
     protected function getNomTable(): string

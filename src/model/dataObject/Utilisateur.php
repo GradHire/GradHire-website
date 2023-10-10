@@ -16,12 +16,12 @@ class Utilisateur extends AbstractDataObject
      * @param string $emailutilisateur
      * @param int $idutilisateur
      */
-    public function __construct($numtelutilisateur, $nomutilisateur, $emailutilisateur, $idutilisateur)
+    public function __construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur)
     {
-        $this->numtelutilisateur = $numtelutilisateur;
-        $this->nomutilisateur = $nomutilisateur;
-        $this->emailutilisateur = $emailutilisateur;
         $this->idutilisateur = $idutilisateur;
+        $this->emailutilisateur = $emailutilisateur;
+        $this->nomutilisateur = $nomutilisateur;
+        $this->numtelutilisateur = $numtelutilisateur;
     }
 
     public function getNumtelutilisateur(): ?string

@@ -23,17 +23,28 @@ class UtilisateurRepository extends AbstractRepository
         return $this->construireDepuisTableau($resultat);
     }
 
-
     protected function construireDepuisTableau(array $dataObjectFormatTableau): Utilisateur
     {
         return new Utilisateur(
-            $dataObjectFormatTableau['numtelutilisateur'] ?? "",
-            $dataObjectFormatTableau['nomutilisateur'] ?? "",
+            $dataObjectFormatTableau['idutilisateur'],
             $dataObjectFormatTableau['emailutilisateur'] ?? "",
-            $dataObjectFormatTableau['idutilisateur']
+            $dataObjectFormatTableau['nomutilisateur'] ?? "",
+            $dataObjectFormatTableau['numtelutilisateur'] ?? ""
         );
     }
 
+    public function getUserNom($idUtilisateur): ?string
+    {
+        $sql = "SELECT nomutilisateur FROM $this->nomTable WHERE idutilisateur = :idutilisateur";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idutilisateur' => $idUtilisateur]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetch();
+        if ($resultat == false) {
+            return null;
+        }
+        return $resultat['nomutilisateur'];
+    }
 
     protected function getNomColonnes(): array
     {

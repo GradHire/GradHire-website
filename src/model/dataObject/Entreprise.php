@@ -28,8 +28,9 @@ class Entreprise extends Utilisateur
      * @param int $validee
      */
 
-    public function __construct(int $idutilisateur, ?string $statutjuridique, ?string $typestructure, ?string $effectif, ?string $codenaf, ?string $fax, ?string $siteweb, int $siret, int $validee) {
-        parent::__construct($idutilisateur, $statutjuridique, $typestructure, $idutilisateur);
+    public function __construct(int $idutilisateur, ?string $statutjuridique, ?string $typestructure, ?string $effectif, ?string $codenaf, ?string $fax, ?string $siteweb, int $siret, int $validee, string $emailutilisateur, string $nomutilisateur, string $numtelutilisateur)
+    {
+        parent::__construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur);
         $this->idutilisateur = $idutilisateur;
         $this->statutjuridique = $statutjuridique;
         $this->typestructure = $typestructure;

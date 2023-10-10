@@ -56,16 +56,11 @@ HTML;
                     if ($offres != null) {
                         foreach ($offres as $offre) {
                             if ($offre->getStatut() === "approved") {
-                                if (Auth::has_role(Roles::Manager, Roles::Staff)) {
-                                    require __DIR__ . '/offre.php';
-                                } else if (!Auth::has_role(Roles::Manager, Roles::Staff)) {
-                                    require __DIR__ . '/offre.php';
-                                }
+                                if (Auth::has_role(Roles::Manager, Roles::Staff)) require __DIR__ . '/offre.php';
+                                else if (!Auth::has_role(Roles::Manager, Roles::Staff)) require __DIR__ . '/offre.php';
                             }
                         }
-                    } else {
-                        require __DIR__ . '/errorOffre.php';
-                    }
+                    } else require __DIR__ . '/errorOffre.php';
                     ?>
                 </div>
             </div>
@@ -78,14 +73,9 @@ HTML;
                 <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
                     <?php
                     if ($offres != null) {
-                        foreach ($offres as $offre) {
-                            if ($offre->getStatut() === "pending" && Auth::has_role(Roles::Manager, Roles::Staff)) {
-                                require __DIR__ . '/offre.php';
-                            }
-                        }
-                    } else {
-                        require __DIR__ . '/errorOffre.php';
-                    }
+                        foreach ($offres as $offre)
+                            if ($offre->getStatut() === "pending" && Auth::has_role(Roles::Manager, Roles::Staff)) require __DIR__ . '/offre.php';
+                    } else require __DIR__ . '/errorOffre.php';
                     echo "</div>"; ?>
                 </div>
             </div>

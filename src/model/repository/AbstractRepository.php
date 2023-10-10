@@ -80,20 +80,7 @@ abstract class AbstractRepository
     {
         $sql = Database::get_conn()->query("SELECT * FROM " . $this->getNomTable());
         $dataObjects = [];
-        foreach ($sql as $dataObjectFormatTableau) {
-            $dataObjects[] = $this->construireDepuisTableau($dataObjectFormatTableau);
-        }
-        return $dataObjects;
-    }
-
-    public function getSql($sql): ?array
-    {
-        $sql = Database::get_conn()->prepare($sql);
-        $sql->execute();
-        $dataObjects = [];
-        foreach ($sql as $dataObjectFormatTableau) {
-            $dataObjects[] = $this->construireDepuisTableau($dataObjectFormatTableau);
-        }
+        foreach ($sql as $dataObjectFormatTableau) $dataObjects[] = $this->construireDepuisTableau($dataObjectFormatTableau);
         return $dataObjects;
     }
 

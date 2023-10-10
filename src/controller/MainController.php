@@ -10,6 +10,7 @@ use app\src\model\OffreForm;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
+use app\src\model\repository\UtilisateurRepository;
 use app\src\model\Request;
 
 class MainController extends Controller
@@ -59,51 +60,15 @@ class MainController extends Controller
     public function entreprises(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
-        $entreprise = (new EntrepriseRepository())->getById($id);
+        $entreprise = (new EntrepriseRepository())->getByIdFull($id);
         if ($entreprise == null && $id != null) throw new NotFoundException();
-        else if ($entreprise != null && $id != null) return $this->render('entreprises/detailEntreprise', ['entreprise' => $entreprise]);
+        else if ($entreprise != null && $id != null) {
+            $offres = (new OffresRepository())->getOffresByIdEntreprise($id);
+            return $this->render('entreprise/detailEntreprise', ['entreprise' => $entreprise, 'offres' => $offres]);
+        }
 
         $entreprises = (new EntrepriseRepository())->getAll();
         return $this->render('entreprise/entreprise', ['entreprises' => $entreprises]);
-    }
-
-    private static function constructFilter(): array
-    {
-        $filter = array();
-//        if (Auth::has_role(["student"])) {
-//            if (isset($_GET['statut'])) $filter['statut'] = $_GET['statut'];
-//        } else {
-//            $filter['statut'] = "staff";
-//        }
-        if (isset($_GET['sujet'])) {
-            $filter['sujet'] = $_GET['sujet'];
-        } else {
-            $filter['sujet'] = "";
-        }
-        if (isset($_GET['thematique'])) {
-            $filter['thematique'] = "";
-            foreach ($_GET['thematique'] as $key => $value) {
-                if ($filter['thematique'] == null) $filter['thematique'] = $value;
-                else if ($filter['thematique'] != null) $filter['thematique'] .= ',' . $value;
-            }
-        }
-        if (isset($_GET['anneeVisee'])) $filter['anneeVisee'] = $_GET['anneeVisee'];
-        if (isset($_GET['duree'])) $filter['duree'] = $_GET['duree'];
-        if (isset($_GET['alternance'])) $filter['alternance'] = $_GET['alternance'];
-        if (isset($_GET['stage'])) $filter['stage'] = $_GET['stage'];
-        if (isset($_GET['gratificationMin'])) {
-            if ($_GET['gratificationMin'] == "") $filter['gratificationMin'] = null;
-            else if ($_GET['gratificationMin'] < 4.05) $filter['gratificationMin'] = 4.05;
-            else if ($_GET['gratificationMin'] > 15) $filter['gratificationMin'] = 15;
-            else $filter['gratificationMin'] = $_GET['gratificationMin'];
-        }
-        if (isset($_GET['gratificationMax'])) {
-            if ($_GET['gratificationMax'] == "") $filter['gratificationMax'] = null;
-            else if ($_GET['gratificationMax'] < 4.05) $filter['gratificationMax'] = 4.05;
-            else if ($_GET['gratificationMax'] > 15) $filter['gratificationMax'] = 15;
-            else $filter['gratificationMax'] = $_GET['gratificationMax'];
-        }
-        return $filter;
     }
 
     public function creeroffre(Request $request): string
@@ -146,18 +111,76 @@ class MainController extends Controller
     public function offres(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
-        $offre = (new OffresRepository())->getById($id);
-        if ($offre == null && $id != null) throw new NotFoundException();
-        else if ($offre != null && $id != null) return $this->render('offres/detailOffre', ['offre' => $offre]);
+        $offre = (new OffresRepository())->getByIdWithUser($id);
 
-        $filter = self::constructFilter();
-        if (empty($search) && empty($filter)) {
-            $offres = (new OffresRepository())->getAll();
-            return $this->render('offres/listOffres', ['offres' => $offres]);
+        if ($offre == null && $id != null) {
+            throw new NotFoundException();
+        } else if ($offre != null && $id != null) {
+            return $this->render('offres/detailOffre', ['offre' => $offre]);
         }
 
-        $offres = (new OffresRepository())->search($filter);
-        if ($offres == null) return $this->render('offres/listOffres', ['offres' => $offres]);
-        return $this->render('offres/listOffres', ['offres' => $offres]);
+        $filter = self::constructFilter();
+
+        if (empty($search) && empty($filter)) $offres = (new OffresRepository())->getAll();
+        else $offres = (new OffresRepository())->search($filter);
+
+        $userIdList = [];
+        foreach ($offres as $offre) {
+            $userIdList[] = $offre->getIdutilisateur();
+        }
+        $utilisateurRepository = new UtilisateurRepository();
+        $utilisateurs = array();
+
+        if (!empty($userIdList)) {
+            foreach ($userIdList as $userId) {
+                if (!isset($utilisateurs[$userId])) {
+                    $utilisateur = $utilisateurRepository->getUserById($userId);
+                    $utilisateurs[$userId] = $utilisateur->getNomutilisateur();
+                }
+            }
+        }
+
+        if ($offres == null) return $this->render('offres/listOffres', ['offres' => $offres, 'utilisateurs' => $utilisateurs]);
+        return $this->render('offres/listOffres', ['offres' => $offres, 'utilisateurs' => $utilisateurs]);
     }
+
+    private static function constructFilter(): array
+    {
+        $filter = array();
+//        if (Auth::has_role(["student"])) {
+//            if (isset($_GET['statut'])) $filter['statut'] = $_GET['statut'];
+//        } else {
+//            $filter['statut'] = "staff";
+//        }
+        if (isset($_GET['sujet'])) {
+            $filter['sujet'] = $_GET['sujet'];
+        } else {
+            $filter['sujet'] = "";
+        }
+        if (isset($_GET['thematique'])) {
+            $filter['thematique'] = "";
+            foreach ($_GET['thematique'] as $key => $value) {
+                if ($filter['thematique'] == null) $filter['thematique'] = $value;
+                else if ($filter['thematique'] != null) $filter['thematique'] .= ',' . $value;
+            }
+        }
+        if (isset($_GET['anneeVisee'])) $filter['anneeVisee'] = $_GET['anneeVisee'];
+        if (isset($_GET['duree'])) $filter['duree'] = $_GET['duree'];
+        if (isset($_GET['alternance'])) $filter['alternance'] = $_GET['alternance'];
+        if (isset($_GET['stage'])) $filter['stage'] = $_GET['stage'];
+        if (isset($_GET['gratificationMin'])) {
+            if ($_GET['gratificationMin'] == "") $filter['gratificationMin'] = null;
+            else if ($_GET['gratificationMin'] < 4.05) $filter['gratificationMin'] = 4.05;
+            else if ($_GET['gratificationMin'] > 15) $filter['gratificationMin'] = 15;
+            else $filter['gratificationMin'] = $_GET['gratificationMin'];
+        }
+        if (isset($_GET['gratificationMax'])) {
+            if ($_GET['gratificationMax'] == "") $filter['gratificationMax'] = null;
+            else if ($_GET['gratificationMax'] < 4.05) $filter['gratificationMax'] = 4.05;
+            else if ($_GET['gratificationMax'] > 15) $filter['gratificationMax'] = 15;
+            else $filter['gratificationMax'] = $_GET['gratificationMax'];
+        }
+        return $filter;
+    }
+
 }
