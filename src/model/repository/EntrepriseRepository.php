@@ -20,7 +20,7 @@ class EntrepriseRepository extends UtilisateurRepository
         if ($resultat == false) {
             return null;
         }
-        return $this->construireEntrepriseDepuisTableau($user, $resultat);
+        return $this->construireEntrepriseDepuisTableau($user);
     }
 
     public function getByIdFull($idEntreprise): ?Entreprise
