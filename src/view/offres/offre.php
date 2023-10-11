@@ -5,17 +5,17 @@
  */
 
 
+
 ?>
 <div class="rounded-[10px] cursor-pointer group bg-white p-4 sm:p-6 shadow-sm hover:shadow min-w-[200px] shrink duration-150 border-2 border-zinc-200 hover:border-zinc-300">
     <div class="flex flex-row gap-1 w-full justify-end">
-        <a href="/offres/<?php echo $offre->getIdoffre(); ?>/edit" class="btn btn-primary">
-            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                 stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/>
-            </svg>
-        </a>
-
+<!--        <a href="/offres/--><?php //echo $offre->getIdoffre(); ?><!--/edit" class="btn btn-primary">-->
+<!--            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"-->
+<!--                 stroke="currentColor">-->
+<!--                <path stroke-linecap="round" stroke-linejoin="round"-->
+<!--                      d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/>-->
+<!--            </svg>-->
+<!--        </a>-->
         <form method="POST" action="/offres/<?php echo $offre->getIdoffre(); ?>/delete">
             <input type="hidden" name="link" value="<?= $currentFilterURL; ?>">
             <input type="hidden" name="delete" value="<?php echo $offre->getIdoffre(); ?>">

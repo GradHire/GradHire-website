@@ -95,7 +95,6 @@ HTML;
             </div>
         </div>
     </div>
-    </div>
 </form>
 <script>
     window.addEventListener('DOMContentLoaded', function () {

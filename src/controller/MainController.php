@@ -125,18 +125,18 @@ class MainController extends Controller
         return $this->render('utilisateurs/detail_utilisateur', ['utilisateur' => $utilisateur]);
     }
 
-    public function mailtest(): string
-    {
-        $to = ["hirchyts.daniil@gmail.com", "daniil.hirchyts@etu.umontpellier.fr"];
-        $subject = "Test mail subject";
-        $message = "This is a test message";
+	public function mailtest(): string
+	{
+		$to = ["hirchyts.daniil@gmail.com", "daniil.hirchyts@etu.umontpellier.fr"];
+		$subject = "Test mail subject";
+		$message = "This is a test message";
 
-        $mailSent = MailRepository::send_mail($to, $subject, $message);
+		$mailSent = MailRepository::send_mail($to, $subject, $message);
 
-        $message = $mailSent ? "Mail sent successfully" : "Mail sending failed";
+		$message = $mailSent ? "Mail sent successfully" : "Mail sending failed";
 
-        return $this->render('test/mailtest', compact('message'));
-    }
+		return $this->render('test/mailtest', compact('message'));
+	}
 
     public function entreprises(Request $request): string
     {
