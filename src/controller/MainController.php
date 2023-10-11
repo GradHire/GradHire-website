@@ -2,6 +2,7 @@
 
 namespace app\src\controller;
 
+use app\src\core\db\Database;
 use app\src\core\exception\ForbiddenException;
 use app\src\core\exception\NotFoundException;
 use app\src\core\exception\ServerErrorException;
@@ -233,6 +234,7 @@ class MainController extends Controller
                 return $this->render('/offres/edit', ['offre' => $offre]);
             }
         }
+        return $this->render('/offres/edit');
     }
 
 
@@ -301,7 +303,8 @@ class MainController extends Controller
         return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
     }
 
-    public function postuler(Request $request): string {
+    public function postuler(Request $request): string
+    {
         $id = $request->getRouteParams()['id'] ?? null;
         $offre = (new OffresRepository())->getById($id);
         if($request->getMethod()==='get'){
@@ -335,7 +338,8 @@ class MainController extends Controller
             else {
                 echo "Vous avez déja postulé pour cette offre";
             }
-            return Application::$app->response->redirect('/offres');
+            Application::$app->response->redirect('/offres');
+            return '';
         }
 
     }
