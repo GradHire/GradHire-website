@@ -70,6 +70,9 @@ $app->router->get('/offres/{id:\d+}', [MainController::class, 'offres']);
 $app->router->get('/offres/{id:\d+}/postuler', [MainController::class, 'postuler']);
 $app->router->post('/offres/{id:\d+}/postuler', [MainController::class, 'postuler']);
 
+$app->router->post('/offres/{id:\d+}/edit', [MainController::class, 'editOffre']);
+$app->router->post('/offres/{id:\d+}/delete', [MainController::class, 'deleteOffre']);
+
 
 $app->router->post('/offres/{id:\d+}/edit', [MainController::class, 'editOffre']);
 

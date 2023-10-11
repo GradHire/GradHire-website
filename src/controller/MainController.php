@@ -11,6 +11,7 @@ use app\src\model\dataObject\Offre;
 use app\src\model\Form\FormModel;
 use app\src\model\Form\FormString;
 use app\src\model\OffreForm;
+use app\src\model\repository\CandidatureRepository;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
@@ -221,6 +222,19 @@ class MainController extends Controller
             }
         }
     }
+
+    public function editOffre(Request $request): string
+    {
+        if ($request->getMethod() === 'post') {
+            $id = $request->getRouteParams()['id'] ?? null;
+            $offre = (new OffresRepository())->getById($id);
+            if ($offre == null && $id != null) throw new NotFoundException();
+            else if ($offre != null && $id != null) {
+                return $this->render('/offres/edit', ['offre' => $offre]);
+            }
+        }
+    }
+
 
     public function offres(Request $request): string
     {
