@@ -25,7 +25,7 @@ class MainController extends Controller
         if (session_status() !== PHP_SESSION_NONE)
             session_destroy();
         $user = Auth::load_user_by_id($req->getRouteParams()["id"]);
-        \app\src\model\Auth\Auth::generate_token($user, "true");
+        Auth::generate_token($user, "true");
         Application::$app->response->redirect('/');
     }
 
@@ -101,10 +101,24 @@ class MainController extends Controller
             $idAnnee = date("Y");
             //get current timestamp
             $datecreation = date("Y-m-d H:i:s");
-            $offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef, $statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation);
+            $offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef, $statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation, "");
             print_r($offre);
             OffreForm::creerOffre($offre, $distanciel);
             return $this->render('/offres/create');
+        }
+    }
+
+    public function deleteOffre(Request $request): void
+    {
+        if ($request->getMethod() === 'post') {
+            $id = $request->getRouteParams()['id'] ?? null;
+            $offre = (new OffresRepository())->getById($id);
+            $url = $_POST['link'];
+            if ($offre == null && $id != null) throw new NotFoundException();
+            else if ($offre != null && $id != null) {
+                (new OffresRepository())->updateToDraft($id);
+                Application::$app->response->redirect($url);
+            }
         }
     }
 
@@ -113,11 +127,8 @@ class MainController extends Controller
         $id = $request->getRouteParams()['id'] ?? null;
         $offre = (new OffresRepository())->getByIdWithUser($id);
 
-        if ($offre == null && $id != null) {
-            throw new NotFoundException();
-        } else if ($offre != null && $id != null) {
-            return $this->render('offres/detailOffre', ['offre' => $offre]);
-        }
+        if ($offre == null && $id != null) throw new NotFoundException();
+        else if ($offre != null && $id != null) return $this->render('offres/detailOffre', ['offre' => $offre]);
 
         $filter = self::constructFilter();
 
@@ -125,9 +136,7 @@ class MainController extends Controller
         else $offres = (new OffresRepository())->search($filter);
 
         $userIdList = [];
-        foreach ($offres as $offre) {
-            $userIdList[] = $offre->getIdutilisateur();
-        }
+        foreach ($offres as $offre) $userIdList[] = $offre->getIdutilisateur();
         $utilisateurRepository = new UtilisateurRepository();
         $utilisateurs = array();
 
@@ -140,8 +149,8 @@ class MainController extends Controller
             }
         }
 
-        if ($offres == null) return $this->render('offres/listOffres', ['offres' => $offres, 'utilisateurs' => $utilisateurs]);
-        return $this->render('offres/listOffres', ['offres' => $offres, 'utilisateurs' => $utilisateurs]);
+        $currentFilterURL = "/offres?" . http_build_query($filter);
+        return $this->render('offres/listOffres', ['offres' => $offres, 'utilisateurs' => $utilisateurs, 'currentFilterURL' => $currentFilterURL]);
     }
 
     private static function constructFilter(): array
@@ -152,11 +161,8 @@ class MainController extends Controller
 //        } else {
 //            $filter['statut'] = "staff";
 //        }
-        if (isset($_GET['sujet'])) {
-            $filter['sujet'] = $_GET['sujet'];
-        } else {
-            $filter['sujet'] = "";
-        }
+        if (isset($_GET['sujet'])) $filter['sujet'] = $_GET['sujet'];
+        else $filter['sujet'] = "";
         if (isset($_GET['thematique'])) {
             $filter['thematique'] = "";
             foreach ($_GET['thematique'] as $key => $value) {
