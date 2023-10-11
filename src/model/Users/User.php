@@ -74,7 +74,10 @@ abstract class User
 		try {
 			$statement = Database::get_conn()->prepare("CALL " . static::$update_function . "(" . $this->id . ", " . ltrim(str_repeat(",?", count($values)), ",") . ")");
 			$statement->execute(array_values($values));
-			if ($this->is_me()) Application::setUser(static::find_by_id(Application::getUser()->id()));
+			if ($this->is_me()) {
+				$this->refresh();
+				Application::setUser($this);
+			}
 		} catch (\Exception $e) {
 			print_r($e);
 			throw new ServerErrorException();
@@ -91,6 +94,19 @@ abstract class User
 	public function id(): int
 	{
 		return $this->id;
+	}
+
+	public function refresh(): void
+	{
+		try {
+			$statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE idutilisateur = ?");
+			$statement->execute([$this->id]);
+			$user = $statement->fetch();
+			if (is_null($user)) throw new ServerErrorException();
+			$this->attributes = $user;
+		} catch (\Exception) {
+			throw new ServerErrorException();
+		}
 	}
 
 	public function attributes(): array

@@ -42,6 +42,7 @@ use app\src\model\Users\User;
 							<?php
 							break;
 					} ?>
+					<p><?= $user->attributes()["bio"] ?></p>
 				</div>
 			</div>
 			<!-- Card footer -->

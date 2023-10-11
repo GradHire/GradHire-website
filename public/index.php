@@ -65,13 +65,20 @@ $app->router->post('/offres/create', [MainController::class, 'creeroffre']);
 
 $app->router->get('/offres/{id:\d+}', [MainController::class, 'offres']);
 
-$app->router->post('/offres/{id:\d+}/delete', [MainController::class, 'deleteOffre']);
+$app->router->get('/offres/{id:\d+}/postuler', [MainController::class, 'postuler']);
+$app->router->post('/offres/{id:\d+}/postuler', [MainController::class, 'postuler']);
+
 
 $app->router->get('/dashboard', [MainController::class, 'dashboard']);
 $app->router->get('/user_test/{id}', [MainController::class, 'user_test']);
 
+$app->router->get('/candidatures', [MainController::class, 'candidatures']);
+$app->router->get('/candidatures/{id:\d+}', [MainController::class, 'candidatures']);
+$app->router->post('/candidatures', [MainController::class, 'candidatures']);
+
 $app->router->get('/utilisateurs', [MainController::class, 'utilisateurs']);
 $app->router->get('/utilisateurs/{id}', [MainController::class, 'utilisateurs']);
 $app->router->post('/utilisateurs/{id}', [MainController::class, 'utilisateurs']);
+
 
 $app->run();

@@ -41,6 +41,7 @@ class OffresRepository extends AbstractRepository
     protected static function checkOnlyStageOrAlternance($filter): bool
     {
         $listCherker = ['alternance', 'stage', 'gratificationMin', 'gratificationMax', 'sujet'];
+        //return true if it contains only stage or alternance
         if (array_key_exists('alternance', $filter) && array_key_exists('stage', $filter)) {
             return false;
         } else if (array_key_exists('alternance', $filter)) {
