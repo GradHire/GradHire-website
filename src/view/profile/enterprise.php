@@ -17,9 +17,10 @@ if ($user->attributes()["validee"] == 0) throw new NotFoundException();
 					<!-- Image + name -->
 					<header>
 						<div class="flex mb-2">
-							<img class="rounded-full mr-5"
-							     src="https://preview.cruip.com/mosaic/images/user-64-01.jpg" width="64"
-							     height="64" alt="User 01"/>
+							<div class="rounded-full overflow-hidden h-20 w-20 mr-5">
+								<img src="<?= $user->get_picture() ?>" alt="Photo de profil"
+								     class="w-full h-full object-cover rounded-full"/>
+							</div>
 							<div class="mt-1 pr-1">
 								<a class="inline-flex text-gray-800 hover:text-gray-900" href="#0">
 									<h2 class="text-xl leading-snug justify-center font-semibold"><?= $user->full_name() ?></h2>
