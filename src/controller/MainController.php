@@ -26,14 +26,14 @@ class MainController extends Controller
 		//$this->registerMiddleware(new AuthMiddleware());
 	}
 
-	public function user_test(Request $req)
-	{
-		if (session_status() !== PHP_SESSION_NONE)
-			session_destroy();
-		$user = Auth::load_user_by_id($req->getRouteParams()["id"]);
-		Auth::generate_token($user, "true");
-		Application::$app->response->redirect('/');
-	}
+    public function user_test(Request $req)
+    {
+        if (session_status() !== PHP_SESSION_NONE)
+            session_destroy();
+        $user = Auth::load_user_by_id($req->getRouteParams()["id"]);
+        Auth::generate_token($user, "true");
+        Application::$app->response->redirect('/');
+    }
 
 	public function contact(): string
 	{
@@ -130,32 +130,27 @@ class MainController extends Controller
         $to = ["hirchyts.daniil@gmail.com", "daniil.hirchyts@etu.umontpellier.fr"];
         $subject = "Test mail subject";
         $message = "This is a test message";
-	public function mailtest(): string
-	{
-		$to = ["hirchyts.daniil@gmail.com", "daniil.hirchyts@etu.umontpellier.fr"];
-		$subject = "Test mail subject";
-		$message = "This is a test message";
 
-		$mailSent = MailRepository::send_mail($to, $subject, $message);
+        $mailSent = MailRepository::send_mail($to, $subject, $message);
 
-		$message = $mailSent ? "Mail sent successfully" : "Mail sending failed";
+        $message = $mailSent ? "Mail sent successfully" : "Mail sending failed";
 
-		return $this->render('test/mailtest', compact('message'));
-	}
+        return $this->render('test/mailtest', compact('message'));
+    }
 
-	public function entreprises(Request $request): string
-	{
-		$id = $request->getRouteParams()['id'] ?? null;
-		$entreprise = (new EntrepriseRepository())->getByIdFull($id);
-		if ($entreprise == null && $id != null) throw new NotFoundException();
-		else if ($entreprise != null && $id != null) {
-			$offres = (new OffresRepository())->getOffresByIdEntreprise($id);
-			return $this->render('entreprise/detailEntreprise', ['entreprise' => $entreprise, 'offres' => $offres]);
-		}
+    public function entreprises(Request $request): string
+    {
+        $id = $request->getRouteParams()['id'] ?? null;
+        $entreprise = (new EntrepriseRepository())->getByIdFull($id);
+        if ($entreprise == null && $id != null) throw new NotFoundException();
+        else if ($entreprise != null && $id != null) {
+            $offres = (new OffresRepository())->getOffresByIdEntreprise($id);
+            return $this->render('entreprise/detailEntreprise', ['entreprise' => $entreprise, 'offres' => $offres]);
+        }
 
-		$entreprises = (new EntrepriseRepository())->getAll();
-		return $this->render('entreprise/entreprise', ['entreprises' => $entreprises]);
-	}
+        $entreprises = (new EntrepriseRepository())->getAll();
+        return $this->render('entreprise/entreprise', ['entreprises' => $entreprises]);
+    }
 
 	public function creeroffre(Request $request): string
 	{
@@ -194,28 +189,37 @@ class MainController extends Controller
 		}
 	}
 
-	public function offres(Request $request): string
-	{
-		$id = $request->getRouteParams()['id'] ?? null;
-		$offre = (new OffresRepository())->getByIdWithUser($id);
+    public function deleteOffre(Request $request): void
+    {
+        if ($request->getMethod() === 'post') {
+            $id = $request->getRouteParams()['id'] ?? null;
+            $offre = (new OffresRepository())->getById($id);
+            $url = $_POST['link'];
+            if ($offre == null && $id != null) throw new NotFoundException();
+            else if ($offre != null && $id != null) {
+                (new OffresRepository())->updateToDraft($id);
+                Application::$app->response->redirect($url);
+            }
+        }
+    }
 
-		if ($offre == null && $id != null) {
-			throw new NotFoundException();
-		} else if ($offre != null && $id != null) {
-			return $this->render('offres/detailOffre', ['offre' => $offre]);
-		}
+    public function offres(Request $request): string
+    {
+        $id = $request->getRouteParams()['id'] ?? null;
+        $offre = (new OffresRepository())->getByIdWithUser($id);
+
+        if ($offre == null && $id != null) throw new NotFoundException();
+        else if ($offre != null && $id != null) return $this->render('offres/detailOffre', ['offre' => $offre]);
 
 		$filter = self::constructFilter();
 
 		if (empty($search) && empty($filter)) $offres = (new OffresRepository())->getAll();
 		else $offres = (new OffresRepository())->search($filter);
 
-		$userIdList = [];
-		foreach ($offres as $offre) {
-			$userIdList[] = $offre->getIdutilisateur();
-		}
-		$utilisateurRepository = new UtilisateurRepository();
-		$utilisateurs = array();
+        $userIdList = [];
+        foreach ($offres as $offre) $userIdList[] = $offre->getIdutilisateur();
+        $utilisateurRepository = new UtilisateurRepository();
+        $utilisateurs = array();
 
 		if (!empty($userIdList)) {
 			foreach ($userIdList as $userId) {
@@ -226,9 +230,9 @@ class MainController extends Controller
 			}
 		}
 
-		if ($offres == null) return $this->render('offres/listOffres', ['offres' => $offres, 'utilisateurs' => $utilisateurs]);
-		return $this->render('offres/listOffres', ['offres' => $offres, 'utilisateurs' => $utilisateurs]);
-	}
+        $currentFilterURL = "/offres?" . http_build_query($filter);
+        return $this->render('offres/listOffres', ['offres' => $offres, 'utilisateurs' => $utilisateurs, 'currentFilterURL' => $currentFilterURL]);
+    }
 
 	private static function constructFilter(): array
 	{
@@ -238,35 +242,32 @@ class MainController extends Controller
 //        } else {
 //            $filter['statut'] = "staff";
 //        }
-		if (isset($_GET['sujet'])) {
-			$filter['sujet'] = $_GET['sujet'];
-		} else {
-			$filter['sujet'] = "";
-		}
-		if (isset($_GET['thematique'])) {
-			$filter['thematique'] = "";
-			foreach ($_GET['thematique'] as $key => $value) {
-				if ($filter['thematique'] == null) $filter['thematique'] = $value;
-				else if ($filter['thematique'] != null) $filter['thematique'] .= ',' . $value;
-			}
-		}
-		if (isset($_GET['anneeVisee'])) $filter['anneeVisee'] = $_GET['anneeVisee'];
-		if (isset($_GET['duree'])) $filter['duree'] = $_GET['duree'];
-		if (isset($_GET['alternance'])) $filter['alternance'] = $_GET['alternance'];
-		if (isset($_GET['stage'])) $filter['stage'] = $_GET['stage'];
-		if (isset($_GET['gratificationMin'])) {
-			if ($_GET['gratificationMin'] == "") $filter['gratificationMin'] = null;
-			else if ($_GET['gratificationMin'] < 4.05) $filter['gratificationMin'] = 4.05;
-			else if ($_GET['gratificationMin'] > 15) $filter['gratificationMin'] = 15;
-			else $filter['gratificationMin'] = $_GET['gratificationMin'];
-		}
-		if (isset($_GET['gratificationMax'])) {
-			if ($_GET['gratificationMax'] == "") $filter['gratificationMax'] = null;
-			else if ($_GET['gratificationMax'] < 4.05) $filter['gratificationMax'] = 4.05;
-			else if ($_GET['gratificationMax'] > 15) $filter['gratificationMax'] = 15;
-			else $filter['gratificationMax'] = $_GET['gratificationMax'];
-		}
-		return $filter;
-	}
+        if (isset($_GET['sujet'])) $filter['sujet'] = $_GET['sujet'];
+        else $filter['sujet'] = "";
+        if (isset($_GET['thematique'])) {
+            $filter['thematique'] = "";
+            foreach ($_GET['thematique'] as $key => $value) {
+                if ($filter['thematique'] == null) $filter['thematique'] = $value;
+                else if ($filter['thematique'] != null) $filter['thematique'] .= ',' . $value;
+            }
+        }
+        if (isset($_GET['anneeVisee'])) $filter['anneeVisee'] = $_GET['anneeVisee'];
+        if (isset($_GET['duree'])) $filter['duree'] = $_GET['duree'];
+        if (isset($_GET['alternance'])) $filter['alternance'] = $_GET['alternance'];
+        if (isset($_GET['stage'])) $filter['stage'] = $_GET['stage'];
+        if (isset($_GET['gratificationMin'])) {
+            if ($_GET['gratificationMin'] == "") $filter['gratificationMin'] = null;
+            else if ($_GET['gratificationMin'] < 4.05) $filter['gratificationMin'] = 4.05;
+            else if ($_GET['gratificationMin'] > 15) $filter['gratificationMin'] = 15;
+            else $filter['gratificationMin'] = $_GET['gratificationMin'];
+        }
+        if (isset($_GET['gratificationMax'])) {
+            if ($_GET['gratificationMax'] == "") $filter['gratificationMax'] = null;
+            else if ($_GET['gratificationMax'] < 4.05) $filter['gratificationMax'] = 4.05;
+            else if ($_GET['gratificationMax'] > 15) $filter['gratificationMax'] = 15;
+            else $filter['gratificationMax'] = $_GET['gratificationMax'];
+        }
+        return $filter;
+    }
 
 }

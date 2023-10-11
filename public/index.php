@@ -65,6 +65,7 @@ $app->router->post('/offres/create', [MainController::class, 'creeroffre']);
 
 $app->router->get('/offres/{id:\d+}', [MainController::class, 'offres']);
 
+$app->router->post('/offres/{id:\d+}/delete', [MainController::class, 'deleteOffre']);
 
 $app->router->get('/dashboard', [MainController::class, 'dashboard']);
 $app->router->get('/user_test/{id}', [MainController::class, 'user_test']);
