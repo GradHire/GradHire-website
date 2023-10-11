@@ -9,23 +9,8 @@ class EntrepriseRepository extends UtilisateurRepository
 {
     private string $nomTable = "Entreprise";
 
-    public function getById($idEntreprise): ?Entreprise
-    {
-        $user = $this->getUserById($idEntreprise);
-        $sql = "SELECT * FROM $this->nomTable WHERE idutilisateur = :idutilisateur";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idutilisateur' => $idEntreprise]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetch();
-        if ($resultat == false) {
-            return null;
-        }
-        return $this->construireEntrepriseDepuisTableau($user);
-    }
-
     public function getByIdFull($idEntreprise): ?Entreprise
     {
-        //Join with Utilisateur table
         $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idutilisateur = Utilisateur.idutilisateur WHERE $this->nomTable.idutilisateur = :idutilisateur";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idutilisateur' => $idEntreprise]);

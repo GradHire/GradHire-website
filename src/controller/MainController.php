@@ -8,6 +8,7 @@ use app\src\core\exception\NotFoundException;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
+use app\src\model\dataObject\Candidature;
 use app\src\model\dataObject\Offre;
 use app\src\model\Form\FormModel;
 use app\src\model\Form\FormString;
@@ -173,42 +174,42 @@ class MainController extends Controller
         return $this->render('entreprise/entreprise', ['entreprises' => $entreprises]);
     }
 
-    public function creeroffre(Request $request): string
-    {
-        if ($request->getMethod() === 'get') {
-            return $this->render('/offres/create');
-        } else {
-            $type = $_POST['radios'];
-            $titre = $_POST['titre'];
-            $theme = $_POST['theme'];
-            $nbjour = $_POST['nbjour'];
-            $nbheure = $_POST['nbheure'];
-            if ($type == "alternance") $distanciel = $_POST['distanciel'];
-            else $distanciel = null;
-            $salaire = $_POST['salaire'];
-            $unitesalaire = "heures";
-            $statut = "en attente";
-            $avantage = $_POST['avantage'];
-            $dated = $_POST['dated'];
-            $datef = $_POST['datef'];
-            $duree = $_POST['duree'];
-            $description = $_POST['description'];
-            $idUtilisateur = 51122324;
-            $idOffre = null;
-            if ($duree == 1) {
-                $anneeVisee = "2";
-            } else {
-                $anneeVisee = "3";
-            }
-            $idAnnee = date("Y");
-            //get current timestamp
-            $datecreation = date("Y-m-d H:i:s");
-            $offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef, $statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation);
-            print_r($offre);
-            OffreForm::creerOffre($offre, $distanciel);
-            return $this->render('/offres/create');
-        }
-    }
+	public function creeroffre(Request $request): string
+	{
+		if ($request->getMethod() === 'get') {
+			return $this->render('/offres/create');
+		} else {
+			$type = $_POST['radios'];
+			$titre = $_POST['titre'];
+			$theme = $_POST['theme'];
+			$nbjour = $_POST['nbjour'];
+			$nbheure = $_POST['nbheure'];
+			if ($type == "alternance") $distanciel = $_POST['distanciel'];
+			else $distanciel = null;
+			$salaire = $_POST['salaire'];
+			$unitesalaire = "heures";
+			$statut = "en attente";
+			$avantage = $_POST['avantage'];
+			$dated = $_POST['dated'];
+			$datef = $_POST['datef'];
+			$duree = $_POST['duree'];
+			$description = $_POST['description'];
+			$idUtilisateur = 51122324;
+			$idOffre = null;
+			if ($duree == 1) {
+				$anneeVisee = "2";
+			} else {
+				$anneeVisee = "3";
+			}
+			$idAnnee = date("Y");
+			//get current timestamp
+			$datecreation = date("Y-m-d H:i:s");
+			$offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef, $statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation);
+			print_r($offre);
+			OffreForm::creerOffre($offre, $distanciel);
+			return $this->render('/offres/create');
+		}
+	}
 
     public function deleteOffre(Request $request): void
     {
@@ -344,9 +345,9 @@ class MainController extends Controller
 
     }
 
-	private static function constructFilter(): array
-	{
-		$filter = array();
+    private static function constructFilter(): array
+    {
+        $filter = array();
 //        if (Auth::has_role(["student"])) {
 //            if (isset($_GET['statut'])) $filter['statut'] = $_GET['statut'];
 //        } else {

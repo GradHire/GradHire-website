@@ -84,8 +84,6 @@ Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff, Roles::Teacher, R
                             require __DIR__ . '/offre.php';
                         }
                     }
-                } else {
-                    require __DIR__ . '/errorOffre.php';
                 }
                 echo "</div>"; ?>
             </div>
