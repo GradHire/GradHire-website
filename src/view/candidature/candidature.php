@@ -1,44 +1,86 @@
 <?php
-/** @var $candidature \app\src\model\dataObject\Candidature
- * @var $utilisateurs array
- */
+/** @var $candidatures \app\src\model\dataObject\Candidature */
 
+use app\src\model\dataObject\Entreprise;
+use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\UtilisateurRepository;
 
+$offresRepo= new OffresRepository();
+global $etatCandidature;
+
 ?>
-<a href="/candidatures/<?php echo $candidature["idcandidature"] ?>"
-   class="rounded-[10px] cursor-pointer group bg-white p-4 !pt-10 sm:p-6 shadow-sm hover:shadow min-w-[200px] shrink duration-150 border-2 border-zinc-200 hover:border-zinc-300">
-    <?php $dateCreation = new DateTime($candidature["datec"]);
-    $dateCreation = $dateCreation->format('d/m/Y');
-    echo "<p class=\"block text-xs text-zinc-500\">" . $dateCreation . "</p>";
-    ?>
-    <span>
-        <span class="mt-0.5 text-lg font-medium text-zinc-900">
-            <?php
-            $offre = new OffresRepository();
-            $offre = $offre->getById($candidature["idoffre"]);
+<div class="overflow-x-auto w-full">
+    <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
+        <thead class="ltr:text-left rtl:text-right">
+        <tr>
+            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-gray-900">
+                Nom de l'entreprise
+            </th>
+            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-gray-900">
+                Nom de l'offre
+            </th>
+            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-gray-900">
+                Email étudiant
+            </th>
+            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-gray-900">
+                Dates de candidature
+            </th>
+            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-gray-900">
+                Etat de la candidature
+            </th>
+        </tr>
+        </thead>
 
-            echo $offre->getSujet() ?>
-        </span>
-    </span>
+        <tbody class="divide-y divide-gray-200">
+        <?php
+        foreach ($candidatures as $candidature) {
+            if($etatCandidature==="En attente") {
+                if ($candidature["etatcandidature"] != "En attente") {
+                    continue;
+                }
+            }
+            if($etatCandidature!="En attente") {
+                if ($candidature["etatcandidature"] === "En attente") {
+                    continue;
+                }
+            }
+            $offreIndividuelle = $offresRepo->getById($candidature["idoffre"]);
+            $etudiant= new UtilisateurRepository();
+            $etudiant = $etudiant->getUserById($candidature["idutilisateur"]);
+            $entreprise = new EntrepriseRepository();
+            $entreprise= $entreprise->getByIdFull($offreIndividuelle->getIdutilisateur());
+            ?>
+            <tr class="odd:bg-gray-50">
+                <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                    <?= $entreprise->getNomutilisateur(); ?>
+                </td>
+                <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                    <?php echo $offreIndividuelle->getSujet(); ?>
+                </td>
+                <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                    <?php
+                    echo $etudiant->getEmailutilisateur();
+                    ?>
+                </td>
+                <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                    <?php
+                    echo $candidature["datec"];
+                    ?>
+                </td>
+                <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                    <?php
+                    echo $candidature["etatcandidature"];
+                    ?>
+                </td>
+                <td class="whitespace-nowrap px-4 py-2">
+                    <a href="/candidatures/<?php echo $candidature["idcandidature"] ?>"
+                       class="inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">Voir
+                        plus</a>
+                </td>
+            </tr>
+        <?php } ?>
+        </tbody>
 
-    <div class="mt-4 flex w-full gap-1">
-        <span class="whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-0.5 text-center flex justify-center items-center text-xs text-zinc-600">
-           <?php
-           $etudiant= new UtilisateurRepository();
-              $etudiant = $etudiant->getUserById($candidature["idutilisateur"]);
-
-
-           $userId = $etudiant->getEmailutilisateur();
-              $userId = explode("@", $userId);
-              echo $userId[0];
-           ?>
-        </span>
-        <span class="whitespace-nowrap rounded-full bg-zinc-100 px-2.5 py-0.5 text-center flex justify-center items-center text-xs text-zinc-600">
-        <?php echo $candidature["etatcandidature"] ?>
-        <span class="group w-full pr-2 group-hover:pr-0 duration-150 inline-flex items-end justify-end gap-1 text-sm font-medium text-zinc-600"><span
-                aria-hidden="true"
-                class="block transition-all group-hover:ms-0.5 rtl:rotate-180">&rarr;</span></span>
-    </div>
-</a>
+    </table>
+</div>

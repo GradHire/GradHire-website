@@ -11,12 +11,14 @@ $filepath = "/uploads/". $candidatures->getIdoffre()."_".$candidatures->getIduti
 echo "<a href='".$filepath."' download target='_blank'>📥 Téléchargez la Lettre de Motivation</a>
 </div>";
 
-?>
-
-<form action="/candidatures" method="POST">
-    <input type="hidden" name="idcandidature" value="<?php echo $candidatures->getIdcandidature() ?>">
+if($candidatures->getEtatcandidature() == "En attente"){
+    echo "<div class='flex flex-col mb-3'>
+    <form action='/candidatures' method='POST'>
+    <input type='hidden' name='idcandidature' value='".$candidatures->getIdcandidature()."'>
     <button type='submit' name='action' value='Accepter'>Accepter</button>
     <button type='submit' name='action' value='Refuser'>Réfuser</button>
-</form>
-</div>
+    </form>
+    </div>";
+}
+?>
 
