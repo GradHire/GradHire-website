@@ -10,7 +10,7 @@ require_once __DIR__ . '/../src/core/lib/Psr4AutoloaderClass.php';
 require_once __DIR__ . '/../src/config.php';
 
 if (session_status() == PHP_SESSION_NONE)
-	session_start();
+    session_start();
 
 $loader = new Psr4AutoloaderClass();
 $loader->register();
@@ -47,7 +47,9 @@ $app->router->get('/profile', [MainController::class, 'profile']);
 $app->router->get('/profile/{id}', [MainController::class, 'profile']);
 
 $app->router->get('/edit_profile', [MainController::class, 'edit_profile']);
+$app->router->get('/edit_profile/{id}', [MainController::class, 'edit_profile']);
 $app->router->post('/edit_profile', [MainController::class, 'edit_profile']);
+$app->router->post('/edit_profile/{id}', [MainController::class, 'edit_profile']);
 
 $app->router->get('/search', [MainController::class, 'search']);
 
@@ -65,15 +67,24 @@ $app->router->post('/offres/create', [MainController::class, 'creeroffre']);
 
 $app->router->get('/offres/{id:\d+}', [MainController::class, 'offres']);
 
-$app->router->post('/offres/{id:\d+}/delete', [MainController::class, 'deleteOffre']);
+$app->router->get('/offres/{id:\d+}/postuler', [MainController::class, 'postuler']);
+$app->router->post('/offres/{id:\d+}/postuler', [MainController::class, 'postuler']);
+
 
 $app->router->post('/offres/{id:\d+}/edit', [MainController::class, 'editOffre']);
 
 $app->router->get('/dashboard', [MainController::class, 'dashboard']);
 $app->router->get('/user_test/{id}', [MainController::class, 'user_test']);
 
+$app->router->get('/candidatures', [MainController::class, 'candidatures']);
+$app->router->get('/candidatures/{id:\d+}', [MainController::class, 'candidatures']);
+$app->router->post('/candidatures', [MainController::class, 'candidatures']);
+
+$app->router->get('/archiver/{id}', [MainController::class, 'archiver']);
+
 $app->router->get('/utilisateurs', [MainController::class, 'utilisateurs']);
 $app->router->get('/utilisateurs/{id}', [MainController::class, 'utilisateurs']);
 $app->router->post('/utilisateurs/{id}', [MainController::class, 'utilisateurs']);
+
 
 $app->run();

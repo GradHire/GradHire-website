@@ -41,6 +41,7 @@ class OffresRepository extends AbstractRepository
     protected static function checkOnlyStageOrAlternance($filter): bool
     {
         $listCherker = ['alternance', 'stage', 'gratificationMin', 'gratificationMax', 'sujet'];
+        //return true if it contains only stage or alternance
         if (array_key_exists('alternance', $filter) && array_key_exists('stage', $filter)) {
             return false;
         } else if (array_key_exists('alternance', $filter)) {
@@ -242,5 +243,15 @@ class OffresRepository extends AbstractRepository
     {
         foreach ($filter as $key => $value) if ($value != "") return true;
         return false;
+    }
+
+    public function checkIfCreatorOffreIsArchived(Offre $offre): bool
+    {
+        $sql = "SELECT archiver FROM Offre o JOIN Utilisateur u ON u.idUtilisateur = o.idUtilisateur WHERE idoffre = :idoffre";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idoffre' => $offre->getIdoffre()]);
+        $resultat = $requete->fetch();
+        if ($resultat['archiver'] == 1) return true;
+        else return false;
     }
 }

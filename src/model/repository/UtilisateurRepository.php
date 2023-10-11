@@ -4,6 +4,7 @@ namespace app\src\model\repository;
 
 use app\src\core\db\Database;
 use app\src\model\dataObject\Utilisateur;
+use app\src\model\Users\User;
 use mysql_xdevapi\DatabaseObject;
 
 class UtilisateurRepository extends AbstractRepository
@@ -73,5 +74,11 @@ class UtilisateurRepository extends AbstractRepository
     protected function getNomTable(): string
     {
         return $this->nomTable;
+    }
+    public function setUserToArchived(Utilisateur $user): void
+    {
+        $sql = "UPDATE Utilisateur SET archiver = 1 WHERE idutilisateur = :idutilisateur";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idutilisateur' => $user->getIdutilisateur()]);
     }
 }

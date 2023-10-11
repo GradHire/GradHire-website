@@ -1,5 +1,12 @@
 <?php
 /** @var $utilisateurs \app\src\model\dataObject\Utilisateur */
+
+use app\src\core\exception\NotFoundException;
+use app\src\model\Auth;
+use app\src\model\Users\Roles;
+?>
+<?php
+if (Auth::has_role(Roles::Staff, Roles::Manager)){
 ?>
 <div class="overflow-x-auto w-full">
     <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
@@ -46,3 +53,8 @@
 
     </table>
 </div>
+<?php
+}
+else{
+    throw new NotFoundException();
+}

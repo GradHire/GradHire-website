@@ -5,6 +5,7 @@
  */
 
 
+
 ?>
 <a href="/offres/<?php echo $offre->getIdoffre(); ?>"
    class="offreBox rounded-[10px] relative cursor-pointer group bg-white p-4 sm:p-6 shadow-sm hover:shadow min-w-[200px] shrink duration-150 border-2 border-zinc-200 hover:border-zinc-300">

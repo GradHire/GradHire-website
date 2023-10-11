@@ -55,6 +55,13 @@ class MainController extends Controller
         ]);
     }
 
+    public function archiver(Request $req): string{
+        $user = (new UtilisateurRepository())->getUserById($req->getRouteParams()["id"]);
+        (new UtilisateurRepository())->setUserToArchived($user);
+        Application::$app->response->redirect('/utilisateurs/'.$req->getRouteParams()["id"]);
+        return '';
+    }
+
     /**
      * @throws ForbiddenException
      * @throws ServerErrorException
@@ -62,43 +69,55 @@ class MainController extends Controller
     public function edit_profile(Request $request): string
     {
         if (Application::isGuest()) throw new ForbiddenException();
+        $id = $request->getRouteParams()["id"] ?? null;
+        if (!is_null($id) && !Auth::has_role(Roles::Manager, Roles::Staff))
+            throw new ForbiddenException();
         $form = null;
-        switch (Application::getUser()->role()) {
+        $user = is_null($id) ? Application::getUser() : Auth::load_user_by_id($id);
+        if (is_null($user)) throw new NotFoundException();
+        switch ($user->role()) {
             case Roles::Enterprise:
                 $form = new FormModel([
-                    "name" => FormString::New("Nom entreprise")->required()->default(Application::getUser()->attributes()["nomutilisateur"]),
-                    "email" => FormString::New("Adresse mail")->email()->required()->default(Application::getUser()->attributes()["emailutilisateur"]),
-                    "phone" => FormString::New("Téléphone")->required()->numeric()->default(Application::getUser()->attributes()["numtelutilisateur"])
+                    "name" => FormString::New("Nom entreprise")->required()->default($user->attributes()["nomutilisateur"]),
+                    "email" => FormString::New("Adresse mail")->email()->required()->default($user->attributes()["emailutilisateur"]),
+                    "phone" => FormString::New("Téléphone")->numeric()->default($user->attributes()["numtelutilisateur"]),
+                    "bio" => FormString::New("Biographie")->default($user->attributes()["bio"])
                 ]);
                 break;
             case Roles::Tutor:
                 $form = new FormModel([
-                    "name" => FormString::New("Prénom")->required()->default(Application::getUser()->attributes()["nomutilisateur"]),
-                    "surname" => FormString::New("Nom")->required()->default(Application::getUser()->attributes()["prenomtuteurp"]),
-                    "email" => FormString::New("Adresse mail")->email()->required()->default(Application::getUser()->attributes()["emailutilisateur"]),
-                    "fonction" => FormString::New("Fonction")->required()->default(Application::getUser()->attributes()["fonctiontuteurp"])
+                    "name" => FormString::New("Prénom")->required()->default($user->attributes()["nomutilisateur"]),
+                    "surname" => FormString::New("Nom")->required()->default($user->attributes()["prenomtuteurp"]),
+                    "email" => FormString::New("Adresse mail")->email()->required()->default($user->attributes()["emailutilisateur"]),
+                    "fonction" => FormString::New("Fonction")->required()->default($user->attributes()["fonctiontuteurp"]),
+                    "bio" => FormString::New("Biographie")->default($user->attributes()["bio"])
                 ]);
                 break;
             case  Roles::Student:
                 $form = new FormModel([
-                    "name" => FormString::New("Prénom")->required()->default(Application::getUser()->attributes()["nomutilisateur"]),
-                    "surname" => FormString::New("Nom")->required()->default(Application::getUser()->attributes()["prenomutilisateurldap"]),
+                    "email" => FormString::New("Adresse mail perso")->email()->default($user->attributes()["mailperso"])->empty(),
+                    "tel" => FormString::New("Téléphone")->numeric()->default($user->attributes()["numtelutilisateur"])->empty(),
+                    "date" => FormString::New("Date de naissance")->date()->default($user->attributes()["datenaissance"])->empty(),
+                    "studentnum" => FormString::New("Numéro Etudiant")->default($user->attributes()["numetudiant"])->empty(),
+                    "bio" => FormString::New("Biographie")->default($user->attributes()["bio"]),
                 ]);
                 break;
             case  Roles::Teacher:
             case Roles::Manager:
             case Roles::Staff:
                 $form = new FormModel([
-                    "name" => FormString::New("Prénom")->required()->default(Application::getUser()->attributes()["nomutilisateur"]),
-                    "surname" => FormString::New("Nom")->required()->default(Application::getUser()->attributes()["prenomutilisateurldap"]),
-                    "role" => FormString::New("Role")->required()->default(Application::getUser()->attributes()["role"]),
+                    "role" => FormString::New("Role")->required()->default($user->attributes()["role"]),
+                    "bio" => FormString::New("Biographie")->default($user->attributes()["bio"]),
                 ]);
                 break;
         }
 
         if ($request->getMethod() === 'post') {
+            if (isset($_FILES["picture"])) {
+                FormFile::save($_FILES["picture"], "pictures", $user->id());
+            }
             if ($form->validate($request->getBody())) {
-                Application::getUser()->update($form->get_data());
+                $user->update($form->get_data());
                 Application::$app->response->redirect('/profile');
                 return '';
             }
@@ -125,11 +144,11 @@ class MainController extends Controller
         return $this->render('utilisateurs/detail_utilisateur', ['utilisateur' => $utilisateur]);
     }
 
-    public function mailtest(): string
-    {
-        $to = ["hirchyts.daniil@gmail.com", "daniil.hirchyts@etu.umontpellier.fr"];
-        $subject = "Test mail subject";
-        $message = "This is a test message";
+	public function mailtest(): string
+	{
+		$to = ["hirchyts.daniil@gmail.com", "daniil.hirchyts@etu.umontpellier.fr"];
+		$subject = "Test mail subject";
+		$message = "This is a test message";
 
         $mailSent = MailRepository::send_mail($to, $subject, $message);
 
@@ -203,19 +222,6 @@ class MainController extends Controller
         }
     }
 
-    public function editOffre(Request $request): string
-    {
-        if ($request->getMethod() === 'post') {
-            $id = $request->getRouteParams()['id'] ?? null;
-            $offre = (new OffresRepository())->getById($id);
-            if ($offre == null && $id != null) throw new NotFoundException();
-            else if ($offre != null && $id != null) {
-                return $this->render('/offres/edit', ['offre' => $offre]);
-            }
-        }
-    }
-
-
     public function offres(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
@@ -247,9 +253,82 @@ class MainController extends Controller
         return $this->render('offres/listOffres', ['offres' => $offres, 'utilisateurs' => $utilisateurs, 'currentFilterURL' => $currentFilterURL]);
     }
 
-    private static function constructFilter(): array
-    {
-        $filter = array();
+    public function candidatures(Request $request): string{
+
+
+        $id= $request->getRouteParams()['id'] ?? null;
+        $candidatures = (new CandidatureRepository())->getById($id);
+        if ($candidatures != null && $id != null) {
+            return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
+        }
+
+        $candidaturesrepose= new CandidatureRepository();
+        $candidatures = ($candidaturesrepose->getAll());
+
+        if($request->getMethod()==='post'){
+            $id= $request->getBody()['idcandidature'] ?? null;
+            if($request->getBody()['action']==='Accepter'){
+                $sql= "UPDATE Candidature SET etatcandidature='Validé par secrétariat' WHERE idcandidature=$id";
+                $requete = Database::get_conn()->prepare($sql);
+                $requete->execute();
+                $candidaturesrepose= new CandidatureRepository();
+                $candidatures = ($candidaturesrepose->getAll());
+                return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+            }
+            else{
+                $sql= "UPDATE Candidature SET etatcandidature='Refusé' WHERE idcandidature=$id";
+                $requete = Database::get_conn()->prepare($sql);
+                $requete->execute();
+                $candidaturesrepose= new CandidatureRepository();
+                $candidatures = ($candidaturesrepose->getAll());
+                return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+            }
+        }
+        return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+    }
+
+    public function postuler(Request $request): string {
+        $id = $request->getRouteParams()['id'] ?? null;
+        $offre = (new OffresRepository())->getById($id);
+        if($request->getMethod()==='get'){
+            return $this->render('candidature/postuler', ['offre' => $offre]);
+        }
+        else{
+            $idoffre=$offre->getIdOffre();
+            $iduser= Application::getUser()->id();
+            $nomfichier= "uploads/".$idoffre."_".$iduser;
+            if (!file_exists($nomfichier)) {
+                mkdir($nomfichier, 0777, true);
+                $target_dir = $nomfichier . "/"; // utiliser le nouveau dossier comme répertoire cible
+
+                $target_file = $target_dir . basename($_FILES["cv"]["name"]);
+                $target_file2 = $target_dir . basename($_FILES["ltm"]["name"]);
+
+                $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+                $imageFileType2 = strtolower(pathinfo($target_file2, PATHINFO_EXTENSION));
+
+                move_uploaded_file($_FILES["cv"]["tmp_name"], $target_file);
+                move_uploaded_file($_FILES["ltm"]["tmp_name"], $target_file2);
+
+                rename($target_file, $target_dir . "cv." . $imageFileType);
+                rename($target_file2, $target_dir . "ltm." . $imageFileType2);
+
+                $datecourante=date("Y-m-d");
+                $sql = "INSERT INTO Candidature VALUES (NULL, '$datecourante', 'En attente', $idoffre, $iduser)";
+                $requete = Database::get_conn()->prepare($sql);
+                $requete->execute();
+            }
+            else {
+                echo "Vous avez déja postulé pour cette offre";
+            }
+            return Application::$app->response->redirect('/offres');
+        }
+
+    }
+
+	private static function constructFilter(): array
+	{
+		$filter = array();
 //        if (Auth::has_role(["student"])) {
 //            if (isset($_GET['statut'])) $filter['statut'] = $_GET['statut'];
 //        } else {
