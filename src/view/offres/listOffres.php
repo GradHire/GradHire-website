@@ -88,8 +88,6 @@ HTML;
                             require __DIR__ . '/offre.php';
                         }
                     }
-                } else {
-                    require __DIR__ . '/errorOffre.php';
                 }
                 echo "</div>"; ?>
             </div>
