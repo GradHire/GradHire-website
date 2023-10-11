@@ -48,7 +48,7 @@ Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff, Roles::Teacher, R
         <div class="lg:col-span-3 rounded-lg flex flex-col gap-4">
             <div class="flex flex-col gap-1 w-full">
                 <h2 class="font-bold text-lg">Offres validées</h2>
-                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
+                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
                     <?php
                     if ($offres != null) {
                         foreach ($offres as $offre) {
