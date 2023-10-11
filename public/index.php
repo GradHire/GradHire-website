@@ -76,6 +76,8 @@ $app->router->get('/candidatures', [MainController::class, 'candidatures']);
 $app->router->get('/candidatures/{id:\d+}', [MainController::class, 'candidatures']);
 $app->router->post('/candidatures', [MainController::class, 'candidatures']);
 
+$app->router->post('/archiver/{id}', [MainController::class, 'archiver']);
+
 $app->router->get('/utilisateurs', [MainController::class, 'utilisateurs']);
 $app->router->get('/utilisateurs/{id}', [MainController::class, 'utilisateurs']);
 $app->router->post('/utilisateurs/{id}', [MainController::class, 'utilisateurs']);

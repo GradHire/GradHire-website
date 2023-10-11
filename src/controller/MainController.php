@@ -58,6 +58,13 @@ class MainController extends Controller
 		]);
 	}
 
+    public function archiver(Request $req): string{
+        $user = (new UtilisateurRepository())->getUserById($req->getRouteParams()["id"]);
+        (new UtilisateurRepository())->setUserToArchived($user);
+        Application::$app->response->redirect('/utilisateurs/'.$req->getRouteParams()["id"]);
+        return '';
+    }
+
 	/**
 	 * @throws ForbiddenException
 	 * @throws ServerErrorException
