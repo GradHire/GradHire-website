@@ -101,6 +101,7 @@ Auth::check_role(Roles::Enterprise, Roles::Manager, Roles::Staff); ?>
 	</form>
 </div>
 <script>
+
     function showDistanciel() {
         var radios = document.getElementById("alternanceRadio");
         var distancielDiv = document.getElementById('distancielDiv');
@@ -114,7 +115,7 @@ Auth::check_role(Roles::Enterprise, Roles::Manager, Roles::Staff); ?>
         var nbjour = document.getElementById('nbjour');
         var distanciel = document.getElementById('distanciel');
 
-        datedElem.addEventListener('change', function () {
+        datedElem.addEventListener('change', function() {
             if (datefElem.value && (this.value > datefElem.value)) {
                 datefElem.setCustomValidity("Date de début ne peut pas être postérieure à la date de fin!");
             } else {
@@ -122,7 +123,7 @@ Auth::check_role(Roles::Enterprise, Roles::Manager, Roles::Staff); ?>
             }
         });
 
-        datefElem.addEventListener('change', function () {
+        datefElem.addEventListener('change', function() {
             if (datedElem.value && (this.value < datedElem.value)) {
                 this.setCustomValidity("Date de fin ne peut pas être antérieure à la date de début!");
             } else {
@@ -130,22 +131,20 @@ Auth::check_role(Roles::Enterprise, Roles::Manager, Roles::Staff); ?>
             }
         });
 
-        nbjour.addEventListener()
-        {
+        nbjour.addEventListener('change', function() {
             if (distanciel.value && (this.value < distanciel.value)) {
                 this.setCustomValidity("Nombre de jour a distanciel ne peut pas être supérieur au nombre de jour par semaine!");
             } else {
                 this.setCustomValidity("");
             }
-        }
-        distanciel.addEventListener()
-        {
+        });
+        distanciel.addEventListener('change', function() {
             if (nbjour.value && (this.value > nbjour.value)) {
                 this.setCustomValidity("Nombre de jour a distanciel ne peut pas être supérieur au nombre de jour par semaine!");
             } else {
                 this.setCustomValidity("");
             }
-        }
+        });
 
     });
 

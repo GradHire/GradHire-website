@@ -1,11 +1,12 @@
 <?php
 /** @var $offres \app\src\model\dataObject\Offre */
 
+use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\Users\Roles;
+use app\src\model\repository\OffresRepository;
 
-
-Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff,Roles::Teacher,Roles::Tutor);
+Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff, Roles::Teacher, Roles::Tutor);
 
 
 ?>
@@ -56,34 +57,50 @@ HTML;
                     if ($offres != null) {
                         foreach ($offres as $offre) {
                             if ($offre->getStatut() === "approved") {
-                                if (Auth::has_role(Roles::Manager, Roles::Staff)) require __DIR__ . '/offre.php';
-                                else if (!Auth::has_role(Roles::Manager, Roles::Staff)) require __DIR__ . '/offre.php';
+                                if (Auth::has_role(Roles::Manager, Roles::Staff)) {
+                                    require __DIR__ . '/offre.php';
+                                } else if (!Auth::has_role(Roles::Manager, Roles::Staff) && (new OffresRepository())->checkIfCreatorOffreIsArchived($offre) === false) {
+                                    if (Application::getUser()->attributes()["annee"] == 3 && $offre->getAnneeVisee() == 2) {
+                                        continue;
+                                    } else {
+                                        require __DIR__ . '/offre.php';
+                                    }
+                                }
                             }
                         }
-                    } else require __DIR__ . '/errorOffre.php';
+                    } else {
+                        require __DIR__ . '/errorOffre.php';
+                    }
                     ?>
                 </div>
             </div>
-            <?php if (Auth::has_role(Roles::Manager, Roles::Staff)){
+            <?php if (Auth::has_role(Roles::Manager, Roles::Staff)) {
                 echo '<div class="w-full bg-zinc-200 h-[1px] rounded-full"></div>';
                 echo '<div class="flex flex-col gap-1 w-full">';
                 echo '<h2 class="font-bold text-lg">Offres en attente</h2>';
             }
             ?>
-                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
-                    <?php
-                    if ($offres != null) {
-                        foreach ($offres as $offre)
-                            if ($offre->getStatut() === "pending" && Auth::has_role(Roles::Manager, Roles::Staff)) require __DIR__ . '/offre.php';
-                    } else require __DIR__ . '/errorOffre.php';
-                    echo "</div>"; ?>
-                </div>
+            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
+                <?php
+                if ($offres != null) {
+                    foreach ($offres as $offre) {
+                        if ($offre->getStatut() === "pending" && Auth::has_role(Roles::Manager, Roles::Staff)) {
+                            require __DIR__ . '/offre.php';
+                        }
+                    }
+                } else {
+                    require __DIR__ . '/errorOffre.php';
+                }
+                echo "</div>"; ?>
             </div>
         </div>
     </div>
 </form>
 <script>
     window.addEventListener('DOMContentLoaded', function () {
+
+        const resetButton = document.getElementById('reset-button');
+        resetButton.addEventListener('click', resetFilters);
 
 
         const alternanceInput = document.getElementById('alternance');
@@ -116,6 +133,40 @@ HTML;
         gratificationMinSlider.addEventListener('change', updateUrl);
         gratificationMaxSlider.addEventListener('change', updateUrl);
     });
+
+
+    function resetFilters() {
+        const alternanceInput = document.getElementById('alternance');
+        alternanceInput.checked = false;
+
+        const stageInput = document.getElementById('stage');
+        stageInput.checked = false;
+
+        const searchInput = document.getElementById('default-search');
+        searchInput.value = "";
+
+        const selectedAnneeVisee = document.querySelector('select[name="anneeVisee"]');
+        selectedAnneeVisee.selectedIndex = 0;
+
+        const selectedThematique = Array.from(document.querySelectorAll('input[name="thematique[]"]:checked'));
+        selectedThematique.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+
+        const selectedDuree = document.querySelector('select[name="duree"]');
+        selectedDuree.selectedIndex = 0;
+
+        const gratificationMinSlider = document.getElementById("slider-1");
+        gratificationMinSlider.value = gratificationMinSlider.min;
+
+        const gratificationMaxSlider = document.getElementById("slider-2");
+        gratificationMaxSlider.value = 12;
+
+        const newUrl = window.location.origin + window.location.pathname;
+        window.history.pushState(null, document.title, newUrl);
+
+        window.location.reload();
+    }
 
     function updateUrl() {
         const queryString = [];

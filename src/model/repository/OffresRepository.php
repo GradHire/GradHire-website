@@ -22,6 +22,22 @@ class OffresRepository extends AbstractRepository
         return $resultat;
     }
 
+    public function deleteById($idOffre): bool
+    {
+        $sql = "DELETE FROM $this->nomTable WHERE idoffre = :idoffre";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idoffre' => $idOffre]);
+        return true;
+    }
+
+    public function updateToDraft($idOffre): bool
+    {
+        $sql = "UPDATE $this->nomTable SET status = 'draft' WHERE idoffre = :idoffre";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idoffre' => $idOffre]);
+        return true;
+    }
+
     protected static function checkOnlyStageOrAlternance($filter): bool
     {
         $listCherker = ['alternance', 'stage', 'gratificationMin', 'gratificationMax', 'sujet'];
@@ -227,5 +243,15 @@ class OffresRepository extends AbstractRepository
     {
         foreach ($filter as $key => $value) if ($value != "") return true;
         return false;
+    }
+
+    public function checkIfCreatorOffreIsArchived(Offre $offre): bool
+    {
+        $sql = "SELECT archiver FROM Offre o JOIN Utilisateur u ON u.idUtilisateur = o.idUtilisateur WHERE idoffre = :idoffre";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idoffre' => $offre->getIdoffre()]);
+        $resultat = $requete->fetch();
+        if ($resultat['archiver'] == 1) return true;
+        else return false;
     }
 }

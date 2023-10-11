@@ -2,3 +2,5 @@ vendor
 .idea
 node_modules
 public/resources/css/output.css
+public/uploads
+public/pictures

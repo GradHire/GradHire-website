@@ -92,9 +92,9 @@ class FormModel
         </button>';
 	}
 
-	public function start(): void
+	public function start(string $enctype = ''): void
 	{
-		echo '<form action="' . $this->action . '" method="' . $this->method . '">';
+		echo '<form action="' . $this->action . '" method="' . $this->method . '" ' . ($enctype !== '' ? 'enctype="' . $enctype . '"' : '') . '>';
 	}
 
 	public function end(): void
