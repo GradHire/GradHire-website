@@ -245,13 +245,13 @@ class OffresRepository extends AbstractRepository
         return false;
     }
 
-    protected function checkIfCreatorOffreIsArchived(Offre $offre): bool
+    public function checkIfCreatorOffreIsArchived(Offre $offre): bool
     {
-        $sql = "SELECT e.validee FROM Offre o JOIN Entreprise e ON e.idUtilisateur = o.idUtilisateur WHERE idoffre = :idoffre";
+        $sql = "SELECT archiver FROM Offre o JOIN Utilisateur u ON u.idUtilisateur = o.idUtilisateur WHERE idoffre = :idoffre";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idoffre' => $offre->getIdoffre()]);
         $resultat = $requete->fetch();
-        if ($resultat['validee'] == 2) return true;
+        if ($resultat['archiver'] == 1) return true;
         else return false;
     }
 }

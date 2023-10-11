@@ -77,8 +77,7 @@ class UtilisateurRepository extends AbstractRepository
     }
     public function setUserToArchived(Utilisateur $user): void
     {
-        $table = $this->getNomTable();
-        $sql = "UPDATE $table SET validee = 2 WHERE idutilisateur = :idutilisateur";
+        $sql = "UPDATE Utilisateur SET archiver = 1 WHERE idutilisateur = :idutilisateur";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idutilisateur' => $user->getIdutilisateur()]);
     }
