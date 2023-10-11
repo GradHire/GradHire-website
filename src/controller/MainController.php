@@ -7,7 +7,7 @@ use app\src\core\exception\ForbiddenException;
 use app\src\core\exception\NotFoundException;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
-use app\src\model\Auth\Auth;
+use app\src\model\Auth;
 use app\src\model\dataObject\Candidature;
 use app\src\model\dataObject\Offre;
 use app\src\model\Form\FormModel;
@@ -164,7 +164,7 @@ class MainController extends Controller
 			$datef = $_POST['datef'];
 			$duree = $_POST['duree'];
 			$description = $_POST['description'];
-			$idUtilisateur = 51122324;
+			$idUtilisateur = Application::getUser()->id();
 			$idOffre = null;
 			if ($duree == 1) {
 				$anneeVisee = "2";
