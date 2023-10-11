@@ -68,6 +68,4 @@ class Utilisateur extends AbstractDataObject
     {
         return $this->$nomColonne;
     }
-
-
 }

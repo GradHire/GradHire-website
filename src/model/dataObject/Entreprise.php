@@ -136,5 +136,4 @@ class Entreprise extends Utilisateur
     {
         $this->validee = $validee;
     }
-
 }

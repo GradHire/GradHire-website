@@ -44,6 +44,17 @@ class MainController extends Controller
         return $this->render('dashboard/dashboard');
     }
 
+    public function utilisateurs(Request $request): string
+    {
+        $id = $request->getRouteParams()['id'] ?? null;
+        $utilisateur = (new UtilisateurRepository())->getUserById($id);
+        if ($utilisateur == null && $id == null) {
+            $utilisateurs = (new UtilisateurRepository())->getAll();
+            return $this->render('utilisateurs/utilisateurs', ['utilisateurs' => $utilisateurs]);
+        }
+        return $this->render('utilisateurs/detail_utilisateur', ['utilisateur' => $utilisateur]);
+    }
+
     public function mailtest(): string
     {
         $to = ["hirchyts.daniil@gmail.com", "daniil.hirchyts@etu.umontpellier.fr"];
@@ -152,6 +163,7 @@ class MainController extends Controller
         $currentFilterURL = "/offres?" . http_build_query($filter);
         return $this->render('offres/listOffres', ['offres' => $offres, 'utilisateurs' => $utilisateurs, 'currentFilterURL' => $currentFilterURL]);
     }
+
 
     private static function constructFilter(): array
     {

@@ -66,4 +66,8 @@ $app->router->post('/offres/{id:\d+}/delete', [MainController::class, 'deleteOff
 $app->router->get('/dashboard', [MainController::class, 'dashboard']);
 $app->router->get('/user_test/{id}', [MainController::class, 'user_test']);
 
+$app->router->get('/utilisateurs', [MainController::class, 'utilisateurs']);
+$app->router->get('/utilisateurs/{id}', [MainController::class, 'utilisateurs']);
+$app->router->post('/utilisateurs/{id}', [MainController::class, 'utilisateurs']);
+
 $app->run();
