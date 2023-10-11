@@ -10,7 +10,7 @@ require_once __DIR__ . '/../src/core/lib/Psr4AutoloaderClass.php';
 require_once __DIR__ . '/../src/config.php';
 
 if (session_status() == PHP_SESSION_NONE)
-	session_start();
+    session_start();
 
 $loader = new Psr4AutoloaderClass();
 $loader->register();
@@ -47,7 +47,9 @@ $app->router->get('/profile', [MainController::class, 'profile']);
 $app->router->get('/profile/{id}', [MainController::class, 'profile']);
 
 $app->router->get('/edit_profile', [MainController::class, 'edit_profile']);
+$app->router->get('/edit_profile/{id}', [MainController::class, 'edit_profile']);
 $app->router->post('/edit_profile', [MainController::class, 'edit_profile']);
+$app->router->post('/edit_profile/{id}', [MainController::class, 'edit_profile']);
 
 $app->router->get('/search', [MainController::class, 'search']);
 
