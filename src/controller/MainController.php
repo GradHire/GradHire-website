@@ -104,13 +104,9 @@ class MainController extends Controller
             $description = $_POST['description'];
             $idUtilisateur = 51122324;
             $idOffre = null;
-            if ($duree == 1) {
-                $anneeVisee = "2";
-            } else {
-                $anneeVisee = "3";
-            }
+            if ($duree == 1) $anneeVisee = "2";
+            else $anneeVisee = "3";
             $idAnnee = date("Y");
-            //get current timestamp
             $datecreation = date("Y-m-d H:i:s");
             $offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef, $statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation, "");
             print_r($offre);
