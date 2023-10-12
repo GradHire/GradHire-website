@@ -80,7 +80,12 @@
 	</div>
 </nav>
 <div id="blur-background" class="hidden w-screen h-screen fixed z-50 top-0 left-0 backdrop-blur-md"></div>
-
+<div class="bg-white shadow w-full flex justify-center">
+    <div class="md:w-[75%] w-full max-w-[1200px] p-4">
+        <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900">
+            Title
+    </div>
+</div>
 <div class="w-full flex justify-center items-center">
 	<div class="md:w-[75%] w-full max-w-[1200px] p-4 flex justify-center items-center">
 		{{content}}
