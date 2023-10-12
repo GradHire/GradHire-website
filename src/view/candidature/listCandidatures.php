@@ -4,6 +4,7 @@
 use app\src\model\Auth\Auth;
 use app\src\model\Users\Roles;
 
+$this->title = 'Candidates';
 
 
 global $etatCandidature;

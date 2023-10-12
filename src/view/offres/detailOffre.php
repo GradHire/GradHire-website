@@ -7,8 +7,8 @@
 <div class="w-full">
     <div class="w-full flex md:flex-row flex-col justify-between items-start">
         <div class="px-4 sm:px-0">
-            <h3 class="text-lg font-semibold leading-7 text-gray-900"><?= $offre->getSujet() ?></h3>
-            <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
+            <h3 class="text-lg font-semibold leading-7 text-zinc-900"><?= $offre->getSujet() ?></h3>
+            <p class="mt-1 max-w-2xl text-sm leading-6 text-zinc-500">
                 <?php
                 try {
                     $date = new DateTime($offre->getDatecreation());
@@ -20,7 +20,7 @@
         </div>
         <span class="inline-flex cursor-pointer  -space-x-px overflow-hidden rounded-md border bg-white shadow-sm">
   <a href="/offres/<?= $offre->getIdOffre() ?>/edit"
-     class="cursor-pointer inline-block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:relative">
+     class="cursor-pointer inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
          class="w-5 h-5">
   <path stroke-linecap="round" stroke-linejoin="round"
@@ -29,14 +29,14 @@
   </a>
             <?php if ($offre->getStatut() != "approved"): ?>
                 <a href="/offres/<?= $offre->getIdOffre() ?>/validate"
-                   class="inline-block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:relative">
+                   class="inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative">
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
      class="w-5 h-5">
   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
 </svg>
   </a><?php endif; ?>
             <?php if ($offre->getStatut() != "draft"): ?>
-  <a href="/offres/<?= $offre->getIdOffre() ?>/archive" class="inline-block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:relative">
+  <a href="/offres/<?= $offre->getIdOffre() ?>/archive" class="inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
          class="w-5 h-5">
   <path stroke-linecap="round" stroke-linejoin="round"
@@ -47,11 +47,11 @@
 
 </span>
     </div>
-    <div class="mt-6 border-t border-gray-100">
-        <dl class="divide-y divide-gray-100">
+    <div class="mt-6 border-t border-zinc-100">
+        <dl class="divide-y divide-zinc-100">
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-gray-900">Statut</dt>
-                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                <dt class="text-sm font-medium leading-6 text-zinc-900">Statut</dt>
+                <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                     <div>
                         <?php
                         if ($offre->getStatut() == "pending") {
@@ -67,7 +67,7 @@
     Refusée
     </span>";
                         } else if ($offre->getStatut() == "draft") {
-                            echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-gray-100 text-gray-800\">
+                            echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-zinc-100 text-zinc-800\">
     Archivée
     </span>";
                         }
@@ -76,22 +76,22 @@
                 </dd>
             </div>
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-gray-900">Thématique</dt>
-                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><?= $offre->getThematique() ?></dd>
+                <dt class="text-sm font-medium leading-6 text-zinc-900">Thématique</dt>
+                <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?= $offre->getThematique() ?></dd>
             </div>
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-gray-900">Entreprise</dt>
-                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><a
+                <dt class="text-sm font-medium leading-6 text-zinc-900">Entreprise</dt>
+                <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><a
                             href="/entreprises/<?= $offre->getIdutilisateur() ?>"><?= $offre->getNomutilisateur() ?></a>
             </div>
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-gray-900">Durée</dt>
-                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><?= $offre->getDuree() ?> an(s)
+                <dt class="text-sm font-medium leading-6 text-zinc-900">Durée</dt>
+                <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?= $offre->getDuree() ?> an(s)
                 </dd>
             </div>
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-gray-900">Dates</dt>
-                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><?php
+                <dt class="text-sm font-medium leading-6 text-zinc-900">Dates</dt>
+                <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?php
                     try {
                         $dateDebut = new DateTime($offre->getDatedebut());
                         $dateFin = new DateTime($offre->getDatefin());
@@ -104,18 +104,18 @@
                     ?>
             </div>
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-gray-900">Année visée</dt>
-                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><?= $offre->getAnneeVisee() ?>A
+                <dt class="text-sm font-medium leading-6 text-zinc-900">Année visée</dt>
+                <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?= $offre->getAnneeVisee() ?>A
                 </dd>
             </div>
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-gray-900">Gratification</dt>
-                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><?= $offre->getGratification() ?>
+                <dt class="text-sm font-medium leading-6 text-zinc-900">Gratification</dt>
+                <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?= $offre->getGratification() ?>
                     €/<?= $offre->getUnitegratification() ?></dd>
             </div>
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-gray-900">Description</dt>
-                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><?= $offre->getDescription() ?></dd>
+                <dt class="text-sm font-medium leading-6 text-zinc-900">Description</dt>
+                <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?= $offre->getDescription() ?></dd>
             </div>
         </dl>
     </div>

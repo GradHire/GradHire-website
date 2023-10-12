@@ -6,6 +6,8 @@ use app\src\model\Auth;
 use app\src\model\Users\Roles;
 
 
+$this->title = 'Offres';
+
 Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff, Roles::Teacher, Roles::Tutor);
 
 

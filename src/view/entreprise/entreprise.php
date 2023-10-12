@@ -1,45 +1,47 @@
 <?php
 /** @var $entreprises \app\src\model\dataObject\Entreprise */
+$this->title = 'Entreprises';
+
 ?>
 <div class="overflow-x-auto w-full">
-    <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
+    <table class="min-w-full divide-y-2 divide-zinc-200 bg-white text-sm">
         <thead class="ltr:text-left rtl:text-right">
         <tr>
-            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-gray-900">
+            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900">
                 Nom d'entreprise
             </th>
-            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-gray-900">
+            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900">
                 Email
             </th>
-            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-gray-900">
+            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900">
                 Téléphone
             </th>
-            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-gray-900">
+            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900">
                 Site web
             </th>
         </tr>
         </thead>
 
-        <tbody class="divide-y divide-gray-200">
+        <tbody class="divide-y divide-zinc-200">
         <?php foreach ($entreprises as $entreprise) { ?>
-            <tr class="odd:bg-gray-50">
-                <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+            <tr class="odd:bg-zinc-50">
+                <td class="whitespace-nowrap px-4 py-2 font-medium text-zinc-900">
                     <?= $entreprise->getNomutilisateur(); ?>
                 </td>
-                <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                     <?php
                     $email = $entreprise->getEmailutilisateur();
                     if ($email != null) echo $email;
                     else echo("Non renseigné");
                     ?>
                 </td>
-                <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                     <?php
                     if ($entreprise->getNumtelutilisateur() == null) echo("Non renseigné");
                     else echo $entreprise->getNumtelutilisateur();
                     ?>
                 </td>
-                <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                     <?php
                     if ($entreprise->getSiteweb() == null) echo("Non renseigné");
                     else echo $entreprise->getSiteweb(); ?>

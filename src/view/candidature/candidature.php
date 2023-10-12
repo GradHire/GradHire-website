@@ -11,28 +11,28 @@ global $etatCandidature;
 
 ?>
 <div class="overflow-x-auto w-full">
-    <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
+    <table class="min-w-full divide-y-2 divide-zinc-200 bg-white text-sm">
         <thead class="ltr:text-left rtl:text-right">
         <tr>
-            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-gray-900">
+            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900">
                 Nom de l'entreprise
             </th>
-            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-gray-900">
+            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900">
                 Nom de l'offre
             </th>
-            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-gray-900">
+            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900">
                 Email étudiant
             </th>
-            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-gray-900">
+            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900">
                 Dates de candidature
             </th>
-            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-gray-900">
+            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900">
                 Etat de la candidature
             </th>
         </tr>
         </thead>
 
-        <tbody class="divide-y divide-gray-200">
+        <tbody class="divide-y divide-zinc-200">
         <?php
         foreach ($candidatures as $candidature) {
             if($etatCandidature==="En attente") {
@@ -51,24 +51,24 @@ global $etatCandidature;
             $entreprise = new EntrepriseRepository();
             $entreprise= $entreprise->getByIdFull($offreIndividuelle->getIdutilisateur());
             ?>
-            <tr class="odd:bg-gray-50">
-                <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+            <tr class="odd:bg-zinc-50">
+                <td class="whitespace-nowrap px-4 py-2 font-medium text-zinc-900">
                     <?= $entreprise->getNomutilisateur(); ?>
                 </td>
-                <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                <td class="whitespace-nowrap px-4 py-2 font-medium text-zinc-900">
                     <?php echo $offreIndividuelle->getSujet(); ?>
                 </td>
-                <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                     <?php
                     echo $etudiant->getEmailutilisateur();
                     ?>
                 </td>
-                <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                     <?php
                     echo $candidature["datec"];
                     ?>
                 </td>
-                <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                     <?php
                     echo $candidature["etatcandidature"];
                     ?>
