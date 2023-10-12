@@ -65,6 +65,7 @@ $app->router->get('/entreprises/{id:\d+}', [MainController::class, 'entreprises'
 $app->router->get('/offres/create', [MainController::class, 'creeroffre']);
 $app->router->post('/offres/create', [MainController::class, 'creeroffre']);
 
+
 $app->router->get('/offres/{id:\d+}', [MainController::class, 'offres']);
 
 $app->router->get('/offres/{id:\d+}/postuler', [MainController::class, 'postuler']);

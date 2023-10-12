@@ -192,20 +192,27 @@ class MainController extends Controller
 		if ($request->getMethod() === 'get') {
 			return $this->render('/offres/create');
 		} else {
+            $action = $_POST['action'] ?? null;
+
 			$type = $_POST['radios'];
 			$titre = $_POST['titre'];
-			$theme = $_POST['theme'];
-			$nbjour = $_POST['nbjour'];
-			$nbheure = $_POST['nbheure'];
+            $theme = $_POST['theme'] ?? null;
+            $nbjour = $_POST['nbjour'] ?? null;
+            $nbheure = $_POST['nbheure'];
 			if ($type == "alternance") $distanciel = $_POST['distanciel'];
 			else $distanciel = null;
 			$salaire = $_POST['salaire'];
 			$unitesalaire = "heures";
-			$statut = "pending";
+			if($action== "sauvegarder") $statut = "draft";
+            else $statut = "pending";
 			$avantage = $_POST['avantage'];
-			$dated = $_POST['dated'];
-			$datef = $_POST['datef'];
-			$duree = $_POST['duree'];
+			$dated = $_POST['dated'] ?? null;
+            if($dated == null)
+                $dated = date("Y-m-d H:i:s");
+			$datef = $_POST['datef'] ?? null;
+            if($datef == null)
+                $datef = date("Y-m-d H:i:s");
+			$duree = $_POST['duree'] ?? null;
 			$description = $_POST['description'];
 			if(Application::getUser()->role() === Roles::Enterprise)
                 $idUtilisateur = Application::getUser()->id();
@@ -228,6 +235,10 @@ class MainController extends Controller
 		}
 	}
 
+    public function sauvegarder(Request $request): void
+    {
+        echo "test";
+    }
     public function deleteOffre(Request $request): void
     {
         if ($request->getMethod() === 'post') {

@@ -204,6 +204,16 @@ class OffresRepository extends AbstractRepository
         return $resultat;
     }
 
+    public function draftExist($idEntreprise): ?array{
+        $sql = "SELECT * FROM Offre WHERE idutilisateur = :idutilisateur AND status = 'draft'";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idutilisateur' => $idEntreprise]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetchAll();
+        if ($resultat == false) return null;
+        return $resultat;
+    }
+
     public function tableChecker($filter): string
     {
         if (array_key_exists('alternance', $filter) && array_key_exists('stage', $filter))
