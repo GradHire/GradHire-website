@@ -8,7 +8,6 @@
 	<link rel="stylesheet" href="/resources/css/output.css">
 </head>
 <body>
-
 <nav class="bg-white border-zinc-200 dark:bg-zinc-900 shadow">
 	<div class="flex flex-wrap items-center justify-between md:w-[75%] w-full max-w-[1200px] mx-auto p-4">
 		<a href="/" class="flex items-center">
@@ -80,6 +79,8 @@
 		</div>
 	</div>
 </nav>
+<div id="blur-background" class="hidden w-screen h-screen fixed z-50 top-0 left-0 backdrop-blur-md"></div>
+
 <div class="w-full flex justify-center items-center">
 	<div class="md:w-[75%] w-full max-w-[1200px] p-4 flex justify-center items-center">
 		{{content}}
