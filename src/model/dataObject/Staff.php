@@ -3,11 +3,8 @@ namespace app\src\model\dataObject;
 use app\src\model\dataObject\Utilisateur;
 
 class Staff extends Utilisateur {
+
     private int $idUtilisateur;
-    private ?string $bio;
-    private string $emailUtilisateur;
-    private string $nomUtilisateur;
-    private ?string $numTelUtilisateur;
     private string $prenomUtilisateurLDAP;
     private string $loginLDAP;
     private string $role;
@@ -15,12 +12,8 @@ class Staff extends Utilisateur {
 
     public function __construct($idUtilisateur, $bio, $emailUtilisateur, $nomUtilisateur, $numTelUtilisateur, $prenomUtilisateurLDAP, $loginLDAP, $role, $mailuni)
     {
-        parent::__construct($idUtilisateur, $emailUtilisateur, $nomUtilisateur, $numTelUtilisateur);
+        parent::__construct($idUtilisateur, $emailUtilisateur, $nomUtilisateur, $numTelUtilisateur, $bio);
         $this->idUtilisateur = $idUtilisateur;
-        $this->bio = $bio;
-        $this->emailUtilisateur = $emailUtilisateur;
-        $this->nomUtilisateur = $nomUtilisateur;
-        $this->numTelUtilisateur = $numTelUtilisateur;
         $this->prenomUtilisateurLDAP = $prenomUtilisateurLDAP;
         $this->loginLDAP = $loginLDAP;
         $this->role = $role;
@@ -36,46 +29,6 @@ class Staff extends Utilisateur {
     public function setIdUtilisateur(int $idUtilisateur): void
     {
         $this->idUtilisateur = $idUtilisateur;
-    }
-
-    public function getBio(): ?string
-    {
-        return $this->bio;
-    }
-
-    public function setBio(?string $bio): void
-    {
-        $this->bio = $bio;
-    }
-
-    public function getEmailUtilisateur(): string
-    {
-        return $this->emailUtilisateur;
-    }
-
-    public function setEmailUtilisateur(string $emailUtilisateur): void
-    {
-        $this->emailUtilisateur = $emailUtilisateur;
-    }
-
-    public function getNomUtilisateur(): string
-    {
-        return $this->nomUtilisateur;
-    }
-
-    public function setNomUtilisateur(string $nomUtilisateur): void
-    {
-        $this->nomUtilisateur = $nomUtilisateur;
-    }
-
-    public function getNumTelUtilisateur(): ?string
-    {
-        return $this->numTelUtilisateur;
-    }
-
-    public function setNumTelUtilisateur(?string $numTelUtilisateur): void
-    {
-        $this->numTelUtilisateur = $numTelUtilisateur;
     }
 
     public function getPrenomUtilisateurLDAP(): string

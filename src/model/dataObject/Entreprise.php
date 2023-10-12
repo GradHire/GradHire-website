@@ -28,9 +28,9 @@ class Entreprise extends Utilisateur
      * @param int $validee
      */
 
-    public function __construct(int $idutilisateur, ?string $statutjuridique, ?string $typestructure, ?string $effectif, ?string $codenaf, ?string $fax, ?string $siteweb, int $siret, int $validee, string $emailutilisateur, string $nomutilisateur, string $numtelutilisateur)
+    public function __construct(int $idutilisateur,?string $bio, ?string $statutjuridique, ?string $typestructure, ?string $effectif, ?string $codenaf, ?string $fax, ?string $siteweb, int $siret, int $validee, string $emailutilisateur, string $nomutilisateur, string $numtelutilisateur)
     {
-        parent::__construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur);
+        parent::__construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur, $bio);
         $this->idutilisateur = $idutilisateur;
         $this->statutjuridique = $statutjuridique;
         $this->typestructure = $typestructure;
@@ -40,7 +40,6 @@ class Entreprise extends Utilisateur
         $this->siteweb = $siteweb;
         $this->siret = $siret;
         $this->validee = $validee;
-        echo '<br> Entreprise construct <br>';
     }
 
     protected function getValueColonne(string $nomColonne): string

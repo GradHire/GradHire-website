@@ -4,10 +4,6 @@ use app\src\model\dataObject\Utilisateur;
 class Tuteur extends Utilisateur {
 
     private int $idUtilisateur;
-    private ?string $bio;
-    private string $emailUtilisateur;
-    private string $nomUtilisateur;
-    private ?string $numTelUtilisateur;
     private ?string $hash;
     private string $prenomtuteurp;
     private ?string $fonctiontuteurp;
@@ -15,17 +11,12 @@ class Tuteur extends Utilisateur {
 
     public function __construct(int $idUtilisateur,?string $bio,string $emailUtilisateur,string $nomUtilisateur, ?string $numTelUtilisateur,?string $hash,string $prenomtuteurp, ?string $fonctiontuteurp, int $identreprise)
     {
-        parent::__construct($idUtilisateur, $emailUtilisateur, $nomUtilisateur, $numTelUtilisateur);
+        parent::__construct($idUtilisateur, $emailUtilisateur, $nomUtilisateur, $numTelUtilisateur, $bio);
         $this->idUtilisateur = $idUtilisateur;
-        $this->bio = $bio;
-        $this->emailUtilisateur = $emailUtilisateur;
-        $this->nomUtilisateur = $nomUtilisateur;
-        $this->numTelUtilisateur = $numTelUtilisateur;
         $this->hash = $hash;
         $this->prenomtuteurp = $prenomtuteurp;
         $this->fonctiontuteurp = $fonctiontuteurp;
         $this->identreprise = $identreprise;
-        echo '<br> Tuteur construct <br>';
     }
 
     public function getIdUtilisateur(): int
@@ -36,46 +27,6 @@ class Tuteur extends Utilisateur {
     public function setIdUtilisateur(int $idUtilisateur): void
     {
         $this->idUtilisateur = $idUtilisateur;
-    }
-
-    public function getBio(): ?string
-    {
-        return $this->bio;
-    }
-
-    public function setBio(?string $bio): void
-    {
-        $this->bio = $bio;
-    }
-
-    public function getEmailUtilisateur(): string
-    {
-        return $this->emailUtilisateur;
-    }
-
-    public function setEmailUtilisateur(string $emailUtilisateur): void
-    {
-        $this->emailUtilisateur = $emailUtilisateur;
-    }
-
-    public function getNomUtilisateur(): string
-    {
-        return $this->nomUtilisateur;
-    }
-
-    public function setNomUtilisateur(string $nomUtilisateur): void
-    {
-        $this->nomUtilisateur = $nomUtilisateur;
-    }
-
-    public function getNumTelUtilisateur(): ?string
-    {
-        return $this->numTelUtilisateur;
-    }
-
-    public function setNumTelUtilisateur(?string $numTelUtilisateur): void
-    {
-        $this->numTelUtilisateur = $numTelUtilisateur;
     }
 
     public function getHash(): ?string
@@ -117,4 +68,5 @@ class Tuteur extends Utilisateur {
     {
         $this->identreprise = $identreprise;
     }
+
 }

@@ -145,22 +145,18 @@ class MainController extends Controller
         $utilisateur = null;
         if ((new EntrepriseRepository())->getByIdFull($id) != null) {
             $utilisateur = (new EntrepriseRepository())->getByIdFull($id);
-            print_r($utilisateur);
             return $this->render('utilisateurs/detailEntreprise', ['utilisateur' => $utilisateur]);
         }
         elseif ((new EtudiantRepository())->getByIdFull($id) != null){
             $utilisateur = (new EtudiantRepository())->getByIdFull($id);
-            print_r($utilisateur);
             return $this->render('utilisateurs/detailEtudiant', ['utilisateur' => $utilisateur]);
         }
         elseif ((new TuteurRepository())->getByIdFull($id) != null){
             $utilisateur = (new TuteurRepository())->getByIdFull($id);
-            print_r($utilisateur);
             return $this->render('utilisateurs/detailTuteur', ['utilisateur' => $utilisateur]);
         }
         elseif ((new StaffRepository())->getByIdFull($id) != null){
             $utilisateur = (new StaffRepository())->getByIdFull($id);
-            print_r($utilisateur);
             return $this->render('utilisateurs/detailStaff', ['utilisateur' => $utilisateur]);
         }
         $utilisateur = (new UtilisateurRepository())->getAll();

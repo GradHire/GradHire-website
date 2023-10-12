@@ -44,21 +44,9 @@ class UtilisateurRepository extends AbstractRepository
             $dataObjectFormatTableau['idutilisateur'],
             $dataObjectFormatTableau['emailutilisateur'] ?? "",
             $dataObjectFormatTableau['nomutilisateur'] ?? "",
-            $dataObjectFormatTableau['numtelutilisateur'] ?? ""
+            $dataObjectFormatTableau['numtelutilisateur'] ?? "",
+            $dataObjectFormatTableau['bio'] ?? ""
         );
-    }
-
-    public function getUserNom($idUtilisateur): ?string
-    {
-        $sql = "SELECT nomutilisateur FROM $this->nomTable WHERE idutilisateur = :idutilisateur";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idutilisateur' => $idUtilisateur]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetch();
-        if ($resultat == false) {
-            return null;
-        }
-        return $resultat['nomutilisateur'];
     }
 
     protected function getNomColonnes(): array

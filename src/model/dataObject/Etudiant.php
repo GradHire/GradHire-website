@@ -1,20 +1,15 @@
 <?php
 namespace app\src\model\dataObject;
-use app\src\model\dataObject\AbstractDataObject;
 use app\src\model\dataObject\Utilisateur;
 class Etudiant extends Utilisateur {
 
     private int $idUtilisateur;
-    private string $bio;
-    private string $emailUtilisateur;
-    private ?string $numTelUtilisateur;
     private ?string $mailperso;
     private ?string $codesexeetudiant;
     private ?int $numEtudiant;
     private ?string $datenaissance;
     private ?int $idgroupe;
     private int $annee;
-    private string $nomutilisateur;
     private string $prenomutilisateurldap;
     private string $loginLDAP;
 
@@ -23,7 +18,7 @@ class Etudiant extends Utilisateur {
         return $this->$nomColonne;
     }
 
-    public function __construc(
+    public function __construct(
         int $idUtilisateur,
         string $bio,
         string $emailUtilisateur,
@@ -37,22 +32,18 @@ class Etudiant extends Utilisateur {
         int $annee,
         string $prenomutilisateurldap,
         string $loginLDAP
-    ){
-        parent::__construct( $idUtilisateur, $emailUtilisateur,$nomutilisateur, $numTelUtilisateur);
+    )
+    {
+        parent::__construct($idUtilisateur, $emailUtilisateur,$nomutilisateur, $numTelUtilisateur,$bio);
         $this->idUtilisateur = $idUtilisateur;
-        $this->bio = $bio;
-        $this->emailUtilisateur = $emailUtilisateur;
-        $this->numTelUtilisateur = $numTelUtilisateur;
         $this->mailperso = $mailperso;
         $this->codesexeetudiant = $codesexeetudiant;
         $this->numEtudiant = $numEtudiant;
         $this->datenaissance = $datenaissance;
         $this->idgroupe = $idgroupe;
         $this->annee = $annee;
-        $this->nomutilisateur = $nomutilisateur;
         $this->prenomutilisateurldap = $prenomutilisateurldap;
         $this->loginLDAP = $loginLDAP;
-        echo '<br> Etudiant construct <br>';
     }
 
     public function getIdUtilisateur(): int
@@ -65,35 +56,6 @@ class Etudiant extends Utilisateur {
         $this->idUtilisateur = $idUtilisateur;
     }
 
-    public function getBio(): string
-    {
-        return $this->bio;
-    }
-
-    public function setBio(string $bio): void
-    {
-        $this->bio = $bio;
-    }
-
-    public function getEmailUtilisateur(): string
-    {
-        return $this->emailUtilisateur;
-    }
-
-    public function setEmailUtilisateur(string $emailUtilisateur): void
-    {
-        $this->emailUtilisateur = $emailUtilisateur;
-    }
-
-    public function getNumTelUtilisateur(): ?string
-    {
-        return $this->numTelUtilisateur;
-    }
-
-    public function setNumTelUtilisateur(?string $numTelUtilisateur): void
-    {
-        $this->numTelUtilisateur = $numTelUtilisateur;
-    }
 
     public function getMailperso(): ?string
     {
@@ -155,14 +117,15 @@ class Etudiant extends Utilisateur {
         $this->annee = $annee;
     }
 
-    public function getNomutilisateur(): string
+
+    public function getPrenomutilisateurldap(): string
     {
-        return $this->nomutilisateur;
+        return $this->prenomutilisateurldap;
     }
 
-    public function setNomutilisateur(string $nomutilisateur): void
+    public function setPrenomutilisateurldap(string $prenomutilisateurldap): void
     {
-        $this->nomutilisateur = $nomutilisateur;
+        $this->prenomutilisateurldap = $prenomutilisateurldap;
     }
 
     public function getLoginLDAP(): string
@@ -174,6 +137,8 @@ class Etudiant extends Utilisateur {
     {
         $this->loginLDAP = $loginLDAP;
     }
+
+
 
 
 }

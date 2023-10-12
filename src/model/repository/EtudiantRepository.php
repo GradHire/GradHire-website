@@ -11,10 +11,10 @@ class EtudiantRepository extends UtilisateurRepository{
     {
         return new Etudiant(
             $dataObjectFormatTableau["idutilisateur"],
-            $dataObjectFormatTableau["bio"],
             $dataObjectFormatTableau["emailutilisateur"],
             $dataObjectFormatTableau["nomutilisateur"],
             $dataObjectFormatTableau["numtelutilisateur"],
+            $dataObjectFormatTableau["bio"],
             $dataObjectFormatTableau["mailperso"],
             $dataObjectFormatTableau["codesexeetudiant"],
             $dataObjectFormatTableau["numetudiant"],
@@ -36,9 +36,6 @@ class EtudiantRepository extends UtilisateurRepository{
         if ($resultat == false) {
             return null;
         }
-        echo '<br>';
-        print_r($resultat);
-        echo '<br>';
         return $this->construireDepuisTableau($resultat);
     }
 
