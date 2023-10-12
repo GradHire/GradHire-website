@@ -337,42 +337,37 @@ class MainController extends Controller
 		return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
 	}
 
+	/**
+	 * @throws NotFoundException
+	 * @throws ServerErrorException
+	 */
 	public function postuler(Request $request): string
 	{
 		$id = $request->getRouteParams()['id'] ?? null;
 		$offre = (new OffresRepository())->getById($id);
-		if ($request->getMethod() === 'get') {
-			return $this->render('candidature/postuler', ['offre' => $offre]);
-		} else {
-			$idoffre = $offre->getIdOffre();
-			$iduser = Application::getUser()->id();
-			$nomfichier = "uploads/" . $idoffre . "_" . $iduser;
-			if (!file_exists($nomfichier)) {
-				mkdir($nomfichier, 0777, true);
-				$target_dir = $nomfichier . "/"; // utiliser le nouveau dossier comme répertoire cible
 
-				$target_file = $target_dir . basename($_FILES["cv"]["name"]);
-				$target_file2 = $target_dir . basename($_FILES["ltm"]["name"]);
+		if (!$offre) throw  new NotFoundException();
 
-				$imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-				$imageFileType2 = strtolower(pathinfo($target_file2, PATHINFO_EXTENSION));
+		$form = new FormModel([
+			"cv" => FormModel::file("CV")->required()->pdf(),
+			"ltm" => FormModel::file("Lettre de motivation")->required()->pdf()
+		]);
+		$form->useFile();
 
-				move_uploaded_file($_FILES["cv"]["tmp_name"], $target_file);
-				move_uploaded_file($_FILES["ltm"]["tmp_name"], $target_file2);
-
-				rename($target_file, $target_dir . "cv." . $imageFileType);
-				rename($target_file2, $target_dir . "ltm." . $imageFileType2);
-
-				$datecourante = date("Y-m-d");
-				$sql = "INSERT INTO Candidature VALUES (NULL, '$datecourante', 'En attente', $idoffre, $iduser)";
-				$requete = Database::get_conn()->prepare($sql);
-				$requete->execute();
-			} else {
-				echo "Vous avez déja postulé pour cette offre";
+		if ($request->getMethod() === 'post') {
+			if ($form->validate($request->getBody())) {
+				$path = "uploads/" . $id . "_" . Application::getUser()->id();
+				$form->getFile("cv")->save($path, "cv");
+				$form->getFile("ltm")->save($path, "ltm");
+				$stmt = Database::get_conn()->prepare("INSERT INTO `Candidature`(`idoffre`, `idutilisateur`) VALUES (?,?)");
+				$stmt->execute([$id, Application::getUser()->id()]);
+				Application::$app->response->redirect('/offres');
+				return '';
 			}
-			return Application::$app->response->redirect('/offres');
+
 		}
-
+		return $this->render('candidature/postuler', [
+			'form' => $form
+		]);
 	}
-
 }
