@@ -17,6 +17,7 @@ class Offre extends AbstractDataObject
     private ?string $dateFin;
     private string $status;
     private ?string $anneeVisee;
+    private ?string  $nomutilisateur;
     private string $idAnnee;
     private int $idutilisateur;
     private string $description;
@@ -41,6 +42,7 @@ class Offre extends AbstractDataObject
         $idUtilisateur,
         $description,
         $datecreation,
+        $nomutilisateur,
         $status
 //        $alternance
     )
@@ -303,6 +305,17 @@ class Offre extends AbstractDataObject
     {
         return $this->$nomColonne;
     }
+
+    public function getNomutilisateur(): ?string
+    {
+        return $this->nomutilisateur;
+    }
+
+    public function setNomutilisateur(?string $nomutilisateur): void
+    {
+        $this->nomutilisateur = $nomutilisateur;
+    }
+
 
 
 }
