@@ -23,7 +23,7 @@ class OffreForm extends Model{
             "idAnneeTag" => $offre->getIdAnnee(),
             "idUtilisateurTag" => $offre->getIdutilisateur(),
             "descriptionTag" => $offre->getDescription(),
-            "statutTag" => $offre->getstatus(),
+            "statutTag" => $offre->getStatut(),
             "dateCreationTag" => $offre->getDateCreation(),
         );
         try {

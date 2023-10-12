@@ -217,7 +217,7 @@ class MainController extends Controller
 			$idAnnee = date("Y");
 
 			$datecreation = date("Y-m-d H:i:s");
-			$offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation,$nomutilisateur,$statut);
+			$offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef,$statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation,null);
 
 			OffreForm::creerOffre($offre, $distanciel);
 			return $this->render('/offres/create');
