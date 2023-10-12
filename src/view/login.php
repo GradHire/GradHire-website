@@ -13,11 +13,9 @@ use app\src\model\Form\FormModel;
 	<?php $form->start(); ?>
 	<div class="w-full gap-4 flex flex-col">
 		<?php
-		$form->field("username");
-		$form->field("password");
-		$form->field("remember");
+		$form->print_all_fields();
 		$form->submit("Se connecter");
-		echo $form->getError();
+		$form->getError();
 		?>
 	</div>
 	<?php $form->end(); ?>
