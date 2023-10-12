@@ -15,13 +15,12 @@ class Offre extends AbstractDataObject
     private ?string $avantageNature;
     private string $dateDebut;
     private ?string $dateFin;
-    private ?string $statut;
+    private string $status;
     private ?string $anneeVisee;
     private string $idAnnee;
     private int $idutilisateur;
     private string $description;
     private string $datecreation;
-    private ?string $nomutilisateur;
 
 //    private ?int $alternance;
     public function __construct
@@ -37,13 +36,12 @@ class Offre extends AbstractDataObject
         $avantageNature,
         $dateDebut,
         $dateFin,
-        $statut,
         $anneeVisee,
         $idAnnee,
         $idUtilisateur,
         $description,
         $datecreation,
-        $nomutilisateur
+        $status
 //        $alternance
     )
     {
@@ -58,18 +56,17 @@ class Offre extends AbstractDataObject
         $this->avantageNature = $avantageNature;
         $this->dateDebut = $dateDebut;
         $this->dateFin = $dateFin;
-        $this->statut = $statut;
+        $this->status = $status;
         $this->anneeVisee = $anneeVisee;
         $this->idAnnee = $idAnnee;
         $this->idutilisateur = $idUtilisateur;
         $this->description = $description;
         $this->datecreation = $datecreation;
-        $this->nomutilisateur = $nomutilisateur;
     }
 
     public function __toString(): string
     {
-        return "Offre : " . $this->getSujet() . " " . $this->getThematique() . " " . $this->getDuree() . " " . $this->getNbjourtravailhebdo() . " " . $this->getNbHeureTravailHebdo() . " " . $this->getGratification() . " " . $this->getUnitegratification() . " " . $this->getAvantageNature() . " " . $this->getDateDebut() . " " . $this->getDateFin() . " " . $this->getStatut() . " " . $this->getAnneeVisee() . " " . $this->getIdAnnee() . " " . $this->getIdutilisateur() . " " . $this->getDescription();
+        return "Offre : " . $this->getSujet() . " " . $this->getThematique() . " " . $this->getDuree() . " " . $this->getNbjourtravailhebdo() . " " . $this->getNbHeureTravailHebdo() . " " . $this->getGratification() . " " . $this->getUnitegratification() . " " . $this->getAvantageNature() . " " . $this->getDateDebut() . " " . $this->getDateFin() . " " . $this->getstatus() . " " . $this->getAnneeVisee() . " " . $this->getIdAnnee() . " " . $this->getIdutilisateur() . " " . $this->getDescription();
     }
 
     /**
@@ -243,17 +240,17 @@ class Offre extends AbstractDataObject
     /**
      * @return string
      */
-    public function getStatut(): ?string
+    public function getstatus(): ?string
     {
-        return $this->statut;
+        return $this->status;
     }
 
     /**
-     * @param string $statut
+     * @param string $status
      */
-    public function setStatut(string $statut): void
+    public function setstatus(string $status): void
     {
-        $this->statut = $statut;
+        $this->status = $status;
     }
 
     /**
@@ -299,10 +296,6 @@ class Offre extends AbstractDataObject
         return $this->datecreation;
     }
 
-    public function getNomutilisateur()
-    {
-        return $this->nomutilisateur;
-    }
 
 
 

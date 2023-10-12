@@ -201,13 +201,13 @@ class MainController extends Controller
 			else $distanciel = null;
 			$salaire = $_POST['salaire'];
 			$unitesalaire = "heures";
-			$statut = "en attente";
+			$statut = "pending";
 			$avantage = $_POST['avantage'];
 			$dated = $_POST['dated'];
 			$datef = $_POST['datef'];
 			$duree = $_POST['duree'];
 			$description = $_POST['description'];
-			$idUtilisateur = 51122324;
+			$idUtilisateur = Application::getUser()->id();
 			$idOffre = null;
 			if ($duree == 1) {
 				$anneeVisee = "2";
@@ -215,10 +215,10 @@ class MainController extends Controller
 				$anneeVisee = "3";
 			}
 			$idAnnee = date("Y");
-			//get current timestamp
+
 			$datecreation = date("Y-m-d H:i:s");
-			$offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef, $statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation);
-			print_r($offre);
+			$offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation, $statut);
+
 			OffreForm::creerOffre($offre, $distanciel);
 			return $this->render('/offres/create');
 		}

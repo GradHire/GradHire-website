@@ -5,7 +5,7 @@ use app\src\model\dataObject\Offre;
 
 class OffreForm extends Model{
     public static function creerOffre(Offre $offre, ?float $distanciel){
-        $sql = "INSERT INTO Offre VALUES (null ,:dureeTag, :thematiqueTag, :sujetTag, :nbJourTravailHebdoTag, :nbHeureTravailHebdoTag, :gratificationTag, :unitegratificationTag, :avantageNatureTag, :dateDebutTag, :dateFinTag, :statutTag, :anneeViseeTag, :idAnneeTag, :idUtilisateurTag, :descriptionTag,null)";
+        $sql = "INSERT INTO Offre VALUES (null ,:dureeTag, :thematiqueTag, :sujetTag, :nbJourTravailHebdoTag, :nbHeureTravailHebdoTag, :gratificationTag, :unitegratificationTag, :avantageNatureTag, :dateDebutTag, :dateFinTag, :anneeViseeTag, :idAnneeTag, :idUtilisateurTag, :descriptionTag,:dateCreationTag,:statutTag)";
         echo $sql;
         $pdoStatement = Database::get_conn()->prepare($sql);
         $values = array(
@@ -19,11 +19,12 @@ class OffreForm extends Model{
             "avantageNatureTag" => $offre->getAvantageNature(),
             "dateDebutTag" => $offre->getDateDebut(),
             "dateFinTag" => $offre->getDateFin(),
-            "statutTag" => $offre->getStatut(),
             "anneeViseeTag" => $offre->getAnneeVisee(),
             "idAnneeTag" => $offre->getIdAnnee(),
             "idUtilisateurTag" => $offre->getIdutilisateur(),
             "descriptionTag" => $offre->getDescription(),
+            "statutTag" => $offre->getstatus(),
+            "dateCreationTag" => $offre->getDateCreation(),
         );
         try {
             $pdoStatement->execute($values);
