@@ -19,11 +19,11 @@ class ProUser extends User
 		try {
 			$user = self::find_account($email, $password);
 			if (is_null($user)) {
-				$form->add_error("Email ou mot de passe invalide");
+				$form->setError("Email ou mot de passe invalide");
 				return false;
 			}
 			if ($user->role() == Roles::Enterprise && !$user->attributes()["validee"]) {
-				$form->add_error("Votre compte n'a pas encore été validé.");
+				$form->setError("Votre compte n'a pas encore été validé.");
 				return false;
 			}
 			Auth::generate_token($user, $remember);

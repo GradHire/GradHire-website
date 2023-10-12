@@ -81,13 +81,10 @@ class AuthController extends Controller
 		if ($request->getMethod() === 'post') {
 			if ($loginForm->validate($request->getBody())) {
 				$dt = $loginForm->getParsedBody();
-				print_r($dt);
 				if (LdapUser::login($dt["username"], $dt["password"], $dt["remember"], $loginForm)) {
 					Application::$app->response->redirect('/');
 					return null;
 				}
-			} else {
-				print_r("toz");
 			}
 		}
 		$this->setLayout('auth');

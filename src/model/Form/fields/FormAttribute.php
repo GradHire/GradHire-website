@@ -6,6 +6,7 @@ namespace app\src\model\Form\fields;
 use app\src\model\Form\FormInputValue;
 use app\src\model\Form\FormValidationException;
 use app\src\model\Form\rules\FormAttributeRule;
+use app\src\model\Form\rules\RuleRequired;
 
 abstract class FormAttribute
 {
@@ -38,10 +39,9 @@ abstract class FormAttribute
 	{
 		try {
 			if ($this instanceof FormFile) {
-				$value = new FormInputValue($_FILES[$name] ?? null, $fields, $body);
-				foreach ($this->rules as $rule)
-					$rule->process($value);
-				return [null, $value->toString()];
+				$file = $_FILES[$name] ?? null;
+				if (!is_null($file) && (is_null($file["name"]) || $file["name"] === "")) $file = null;
+				$value = new FormInputValue($file, $fields, $body);
 			} else {
 				$value = new FormInputValue($body[$name] ?? null, $fields, $body);
 				foreach ($this->priority_rules as $rule)
@@ -49,13 +49,49 @@ abstract class FormAttribute
 				$this->type_rule->process($value);
 				foreach ($this->modifiers as $modifier)
 					$modifier->process($value);
-				foreach ($this->rules as $rule)
-					$rule->process($value);
-				return [null, $value->toString()];
 			}
+			foreach ($this->rules as $rule)
+				$rule->process($value);
+			return [null, $value->toString()];
 		} catch (FormValidationException $e) {
 			return [$e, null];
 		}
+	}
+
+	public function required(): static
+	{
+		$this->addPriorityRule(new RuleRequired());
+		$this->setParam("required");
+		return $this;
+	}
+
+	protected function addPriorityRule(FormAttributeRule $rule): void
+	{
+		$this->priority_rules[] = $rule;
+	}
+
+	protected function setParam(string $name, $value = null): void
+	{
+		if (is_null($value))
+			$this->params[] = $name;
+		else
+			$this->params[$name] = $value;
+	}
+
+	public function id(string $id): static
+	{
+		$this->setParam("id", $id);
+		return $this;
+	}
+
+	public function params(array $attributes): static
+	{
+		foreach ($attributes as $key => $value)
+			if (is_null($value))
+				$this->setParam($key);
+			else
+				$this->setParam($key, $value);
+		return $this;
 	}
 
 	abstract function field(string $name, string $value): string;
@@ -68,22 +104,9 @@ abstract class FormAttribute
 		return $val;
 	}
 
-	protected function addPriorityRule(FormAttributeRule $rule): void
-	{
-		$this->priority_rules[] = $rule;
-	}
-
 	protected function addRule(FormAttributeRule $rule): void
 	{
 		$this->rules[] = $rule;
-	}
-
-	protected function setParam(string $name, $value = null): void
-	{
-		if (is_null($value))
-			$this->params[] = $name;
-		else
-			$this->params[$name] = $value;
 	}
 
 	protected function getParams(): string

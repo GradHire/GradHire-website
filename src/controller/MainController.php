@@ -119,7 +119,11 @@ class MainController extends Controller
 				]);
 				break;
 		}
-		$attr = array_merge($attr, ["bio" => FormModel::string("Biographie")->default($user->attributes()["bio"]), "picture" => FormModel::file("Photo de profile")]);
+		$attr = array_merge(
+			["picture" => FormModel::file("Photo de profile")->id("image")->image()],
+			$attr,
+			["bio" => FormModel::string("Biographie")->default($user->attributes()["bio"])->max(200)]
+		);
 		$form = new FormModel($attr);
 		$form->useFile();
 

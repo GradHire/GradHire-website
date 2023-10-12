@@ -20,7 +20,7 @@ class EnterpriseUser extends ProUser
 		try {
 			$exist = EnterpriseUser::exist($body["email"], $body["siret"]);
 			if ($exist) {
-				$form->add_error("Un compte existe déjà avec cette adresse mail ou ce numéro de siret.");
+				$form->setError("Un compte existe déjà avec cette adresse mail ou ce numéro de siret.");
 				return false;
 			}
 			EnterpriseUser::save([$body["name"], $body["siret"], $body["email"], password_hash($body["password"], PASSWORD_DEFAULT), $body["phone"]]);

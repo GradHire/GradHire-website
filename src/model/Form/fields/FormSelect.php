@@ -22,7 +22,7 @@ class FormSelect extends AnyAttribute
 	function field(string $name, string $value): string
 	{
 		$value = $this->getValue($value);
-		$select = '<select name="' . $name . '" ' . $this->getParams() . '>';
+		$select = '<select name="' . $name . '" ' . $this->getParams() . ' class="w-full text-zinc-700 rounded-lg sm:text-sm p-2">';
 		foreach ($this->options as $fValue => $label) {
 			$select .= "<option value=\"$fValue\" " . ($value === $fValue ? 'selected="selected"' : '') . " >$label</option>";
 		}
