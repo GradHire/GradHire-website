@@ -70,6 +70,12 @@ if ($user->attributes()["validee"] == 0) throw new NotFoundException();
                                 <span>Liste des tuteurs</span>
                             </div>
                         </a>
+                        <a class="block flex-1 text-center text-sm text-gray-600 hover:text-gray-800 font-medium px-3 py-4 group"
+                           href="candidatures">
+                            <div class="flex items-center justify-center">
+                                <span>Liste des candidatures</span>
+                            </div>
+                        </a>
 					<?php } else { ?>
 						<a class="block flex-1 text-center text-sm text-indigo-500 hover:text-indigo-600 font-medium px-3 py-4"
 						   href="mailto:<?= $user->attributes()["emailutilisateur"] ?>" target="_blank">
