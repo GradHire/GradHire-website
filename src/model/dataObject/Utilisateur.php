@@ -9,6 +9,7 @@ class Utilisateur extends AbstractDataObject
     private string $nomutilisateur;
     private string $emailutilisateur;
     private int $idutilisateur;
+    private ?string $bio;
 
     /**
      * @param string|null $numtelutilisateur
@@ -16,13 +17,13 @@ class Utilisateur extends AbstractDataObject
      * @param string $emailutilisateur
      * @param int $idutilisateur
      */
-    public function __construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur)
+    public function __construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur, $bio)
     {
         $this->idutilisateur = $idutilisateur;
         $this->emailutilisateur = $emailutilisateur;
         $this->nomutilisateur = $nomutilisateur;
         $this->numtelutilisateur = $numtelutilisateur;
-        echo '<br> Utilisateurs construct <br>';
+        $this->bio = $bio;
     }
 
     public function getNumtelutilisateur(): ?string
@@ -69,4 +70,15 @@ class Utilisateur extends AbstractDataObject
     {
         return $this->$nomColonne;
     }
+
+    public function getBio(): ?string
+    {
+        return $this->bio;
+    }
+
+    public function setBio(?string $bio): void
+    {
+        $this->bio = $bio;
+    }
+
 }

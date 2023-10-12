@@ -26,6 +26,7 @@ class EntrepriseRepository extends UtilisateurRepository
     {
         return new Entreprise(
             $entrepriseData['idutilisateur'],
+            $entrepriseData['bio'] ?? "",
             $entrepriseData['statutjuridique'] ?? "",
             $entrepriseData['typestructure'] ?? "",
             $entrepriseData['effectif'] ?? "",
