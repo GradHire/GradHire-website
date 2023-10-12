@@ -340,9 +340,11 @@ class MainController extends Controller
 	/**
 	 * @throws NotFoundException
 	 * @throws ServerErrorException
+	 * @throws ForbiddenException
 	 */
 	public function postuler(Request $request): string
 	{
+		if (!Auth::has_role(Roles::Student)) throw new ForbiddenException();
 		$id = $request->getRouteParams()['id'] ?? null;
 		$offre = (new OffresRepository())->getById($id);
 
@@ -357,8 +359,11 @@ class MainController extends Controller
 		if ($request->getMethod() === 'post') {
 			if ($form->validate($request->getBody())) {
 				$path = "uploads/" . $id . "_" . Application::getUser()->id();
-				$form->getFile("cv")->save($path, "cv");
-				$form->getFile("ltm")->save($path, "ltm");
+				if (!$form->getFile("cv")->save($path, "cv") ||
+					!$form->getFile("ltm")->save($path, "ltm")) {
+					$form->setError("Impossible de télécharger tous les fichiers");
+					return '';
+				}
 				$stmt = Database::get_conn()->prepare("INSERT INTO `Candidature`(`idoffre`, `idutilisateur`) VALUES (?,?)");
 				$stmt->execute([$id, Application::getUser()->id()]);
 				Application::$app->response->redirect('/offres');
