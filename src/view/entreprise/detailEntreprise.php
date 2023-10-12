@@ -12,22 +12,27 @@
             <h3 class="text-lg font-semibold leading-7 text-gray-900"><?= $entreprise->getNomutilisateur() ?></h3>
             <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-500"><?= $entreprise->getTypestructure() ?></p>
         </div>
-        <div>
-            <?php
-            if ($entreprise->getValidee() == "0") {
-                echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-yellow-100 text-yellow-800\">
-    En attente
-    </span>";
-            } else if ($entreprise->getValidee() == "1") {
-                echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-green-100 text-green-800\">
-    Validée
-    </span>";
-            }
-            ?>
-        </div>
     </div>
     <div class="mt-6 border-t border-gray-100">
         <dl class="divide-y divide-gray-100">
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-gray-900">Statut</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                    <div>
+                        <?php
+                        if ($entreprise->getValidee() == "0") {
+                            echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-yellow-100 text-yellow-800\">
+    En attente
+    </span>";
+                        } else if ($entreprise->getValidee() == "1") {
+                            echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-green-100 text-green-800\">
+    Validée
+    </span>";
+                        }
+                        ?>
+                    </div>
+                </dd>
+            </div>
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Effectif</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
