@@ -40,6 +40,7 @@ class Entreprise extends Utilisateur
         $this->siteweb = $siteweb;
         $this->siret = $siret;
         $this->validee = $validee;
+        echo '<br> Entreprise construct <br>';
     }
 
     protected function getValueColonne(string $nomColonne): string

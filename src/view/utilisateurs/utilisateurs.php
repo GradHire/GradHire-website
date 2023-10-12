@@ -1,6 +1,5 @@
 <?php
 /** @var $utilisateurs \app\src\model\dataObject\Utilisateur */
-
 use app\src\core\exception\NotFoundException;
 use app\src\model\Auth;
 use app\src\model\Users\Roles;

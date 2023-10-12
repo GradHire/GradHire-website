@@ -1,34 +1,35 @@
 <?php
-namespace app\src\model\repository;
-use app\src\core\db\Database;
-use app\src\model\repository\AbstractRepository;
-use app\src\model\repository\UtilisateurRepository;
-use app\src\model\dataObject\Etudiant;
-class EtudiantRepository extends UtilisateurRepository{
 
-    private static string $view = "EtudiantVue";
-    protected function construireDepuisTableau(array $dataObjectFormatTableau): Etudiant
+namespace app\src\model\repository;
+
+use app\src\core\db\Database;
+use app\src\model\dataObject\Staff;
+use app\src\model\repository\UtilisateurRepository;
+use app\src\model\dataObject\Utilisateur;
+
+class StaffRepository extends UtilisateurRepository
+{
+
+    private static string $view = "StaffVue";
+
+    protected function construireDepuisTableau(array $dataObjectFormatTableau): Staff
     {
-        return new Etudiant(
+        return new Staff(
             $dataObjectFormatTableau["idutilisateur"],
             $dataObjectFormatTableau["bio"],
             $dataObjectFormatTableau["emailutilisateur"],
             $dataObjectFormatTableau["nomutilisateur"],
             $dataObjectFormatTableau["numtelutilisateur"],
-            $dataObjectFormatTableau["mailperso"],
-            $dataObjectFormatTableau["codesexeetudiant"],
-            $dataObjectFormatTableau["numetudiant"],
-            $dataObjectFormatTableau["datenaissance"],
-            $dataObjectFormatTableau["idgroupe"],
-            $dataObjectFormatTableau["annee"],
             $dataObjectFormatTableau["prenomutilisateurldap"],
-            $dataObjectFormatTableau["loginldap"]
+            $dataObjectFormatTableau["loginldap"],
+            $dataObjectFormatTableau["role"],
+            $dataObjectFormatTableau["mailuni"]
         );
     }
 
-    public function getByIdFull($idutilisateur): ?Etudiant
+    public function getByIdFull($idutilisateur): ?Staff
     {
-        $sql = "SELECT * FROM ".self::$view." WHERE idutilisateur = :idutilisateur";
+        $sql = "SELECT * FROM " . self::$view . " WHERE idutilisateur = :idutilisateur";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idutilisateur' => $idutilisateur]);
         $requete->setFetchMode(\PDO::FETCH_ASSOC);
@@ -36,9 +37,6 @@ class EtudiantRepository extends UtilisateurRepository{
         if ($resultat == false) {
             return null;
         }
-        echo '<br>';
-        print_r($resultat);
-        echo '<br>';
         return $this->construireDepuisTableau($resultat);
     }
 
@@ -50,20 +48,16 @@ class EtudiantRepository extends UtilisateurRepository{
             "emailutilisateur",
             "nomutilisateur",
             "numtelutilisateur",
-            "mailperso",
-            "codesexeetudiant",
-            "numetudiant",
-            "datenaissance",
-            "idgroupe",
-            "annee",
             "prenomutilisateurldap",
-            "loginldap"
+            "loginldap",
+            "role",
+            "mailuni"
         ];
     }
 
     protected function getNomTable(): string
     {
-        return "EtudiantVue";
+        return "StaffVue";
     }
 
 }

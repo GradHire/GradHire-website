@@ -7,11 +7,11 @@ use app\src\model\dataObject\Entreprise;
 
 class EntrepriseRepository extends UtilisateurRepository
 {
-    private string $nomTable = "Entreprise";
+    private string $nomTable = "EntrepriseVue";
 
     public function getByIdFull($idEntreprise): ?Entreprise
     {
-        $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idutilisateur = Utilisateur.idutilisateur WHERE $this->nomTable.idutilisateur = :idutilisateur";
+        $sql = "SELECT * FROM $this->nomTable WHERE $this->nomTable.idutilisateur = :idutilisateur";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idutilisateur' => $idEntreprise]);
         $requete->setFetchMode(\PDO::FETCH_ASSOC);

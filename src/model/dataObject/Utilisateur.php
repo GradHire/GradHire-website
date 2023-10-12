@@ -22,6 +22,7 @@ class Utilisateur extends AbstractDataObject
         $this->emailutilisateur = $emailutilisateur;
         $this->nomutilisateur = $nomutilisateur;
         $this->numtelutilisateur = $numtelutilisateur;
+        echo '<br> Utilisateurs construct <br>';
     }
 
     public function getNumtelutilisateur(): ?string

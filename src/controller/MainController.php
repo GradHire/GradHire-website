@@ -20,6 +20,9 @@ use app\src\model\repository\UtilisateurRepository;
 use app\src\model\Request;
 use app\src\model\Users\Profile\EnterpriseProfile;
 use app\src\model\Users\Roles;
+use app\src\model\repository\EtudiantRepository;
+use app\src\model\repository\TuteurRepository;
+use app\src\model\repository\StaffRepository;
 
 class MainController extends Controller
 {
@@ -139,12 +142,29 @@ class MainController extends Controller
     public function utilisateurs(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
-        $utilisateur = (new UtilisateurRepository())->getUserById($id);
-        if ($utilisateur == null && $id == null) {
-            $utilisateurs = (new UtilisateurRepository())->getAll();
-            return $this->render('utilisateurs/utilisateurs', ['utilisateurs' => $utilisateurs]);
+        $utilisateur = null;
+        if ((new EntrepriseRepository())->getByIdFull($id) != null) {
+            $utilisateur = (new EntrepriseRepository())->getByIdFull($id);
+            print_r($utilisateur);
+            return $this->render('utilisateurs/detailEntreprise', ['utilisateur' => $utilisateur]);
         }
-        return $this->render('utilisateurs/detail_utilisateur', ['utilisateur' => $utilisateur]);
+        elseif ((new EtudiantRepository())->getByIdFull($id) != null){
+            $utilisateur = (new EtudiantRepository())->getByIdFull($id);
+            print_r($utilisateur);
+            return $this->render('utilisateurs/detailEtudiant', ['utilisateur' => $utilisateur]);
+        }
+        elseif ((new TuteurRepository())->getByIdFull($id) != null){
+            $utilisateur = (new TuteurRepository())->getByIdFull($id);
+            print_r($utilisateur);
+            return $this->render('utilisateurs/detailTuteur', ['utilisateur' => $utilisateur]);
+        }
+        elseif ((new StaffRepository())->getByIdFull($id) != null){
+            $utilisateur = (new StaffRepository())->getByIdFull($id);
+            print_r($utilisateur);
+            return $this->render('utilisateurs/detailStaff', ['utilisateur' => $utilisateur]);
+        }
+        $utilisateur = (new UtilisateurRepository())->getAll();
+        return $this->render('utilisateurs/utilisateurs', ['utilisateurs' => $utilisateur]);
     }
 
     public function mailtest(): string
@@ -270,7 +290,6 @@ class MainController extends Controller
         }
 
         $filter = self::constructFilter();
-
         if (empty($search) && empty($filter)) $offres = (new OffresRepository())->getAll();
         else $offres = (new OffresRepository())->search($filter);
 

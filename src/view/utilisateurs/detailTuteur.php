@@ -1,6 +1,7 @@
 <?php
-/** @var $utilisateur \app\src\model\dataObject\Utilisateur */
+/** @var $utilisateur \app\src\model\dataObject\Tuteur */
 ?>
+
 <div class="w-full">
     <div class="w-full flex md:flex-row flex-col justify-between items-start">
         <div class="px-4 sm:px-0">
@@ -36,6 +37,42 @@
                 <?php
                 $tel = $utilisateur->getNumtelutilisateur();
                 if ($tel != null) echo $tel;
+                else echo("Non renseigné");
+                ?></dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-gray-900">Biographie </dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0" id="tel">
+                <?php
+                $bio = $utilisateur->getBio();
+                if ($bio != null) echo $bio;
+                else echo("Non renseigné");
+                ?></dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-gray-900">Prenom Tuteur</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0" id="tel">
+                <?php
+                $prenom = $utilisateur->getPrenomtuteurp();
+                if ($prenom != null) echo $prenom;
+                else echo("Non renseigné");
+                ?></dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-gray-900">Fonction Tuteur</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0" id="tel">
+                <?php
+                $fonction = $utilisateur->getFonctiontuteurp();
+                if ($fonction != null) echo $fonction;
+                else echo("Non renseigné");
+                ?></dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-gray-900">ID Entreprise</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0" id="tel">
+                <?php
+                $entreprise = $utilisateur->getIdentreprise();
+                if ($entreprise != null) echo $entreprise;
                 else echo("Non renseigné");
                 ?></dd>
         </div>
