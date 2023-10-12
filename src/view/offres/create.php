@@ -1,11 +1,36 @@
-<?php use app\src\model\Auth;
+<?php
+
+use app\src\model\Application;
+use app\src\model\Auth;
 use app\src\model\Users\Roles;
 
-Auth::check_role(Roles::Enterprise, Roles::Manager, Roles::Staff); ?>
+use app\src\model\repository\EntrepriseRepository;
+
+Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
 <div class="w-full flex flex-col">
 	<form action="create" method="post" class="w-full flex flex-col">
 		<div class="w-full gap-4 flex flex-col">
 
+            <?php
+            if(Application::getUser()->role()===Roles::Manager){
+                ?>
+                <div>
+                    <label for="entreprise">Entreprise</label>
+                    <select name="entreprise" id="entreprise" required
+                            class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:text-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light">
+                        <option disabled selected value="">Selectionne une entreprise</option>
+                        <?php
+                        $entrepriseRepo = new EntrepriseRepository();
+                        $entreprises = $entrepriseRepo->getAll();
+                        foreach ($entreprises as $entreprise) {
+                            echo "<option value='" . $entreprise->getIdutilisateur() . "'>" . $entreprise->getNomutilisateur() . "</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+                <?php
+            }
+            ?>
 
 			<div class="flex mt-4">
 				<label class="flex items-center">

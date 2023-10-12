@@ -71,7 +71,10 @@
                     <a href="/utilisateurs"
                        class="block py-2 pl-3 pr-4 text-zinc-900 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-white md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700">Utilisateurs</a>
                 </li>
-
+                <li>
+                    <a href="/offres/create"
+                       class="block py-2 pl-3 pr-4 text-zinc-900 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-white md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700">Créer Offres</a>
+                </li>
 
 			</ul>
 		</div>

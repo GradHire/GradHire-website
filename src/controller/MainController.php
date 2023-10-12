@@ -207,8 +207,12 @@ class MainController extends Controller
 			$datef = $_POST['datef'];
 			$duree = $_POST['duree'];
 			$description = $_POST['description'];
-			$idUtilisateur = Application::getUser()->id();
+			if(Application::getUser()->role() === Roles::Enterprise)
+                $idUtilisateur = Application::getUser()->id();
+            else
+                $idUtilisateur = $_POST['entreprise'];
 			$idOffre = null;
+
 			if ($duree == 1) {
 				$anneeVisee = "2";
 			} else {
