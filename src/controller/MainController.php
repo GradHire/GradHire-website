@@ -18,6 +18,7 @@ use app\src\model\repository\CandidatureRepository;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
+use app\src\model\repository\TuteurProRepository;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\Request;
 use app\src\model\Users\Profile\EnterpriseProfile;
@@ -173,6 +174,17 @@ class MainController extends Controller
 
         $entreprises = (new EntrepriseRepository())->getAll();
         return $this->render('entreprise/entreprise', ['entreprises' => $entreprises]);
+    }
+    public function ListeTuteurPro(Request $request):string{
+        $id= Application::getUser()->id();
+        $tuteurs= (new TuteurProRepository())->getAllTuteursByIdEntreprise($id);
+        return $this->render('tuteurPro/listeTuteurPro', ['tuteurs' => $tuteurs]);
+
+
+
+
+
+
     }
 
 	public function creeroffre(Request $request): string
@@ -330,6 +342,7 @@ class MainController extends Controller
         }
 
     }
+
     private static function constructFilter(): array
     {
         $filter = array();
@@ -365,5 +378,6 @@ class MainController extends Controller
         }
         return $filter;
     }
+
 
 }

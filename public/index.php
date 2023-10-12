@@ -84,5 +84,7 @@ $app->router->get('/utilisateurs', [MainController::class, 'utilisateurs']);
 $app->router->get('/utilisateurs/{id}', [MainController::class, 'utilisateurs']);
 $app->router->post('/utilisateurs/{id}', [MainController::class, 'utilisateurs']);
 
+$app->router->get('/ListeTuteurPro', [MainController::class, 'ListeTuteurPro']);
+
 
 $app->run();
