@@ -45,7 +45,7 @@ class UtilisateurRepository extends AbstractRepository
             $dataObjectFormatTableau['emailutilisateur'] ?? "",
             $dataObjectFormatTableau['nomutilisateur'] ?? "",
             $dataObjectFormatTableau['numtelutilisateur'] ?? "",
-            $dataObjectFormatTableau['bio'] ?? ""
+            $dataObjectFormatTableau['bio'] ?? "",
         );
     }
 
@@ -68,5 +68,6 @@ class UtilisateurRepository extends AbstractRepository
         $sql = "UPDATE Utilisateur SET archiver = 1 WHERE idutilisateur = :idutilisateur";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idutilisateur' => $user->getIdutilisateur()]);
+        echo "L'utilisateur a été archivé";
     }
 }

@@ -9,7 +9,8 @@
         </div>
         <div class="flex flex-row gap-4">
             <a class="inline-block rounded bg-orange-400 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700" href="/edit_profile/<?= $utilisateur->getIdutilisateur() ?>">Edit</a>
-            <a href="/archiver/<?= $utilisateur->getIdUtilisateur() ?>" class="inline-block rounded bg-red-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">Archiver</a>
+
+            <a href="/utilisateurs/<?= $utilisateur->getIdutilisateur() ?>/archiver" class="inline-block rounded bg-red-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">Archiver</a>
         </div>
     </div>
     <dl class="divide-y divide-zinc-100">

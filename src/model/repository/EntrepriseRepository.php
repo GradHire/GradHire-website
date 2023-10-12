@@ -19,10 +19,10 @@ class EntrepriseRepository extends UtilisateurRepository
         if ($resultat == false) {
             return null;
         }
-        return $this->construireEntrepriseDepuisTableau($resultat);
+        return $this->construireDepuisTableau($resultat);
     }
 
-    protected function construireEntrepriseDepuisTableau(array $entrepriseData): Entreprise
+    protected function construireDepuisTableau(array $entrepriseData): Entreprise
     {
         return new Entreprise(
             $entrepriseData['idutilisateur'],

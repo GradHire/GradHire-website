@@ -9,7 +9,7 @@ class Tuteur extends Utilisateur {
     private ?string $fonctiontuteurp;
     private int $identreprise;
 
-    public function __construct(int $idUtilisateur,?string $bio,string $emailUtilisateur,string $nomUtilisateur, ?string $numTelUtilisateur,?string $hash,string $prenomtuteurp, ?string $fonctiontuteurp, int $identreprise)
+    public function __construct(int $idUtilisateur,?string $bio,string $emailUtilisateur,string $nomUtilisateur, ?string $numTelUtilisateur, ?string $hash,string $prenomtuteurp, ?string $fonctiontuteurp, int $identreprise)
     {
         parent::__construct($idUtilisateur, $emailUtilisateur, $nomUtilisateur, $numTelUtilisateur, $bio);
         $this->idUtilisateur = $idUtilisateur;

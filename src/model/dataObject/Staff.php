@@ -18,7 +18,6 @@ class Staff extends Utilisateur {
         $this->loginLDAP = $loginLDAP;
         $this->role = $role;
         $this->mailuni = $mailuni;
-        echo '<br> Staff construct <br>';
     }
 
     public function getIdUtilisateur(): int
