@@ -23,7 +23,7 @@ jobs:
         run: composer require overtrue/phplint
 
       - name: Run PHPLint
-        run: vendor/bin/phplint
+        run: vendor/bin/phplint src/
 
       - name: Check for Vulnerabilities
         run: php composer.phar audit
