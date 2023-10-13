@@ -72,6 +72,11 @@ class Application
         return !isset($_COOKIE["token"]) || !isset($_SESSION["user"]);
     }
 
+    public static function getRedirect(): string
+    {
+        return "redirect=" . urlencode('http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+    }
+
     public function run(): void
     {
         $this->triggerEvent(self::EVENT_BEFORE_REQUEST);
