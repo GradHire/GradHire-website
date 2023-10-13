@@ -53,7 +53,8 @@ class MainController extends Controller
             $user = Application::getUser();
             if (is_null($user)) throw new ForbiddenException();
         }
-        return $this->render($user->role() === Roles::Enterprise ? 'profile/enterprise' : 'profile/others', [
+        if ($user->role() === Roles::Enterprise) throw new NotFoundException();
+        return $this->render('profile/profile', [
             'user' => $user
         ]);
     }
