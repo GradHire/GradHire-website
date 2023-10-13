@@ -11,6 +11,8 @@ use app\src\model\Form\fields\FormFile;
 use app\src\model\Form\fields\FormInt;
 use app\src\model\Form\fields\FormPassword;
 use app\src\model\Form\fields\FormPhone;
+use app\src\model\Form\fields\FormRadio;
+use app\src\model\Form\fields\FormRangeSlider;
 use app\src\model\Form\fields\FormSelect;
 use app\src\model\Form\fields\FormString;
 
@@ -18,6 +20,7 @@ class FormModel
 {
 	private array $fields;
 	private array $errors = [];
+	private array $js = [];
 	private array $body = [];
 	/**
 	 * @var FileUpload[]
@@ -69,6 +72,11 @@ class FormModel
 		return new FormSelect($name, $options);
 	}
 
+	public static function radio(string $name, array $options): FormRadio
+	{
+		return new FormRadio($name, $options);
+	}
+
 	public static function email(string $name): FormEmail
 	{
 		return new FormEmail($name);
@@ -82,6 +90,11 @@ class FormModel
 	public static function file(string $name): FormFile
 	{
 		return new FormFile($name);
+	}
+
+	public static function range(string $name, float $min, float $max): FormRangeSlider
+	{
+		return new FormRangeSlider($name, $min, $max);
 	}
 
 	public function print_all_fields(): void
@@ -98,7 +111,10 @@ class FormModel
 			echo "Le champs '" . $name . "' n'existe pas";
 		if ($this->memorize && count($this->body) > 0 && isset($this->body[$name]))
 			$value = $this->body[$name];
-		if ($field instanceof FormAttribute)
+		if ($field instanceof FormAttribute) {
+			$script = $field->getJS();
+			if ($script != "" && (count($this->js) === 0 || !in_array($script, $this->js)))
+				$this->js[] = $script;
 			echo '<div class="form-group">
                 <label>' . $field->getName() . '</label>                
 			<div class="invalid-feedback">
@@ -106,6 +122,7 @@ class FormModel
 			</div>
 			' . ($this->errors[$name] ?? null) . '
             </div>';
+		}
 	}
 
 	public function validate(array $body): bool
@@ -159,6 +176,8 @@ class FormModel
 
 	public function end(): void
 	{
+		foreach ($this->js as $script)
+			echo '<script type="text/javascript" src="resources/js/' . $script . '"></script>';
 		echo '</form>';
 	}
 
