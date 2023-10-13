@@ -13,13 +13,13 @@ class Offre extends AbstractDataObject
     private ?float $gratification;
     private ?string $unitegratification;
     private ?string $avantageNature;
-    private string $dateDebut;
+    private ?string $dateDebut;
     private ?string $dateFin;
     private ?string $statut;
     private ?string $anneeVisee;
     private string $idAnnee;
     private int $idutilisateur;
-    private string $description;
+    private ?string $description;
     private string $datecreation;
     private ?string $nomutilisateur;
 
