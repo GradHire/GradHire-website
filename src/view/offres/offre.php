@@ -56,7 +56,6 @@ include_once "modal-delete.php";
             <div>
                 <p class="text-sm text-zinc-500">
                     <?php
-                    //if description is too long (more than 50 characters), we cut it and add "..."
                     if (strlen($offre->getDescription()) > 50) echo substr(ucfirst($offre->getDescription()), 0, 50) . "…";
                     else echo ucfirst($offre->getDescription()) ?>
                 </p>
@@ -85,11 +84,15 @@ include_once "modal-delete.php";
     const bg<?= $id_offre ?> = document.getElementById("blur-background")
     const btn<?= $id_offre ?> = document.getElementById("btn-danger-delete-<?= $id_offre ?>");
     const closeBtns<?= $id_offre ?> = document.querySelectorAll(".close-modal-btn-<?= $id_offre ?>");
+
     btn<?= $id_offre ?>.onclick = function () {
-        modal<?= $id_offre ?>.classList.remove("hidden");
-        modal<?= $id_offre ?>.classList.add("block");
-        bg<?= $id_offre ?>.classList.remove("hidden");
+        if (modal<?= $id_offre ?> && bg<?= $id_offre ?>) {
+            modal<?= $id_offre ?>.classList.remove("hidden");
+            modal<?= $id_offre ?>.classList.add("block");
+            bg<?= $id_offre ?>.classList.remove("hidden");
+        }
     }
+
     closeBtns<?= $id_offre ?>.forEach(function (btn) {
         btn.onclick = function () {
             modal<?= $id_offre ?>.classList.add("hidden");
