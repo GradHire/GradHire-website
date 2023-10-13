@@ -96,6 +96,11 @@ abstract class FormAttribute
 
 	abstract function field(string $name, string $value): string;
 
+	public function getJS(): string
+	{
+		return '';
+	}
+
 	protected function getValue(mixed $value): mixed
 	{
 		$val = !$this->forget ? $value : null;

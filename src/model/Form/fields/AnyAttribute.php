@@ -27,10 +27,4 @@ abstract class AnyAttribute extends FormAttribute
 		$this->default = $value;
 		return $this;
 	}
-
-
-	public function isRequired(): bool
-	{
-		return in_array("required", $this->params);
-	}
 }
