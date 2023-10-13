@@ -1,0 +1,63 @@
+<?php
+
+namespace app\src\model\repository;
+
+use app\src\core\db\Database;
+use app\src\model\dataObject\Staff;
+use app\src\model\repository\UtilisateurRepository;
+use app\src\model\dataObject\Utilisateur;
+
+class StaffRepository extends UtilisateurRepository
+{
+
+    private static string $view = "StaffVue";
+
+    protected function construireDepuisTableau(array $dataObjectFormatTableau): Staff
+    {
+        return new Staff(
+            $dataObjectFormatTableau["idutilisateur"],
+            $dataObjectFormatTableau["bio"],
+            $dataObjectFormatTableau["emailutilisateur"],
+            $dataObjectFormatTableau["nomutilisateur"],
+            $dataObjectFormatTableau["numtelutilisateur"],
+            $dataObjectFormatTableau["prenomutilisateurldap"],
+            $dataObjectFormatTableau["loginldap"],
+            $dataObjectFormatTableau["role"],
+            $dataObjectFormatTableau["mailuni"]
+        );
+    }
+
+    public function getByIdFull($idutilisateur): ?Staff
+    {
+        $sql = "SELECT * FROM " . self::$view . " WHERE idutilisateur = :idutilisateur";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idutilisateur' => $idutilisateur]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetch();
+        if ($resultat == false) {
+            return null;
+        }
+        return $this->construireDepuisTableau($resultat);
+    }
+
+    protected function getNomColonnes(): array
+    {
+        return [
+            "idUtilisateur",
+            "bio",
+            "emailutilisateur",
+            "nomutilisateur",
+            "numtelutilisateur",
+            "prenomutilisateurldap",
+            "loginldap",
+            "role",
+            "mailuni"
+        ];
+    }
+
+    protected function getNomTable(): string
+    {
+        return "StaffVue";
+    }
+
+}

@@ -2,87 +2,159 @@
 
 namespace app\src\model\Form;
 
+use app\src\model\Form\fields\FormAttribute;
+use app\src\model\Form\fields\FormCheckbox;
+use app\src\model\Form\fields\FormDate;
+use app\src\model\Form\fields\FormDouble;
+use app\src\model\Form\fields\FormEmail;
+use app\src\model\Form\fields\FormFile;
+use app\src\model\Form\fields\FormInt;
+use app\src\model\Form\fields\FormPassword;
+use app\src\model\Form\fields\FormPhone;
+use app\src\model\Form\fields\FormRadio;
+use app\src\model\Form\fields\FormRangeSlider;
+use app\src\model\Form\fields\FormSelect;
+use app\src\model\Form\fields\FormString;
+
 class FormModel
 {
-	protected string $error, $success;
-	private array $attributes;
-	private array $errors;
-	private string $action, $method;
-	private array $data;
+	private array $fields;
+	private array $errors = [];
+	private array $js = [];
+	private array $body = [];
+	/**
+	 * @var FileUpload[]
+	 */
+	private array $files = [];
+	private array $parsedBody = [];
+	private string $success = '', $error = '';
+	private string $action = '', $method = 'post';
+	private bool $useFile = false, $memorize;
 
-	public function __construct(array $attributes)
+	public function __construct(array $fields, bool $memorize = true)
 	{
-		$this->attributes = $attributes;
-		$this->action = '';
-		$this->method = "post";
-		$this->data = [];
-		$this->error = '';
-		$this->success = '';
+		$this->fields = $fields;
+		$this->memorize = $memorize;
 	}
 
-	public function print_all_fields()
+	public static function string(string $name): FormString
 	{
-		foreach ($this->attributes as $key => $value)
-			$this->field($key);
+		return new FormString($name);
+	}
+
+	public static function checkbox(string $name): FormCheckbox
+	{
+		return new FormCheckbox($name);
+	}
+
+	public static function password(string $name): FormPassword
+	{
+		return new FormPassword($name);
+	}
+
+	public static function int(string $name): FormInt
+	{
+		return new FormInt($name);
+	}
+
+	public static function double(string $name): FormDouble
+	{
+		return new FormDouble($name);
+	}
+
+	public static function date(string $name): FormDate
+	{
+		return new FormDate($name);
+	}
+
+	public static function select(string $name, array $options): FormSelect
+	{
+		return new FormSelect($name, $options);
+	}
+
+	public static function radio(string $name, array $options): FormRadio
+	{
+		return new FormRadio($name, $options);
+	}
+
+	public static function email(string $name): FormEmail
+	{
+		return new FormEmail($name);
+	}
+
+	public static function phone(string $name): FormPhone
+	{
+		return new FormPhone($name);
+	}
+
+	public static function file(string $name): FormFile
+	{
+		return new FormFile($name);
+	}
+
+	public static function range(string $name, float $min, float $max): FormRangeSlider
+	{
+		return new FormRangeSlider($name, $min, $max);
+	}
+
+	public function print_all_fields(): void
+	{
+		foreach ($this->fields as $name => $field)
+			$this->field($name);
 	}
 
 	public function field(string $name): void
 	{
-		if ($this->attributes[$name] && $this->attributes[$name] instanceof FormModelAttribute) {
+		$field = $this->fields[$name] ?? null;
+		$value = '';
+		if (is_null($field))
+			echo "Le champs '" . $name . "' n'existe pas";
+		if ($this->memorize && count($this->body) > 0 && isset($this->body[$name]))
+			$value = $this->body[$name];
+		if ($field instanceof FormAttribute) {
+			$script = $field->getJS();
+			if ($script != "" && (count($this->js) === 0 || !in_array($script, $this->js)))
+				$this->js[] = $script;
 			echo '<div class="form-group">
-                <label>' . $this->attributes[$name]->getLabel() . '</label>                
+                <label>' . $field->getName() . '</label>                
 			<div class="invalid-feedback">
-                    ' . $this->attributes[$name]->field($name) . '
+                    ' . $field->field($name, $value) . '
 			</div>
-			' . $this->get_error($name) . '
+			' . ($this->errors[$name] ?? null) . '
             </div>';
 		}
-		echo '';
 	}
 
-	private function get_error(string $name): string
+	public function validate(array $body): bool
 	{
-		return $this->errors[$name] ?? "";
-	}
-
-	public function setAction(string $action): void
-	{
-		$this->action = $action;
-	}
-
-	public function setMethod(string $method): void
-	{
-		$this->method = $method;
-	}
-
-	public function validate($data): bool
-	{
-		$this->data = $data;
-		$error_found = false;
-		$this->errors = [];
-		try {
-			foreach ($this->attributes as $key => $value) {
-				if ($value instanceof FormModelAttribute) {
-					$error = $value->validate($data[$key] ?? null, $this->data);
-					if ($error) {
-						$error_found = true;
-						$this->errors[$key] = $error;
-					}
+		$this->body = $body;
+		foreach ($this->fields as $name => $field)
+			if ($field instanceof FormAttribute) {
+				[$err, $value] = $field->validate($name, $this->fields, $this->body);
+				if (!is_null($err)) {
+					$this->errors[$name] = $err;
+					$this->parsedBody = [];
+					return false;
 				}
+				if ($field instanceof FormFile) {
+					if (!is_null($value))
+						$this->files[$name] = new FileUpload($value);
+				} else {
+					$this->parsedBody[$name] = $value;
+				}
+
 			}
-			return !$error_found;
-		} catch (\Exception) {
-			return false;
-		}
+		return true;
 	}
 
-	public function get_data(): array
+	public function getParsedBody(): array
 	{
-		$res = [];
-		foreach ($this->attributes as $key => $value)
-			if ($value instanceof FormModelAttribute)
-				$res[$key] = array_key_exists($key, $this->data) ? $value->parse_value($this->data[$key]) : $value->getDefault();
-		return $res;
+		return $this->parsedBody;
+	}
+
+	public function getFile(string $name): FileUpload|null
+	{
+		return $this->files[$name] ?? null;
 	}
 
 	public function submit(string $text = "Submit"): void
@@ -92,33 +164,42 @@ class FormModel
         </button>';
 	}
 
-	public function start(string $enctype = ''): void
+	public function useFile(): void
 	{
-		echo '<form action="' . $this->action . '" method="' . $this->method . '" ' . ($enctype !== '' ? 'enctype="' . $enctype . '"' : '') . '>';
+		$this->useFile = true;
+	}
+
+	public function start(): void
+	{
+		echo '<form action="' . $this->action . '" method="' . $this->method . '" ' . ($this->useFile ? 'enctype="multipart/form-data"' : '') . '>';
 	}
 
 	public function end(): void
 	{
+		foreach ($this->js as $script)
+			echo '<script type="text/javascript" src="resources/js/' . $script . '"></script>';
 		echo '</form>';
 	}
 
-	public function add_error(string $text)
+	public function setError(string $text): void
 	{
 		$this->error = $text;
 	}
 
-	public function add_success(string $text)
+	public function getSuccess(): void
+	{
+		if (strlen($this->success) > 0)
+			echo '<p>' . $this->success . '</p>';
+	}
+
+	public function setSuccess(string $text): void
 	{
 		$this->success = $text;
 	}
 
-	public function getError(): string
+	public function getError(): void
 	{
-		return $this->error;
-	}
-
-	public function getSuccess(): string
-	{
-		return $this->success;
+		if (strlen($this->error) > 0)
+			echo '<p>' . $this->error . '</p>';
 	}
 }

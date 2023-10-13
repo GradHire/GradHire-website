@@ -44,21 +44,9 @@ class UtilisateurRepository extends AbstractRepository
             $dataObjectFormatTableau['idutilisateur'],
             $dataObjectFormatTableau['emailutilisateur'] ?? "",
             $dataObjectFormatTableau['nomutilisateur'] ?? "",
-            $dataObjectFormatTableau['numtelutilisateur'] ?? ""
+            $dataObjectFormatTableau['numtelutilisateur'] ?? "",
+            $dataObjectFormatTableau['bio'] ?? "",
         );
-    }
-
-    public function getUserNom($idUtilisateur): ?string
-    {
-        $sql = "SELECT nomutilisateur FROM $this->nomTable WHERE idutilisateur = :idutilisateur";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idutilisateur' => $idUtilisateur]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetch();
-        if ($resultat == false) {
-            return null;
-        }
-        return $resultat['nomutilisateur'];
     }
 
     protected function getNomColonnes(): array
@@ -75,10 +63,26 @@ class UtilisateurRepository extends AbstractRepository
     {
         return $this->nomTable;
     }
-    public function setUserToArchived(Utilisateur $user): void
+    public function setUserToArchived(Utilisateur $user, bool $bool): void
     {
-        $sql = "UPDATE Utilisateur SET archiver = 1 WHERE idutilisateur = :idutilisateur";
+        $sql = "UPDATE Utilisateur SET archiver = :bool WHERE idutilisateur = :idutilisateur";
         $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idutilisateur' => $user->getIdutilisateur()]);
+        $values = [
+            'idutilisateur' => $user->getIdutilisateur(),
+            'bool' => $bool ? 1:0
+        ];
+        $requete->execute($values);
+        echo "L'utilisateur a été archivé";
+    }
+
+    public function isArchived(Utilisateur $utilisateur): ?bool{
+        $sql = "SELECT archiver FROM Utilisateur WHERE idutilisateur = :idutilisateur";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idutilisateur' => $utilisateur->getIdutilisateur()]);
+        $resultat = $requete->fetch();
+        if ($resultat == false) {
+            return null;
+        }
+        return $resultat['archiver'];
     }
 }

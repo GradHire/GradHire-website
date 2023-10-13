@@ -1,14 +1,14 @@
 <?php
 /** @var $user User */
-use app\src\core\exception\NotFoundException;
-use app\src\model\Users\User;
 
-if ($user->attributes()["validee"] == 0) throw new NotFoundException();
+use app\src\model\Users\User;
+$this->title = 'Profile';
+
 ?>
 
 <div class="h-full">
 	<!-- Card -->
-	<div class="max-w-sm mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
+	<div class="max-w-sm mx-auto bg-white shadow-lg rounded-sm border border-zinc-200">
 		<div class="flex flex-col h-full">
 			<!-- Card top -->
 			<div class="flex-grow p-5">
@@ -21,7 +21,7 @@ if ($user->attributes()["validee"] == 0) throw new NotFoundException();
 								     class="w-full h-full object-cover rounded-full"/>
 							</div>
 							<div class="mt-1 pr-1">
-								<a class="inline-flex text-gray-800 hover:text-gray-900" href="#0">
+								<a class="inline-flex text-zinc-800 hover:text-zinc-900" href="#0">
 									<h2 class="text-xl leading-snug justify-center font-semibold"><?= $user->full_name() ?></h2>
 								</a>
 								<div class="flex items-center">
@@ -44,21 +44,21 @@ if ($user->attributes()["validee"] == 0) throw new NotFoundException();
 				</div>
 			</div>
 			<!-- Card footer -->
-			<div class="border-t border-gray-200">
-				<div class="flex divide-x divide-gray-200r">
+			<div class="border-t border-zinc-200">
+				<div class="flex divide-x divide-zinc-200r">
 
 					<?php if ($user->is_me()) { ?>
-						<a class="block flex-1 text-center text-sm text-gray-600 hover:text-gray-800 font-medium px-3 py-4 group"
+						<a class="block flex-1 text-center text-sm text-zinc-600 hover:text-zinc-800 font-medium px-3 py-4 group"
 						   href="edit_profile">
 							<div class="flex items-center justify-center">
-								<svg class="w-4 h-4 fill-current text-gray-400 group-hover:text-gray-500 flex-shrink-0 mr-2"
+								<svg class="w-4 h-4 fill-current text-zinc-400 group-hover:text-zinc-500 flex-shrink-0 mr-2"
 								     viewBox="0 0 16 16">
 									<path d="M11.7.3c-.4-.4-1-.4-1.4 0l-10 10c-.2.2-.3.4-.3.7v4c0 .6.4 1 1 1h4c.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4l-4-4zM4.6 14H2v-2.6l6-6L10.6 8l-6 6zM12 6.6L9.4 4 11 2.4 13.6 5 12 6.6z"/>
 								</svg>
 								<span>Edit Profile</span>
 							</div>
 						</a>
-						<a class="block flex-1 text-center text-sm text-gray-600 hover:text-gray-800 font-medium px-3 py-4 group"
+						<a class="block flex-1 text-center text-sm text-zinc-600 hover:text-zinc-800 font-medium px-3 py-4 group"
 						   href="dashboard">
 							<div class="flex items-center justify-center">
 								<span>Dashboard</span>
