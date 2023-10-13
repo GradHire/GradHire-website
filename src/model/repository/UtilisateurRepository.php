@@ -63,11 +63,15 @@ class UtilisateurRepository extends AbstractRepository
     {
         return $this->nomTable;
     }
-    public function setUserToArchived(Utilisateur $user): void
+    public function setUserToArchived(Utilisateur $user, bool $bool): void
     {
-        $sql = "UPDATE Utilisateur SET archiver = 1 WHERE idutilisateur = :idutilisateur";
+        $sql = "UPDATE Utilisateur SET archiver = :bool WHERE idutilisateur = :idutilisateur";
         $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idutilisateur' => $user->getIdutilisateur()]);
+        $values = [
+            'idutilisateur' => $user->getIdutilisateur(),
+            'bool' => $bool ? 1:0
+        ];
+        $requete->execute($values);
         echo "L'utilisateur a été archivé";
     }
 

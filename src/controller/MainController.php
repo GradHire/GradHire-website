@@ -64,7 +64,10 @@ class MainController extends Controller
     public function archiver(Request $req): string
     {
         $user = (new UtilisateurRepository())->getUserById($req->getRouteParams()["id"]);
-        (new UtilisateurRepository())->setUserToArchived($user);
+        if((new UtilisateurRepository())->isArchived($user)){
+            (new UtilisateurRepository())->setUserToArchived($user, false);
+        }
+        else (new UtilisateurRepository())->setUserToArchived($user, true);
         Application::$app->response->redirect('/utilisateurs/' . $req->getRouteParams()["id"]);
         return '';
     }

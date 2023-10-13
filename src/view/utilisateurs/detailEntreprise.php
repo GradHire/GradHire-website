@@ -1,5 +1,6 @@
 <?php
 /** @var $utilisateur \app\src\model\dataObject\Entreprise */
+use app\src\model\repository\UtilisateurRepository;
 ?>
 
 <div class="w-full">
@@ -9,8 +10,13 @@
         </div>
         <div class="flex flex-row gap-4">
             <a class="inline-block rounded bg-orange-400 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700" href="/edit_profile/<?= $utilisateur->getIdutilisateur() ?>">Edit</a>
-
-            <a class="inline-block rounded bg-red-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700" href="/utilisateurs/<?= $utilisateur->getIdutilisateur() ?>/archiver" >Archiver</a>
+            <?php
+            if((new UtilisateurRepository())->isArchived($utilisateur)){
+                echo("<a class=\"inline-block rounded bg-green-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700\" href=\"/utilisateurs/". $utilisateur->getIdutilisateur() ."/archiver\">Désarchiver</a>");
+            } else {
+                echo("<a class=\"inline-block rounded bg-red-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700\" href=\"/utilisateurs/". $utilisateur->getIdutilisateur() ."/archiver\">Archiver</a>");
+            }
+            ?>
         </div>
     </div>
     <div class="mt-6 border-t border-zinc-100">
@@ -89,5 +95,4 @@
             </div>
         </dl>
 </div>
-
 
