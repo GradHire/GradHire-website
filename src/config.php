@@ -10,4 +10,4 @@ const SMTP_SERVER = 'mail.quoifeur.com';
 const SMTP_USERNAME = 'feur@quoifeur.com';
 const SMTP_PASSWORD = 'PCmarius38651';
 const SMTP_PORT = 587;
-
+const LDAP_API = 'https://webinfo.iutmontp.univ-montp2.fr/~broutym/SAE/ldap.php';

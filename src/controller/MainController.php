@@ -9,6 +9,7 @@ use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Offre;
+use app\src\model\Form\FormFile;
 use app\src\model\Form\FormModel;
 use app\src\model\Form\FormString;
 use app\src\model\OffreForm;
@@ -26,39 +27,39 @@ use app\src\model\repository\StaffRepository;
 
 class MainController extends Controller
 {
-    public function __construct()
-    {
-        //$this->registerMiddleware(new AuthMiddleware());
-    }
+	public function __construct()
+	{
+		//$this->registerMiddleware(new AuthMiddleware());
+	}
 
-    public function user_test(Request $req)
-    {
-        if (session_status() !== PHP_SESSION_NONE)
-            session_destroy();
-        $user = Auth::load_user_by_id($req->getRouteParams()["id"]);
-        Auth::generate_token($user, "true");
-        Application::$app->response->redirect('/');
-    }
+	public function user_test(Request $req)
+	{
+		if (session_status() !== PHP_SESSION_NONE)
+			session_destroy();
+		$user = Auth::load_user_by_id($req->getRouteParams()["id"]);
+		Auth::generate_token($user, "true");
+		Application::$app->response->redirect('/');
+	}
 
-    public function contact(): string
-    {
-        return $this->render('contact');
-    }
+	public function contact(): string
+	{
+		return $this->render('contact');
+	}
 
-    public function profile(Request $req): string
-    {
-        $id = $req->getRouteParams()["id"] ?? null;
-        if (!is_null($id)) {
-            $user = Auth::load_user_by_id($id);
-            if (is_null($user)) throw new NotFoundException();
-        } else {
-            $user = Application::getUser();
-            if (is_null($user)) throw new ForbiddenException();
-        }
-        return $this->render($user->role() === Roles::Enterprise ? 'profile/enterprise' : 'profile/others', [
-            'user' => $user
-        ]);
-    }
+	public function profile(Request $req): string
+	{
+		$id = $req->getRouteParams()["id"] ?? null;
+		if (!is_null($id)) {
+			$user = Auth::load_user_by_id($id);
+			if (is_null($user)) throw new NotFoundException();
+		} else {
+			$user = Application::getUser();
+			if (is_null($user)) throw new ForbiddenException();
+		}
+		return $this->render($user->role() === Roles::Enterprise ? 'profile/enterprise' : 'profile/others', [
+			'user' => $user
+		]);
+	}
 
     public function archiver(Request $req): string
     {
@@ -68,76 +69,86 @@ class MainController extends Controller
         return '';
     }
 
-    /**
-     * @throws ForbiddenException
-     * @throws ServerErrorException
-     */
-    public function edit_profile(Request $request): string
-    {
-        if (Application::isGuest()) throw new ForbiddenException();
-        $id = $request->getRouteParams()["id"] ?? null;
-        if (!is_null($id) && !Auth::has_role(Roles::Manager, Roles::Staff))
-            throw new ForbiddenException();
-        $form = null;
-        $user = is_null($id) ? Application::getUser() : Auth::load_user_by_id($id);
-        if (is_null($user)) throw new NotFoundException();
-        switch ($user->role()) {
-            case Roles::Enterprise:
-                $form = new FormModel([
-                    "name" => FormString::New("Nom entreprise")->required()->default($user->attributes()["nomutilisateur"]),
-                    "email" => FormString::New("Adresse mail")->email()->required()->default($user->attributes()["emailutilisateur"]),
-                    "phone" => FormString::New("Téléphone")->numeric()->default($user->attributes()["numtelutilisateur"]),
-                    "bio" => FormString::New("Biographie")->default($user->attributes()["bio"])
-                ]);
-                break;
-            case Roles::Tutor:
-                $form = new FormModel([
-                    "name" => FormString::New("Prénom")->required()->default($user->attributes()["nomutilisateur"]),
-                    "surname" => FormString::New("Nom")->required()->default($user->attributes()["prenomtuteurp"]),
-                    "email" => FormString::New("Adresse mail")->email()->required()->default($user->attributes()["emailutilisateur"]),
-                    "fonction" => FormString::New("Fonction")->required()->default($user->attributes()["fonctiontuteurp"]),
-                    "bio" => FormString::New("Biographie")->default($user->attributes()["bio"])
-                ]);
-                break;
-            case  Roles::Student:
-                $form = new FormModel([
-                    "email" => FormString::New("Adresse mail perso")->email()->default($user->attributes()["mailperso"])->empty(),
-                    "tel" => FormString::New("Téléphone")->numeric()->default($user->attributes()["numtelutilisateur"])->empty(),
-                    "date" => FormString::New("Date de naissance")->date()->default($user->attributes()["datenaissance"])->empty(),
-                    "studentnum" => FormString::New("Numéro Etudiant")->default($user->attributes()["numetudiant"])->empty(),
-                    "bio" => FormString::New("Biographie")->default($user->attributes()["bio"]),
-                ]);
-                break;
-            case  Roles::Teacher:
-            case Roles::Manager:
-            case Roles::Staff:
-                $form = new FormModel([
-                    "role" => FormString::New("Role")->required()->default($user->attributes()["role"]),
-                    "bio" => FormString::New("Biographie")->default($user->attributes()["bio"]),
-                ]);
-                break;
-        }
+	/**
+	 * @throws ForbiddenException
+	 * @throws NotFoundException
+	 * @throws ServerErrorException
+	 */
+	public function edit_profile(Request $request): string
+	{
+		if (Application::isGuest()) throw new ForbiddenException();
+		$id = $request->getRouteParams()["id"] ?? null;
+		if (!is_null($id) && !Auth::has_role(Roles::Manager, Roles::Staff))
+			throw new ForbiddenException();
+		$user = is_null($id) ? Application::getUser() : Auth::load_user_by_id($id);
+		if (is_null($user)) throw new NotFoundException();
+		$attr = [];
+		switch ($user->role()) {
+			case Roles::Enterprise:
+				$attr = array_merge($attr, [
+					"name" => FormModel::string("Nom entreprise")->required()->default($user->attributes()["nomutilisateur"]),
+					"email" => FormModel::email("Adresse mail")->required()->default($user->attributes()["emailutilisateur"]),
+					"phone" => FormModel::phone("Téléphone")->default($user->attributes()["numtelutilisateur"]),
+				]);
+				break;
+			case Roles::Tutor:
+				$attr = array_merge($attr, [
+					"name" => FormModel::string("Prénom")->required()->default($user->attributes()["nomutilisateur"]),
+					"surname" => FormModel::string("Nom")->required()->default($user->attributes()["prenomtuteurp"]),
+					"email" => FormModel::string("Adresse mail")->required()->default($user->attributes()["emailutilisateur"]),
+					"fonction" => FormModel::select("Fonction", [
+						"tuteur" => "Tuteur",
+						"responsable" => "Responsable"
+					])->required()->default($user->attributes()["fonctiontuteurp"]),
+				]);
+				break;
+			case  Roles::Student:
+				$attr = array_merge($attr, [
+					"email" => FormModel::email("Adresse mail perso")->default($user->attributes()["mailperso"]),
+					"tel" => FormModel::phone("Téléphone")->numeric()->default($user->attributes()["numtelutilisateur"]),
+					"date" => FormModel::date("Date de naissance")->default($user->attributes()["datenaissance"])->before(new \DateTime()),
+					"studentnum" => FormModel::string("Numéro Etudiant")->default($user->attributes()["numetudiant"]),
+				]);
+				break;
+			case Roles::Teacher:
+			case Roles::Manager:
+			case Roles::Staff:
+				$attr = array_merge($attr, [
+					"role" => FormModel::select("Role", [
+						"responsable" => "Responsable",
+						"enseignant" => "Enseignant",
+						"secretariat" => "Secretariat"
+					])->required()->default($user->attributes()["role"]),
+				]);
+				break;
+		}
+		$attr = array_merge(
+			["picture" => FormModel::file("Photo de profile")->id("image")->image()],
+			$attr,
+			["bio" => FormModel::string("Biographie")->default($user->attributes()["bio"])->max(200)]
+		);
+		$form = new FormModel($attr);
+		$form->useFile();
 
-        if ($request->getMethod() === 'post') {
-            if (isset($_FILES["picture"])) {
-                FormFile::save($_FILES["picture"], "pictures", $user->id());
-            }
-            if ($form->validate($request->getBody())) {
-                $user->update($form->get_data());
-                Application::$app->response->redirect('/profile');
-                return '';
-            }
+		if ($request->getMethod() === 'post') {
+			if ($form->validate($request->getBody())) {
+				$picture = $form->getFile("picture");
+				if (!is_null($picture)) $picture->save("pictures", $user->id());
+				$user->update($form->getParsedBody());
+				Application::$app->response->redirect('/profile');
+				return '';
+			}
 
-        }
-        return $this->render('profile/edit_profile', [
-            'form' => $form
-        ]);
-    }
+		}
+		return $this->render('profile/edit_profile', [
+			'form' => $form
+		]);
+	}
 
-    public function dashboard(): string
-    {
-        return $this->render('dashboard/dashboard');
-    }
+	public function dashboard(): string
+	{
+		return $this->render('dashboard/dashboard');
+	}
 
     public function utilisateurs(Request $request): string
     {
@@ -163,11 +174,11 @@ class MainController extends Controller
         return $this->render('utilisateurs/utilisateurs', ['utilisateurs' => $utilisateur]);
     }
 
-    public function mailtest(): string
-    {
-        $to = ["hirchyts.daniil@gmail.com", "daniil.hirchyts@etu.umontpellier.fr"];
-        $subject = "Test mail subject";
-        $message = "This is a test message";
+	public function mailtest(): string
+	{
+		$to = ["hirchyts.daniil@gmail.com", "daniil.hirchyts@etu.umontpellier.fr"];
+		$subject = "Test mail subject";
+		$message = "This is a test message";
 
         $mailSent = MailRepository::send_mail($to, $subject, $message);
 
@@ -176,19 +187,19 @@ class MainController extends Controller
         return $this->render('test/mailtest', compact('message'));
     }
 
-    public function entreprises(Request $request): string
-    {
-        $id = $request->getRouteParams()['id'] ?? null;
-        $entreprise = (new EntrepriseRepository())->getByIdFull($id);
-        if ($entreprise == null && $id != null) throw new NotFoundException();
-        else if ($entreprise != null && $id != null) {
-            $offres = (new OffresRepository())->getOffresByIdEntreprise($id);
-            return $this->render('entreprise/detailEntreprise', ['entreprise' => $entreprise, 'offres' => $offres]);
-        }
+	public function entreprises(Request $request): string
+	{
+		$id = $request->getRouteParams()['id'] ?? null;
+		$entreprise = (new EntrepriseRepository())->getByIdFull($id);
+		if ($entreprise == null && $id != null) throw new NotFoundException();
+		else if ($entreprise != null && $id != null) {
+			$offres = (new OffresRepository())->getOffresByIdEntreprise($id);
+			return $this->render('entreprise/detailEntreprise', ['entreprise' => $entreprise, 'offres' => $offres]);
+		}
 
-        $entreprises = (new EntrepriseRepository())->getAll();
-        return $this->render('entreprise/entreprise', ['entreprises' => $entreprises]);
-    }
+		$entreprises = (new EntrepriseRepository())->getAll();
+		return $this->render('entreprise/entreprise', ['entreprises' => $entreprises]);
+	}
 
     public function creeroffre(Request $request): string
     {
@@ -274,11 +285,24 @@ class MainController extends Controller
         }
         return $this->render('offres/detailOffre', ['offre' => $offre]);
     }
+	public function deleteOffre(Request $request): void
+	{
+		if ($request->getMethod() === 'post') {
+			$id = $request->getRouteParams()['id'] ?? null;
+			$offre = (new OffresRepository())->getById($id);
+			$url = $_POST['link'];
+			if ($offre == null && $id != null) throw new NotFoundException();
+			else if ($offre != null && $id != null) {
+				(new OffresRepository())->updateToDraft($id);
+				Application::$app->response->redirect($url);
+			}
+		}
+	}
 
-    public function offres(Request $request): string
-    {
-        $id = $request->getRouteParams()['id'] ?? null;
-        $offre = (new OffresRepository())->getByIdWithUser($id);
+	public function offres(Request $request): string
+	{
+		$id = $request->getRouteParams()['id'] ?? null;
+		$offre = (new OffresRepository())->getByIdWithUser($id);
 
         if ($offre == null && $id != null) throw new NotFoundException();
         else if ($offre != null && $id != null) {
@@ -289,23 +313,23 @@ class MainController extends Controller
         if (empty($search) && empty($filter)) $offres = (new OffresRepository())->getAll();
         else $offres = (new OffresRepository())->search($filter);
 
-        $userIdList = [];
-        foreach ($offres as $offre) $userIdList[] = $offre->getIdutilisateur();
-        $utilisateurRepository = new UtilisateurRepository();
-        $utilisateurs = array();
+		$userIdList = [];
+		foreach ($offres as $offre) $userIdList[] = $offre->getIdutilisateur();
+		$utilisateurRepository = new UtilisateurRepository();
+		$utilisateurs = array();
 
-        if (!empty($userIdList)) {
-            foreach ($userIdList as $userId) {
-                if (!isset($utilisateurs[$userId])) {
-                    $utilisateur = $utilisateurRepository->getUserById($userId);
-                    $utilisateurs[$userId] = $utilisateur->getNomutilisateur();
-                }
-            }
-        }
+		if (!empty($userIdList)) {
+			foreach ($userIdList as $userId) {
+				if (!isset($utilisateurs[$userId])) {
+					$utilisateur = $utilisateurRepository->getUserById($userId);
+					$utilisateurs[$userId] = $utilisateur->getNomutilisateur();
+				}
+			}
+		}
 
-        $currentFilterURL = "/offres?" . http_build_query($filter);
-        return $this->render('offres/listOffres', ['offres' => $offres, 'utilisateurs' => $utilisateurs, 'currentFilterURL' => $currentFilterURL]);
-    }
+		$currentFilterURL = "/offres?" . http_build_query($filter);
+		return $this->render('offres/listOffres', ['offres' => $offres, 'utilisateurs' => $utilisateurs, 'currentFilterURL' => $currentFilterURL]);
+	}
 
     private static function constructFilter(): array
     {
@@ -343,77 +367,76 @@ class MainController extends Controller
         return $filter;
     }
 
-    public function candidatures(Request $request): string
-    {
+	public function candidatures(Request $request): string
+	{
 
 
-        $id = $request->getRouteParams()['id'] ?? null;
-        $candidatures = (new CandidatureRepository())->getById($id);
-        if ($candidatures != null && $id != null) {
-            return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
-        }
+		$id = $request->getRouteParams()['id'] ?? null;
+		$candidatures = (new CandidatureRepository())->getById($id);
+		if ($candidatures != null && $id != null) {
+			return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
+		}
 
-        $candidaturesrepose = new CandidatureRepository();
-        $candidatures = ($candidaturesrepose->getAll());
+		$candidaturesrepose = new CandidatureRepository();
+		$candidatures = ($candidaturesrepose->getAll());
 
-        if ($request->getMethod() === 'post') {
-            $id = $request->getBody()['idcandidature'] ?? null;
-            if ($request->getBody()['action'] === 'Accepter') {
-                $sql = "UPDATE Candidature SET etatcandidature='Validé par secrétariat' WHERE idcandidature=$id";
-                $requete = Database::get_conn()->prepare($sql);
-                $requete->execute();
-                $candidaturesrepose = new CandidatureRepository();
-                $candidatures = ($candidaturesrepose->getAll());
-                return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
-            } else {
-                $sql = "UPDATE Candidature SET etatcandidature='Refusé' WHERE idcandidature=$id";
-                $requete = Database::get_conn()->prepare($sql);
-                $requete->execute();
-                $candidaturesrepose = new CandidatureRepository();
-                $candidatures = ($candidaturesrepose->getAll());
-                return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
-            }
-        }
-        return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
-    }
+		if ($request->getMethod() === 'post') {
+			$id = $request->getBody()['idcandidature'] ?? null;
+			if ($request->getBody()['action'] === 'Accepter') {
+				$sql = "UPDATE Candidature SET etatcandidature='Validé par secrétariat' WHERE idcandidature=$id";
+				$requete = Database::get_conn()->prepare($sql);
+				$requete->execute();
+				$candidaturesrepose = new CandidatureRepository();
+				$candidatures = ($candidaturesrepose->getAll());
+				return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+			} else {
+				$sql = "UPDATE Candidature SET etatcandidature='Refusé' WHERE idcandidature=$id";
+				$requete = Database::get_conn()->prepare($sql);
+				$requete->execute();
+				$candidaturesrepose = new CandidatureRepository();
+				$candidatures = ($candidaturesrepose->getAll());
+				return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+			}
+		}
+		return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+	}
 
-    public function postuler(Request $request): string
-    {
-        $id = $request->getRouteParams()['id'] ?? null;
-        $offre = (new OffresRepository())->getById($id);
-        if ($request->getMethod() === 'get') {
-            return $this->render('candidature/postuler', ['offre' => $offre]);
-        } else {
-            $idoffre = $offre->getIdOffre();
-            $iduser = Application::getUser()->id();
-            $nomfichier = "uploads/" . $idoffre . "_" . $iduser;
-            if (!file_exists($nomfichier)) {
-                mkdir($nomfichier, 0777, true);
-                $target_dir = $nomfichier . "/"; // utiliser le nouveau dossier comme répertoire cible
+	/**
+	 * @throws NotFoundException
+	 * @throws ServerErrorException
+	 * @throws ForbiddenException
+	 */
+	public function postuler(Request $request): string
+	{
+		if (!Auth::has_role(Roles::Student)) throw new ForbiddenException();
+		$id = $request->getRouteParams()['id'] ?? null;
+		$offre = (new OffresRepository())->getById($id);
 
-                $target_file = $target_dir . basename($_FILES["cv"]["name"]);
-                $target_file2 = $target_dir . basename($_FILES["ltm"]["name"]);
+		if (!$offre) throw  new NotFoundException();
 
-                $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-                $imageFileType2 = strtolower(pathinfo($target_file2, PATHINFO_EXTENSION));
+		$form = new FormModel([
+			"cv" => FormModel::file("CV")->required()->pdf(),
+			"ltm" => FormModel::file("Lettre de motivation")->required()->pdf()
+		]);
+		$form->useFile();
 
-                move_uploaded_file($_FILES["cv"]["tmp_name"], $target_file);
-                move_uploaded_file($_FILES["ltm"]["tmp_name"], $target_file2);
+		if ($request->getMethod() === 'post') {
+			if ($form->validate($request->getBody())) {
+				$path = "uploads/" . $id . "_" . Application::getUser()->id();
+				if (!$form->getFile("cv")->save($path, "cv") ||
+					!$form->getFile("ltm")->save($path, "ltm")) {
+					$form->setError("Impossible de télécharger tous les fichiers");
+					return '';
+				}
+				$stmt = Database::get_conn()->prepare("INSERT INTO `Candidature`(`idoffre`, `idutilisateur`) VALUES (?,?)");
+				$stmt->execute([$id, Application::getUser()->id()]);
+				Application::$app->response->redirect('/offres');
+				return '';
+			}
 
-                rename($target_file, $target_dir . "cv." . $imageFileType);
-                rename($target_file2, $target_dir . "ltm." . $imageFileType2);
-
-                $datecourante = date("Y-m-d");
-                $sql = "INSERT INTO Candidature VALUES (NULL, '$datecourante', 'En attente', $idoffre, $iduser)";
-                $requete = Database::get_conn()->prepare($sql);
-                $requete->execute();
-            } else {
-                echo "Vous avez déja postulé pour cette offre";
-            }
-            Application::$app->response->redirect('/offres');
-            return '';
-        }
-
-    }
-
+		}
+		return $this->render('candidature/postuler', [
+			'form' => $form
+		]);
+	}
 }

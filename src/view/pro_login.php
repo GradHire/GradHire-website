@@ -11,11 +11,9 @@
 	<?php $form->start(); ?>
 	<div class="w-full gap-4 flex flex-col">
 		<?php
-		$form->field("email");
-		$form->field("password");
-		$form->field("remember");
+		$form->print_all_fields();
 		$form->submit("Se connecter");
-		echo $form->getError();
+		$form->getError();
 		?>
 		<a href="register">Créer un compte entreprise</a>
 	</div>

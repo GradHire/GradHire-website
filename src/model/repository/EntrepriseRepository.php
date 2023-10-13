@@ -34,7 +34,6 @@ class EntrepriseRepository extends UtilisateurRepository
             $entrepriseData['fax'] ?? "",
             $entrepriseData['siteweb'] ?? "",
             $entrepriseData['siret'] ?? 0,
-            $entrepriseData['validee'] ?? 0,
             $entrepriseData['emailutilisateur'] ?? "",
             $entrepriseData['nomutilisateur'] ?? "",
             $entrepriseData['numtelutilisateur'] ?? ""
@@ -58,23 +57,23 @@ class EntrepriseRepository extends UtilisateurRepository
         return $entreprises;
     }
 
-    protected function getNomTable(): string
-    {
-        return $this->nomTable;
-    }
+	protected function getNomTable(): string
+	{
+		return $this->nomTable;
+	}
 
-    protected function getNomColonnes(): array
-    {
-        return [
-            "idutilisateur",
-            "statutjuridique",
-            "typestructure",
-            "effectif",
-            "codenaf",
-            "fax",
-            "siteweb",
-            "siret",
-            "validee"
-        ];
-    }
+	protected function getNomColonnes(): array
+	{
+		return [
+			"idutilisateur",
+			"statutjuridique",
+            "bio",
+			"typestructure",
+			"effectif",
+			"codenaf",
+			"fax",
+			"siteweb",
+			"siret",
+		];
+	}
 }
