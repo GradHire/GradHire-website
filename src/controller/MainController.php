@@ -15,7 +15,6 @@ use app\src\model\Form\FormString;
 use app\src\model\OffreForm;
 use app\src\model\repository\CandidatureRepository;
 use app\src\model\repository\EntrepriseRepository;
-use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\Request;
@@ -157,19 +156,6 @@ class MainController extends Controller
             return $this->render('utilisateurs/utilisateurs', ['utilisateurs' => $utilisateurs]);
         }
         return $this->render('utilisateurs/detail_utilisateur', ['utilisateur' => $utilisateur]);
-    }
-
-    public function mailtest(): string
-    {
-        $to = ["hirchyts.daniil@gmail.com", "daniil.hirchyts@etu.umontpellier.fr"];
-        $subject = "Test mail subject";
-        $message = "This is a test message";
-
-        $mailSent = MailRepository::send_mail($to, $subject, $message);
-
-        $message = $mailSent ? "Mail sent successfully" : "Mail sending failed";
-
-        return $this->render('test/mailtest', compact('message'));
     }
 
     public function entreprises(Request $request): string
