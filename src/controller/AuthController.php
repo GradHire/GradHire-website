@@ -80,7 +80,7 @@ class AuthController extends Controller
             if ($loginForm->validate($request->getBody())) {
                 $dt = $loginForm->getParsedBody();
                 if (LdapUser::login($dt["username"], $dt["password"], $dt["remember"], $loginForm)) {
-                    Application::$app->response->redirect('/');
+                    Application::redirectFromParam('/');
                     return null;
                 }
             }

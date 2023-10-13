@@ -77,6 +77,15 @@ class Application
         return "redirect=" . urlencode('http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
     }
 
+    public static function redirectFromParam(string $else): void
+    {
+        print_r($_GET);
+        if (isset($_GET["redirect"]))
+            header("Location: " . urldecode($_GET["redirect"]));
+        else
+            header("Location: " . $else);
+    }
+
     public function run(): void
     {
         $this->triggerEvent(self::EVENT_BEFORE_REQUEST);
