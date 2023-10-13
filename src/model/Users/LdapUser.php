@@ -50,8 +50,13 @@ class LdapUser extends User
 							$response->data->uid,
 							$response->data->year
 						]);
-					} else if ($response->data->type !== "staff") {
-						$user->update_year($response->data->year);
+					} else {
+						if ($user->archived()) {
+							$form->setError("Ce compte à été archivé");
+							return false;
+						}
+						if ($response->data->type !== "staff")
+							$user->update_year($response->data->year);
 					}
 					Auth::generate_token($user, $remember);
 					return true;

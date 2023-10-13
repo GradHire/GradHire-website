@@ -33,11 +33,11 @@ class AuthController extends Controller
 			if ($form->validate($request->getBody())) {
 				$dt = $form->getParsedBody();
 				if (EnterpriseUser::register($dt, $form)) {
-					return 'Compte créer vous recevrez un mail lorsque votre compte sera validé';
+					Application::$app->response->redirect('/');
+					return '';
 				}
 			}
 		}
-		$this->setLayout('auth');
 		return $this->render('register', [
 			'form' => $form
 		]);
@@ -62,7 +62,6 @@ class AuthController extends Controller
 				}
 			}
 		}
-		$this->setLayout('auth');
 		return $this->render('pro_login', [
 			'form' => $loginForm
 		]);
@@ -87,7 +86,6 @@ class AuthController extends Controller
 				}
 			}
 		}
-		$this->setLayout('auth');
 		return $this->render('login', [
 			'form' => $loginForm
 		]);

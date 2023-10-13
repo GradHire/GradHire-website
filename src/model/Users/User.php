@@ -95,6 +95,9 @@ abstract class User
 		return $this->id;
 	}
 
+	/**
+	 * @throws ServerErrorException
+	 */
 	public function refresh(): void
 	{
 		try {
@@ -125,4 +128,9 @@ abstract class User
 	}
 
 	abstract function full_name(): string;
+
+	public function archived(): bool
+	{
+		return $this->attributes["archiver"] === 1;
+	}
 }
