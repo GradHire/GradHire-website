@@ -2,6 +2,8 @@
 
 namespace app\src\model\repository;
 
+use app\src\core\exception\ServerErrorException;
+use PDOException;
 use app\src\core\db\Database;
 use app\src\model\dataObject\Entreprise;
 
@@ -9,17 +11,24 @@ class EntrepriseRepository extends UtilisateurRepository
 {
     private string $nomTable = "EntrepriseVue";
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getByIdFull($idEntreprise): ?Entreprise
     {
-        $sql = "SELECT * FROM $this->nomTable WHERE $this->nomTable.idutilisateur = :idutilisateur";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idutilisateur' => $idEntreprise]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetch();
-        if ($resultat == false) {
-            return null;
+        try {
+            $sql = "SELECT * FROM $this->nomTable WHERE $this->nomTable.idutilisateur = :idutilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idutilisateur' => $idEntreprise]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetch();
+            if ($resultat == false) {
+                return null;
+            }
+            return $this->construireDepuisTableau($resultat);
+        } catch (PDOException) {
+            throw new ServerErrorException();
         }
-        return $this->construireDepuisTableau($resultat);
     }
 
     protected function construireDepuisTableau(array $entrepriseData): Entreprise
@@ -40,8 +49,12 @@ class EntrepriseRepository extends UtilisateurRepository
         );
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getAll(): ?array
     {
+        try {
         $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idutilisateur = Utilisateur.idutilisateur";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute();
@@ -55,6 +68,9 @@ class EntrepriseRepository extends UtilisateurRepository
             $entreprises[] = $this->construireDepuisTableau($entrepriseData);
         }
         return $entreprises;
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
     }
 
 	protected function getNomTable(): string

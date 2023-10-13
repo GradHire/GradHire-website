@@ -3,9 +3,11 @@
 namespace app\src\model\repository;
 
 use app\src\core\db\Database;
+use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\Staff;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\dataObject\Utilisateur;
+use PDOException;
 
 class StaffRepository extends UtilisateurRepository
 {
@@ -27,17 +29,41 @@ class StaffRepository extends UtilisateurRepository
         );
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getByIdFull($idutilisateur): ?Staff
     {
-        $sql = "SELECT * FROM " . self::$view . " WHERE idutilisateur = :idutilisateur";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idutilisateur' => $idutilisateur]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetch();
-        if ($resultat == false) {
-            return null;
+        try {
+            $sql = "SELECT * FROM " . self::$view . " WHERE idutilisateur = :idutilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idutilisateur' => $idutilisateur]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetch();
+            if ($resultat == false) {
+                return null;
+            }
+            return $this->construireDepuisTableau($resultat);
+        } catch (PDOException) {
+            throw new ServerErrorException();
         }
-        return $this->construireDepuisTableau($resultat);
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function getManagersEmail(): array
+    {
+        try {
+            $stmt = Database::get_conn()->prepare("SELECT emailutilisateur FROM StaffVue WHERE role='responsable'");
+            $stmt->execute();
+            $emails = [];
+            foreach ($stmt->fetchAll() as $email)
+                $emails[] = $email["emailutilisateur"];
+            return $emails;
+        } catch (\Exception) {
+            throw new ServerErrorException();
+        }
     }
 
     protected function getNomColonnes(): array
@@ -59,5 +85,4 @@ class StaffRepository extends UtilisateurRepository
     {
         return "StaffVue";
     }
-
 }

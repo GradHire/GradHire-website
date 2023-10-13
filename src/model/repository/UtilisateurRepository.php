@@ -3,39 +3,55 @@
 namespace app\src\model\repository;
 
 use app\src\core\db\Database;
+use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\Utilisateur;
 use app\src\model\Users\User;
 use mysql_xdevapi\DatabaseObject;
+use PDOException;
 
 class UtilisateurRepository extends AbstractRepository
 {
 
     private string $nomTable = "Utilisateur";
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getAll(): ?array
     {
-        $sql = "SELECT * FROM $this->nomTable";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute();
-        $resultat = $requete->fetchAll();
-        $utilisateurs = [];
-        foreach ($resultat as $utilisateur) {
-            $utilisateurs[] = $this->construireDepuisTableau($utilisateur);
+        try {
+            $sql = "SELECT * FROM $this->nomTable";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute();
+            $resultat = $requete->fetchAll();
+            $utilisateurs = [];
+            foreach ($resultat as $utilisateur) {
+                $utilisateurs[] = $this->construireDepuisTableau($utilisateur);
+            }
+            return $utilisateurs;
+        } catch (PDOException) {
+            throw new ServerErrorException();
         }
-        return $utilisateurs;
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getUserById($idUtilisateur): ?Utilisateur
     {
-        $sql = "SELECT * FROM $this->nomTable WHERE idutilisateur = :idutilisateur";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idutilisateur' => $idUtilisateur]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetch();
-        if ($resultat == false) {
-            return null;
+        try {
+            $sql = "SELECT * FROM $this->nomTable WHERE idutilisateur = :idutilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idutilisateur' => $idUtilisateur]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetch();
+            if ($resultat == false) {
+                return null;
+            }
+            return $this->construireDepuisTableau($resultat);
+        } catch (PDOException) {
+            throw new ServerErrorException();
         }
-        return $this->construireDepuisTableau($resultat);
     }
 
     protected function construireDepuisTableau(array $dataObjectFormatTableau): Utilisateur
@@ -63,22 +79,41 @@ class UtilisateurRepository extends AbstractRepository
     {
         return $this->nomTable;
     }
-    public function setUserToArchived(Utilisateur $user): void
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function setUserToArchived(Utilisateur $user, bool $bool): void
     {
-        $sql = "UPDATE Utilisateur SET archiver = 1 WHERE idutilisateur = :idutilisateur";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idutilisateur' => $user->getIdutilisateur()]);
-        echo "L'utilisateur a été archivé";
+        try {
+            $sql = "UPDATE Utilisateur SET archiver = :bool WHERE idutilisateur = :idutilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $values = [
+                'idutilisateur' => $user->getIdutilisateur(),
+                'bool' => $bool ? 1 : 0
+            ];
+            $requete->execute($values);
+            echo "L'utilisateur a été archivé";
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function isArchived(Utilisateur $utilisateur): ?bool{
-        $sql = "SELECT archiver FROM Utilisateur WHERE idutilisateur = :idutilisateur";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idutilisateur' => $utilisateur->getIdutilisateur()]);
-        $resultat = $requete->fetch();
-        if ($resultat == false) {
-            return null;
+        try {
+            $sql = "SELECT archiver FROM Utilisateur WHERE idutilisateur = :idutilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idutilisateur' => $utilisateur->getIdutilisateur()]);
+            $resultat = $requete->fetch();
+            if ($resultat == false) {
+                return null;
+            }
+            return $resultat['archiver'];
+        } catch (PDOException) {
+            throw new ServerErrorException();
         }
-        return $resultat['archiver'];
     }
 }

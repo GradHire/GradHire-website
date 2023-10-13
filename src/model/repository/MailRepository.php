@@ -6,6 +6,7 @@ class MailRepository
 {
     public static function send_mail(array $email, string $subject, string $message): bool
     {
+        if (count($email) === 0) return true;
         $headers = "MIME-Version: 1.0" . "\r\n"
             . "Content-type:text/html;charset=UTF-8" . "\r\n"
             . 'From: ' . SMTP_USERNAME . "\r\n";
@@ -39,7 +40,7 @@ class MailRepository
                 fputs($smtpConn, "QUIT\r\n");
                 fclose($smtpConn);
 
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 return false;
             }
         }

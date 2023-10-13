@@ -1,13 +1,13 @@
 <html lang="fr">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>GradHire</title>
-	<link rel="stylesheet" href="/resources/css/input.css">
-	<link rel="stylesheet" href="/resources/css/output.css">
-	<link rel="icon" type="image/png" sizes="32x32" href="/resources/images/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="/resources/images/favicon-16x16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GradHire</title>
+    <link rel="stylesheet" href="/resources/css/input.css">
+    <link rel="stylesheet" href="/resources/css/output.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="/resources/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/resources/images/favicon-16x16.png">
 </head>
 <body>
 
@@ -18,6 +18,8 @@
         </a>
         <div class="flex items-center md:order-2">
             <?php use app\src\model\Application;
+            use app\src\model\Auth;
+            use app\src\model\Users\Roles;
 
             if (Application::isGuest()): ?>
                 <a href="/login"
@@ -28,7 +30,8 @@
             <?php else: ?>
                 <ul class="navbar-nav ml-auto flex gap-5">
                     <li class="nav-item active">
-                        <a class="nav-link flex" href="/profile">
+                        <a class="nav-link flex"
+                           href="<?= Auth::has_role(Roles::Enterprise) ? "/entreprises/" . Application::getUser()->id() : '/profile' ?>">
                             <?= Application::getUser()->full_name() ?>
                             <div class="rounded-full overflow-hidden h-8 w-8 ml-2">
                                 <img src="<?= Application::getUser()->get_picture() ?>" alt="Photo de profil"
@@ -58,20 +61,20 @@
 			<ul class="flex flex-col mt-4 font-medium md:flex-row md:space-x-8 md:mt-0">
 				<li>
 					<a href="/"
-					   class="block py-2 pl-3 pr-4 text-zinc-600 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-zinc-500 md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700"
+					   class="navLink block py-2 pl-3 pr-4 text-zinc-500 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-zinc-500 md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700"
 					   aria-current="page">Home</a>
 				</li>
 				<li>
 					<a href="/offres"
-					   class="block py-2 pl-3 pr-4 text-zinc-900 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-white md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700">Offres</a>
+					   class="navLink block py-2 pl-3 pr-4 text-zinc-500 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-white md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700">Offres</a>
 				</li>
 				<li>
 					<a href="/entreprises"
-					   class="block py-2 pl-3 pr-4 text-zinc-900 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-white md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700">Entreprises</a>
+					   class="navLink block py-2 pl-3 pr-4 text-zinc-500 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-white md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700">Entreprises</a>
 				</li>
 				<li>
 					<a href="/utilisateurs"
-					   class="block py-2 pl-3 pr-4 text-zinc-900 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-white md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700">Utilisateurs</a>
+					   class="navLink block py-2 pl-3 pr-4 text-zinc-500 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-white md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700">Utilisateurs</a>
 				</li>
 
                 <li>
@@ -90,15 +93,9 @@
     </div>
 </div>
 <div class="w-full flex justify-center items-center">
-	<div class="md:w-[75%] w-full max-w-[1200px] p-4 flex justify-center items-center">
-		{{content}}
-	</div>
+    <div class="md:w-[75%] w-full max-w-[1200px] p-4 flex justify-center items-center">
+        {{content}}
+    </div>
 </div>
 </body>
-<script>
-    const path = window.location.pathname;
-    document.querySelectorAll('.navLink').forEach(function (navLink) {
-        if (navLink.getAttribute('href') === path) navLink.classList.add('underline', 'text-zinc-900');
-    });
-</script>
 </html>
