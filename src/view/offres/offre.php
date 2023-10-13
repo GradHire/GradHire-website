@@ -8,7 +8,6 @@ use app\src\model\Application;
 
 $id_offre = $offre->getIdoffre();
 
-include_once "modal-delete.php";
 ?>
 <div class="relative offreBox">
     <div class="absolute top-0 right-0 flex flex-row gap-1 mt-11 mr-4 z-10">
@@ -24,7 +23,7 @@ include_once "modal-delete.php";
 
             </button>
         </form>
-        <button id="btn-danger-delete-<?= $id_offre ?>"
+        <button onclick="showModal(<?= $id_offre ?>)"
                 class="formAdminSupprimer  flex items-center justify-center w-7 h-7 border-[1px] border-zinc-100 duration-150 bg-zinc-50 hover:invert  rounded-full">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                  stroke="currentColor"
@@ -79,27 +78,6 @@ include_once "modal-delete.php";
         </a>
     </div>
 </div>
-<script>
-    const modal<?= $id_offre ?>= document.getElementById("myModal-<?= $id_offre ?>");
-    const bg<?= $id_offre ?> = document.getElementById("blur-background")
-    const btn<?= $id_offre ?> = document.getElementById("btn-danger-delete-<?= $id_offre ?>");
-    const closeBtns<?= $id_offre ?> = document.querySelectorAll(".close-modal-btn-<?= $id_offre ?>");
 
-    btn<?= $id_offre ?>.onclick = function () {
-        if (modal<?= $id_offre ?> && bg<?= $id_offre ?>) {
-            modal<?= $id_offre ?>.classList.remove("hidden");
-            modal<?= $id_offre ?>.classList.add("block");
-            bg<?= $id_offre ?>.classList.remove("hidden");
-        }
-    }
-
-    closeBtns<?= $id_offre ?>.forEach(function (btn) {
-        btn.onclick = function () {
-            modal<?= $id_offre ?>.classList.add("hidden");
-            modal<?= $id_offre ?>.classList.remove("block");
-            bg<?= $id_offre ?>.classList.add("hidden");
-        }
-    });
-</script>
 
 
