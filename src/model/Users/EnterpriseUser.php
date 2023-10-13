@@ -4,8 +4,10 @@ namespace app\src\model\Users;
 
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
+use app\src\model\Auth;
 use app\src\model\Form\FormModel;
 use app\src\model\repository\MailRepository;
+use app\src\model\repository\StaffRepository;
 
 class EnterpriseUser extends ProUser
 {
@@ -25,12 +27,13 @@ class EnterpriseUser extends ProUser
                 return false;
             }
             $user = EnterpriseUser::save([$body["name"], $body["siret"], $body["email"], password_hash($body["password"], PASSWORD_DEFAULT), $body["phone"]]);
-            MailRepository::send_mail(["marius.brouty@gmail.com"], "Nouvelle entreprise", <<<HTML
-<div>
-<p>L'entreprise {$body["name"]} viens de créer un compte</p>
-<a href="http://localhost:8080/entreprises/51122324">Voir le profile</a>
-</div>
-HTML
+            $emails = (new StaffRepository())->getManagersEmail();
+            MailRepository::send_mail($emails, "Nouvelle entreprise", <<<HTML
+ <div>
+ <p>L'entreprise {$body["name"]} viens de créer un compte</p>
+ <a href="http://localhost:8080/entreprises/{$user->id()}">Voir le profile</a>
+ </div>
+ HTML
             );
             Auth::generate_token($user, false);
             return true;

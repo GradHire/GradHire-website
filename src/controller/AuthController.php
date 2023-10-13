@@ -29,7 +29,6 @@ class AuthController extends Controller
 
         ]);
         if ($request->getMethod() === 'post') {
-
             if ($form->validate($request->getBody())) {
                 $dt = $form->getParsedBody();
                 if (EnterpriseUser::register($dt, $form)) {
