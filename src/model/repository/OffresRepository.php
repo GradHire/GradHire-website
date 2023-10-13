@@ -261,4 +261,13 @@ class OffresRepository extends AbstractRepository
         foreach ($filter as $key => $value) if ($value != "") return true;
         return false;
     }
+
+    public function checkArchived(Offre $offre){
+        $sql = "SELECT archiver FROM Offre JOIN Utilisateur WHERE idoffre = :idoffre";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idoffre' => $offre->getIdoffre()]);
+        $resultat = $requete->fetch();
+        if ($resultat['archiver'] == 1) return true;
+        else return false;
+    }
 }

@@ -53,7 +53,7 @@ class EntrepriseRepository extends UtilisateurRepository
         }
         $entreprises = [];
         foreach ($resultat as $entrepriseData) {
-            $entreprises[] = $this->construireEntrepriseDepuisTableau($entrepriseData);
+            $entreprises[] = $this->construireDepuisTableau($entrepriseData);
         }
         return $entreprises;
     }
