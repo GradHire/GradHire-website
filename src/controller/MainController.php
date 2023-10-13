@@ -198,7 +198,7 @@ class MainController extends Controller
 		if ($request->getMethod() === 'get') {
 			return $this->render('/offres/create');
 		} else {
-            $action = $_POST['action'] ?? null;
+            $action=$_POST['action'];
 
 			$type = $_POST['radios'];
 			$titre = $_POST['titre'];
@@ -209,8 +209,13 @@ class MainController extends Controller
 			else $distanciel = null;
 			$salaire = $_POST['salaire'];
 			$unitesalaire = "heures";
-			if($action== "sauvegarder") $statut = "draft";
-            else $statut = "pending";
+            if (isset($action)) {
+                if ($action == 'Envoyer') {
+                    $statut= "pending";
+                } else if ($action == 'sauvegarder') {
+                    $statut= "draft";
+                }
+            }
 			$avantage = $_POST['avantage'];
 			$dated = $_POST['dated'] ?? null;
             if($dated == null)
@@ -224,8 +229,8 @@ class MainController extends Controller
                 $idUtilisateur = Application::getUser()->id();
             else
                 $idUtilisateur = $_POST['entreprise'];
-			$idOffre = null;
-
+			$idOffre = $_POST['id_offre'];
+            echo $idOffre;
 			if ($duree == 1) {
 				$anneeVisee = "2";
 			} else {
@@ -234,9 +239,14 @@ class MainController extends Controller
 			$idAnnee = date("Y");
 
 			$datecreation = date("Y-m-d H:i:s");
-			$offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef,$statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation,null);
-
-			OffreForm::creerOffre($offre, $distanciel);
+            if($idOffre===""){
+                $offre = new Offre(null, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef,$statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation,null);
+                OffreForm::creerOffre($offre, $distanciel);
+            }
+            else{
+                $offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef,$statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation,null);
+                OffreForm::updateOffre($offre, $distanciel);
+            }
 			return $this->render('/offres/create');
 		}
 	}
