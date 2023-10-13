@@ -22,8 +22,8 @@ class ProUser extends User
 				$form->setError("Email ou mot de passe invalide");
 				return false;
 			}
-			if ($user->role() == Roles::Enterprise && !$user->attributes()["validee"]) {
-				$form->setError("Votre compte n'a pas encore été validé.");
+			if ($user->archived()) {
+				$form->setError("Ce compte à été archivé");
 				return false;
 			}
 			Auth::generate_token($user, $remember);

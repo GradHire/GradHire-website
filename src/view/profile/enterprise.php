@@ -1,10 +1,8 @@
 <?php
 /** @var $user User */
 
-use app\src\core\exception\NotFoundException;
 use app\src\model\Users\User;
 
-if ($user->attributes()["validee"] == 0) throw new NotFoundException();
 ?>
 
 <div class="h-full">
