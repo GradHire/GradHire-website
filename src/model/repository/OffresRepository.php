@@ -3,6 +3,7 @@
 namespace app\src\model\repository;
 
 use app\src\core\db\Database;
+use app\src\model\Application;
 use app\src\model\dataObject\Offre;
 
 
@@ -204,14 +205,22 @@ class OffresRepository extends AbstractRepository
         return $resultat;
     }
 
-    public function draftExist($idEntreprise): ?array{
+    public function draftExist($idEntreprise): array {
         $sql = "SELECT * FROM Offre WHERE idutilisateur = :idutilisateur AND status = 'draft'";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idutilisateur' => $idEntreprise]);
         $requete->setFetchMode(\PDO::FETCH_ASSOC);
         $resultat = $requete->fetchAll();
-        if ($resultat == false) return null;
-        return $resultat;
+        $offres = [];
+        $anneeencours= date("Y");
+        $datecreation = date("Y-m-d");
+        $iduser= Application::getUser()->Id();
+        $offres[]= new Offre(null,null, null, "", 7, 5, 4.05, null, null, $datecreation, null, null, null, $anneeencours, $iduser, "", $datecreation,null);
+        if ($resultat == false) return $offres;
+        foreach ($resultat as $offre_data) {
+            $offres[] = $this->construireDepuisTableau($offre_data);
+        }
+        return $offres;
     }
 
     public function tableChecker($filter): string
