@@ -6,8 +6,8 @@ class Offre extends AbstractDataObject
 {
     private ?int $idoffre;
     private ?string $duree;
-    private string $thematique;
-    private string $sujet;
+    private ?string $thematique;
+    private ?string $sujet;
     private ?int $nbjourtravailhebdo;
     private ?float $nbHeureTravailHebdo;
     private ?float $gratification;
@@ -99,7 +99,7 @@ class Offre extends AbstractDataObject
     /**
      * @return string
      */
-    public function getThematique(): string
+    public function getThematique(): ?string
     {
         return $this->thematique;
     }

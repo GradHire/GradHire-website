@@ -29,9 +29,9 @@ class Entreprise extends Utilisateur
 	 * @param string $numtelutilisateur
 	 */
 
-	public function __construct(int $idutilisateur, ?string $statutjuridique, ?string $typestructure, ?string $effectif, ?string $codenaf, ?string $fax, ?string $siteweb, int $siret, string $emailutilisateur, string $nomutilisateur, string $numtelutilisateur)
+	public function __construct(int $idutilisateur, ?string $statutjuridique, ?string $bio, ?string $typestructure, ?string $effectif, ?string $codenaf, ?string $fax, ?string $siteweb, int $siret, string $emailutilisateur, string $nomutilisateur, string $numtelutilisateur)
 	{
-		parent::__construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur);
+		parent::__construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur, $bio);
 		$this->idutilisateur = $idutilisateur;
 		$this->statutjuridique = $statutjuridique;
 		$this->typestructure = $typestructure;
@@ -77,45 +77,45 @@ class Entreprise extends Utilisateur
 		return $this->effectif;
 	}
 
-	public function setEffectif(?string $effectif): void
-	{
-		$this->effectif = $effectif;
-	}
+    public function setEffectif(?string $effectif): void
+    {
+        $this->effectif = $effectif;
+    }
 
-	public function getCodenaf(): ?string
-	{
-		return $this->codenaf;
-	}
+    public function getCodenaf(): ?string
+    {
+        return $this->codenaf;
+    }
 
-	public function setCodenaf(?string $codenaf): void
-	{
-		$this->codenaf = $codenaf;
-	}
+    public function setCodenaf(?string $codenaf): void
+    {
+        $this->codenaf = $codenaf;
+    }
 
-	public function getFax(): ?string
-	{
-		return $this->fax;
-	}
+    public function getFax(): ?string
+    {
+        return $this->fax;
+    }
 
-	public function setFax(?string $fax): void
-	{
-		$this->fax = $fax;
-	}
+    public function setFax(?string $fax): void
+    {
+        $this->fax = $fax;
+    }
 
-	public function getSiteweb(): ?string
-	{
-		return $this->siteweb;
-	}
+    public function getSiteweb(): ?string
+    {
+        return $this->siteweb;
+    }
 
-	public function setSiteweb(?string $siteweb): void
-	{
-		$this->siteweb = $siteweb;
-	}
+    public function setSiteweb(?string $siteweb): void
+    {
+        $this->siteweb = $siteweb;
+    }
 
-	public function getSiret(): int
-	{
-		return $this->siret;
-	}
+    public function getSiret(): int
+    {
+        return $this->siret;
+    }
 
 	public function setSiret(int $siret): void
 	{

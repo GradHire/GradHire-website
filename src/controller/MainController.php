@@ -20,6 +20,9 @@ use app\src\model\repository\UtilisateurRepository;
 use app\src\model\Request;
 use app\src\model\Users\Profile\EnterpriseProfile;
 use app\src\model\Users\Roles;
+use app\src\model\repository\EtudiantRepository;
+use app\src\model\repository\TuteurRepository;
+use app\src\model\repository\StaffRepository;
 
 class MainController extends Controller
 {
@@ -61,7 +64,10 @@ class MainController extends Controller
     public function archiver(Request $req): string
     {
         $user = (new UtilisateurRepository())->getUserById($req->getRouteParams()["id"]);
-        (new UtilisateurRepository())->setUserToArchived($user);
+        if((new UtilisateurRepository())->isArchived($user)){
+            (new UtilisateurRepository())->setUserToArchived($user, false);
+        }
+        else (new UtilisateurRepository())->setUserToArchived($user, true);
         Application::$app->response->redirect('/utilisateurs/' . $req->getRouteParams()["id"]);
         return '';
     }
@@ -150,23 +156,36 @@ class MainController extends Controller
     public function utilisateurs(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
-        $utilisateur = (new UtilisateurRepository())->getUserById($id);
-        if ($utilisateur == null && $id == null) {
-            $utilisateurs = (new UtilisateurRepository())->getAll();
-            return $this->render('utilisateurs/utilisateurs', ['utilisateurs' => $utilisateurs]);
+        $utilisateur = null;
+        if ((new EntrepriseRepository())->getByIdFull($id) != null) {
+            $utilisateur = (new EntrepriseRepository())->getByIdFull($id);
+            return $this->render('utilisateurs/detailEntreprise', ['utilisateur' => $utilisateur]);
         }
-        return $this->render('utilisateurs/detail_utilisateur', ['utilisateur' => $utilisateur]);
+        elseif ((new EtudiantRepository())->getByIdFull($id) != null){
+            $utilisateur = (new EtudiantRepository())->getByIdFull($id);
+            return $this->render('utilisateurs/detailEtudiant', ['utilisateur' => $utilisateur]);
+        }
+        elseif ((new TuteurRepository())->getByIdFull($id) != null){
+            $utilisateur = (new TuteurRepository())->getByIdFull($id);
+            return $this->render('utilisateurs/detailTuteur', ['utilisateur' => $utilisateur]);
+        }
+        elseif ((new StaffRepository())->getByIdFull($id) != null){
+            $utilisateur = (new StaffRepository())->getByIdFull($id);
+            return $this->render('utilisateurs/detailStaff', ['utilisateur' => $utilisateur]);
+        }
+        $utilisateur = (new UtilisateurRepository())->getAll();
+        return $this->render('utilisateurs/utilisateurs', ['utilisateurs' => $utilisateur]);
     }
 
-    public function entreprises(Request $request): string
-    {
-        $id = $request->getRouteParams()['id'] ?? null;
-        $entreprise = (new EntrepriseRepository())->getByIdFull($id);
-        if ($entreprise == null && $id != null) throw new NotFoundException();
-        else if ($entreprise != null && $id != null) {
-            $offres = (new OffresRepository())->getOffresByIdEntreprise($id);
-            return $this->render('entreprise/detailEntreprise', ['entreprise' => $entreprise, 'offres' => $offres]);
-        }
+	public function entreprises(Request $request): string
+	{
+		$id = $request->getRouteParams()['id'] ?? null;
+		$entreprise = (new EntrepriseRepository())->getByIdFull($id);
+		if ($entreprise == null && $id != null) throw new NotFoundException();
+		else if ($entreprise != null && $id != null) {
+			$offres = (new OffresRepository())->getOffresByIdEntreprise($id);
+			return $this->render('entreprise/detailEntreprise', ['entreprise' => $entreprise, 'offres' => $offres]);
+		}
 
         $entreprises = (new EntrepriseRepository())->getAll();
         return $this->render('entreprise/entreprise', ['entreprises' => $entreprises]);
@@ -209,19 +228,66 @@ class MainController extends Controller
         }
     }
 
-    public function deleteOffre(Request $request): void
+    public function archiveOffre(Request $request): string
     {
+        $id = $request->getRouteParams()['id'] ?? null;
+        $offre = (new OffresRepository())->getById($id);
+        if ($offre == null && $id != null) throw new NotFoundException();
+
         if ($request->getMethod() === 'post') {
-            $id = $request->getRouteParams()['id'] ?? null;
-            $offre = (new OffresRepository())->getById($id);
             $url = $_POST['link'];
             if ($offre == null && $id != null) throw new NotFoundException();
             else if ($offre != null && $id != null) {
                 (new OffresRepository())->updateToDraft($id);
                 Application::$app->response->redirect($url);
             }
+        } elseif ($request->getMethod() === 'get') {
+            (new OffresRepository())->updateToDraft($id);
+            $offre = (new OffresRepository())->getByIdWithUser($id);
+            return $this->render('offres/detailOffre', ['offre' => $offre]);
         }
+        return $this->render('offres/detailOffre', ['offre' => $offre]);
     }
+
+    public function editOffre(Request $request): string
+    {
+        if ($request->getMethod() === 'post') {
+            $id = $request->getRouteParams()['id'] ?? null;
+            $offre = (new OffresRepository())->getById($id);
+            if ($offre == null && $id != null) throw new NotFoundException();
+            else if ($offre != null && $id != null) {
+                return $this->render('/offres/edit', ['offre' => $offre]);
+            }
+        }
+        return $this->render('/offres/edit');
+    }
+
+    public function validateOffre(Request $request): string
+    {
+        $id = $request->getRouteParams()['id'] ?? null;
+        $offre = (new OffresRepository())->getByIdWithUser($id);
+        if ($offre == null && $id != null) throw new NotFoundException();
+
+        if ($request->getMethod() === 'get') {
+            (new OffresRepository())->updateToApproved($id);
+            $offre = (new OffresRepository())->getByIdWithUser($id);
+            return $this->render('offres/detailOffre', ['offre' => $offre]);
+        }
+        return $this->render('offres/detailOffre', ['offre' => $offre]);
+    }
+	public function deleteOffre(Request $request): void
+	{
+		if ($request->getMethod() === 'post') {
+			$id = $request->getRouteParams()['id'] ?? null;
+			$offre = (new OffresRepository())->getById($id);
+			$url = $_POST['link'];
+			if ($offre == null && $id != null) throw new NotFoundException();
+			else if ($offre != null && $id != null) {
+				(new OffresRepository())->updateToDraft($id);
+				Application::$app->response->redirect($url);
+			}
+		}
+	}
 
     public function offres(Request $request): string
     {
@@ -229,10 +295,11 @@ class MainController extends Controller
         $offre = (new OffresRepository())->getByIdWithUser($id);
 
         if ($offre == null && $id != null) throw new NotFoundException();
-        else if ($offre != null && $id != null) return $this->render('offres/detailOffre', ['offre' => $offre]);
+        else if ($offre != null && $id != null) {
+            return $this->render('offres/detailOffre', ['offre' => $offre]);
+        }
 
         $filter = self::constructFilter();
-
         if (empty($search) && empty($filter)) $offres = (new OffresRepository())->getAll();
         else $offres = (new OffresRepository())->search($filter);
 

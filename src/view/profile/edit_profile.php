@@ -3,6 +3,7 @@
 
 use app\src\model\Application;
 use app\src\model\Form\FormModel;
+$this->title = 'Profile';
 
 ?>
 <div class="w-full md:max-w-[75%] gap-4 flex flex-col">

@@ -38,53 +38,60 @@
                                      class="w-full h-full object-cover rounded-full"/>
                             </div>
 
-                        </a></li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/logout">
-                            Logout
-                        </a>
-                    </li>
-                </ul>
-            <?php endif; ?>
-            <button data-collapse-toggle="mega-menu-icons" type="button"
-                    class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-zinc-500 rounded-lg md:hidden hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-200 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:focus:ring-zinc-600"
-                    aria-controls="mega-menu-icons" aria-expanded="false">
-                <span class="sr-only">Open main menu</span>
-                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                     viewBox="0 0 17 14">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M1 1h15M1 7h15M1 13h15"/>
-                </svg>
-            </button>
-        </div>
-        <div id="mega-menu-icons" class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1">
-            <ul class="flex flex-col mt-4 font-medium md:flex-row md:space-x-8 md:mt-0">
-                <li>
-                    <a href="/"
-                       class="block py-2 pl-3 pr-4 text-zinc-600 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-zinc-500 md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700"
-                       aria-current="page">Home</a>
-                </li>
-                <li>
-                    <a href="/offres"
-                       class="block py-2 pl-3 pr-4 text-zinc-900 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-white md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700">Offres</a>
-                </li>
-                <li>
-                    <a href="/entreprises"
-                       class="block py-2 pl-3 pr-4 text-zinc-900 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-white md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700">Entreprises</a>
-                </li>
-                <li>
-                    <a href="/utilisateurs"
-                       class="block py-2 pl-3 pr-4 text-zinc-900 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-white md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700">Utilisateurs</a>
-                </li>
+						</a></li>
+					<li class="nav-item active">
+						<a class="nav-link" href="/logout">
+							Logout
+						</a>
+					</li>
+				</ul>
+			<?php endif; ?>
+			<button data-collapse-toggle="mega-menu-icons" type="button"
+			        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-zinc-500 rounded-lg md:hidden hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-200 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:focus:ring-zinc-600"
+			        aria-controls="mega-menu-icons" aria-expanded="false">
+				<span class="sr-only">Open main menu</span>
+				<svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+				     viewBox="0 0 17 14">
+					<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+					      d="M1 1h15M1 7h15M1 13h15"/>
+				</svg>
+			</button>
+		</div>
+		<div id="mega-menu-icons" class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1">
+			<ul class="flex flex-col mt-4 font-medium md:flex-row md:space-x-8 md:mt-0">
+				<li>
+					<a href="/"
+					   class="navLink block py-2 pl-3 pr-4 text-zinc-500 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-zinc-500 md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700"
+					   aria-current="page">Home</a>
+				</li>
+				<li>
+					<a href="/offres"
+					   class="navLink block py-2 pl-3 pr-4 text-zinc-500 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-white md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700">Offres</a>
+				</li>
+				<li>
+					<a href="/entreprises"
+					   class="navLink block py-2 pl-3 pr-4 text-zinc-500 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-white md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700">Entreprises</a>
+				</li>
+				<li>
+					<a href="/utilisateurs"
+					   class="navLink block py-2 pl-3 pr-4 text-zinc-500 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-white md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700">Utilisateurs</a>
+				</li>
 
                 <li>
                     <a href="/candidatures"
-                       class="block py-2 pl-3 pr-4 text-zinc-900 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-white md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700">Candidatures</a>
+                       class="navLink block py-2 pl-3 pr-4 text-zinc-500 border-b border-zinc-100 hover:bg-zinc-50 md:hover:bg-transparent md:border-0 md:hover:text-zinc-600 md:p-0 dark:text-white md:dark:hover:text-zinc-500 dark:hover:bg-zinc-700 dark:hover:text-zinc-500 md:dark:hover:bg-transparent dark:border-zinc-700">Candidatures</a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
+<div id="blur-background" class="hidden w-screen h-screen fixed z-50 top-0 left-0 backdrop-blur-md"></div>
+<div class="bg-white shadow w-full flex justify-center">
+    <div class="md:w-[75%] w-full max-w-[1200px] p-4">
+        <h1 class="text-xl font-bold leading-tight tracking-tight text-zinc-900">
+            <?= $this->title ?>
+    </div>
+</div>
 <div class="w-full flex justify-center items-center">
     <div class="md:w-[75%] w-full max-w-[1200px] p-4 flex justify-center items-center">
         {{content}}
