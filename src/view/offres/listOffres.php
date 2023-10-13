@@ -43,11 +43,12 @@ Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff, Roles::Teacher, R
                 </button>
             </div>
         </div>
-    </form>
-    <div class="grid grid-cols-1 gap-4 lg:grid-cols-4">
         <div class="rounded-lg p-4 border-2 border-zinc-200">
             <?php require_once __DIR__ . '/search.php'; ?>
         </div>
+    </form>
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-4">
+
         <div class="lg:col-span-3 rounded-lg flex flex-col gap-4">
             <div class="flex flex-col gap-1 w-full">
                 <h2 class="font-bold text-lg">Offres validées</h2>

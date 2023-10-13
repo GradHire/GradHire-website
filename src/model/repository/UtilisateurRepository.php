@@ -70,4 +70,15 @@ class UtilisateurRepository extends AbstractRepository
         $requete->execute(['idutilisateur' => $user->getIdutilisateur()]);
         echo "L'utilisateur a été archivé";
     }
+
+    public function isArchived(Utilisateur $utilisateur): ?bool{
+        $sql = "SELECT archiver FROM Utilisateur WHERE idutilisateur = :idutilisateur";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idutilisateur' => $utilisateur->getIdutilisateur()]);
+        $resultat = $requete->fetch();
+        if ($resultat == false) {
+            return null;
+        }
+        return $resultat['archiver'];
+    }
 }
