@@ -49,6 +49,23 @@ class StaffRepository extends UtilisateurRepository
         }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
+    public function getManagersEmail(): array
+    {
+        try {
+            $stmt = Database::get_conn()->prepare("SELECT emailutilisateur FROM StaffVue WHERE role='responsable'");
+            $stmt->execute();
+            $emails = [];
+            foreach ($stmt->fetchAll() as $email)
+                $emails[] = $email["emailutilisateur"];
+            return $emails;
+        } catch (\Exception) {
+            throw new ServerErrorException();
+        }
+    }
+
     protected function getNomColonnes(): array
     {
         return [
@@ -68,5 +85,4 @@ class StaffRepository extends UtilisateurRepository
     {
         return "StaffVue";
     }
-
 }

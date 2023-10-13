@@ -14,7 +14,6 @@ rangeSliders.forEach(slider => {
     updateRange();
 
     function updateRange() {
-        console.log(hidden);
         const min = parseFloat(minRange.value);
         const max = parseFloat(maxRange.value);
         if (min > max)
