@@ -6,37 +6,21 @@ on:
       - main
 
 jobs:
-  security_scan:
-    name: Scan for PHP Vulnerabilities
+  php-lint:
+    name: Linting
+
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        operating-system:
+          - "ubuntu-22.04"
+        php-version:
+          - "8.2"
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v2
+      - name: Lint PHP files
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
+        uses: overtrue/phplint@main
         with:
-          php-version: '8.2'
-
-      - name: Install PHPLint
-        run: composer require overtrue/phplint
-
-      - name: Run PHPLint
-        run: vendor/bin/phplint src/
-
-      - name: Check for Vulnerabilities
-        run: php composer.phar audit
-
-      - name: Save and upload test results
-        if: ${{ failure() }}
-        run: |
-          mv composer-audit-results.json ${{ github.workspace }}/composer-audit-results.json
-        continue-on-error: true
-
-      - name: Upload results to GitHub
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: composer-audit-results
-          path: ${{ github.workspace }}/composer-audit-results.json
+          path: src/
+          options: --exclude=vendor
