@@ -1,0 +1,42 @@
+name: PHP Vulnerability Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  security_scan:
+    name: Scan for PHP Vulnerabilities
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Install PHPLint
+        run: composer require overtrue/phplint
+
+      - name: Run PHPLint
+        run: vendor/bin/phplint
+
+      - name: Check for Vulnerabilities
+        run: php composer.phar audit
+
+      - name: Save and upload test results
+        if: ${{ failure() }}
+        run: |
+          mv composer-audit-results.json ${{ github.workspace }}/composer-audit-results.json
+        continue-on-error: true
+
+      - name: Upload results to GitHub
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: composer-audit-results
+          path: ${{ github.workspace }}/composer-audit-results.json
