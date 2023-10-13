@@ -11,6 +11,7 @@ use app\src\model\Form\fields\FormFile;
 use app\src\model\Form\fields\FormInt;
 use app\src\model\Form\fields\FormPassword;
 use app\src\model\Form\fields\FormPhone;
+use app\src\model\Form\fields\FormRadio;
 use app\src\model\Form\fields\FormSelect;
 use app\src\model\Form\fields\FormString;
 
@@ -67,6 +68,11 @@ class FormModel
 	public static function select(string $name, array $options): FormSelect
 	{
 		return new FormSelect($name, $options);
+	}
+
+	public static function radio(string $name, array $options): FormRadio
+	{
+		return new FormRadio($name, $options);
 	}
 
 	public static function email(string $name): FormEmail
