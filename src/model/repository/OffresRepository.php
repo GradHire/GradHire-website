@@ -3,7 +3,9 @@
 namespace app\src\model\repository;
 
 use app\src\core\db\Database;
+use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\Offre;
+use PDOException;
 
 
 class OffresRepository extends AbstractRepository
@@ -119,42 +121,70 @@ class OffresRepository extends AbstractRepository
         else return array();
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getAll(): ?array
     {
-        $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idutilisateur = Utilisateur.idutilisateur";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute();
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetchAll();
-        if ($resultat == false) return null;
-        return $resultat;
+        try {
+            $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idutilisateur = Utilisateur.idutilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute();
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetchAll();
+            if ($resultat == false) return null;
+            return $resultat;
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function deleteById($idOffre): bool
     {
-        $sql = "DELETE FROM $this->nomTable WHERE idoffre = :idoffre";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idoffre' => $idOffre]);
-        return true;
+        try {
+            $sql = "DELETE FROM $this->nomTable WHERE idoffre = :idoffre";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idoffre' => $idOffre]);
+            return true;
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function updateToDraft($idOffre): bool
     {
-        $sql = "UPDATE $this->nomTable SET status = 'draft' WHERE idoffre = :idoffre";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idoffre' => $idOffre]);
-        return true;
+        try {
+            $sql = "UPDATE $this->nomTable SET status = 'draft' WHERE idoffre = :idoffre";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idoffre' => $idOffre]);
+            return true;
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getById($idOffre): ?Offre
     {
-        $sql = "SELECT * FROM $this->nomTable WHERE idoffre = :idoffre";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idoffre' => $idOffre]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetch();
-        if ($resultat == false) return null;
-        return $this->construireDepuisTableau($resultat);
+        try {
+            $sql = "SELECT * FROM $this->nomTable WHERE idoffre = :idoffre";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idoffre' => $idOffre]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetch();
+            if ($resultat == false) return null;
+            return $this->construireDepuisTableau($resultat);
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
     }
 
     protected function construireDepuisTableau(array $dataObjectFormatTableau): Offre
@@ -182,26 +212,40 @@ class OffresRepository extends AbstractRepository
         );
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getByIdWithUser($idOffre): ?Offre
     {
-        $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idutilisateur = Utilisateur.idutilisateur WHERE idoffre = :idoffre";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idoffre' => $idOffre]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetch();
-        if ($resultat == false) return null;
-        return $this->construireDepuisTableau($resultat);
+        try {
+            $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idutilisateur = Utilisateur.idutilisateur WHERE idoffre = :idoffre";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idoffre' => $idOffre]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetch();
+            if ($resultat == false) return null;
+            return $this->construireDepuisTableau($resultat);
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getOffresByIdEntreprise($idEntreprise): ?array
     {
-        $sql = "SELECT * FROM Offre WHERE idutilisateur = :idutilisateur";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idutilisateur' => $idEntreprise]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetchAll();
-        if ($resultat == false) return null;
-        return $resultat;
+        try {
+            $sql = "SELECT * FROM Offre WHERE idutilisateur = :idutilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idutilisateur' => $idEntreprise]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetchAll();
+            if ($resultat == false) return null;
+            return $resultat;
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
     }
 
     public function tableChecker($filter): string
@@ -220,21 +264,35 @@ class OffresRepository extends AbstractRepository
         return $this->nomTable;
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function updateToApproved(mixed $id)
     {
+        try {
         $sql = "UPDATE $this->nomTable SET status = 'approved' WHERE idoffre = :idoffre";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idoffre' => $id]);
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function checkIfCreatorOffreIsArchived(Offre $offre): bool
     {
+        try {
         $sql = "SELECT archiver FROM Offre o JOIN Utilisateur u ON u.idUtilisateur = o.idUtilisateur WHERE idoffre = :idoffre";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idoffre' => $offre->getIdoffre()]);
         $resultat = $requete->fetch();
         if ($resultat['archiver'] == 1) return true;
         else return false;
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
     }
 
     protected function getNomColonnes(): array
@@ -262,12 +320,19 @@ class OffresRepository extends AbstractRepository
         return false;
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function checkArchived(Offre $offre){
-        $sql = "SELECT archiver FROM Offre JOIN Utilisateur WHERE idoffre = :idoffre";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idoffre' => $offre->getIdoffre()]);
-        $resultat = $requete->fetch();
-        if ($resultat['archiver'] == 1) return true;
-        else return false;
+        try {
+            $sql = "SELECT archiver FROM Offre JOIN Utilisateur WHERE idoffre = :idoffre";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idoffre' => $offre->getIdoffre()]);
+            $resultat = $requete->fetch();
+            if ($resultat['archiver'] == 1) return true;
+            else return false;
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
     }
 }

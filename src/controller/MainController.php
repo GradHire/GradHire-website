@@ -66,8 +66,12 @@ class MainController extends Controller
         $user = (new UtilisateurRepository())->getUserById($req->getRouteParams()["id"]);
         if((new UtilisateurRepository())->isArchived($user)){
             (new UtilisateurRepository())->setUserToArchived($user, false);
+            (new MailRepository())->send_mail([$user->getEmailutilisateur()], "Désarchivage de votre compte", "Votre compte a été désarchivé");
         }
-        else (new UtilisateurRepository())->setUserToArchived($user, true);
+        else {
+            (new UtilisateurRepository())->setUserToArchived($user, true);
+            (new MailRepository())->send_mail([$user->getEmailutilisateur()], "Archivage de votre compte", "Votre compte a été archivé");
+        }
         Application::$app->response->redirect('/utilisateurs/' . $req->getRouteParams()["id"]);
         return '';
     }

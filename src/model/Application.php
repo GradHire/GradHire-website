@@ -96,4 +96,5 @@ class Application
 	{
 		$this->eventListeners[$eventName][] = $callback;
 	}
+
 }

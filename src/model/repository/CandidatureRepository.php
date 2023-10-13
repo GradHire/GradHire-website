@@ -6,6 +6,7 @@ use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\AbstractDataObject;
 use app\src\model\dataObject\Candidature;
+use PDOException;
 
 class CandidatureRepository extends AbstractRepository
 {
@@ -15,6 +16,7 @@ class CandidatureRepository extends AbstractRepository
      */
     public function getById($id): ?Candidature
     {
+        try {
         $sql = "SELECT * FROM Candidature WHERE idcandidature = :id";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['id' => $id]);
@@ -22,6 +24,9 @@ class CandidatureRepository extends AbstractRepository
         $resultat = $requete->fetch();
         if ($resultat == false) return null;
         return $this->construireDepuisTableau($resultat);
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
     }
 
     protected function construireDepuisTableau(array $dataObjectFormatTableau): Candidature
@@ -44,15 +49,23 @@ class CandidatureRepository extends AbstractRepository
             "idutilisateur"
         ];
     }
+
+    /**
+     * @throws ServerErrorException
+     */
     public function getAll(): ?array
     {
-        $sql= "SELECT * FROM Candidature ";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute();
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetchAll();
-        if ($resultat == false) return null;
-        return $resultat;
+        try {
+            $sql = "SELECT * FROM Candidature ";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute();
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetchAll();
+            if ($resultat == false) return null;
+            return $resultat;
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
     }
 
     protected function getNomTable(): string
