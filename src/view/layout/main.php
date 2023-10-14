@@ -48,10 +48,10 @@ use app\src\model\Users\Roles;
                 <div class="flex h-full space-x-8">
                     <?php if (!Application::isGuest()): ?>
                             <a href="/offres"
-                               class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Offres</a>
+                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Offres</a>
                         <?php if (!Auth::has_role(Roles::Enterprise)): ?>
                             <a href="/entreprises"
-                               class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Entreprises</a>
+                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Entreprises</a>
 
                         <?php endif; ?>
                         <?php if (Auth::has_role(Roles::Teacher)): ?>
@@ -109,27 +109,39 @@ use app\src\model\Users\Roles;
      class="hidden fixed top-0 left-0 w-full h-screen bg-white bg-opacity-90 backdrop-blur-xl backdrop-filter z-50  mt-[65px]">
 	<div class="flex flex-col justify-center items-center space-y-8 uppercase mt-[50px]">
 
-		<?php if (!Application::isGuest()): ?>
-			<?php if (!Auth::has_role(Roles::Enterprise)): ?>
-				<a href="/offres"
-				   class="flex items-center text-xl font-medium text-zinc-700 hover:text-zinc-800">Offres</a>
-				<a href="/entreprises"
-				   class="flex items-center text-xl font-medium text-zinc-700 hover:text-zinc-800">Entreprises</a>
-			<?php endif; ?>
-			<?php if (Auth::has_role(Roles::Enterprise)): ?>
-				<a href="/offres/create"
-				   class="flex items-center text-xl font-medium text-zinc-700 hover:text-zinc-800">Créer une
-				                                                                                   offre</a>
-			<?php endif; ?>
-			<?php if (Auth::has_role(Roles::Manager, Roles::Staff)): ?>
-				<a href="/utilisateurs"
-				   class="flex items-center text-xl font-medium text-zinc-700 hover:text-zinc-800">Utilisateurs</a>
-				<a href="/candidatures"
-				   class="flex items-center text-xl font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
-			<?php endif; ?>
-		<?php endif; ?>
+        <?php if (!Application::isGuest()): ?>
+            <a href="/offres"
+               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Offres</a>
+            <?php if (!Auth::has_role(Roles::Enterprise)): ?>
+                <a href="/entreprises"
+                   class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Entreprises</a>
 
-	</div>
+            <?php endif; ?>
+            <?php if (Auth::has_role(Roles::Teacher)): ?>
+                <a href="/candidatures"
+                   class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
+            <?php endif; ?>
+            <?php if (Auth::has_role(Roles::Enterprise)): ?>
+                <a href="/offres/create"
+                   class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Créer une
+                    offre</a>
+                <a href="/candidatures"
+                   class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
+                <a href="/ListeTuteurPro"
+                   class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Tuteurs</a>
+            <?php endif; ?>
+            <?php if (Auth::has_role(Roles::Manager, Roles::Staff)): ?>
+                <a href="/utilisateurs"
+                   class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Utilisateurs</a>
+                <a href="/candidatures"
+                   class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
+                <a href="/ListeTuteurPro"
+                   class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Tuteurs</a>
+            <?php endif; ?>
+        <?php endif; ?>
+
+
+    </div>
 </div>
 <div id="blur-background" class="hidden w-screen h-screen fixed z-50 top-0 left-0 backdrop-blur-md"></div>
 <div class="w-full flex flex-col justify-center items-center">

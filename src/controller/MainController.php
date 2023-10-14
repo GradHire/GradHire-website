@@ -320,6 +320,7 @@ class MainController extends Controller
                 if ($offre == null && $id != null) throw new NotFoundException();
                 else if ($offre != null && $id != null) {
                     (new OffresRepository())->updateToDraft($id);
+                    (new MailRepository())->send_mail([(new UtilisateurRepository())->getUserById($offre->getIdutilisateur())->getEmailutilisateur()], "Archivage de votre offre", "Votre offre a été archivée");
                     Application::$app->response->redirect($url);
                 }
             } elseif ($request->getMethod() === 'get') {
@@ -354,6 +355,7 @@ class MainController extends Controller
                 "dateFin" => FormModel::date("Date de fin")->default($offre->getDateFin())->id("dateFin"),
             ]);
             $form = new FormModel($attr);
+            (new MailRepository())->send_mail([(new UtilisateurRepository())->getUserById($offre->getIdutilisateur())->getEmailutilisateur()], "Modification de votre offre", "Votre offre a été modifiée");
             return $this->render('/offres/edit', ['offre' => $offre, 'form' => $form]);
         }
     }
@@ -366,6 +368,7 @@ class MainController extends Controller
 
         if ($request->getMethod() === 'get') {
             (new OffresRepository())->updateToApproved($id);
+            (new MailRepository())->send_mail([(new UtilisateurRepository())->getUserById($offre->getIdutilisateur())->getEmailutilisateur()], "Validation de votre offre", "Votre offre a été validée");
             $offre = (new OffresRepository())->getByIdWithUser($id);
             return $this->render('offres/detailOffre', ['offre' => $offre]);
         }
