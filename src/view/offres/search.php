@@ -1,12 +1,21 @@
-<div class="flex flex-col w-full">
+<div class="flex flex-col w-full relative ">
+    <div class="translate-x-2 -translate-y-2  absolute top-0 right-0 flex flex-row gap-2 items-center justify-center">
+        <label for="AcceptConditions" class="relative h-5 w-10 cursor-pointer">
+            <input type="checkbox" id="AcceptConditions" class="peer sr-only"/>
+            <span class="absolute inset-0 rounded-full  bg-zinc-800 transition border-[1px] border-zinc-100 peer-checked:bg-red-500"></span>
+            <span class="absolute shadow inset-y-0 start-0 m-1 h-3 w-3 rounded-full bg-white border-[1px] border-zinc-100 transition-all peer-checked:start-5"></span>
+        </label>
+        <button class="flex items-center justify-center w-7 h-7 border-[1px] border-zinc-100 duration-150 bg-zinc-50 hover:invert  rounded-full"
+            id="reset-button">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+             class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3"/>
+        </svg>
+    </button>
+    </div>
     <div class="flex flex-col w-full gap-2">
         <p class="text-md text-black font-bold">Filtres</p>
-
-        <div class="flex flex-row w-full gap-1">
-            <div class="w-full">
-                <button id="reset-button">Reset Filters</button>
-            </div>
-        </div>
 
         <div class="flex flex-row w-full gap-1">
             <div class="w-full">

@@ -1,38 +1,38 @@
 <?php
+
 namespace app\src\model\repository;
+
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
-use app\src\model\repository\AbstractRepository;
+use app\src\model\dataObject\Staff;
 use app\src\model\repository\UtilisateurRepository;
-use app\src\model\dataObject\Etudiant;
+use app\src\model\dataObject\Utilisateur;
 use PDOException;
 
-class EtudiantRepository extends UtilisateurRepository{
+class StaffRepository extends UtilisateurRepository
+{
 
-    private static string $view = "EtudiantVue";
-    protected function construireDepuisTableau(array $dataObjectFormatTableau): Etudiant
+    private static string $view = "StaffVue";
+
+    protected function construireDepuisTableau(array $dataObjectFormatTableau): Staff
     {
-        return new Etudiant(
+        return new Staff(
             $dataObjectFormatTableau["idutilisateur"],
+            $dataObjectFormatTableau["bio"],
             $dataObjectFormatTableau["emailutilisateur"],
             $dataObjectFormatTableau["nomutilisateur"],
             $dataObjectFormatTableau["numtelutilisateur"],
-            $dataObjectFormatTableau["bio"],
-            $dataObjectFormatTableau["mailperso"],
-            $dataObjectFormatTableau["codesexeetudiant"],
-            $dataObjectFormatTableau["numetudiant"],
-            $dataObjectFormatTableau["datenaissance"],
-            $dataObjectFormatTableau["idgroupe"],
-            $dataObjectFormatTableau["annee"],
             $dataObjectFormatTableau["prenomutilisateurldap"],
-            $dataObjectFormatTableau["loginldap"]
+            $dataObjectFormatTableau["loginldap"],
+            $dataObjectFormatTableau["role"],
+            $dataObjectFormatTableau["mailuni"]
         );
     }
 
     /**
      * @throws ServerErrorException
      */
-    public function getByIdFull($idutilisateur): ?Etudiant
+    public function getByIdFull($idutilisateur): ?Staff
     {
         try {
             $sql = "SELECT * FROM " . self::$view . " WHERE idutilisateur = :idutilisateur";
@@ -49,6 +49,23 @@ class EtudiantRepository extends UtilisateurRepository{
         }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
+    public function getManagersEmail(): array
+    {
+        try {
+            $stmt = Database::get_conn()->prepare("SELECT emailutilisateur FROM StaffVue WHERE role='responsable'");
+            $stmt->execute();
+            $emails = [];
+            foreach ($stmt->fetchAll() as $email)
+                $emails[] = $email["emailutilisateur"];
+            return $emails;
+        } catch (\Exception) {
+            throw new ServerErrorException();
+        }
+    }
+
     protected function getNomColonnes(): array
     {
         return [
@@ -57,20 +74,15 @@ class EtudiantRepository extends UtilisateurRepository{
             "emailutilisateur",
             "nomutilisateur",
             "numtelutilisateur",
-            "mailperso",
-            "codesexeetudiant",
-            "numetudiant",
-            "datenaissance",
-            "idgroupe",
-            "annee",
             "prenomutilisateurldap",
-            "loginldap"
+            "loginldap",
+            "role",
+            "mailuni"
         ];
     }
 
     protected function getNomTable(): string
     {
-        return "EtudiantVue";
+        return "StaffVue";
     }
-
 }

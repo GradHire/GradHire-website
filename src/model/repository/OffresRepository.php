@@ -3,40 +3,16 @@
 namespace app\src\model\repository;
 
 use app\src\core\db\Database;
+use app\src\model\Application;
+use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\Offre;
+use PDOException;
 
 
 class OffresRepository extends AbstractRepository
 {
 
-	private string $nomTable = "Offre";
-
-    public function getAll(): ?array
-    {
-        $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idutilisateur = Utilisateur.idutilisateur";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute();
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetchAll();
-        if ($resultat == false) return null;
-        return $resultat;
-    }
-
-    public function deleteById($idOffre): bool
-    {
-        $sql = "DELETE FROM $this->nomTable WHERE idoffre = :idoffre";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idoffre' => $idOffre]);
-        return true;
-    }
-
-    public function updateToDraft($idOffre): bool
-    {
-        $sql = "UPDATE $this->nomTable SET status = 'draft' WHERE idoffre = :idoffre";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idoffre' => $idOffre]);
-        return true;
-    }
+    private string $nomTable = "Offre";
 
     protected static function checkOnlyStageOrAlternance($filter): bool
     {
@@ -56,64 +32,64 @@ class OffresRepository extends AbstractRepository
         return false;
     }
 
-	protected static function prepareSQLGratification(int $size, array $filter): array
-	{
-		$sql = array();
-		$sql = array_merge($sql, $filter);
+    protected static function prepareSQLGratification(int $size, array $filter): array
+    {
+        $sql = array();
+        $sql = array_merge($sql, $filter);
 
 
-		$gratificationMaxTemp = $sql['gratificationMax'];
-		$gratificationMinTemp = $sql['gratificationMin'];
+        $gratificationMaxTemp = $sql['gratificationMax'];
+        $gratificationMinTemp = $sql['gratificationMin'];
 
         if ($sql['gratificationMin'] == null && $sql['gratificationMax'] == null) return $sql;
         else if ($sql['gratificationMin'] != null && $sql['gratificationMax'] == null) $gratificationMaxTemp = 15;
         else if ($sql['gratificationMin'] == null && $sql['gratificationMax'] != null) $gratificationMinTemp = 4.05;
 
-		if ($size > 1) $sql['sql'] = " gratification BETWEEN :gratificationMinTag AND :gratificationMaxTag AND ";
-		else $sql['sql'] = " gratification BETWEEN :gratificationMinTag AND :gratificationMaxTag ";
+        if ($size > 1) $sql['sql'] = " gratification BETWEEN :gratificationMinTag AND :gratificationMaxTag AND ";
+        else $sql['sql'] = " gratification BETWEEN :gratificationMinTag AND :gratificationMaxTag ";
 
-		$sql['gratificationMin'] = $gratificationMinTemp;
-		$sql['gratificationMax'] = $gratificationMaxTemp;
+        $sql['gratificationMin'] = $gratificationMinTemp;
+        $sql['gratificationMax'] = $gratificationMaxTemp;
 
-		return $sql;
-	}
+        return $sql;
+    }
 
-	protected static function prepareSQLFilter(array $values): string
-	{
-		$sql = "";
-		foreach ($values as $key => $value) {
-			if ($key != 'gratificationMin' && $key != 'gratificationMax' && $key != 'sujet') {
-				foreach ($value as $key2 => $value2) {
-					if ($key == 'thematique') {
-						if ($key2 == count($value) - 1) $sql .= $key . " = :" . $key . $key2 . "Tag AND ";
-						else $sql .= $key . " = :" . $key . $key2 . "Tag OR ";
-					} else {
-						if ($key2 == count($value) - 1) $sql .= $key . " = :" . $key . "Tag AND ";
-						else $sql .= $key . " = :" . $key . "Tag OR ";
-					}
-				}
-			}
-		}
-		return $sql;
-	}
+    protected static function prepareSQLFilter(array $values): string
+    {
+        $sql = "";
+        foreach ($values as $key => $value) {
+            if ($key != 'gratificationMin' && $key != 'gratificationMax' && $key != 'sujet') {
+                foreach ($value as $key2 => $value2) {
+                    if ($key == 'thematique') {
+                        if ($key2 == count($value) - 1) $sql .= $key . " = :" . $key . $key2 . "Tag AND ";
+                        else $sql .= $key . " = :" . $key . $key2 . "Tag OR ";
+                    } else {
+                        if ($key2 == count($value) - 1) $sql .= $key . " = :" . $key . "Tag AND ";
+                        else $sql .= $key . " = :" . $key . "Tag OR ";
+                    }
+                }
+            }
+        }
+        return $sql;
+    }
 
-	protected static function prepareSQLQSearch(array $arraySearch): string
-	{
-		{
-			$sql = "";
-			foreach ($arraySearch as $key => $value) {
-				if ($key == sizeof($arraySearch) - 1) $sql .= "sujet LIKE " . ":sujet" . $key . "Tag ";
-				else $sql .= "sujet LIKE " . ":sujet" . $key . "Tag OR ";
-			}
-			return $sql;
-		}
-	}
+    protected static function prepareSQLQSearch(array $arraySearch): string
+    {
+        {
+            $sql = "";
+            foreach ($arraySearch as $key => $value) {
+                if ($key == sizeof($arraySearch) - 1) $sql .= "sujet LIKE " . ":sujet" . $key . "Tag ";
+                else $sql .= "sujet LIKE " . ":sujet" . $key . "Tag OR ";
+            }
+            return $sql;
+        }
+    }
 
-	protected static function removeEndifAlone(string $sql): string
-	{
-		if (substr($sql, -4) == "AND " || substr($sql, -3) == "OR ") $sql = substr($sql, 0, -4);
-		return $sql;
-	}
+    protected static function removeEndifAlone(string $sql): string
+    {
+        if (substr($sql, -4) == "AND " || substr($sql, -3) == "OR ") $sql = substr($sql, 0, -4);
+        return $sql;
+    }
 
     protected static function constructSQLValues(?array $values, ?array $arraySearch, ?array $filter): array
     {
@@ -146,26 +122,70 @@ class OffresRepository extends AbstractRepository
         else return array();
     }
 
-    public function getById($idOffre): ?Offre
+    /**
+     * @throws ServerErrorException
+     */
+    public function getAll(): ?array
     {
-        $sql = "SELECT * FROM $this->nomTable WHERE idoffre = :idoffre";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idoffre' => $idOffre]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetch();
-        if ($resultat == false) return null;
-        return $this->construireDepuisTableau($resultat);
+        try {
+            $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idutilisateur = Utilisateur.idutilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute();
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetchAll();
+            if ($resultat == false) return null;
+            return $resultat;
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
     }
 
-    public function getByIdWithUser($idOffre): ?Offre
+    /**
+     * @throws ServerErrorException
+     */
+    public function deleteById($idOffre): bool
     {
-        $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idutilisateur = Utilisateur.idutilisateur WHERE idoffre = :idoffre";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idoffre' => $idOffre]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetch();
-        if ($resultat == false) return null;
-        return $this->construireDepuisTableau($resultat);
+        try {
+            $sql = "DELETE FROM $this->nomTable WHERE idoffre = :idoffre";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idoffre' => $idOffre]);
+            return true;
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function updateToDraft($idOffre): bool
+    {
+        try {
+            $sql = "UPDATE $this->nomTable SET status = 'draft' WHERE idoffre = :idoffre";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idoffre' => $idOffre]);
+            return true;
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function getById($idOffre): ?Offre
+    {
+        try {
+            $sql = "SELECT * FROM $this->nomTable WHERE idoffre = :idoffre";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idoffre' => $idOffre]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetch();
+            if ($resultat == false) return null;
+            return $this->construireDepuisTableau($resultat);
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
     }
 
     protected function construireDepuisTableau(array $dataObjectFormatTableau): Offre
@@ -193,15 +213,65 @@ class OffresRepository extends AbstractRepository
         );
     }
 
+    /**
+     * @throws ServerErrorException
+     */
+    public function getByIdWithUser($idOffre): ?Offre
+    {
+        try {
+            $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idutilisateur = Utilisateur.idutilisateur WHERE idoffre = :idoffre";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idoffre' => $idOffre]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetch();
+            if ($resultat == false) return null;
+            return $this->construireDepuisTableau($resultat);
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
     public function getOffresByIdEntreprise($idEntreprise): ?array
     {
-        $sql = "SELECT * FROM Offre WHERE idutilisateur = :idutilisateur";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idutilisateur' => $idEntreprise]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetchAll();
-        if ($resultat == false) return null;
-        return $resultat;
+        try {
+            $sql = "SELECT * FROM Offre WHERE idutilisateur = :idutilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idutilisateur' => $idEntreprise]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetchAll();
+            if ($resultat == false) return null;
+            return $resultat;
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function draftExist($idEntreprise): array {
+        try {
+            $sql = "SELECT * FROM Offre WHERE idutilisateur = :idutilisateur AND status = 'draft'";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idutilisateur' => $idEntreprise]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetchAll();
+            $offres = [];
+            $anneeencours = date("Y");
+            $datecreation = date("Y-m-d");
+            $iduser = Application::getUser()->Id();
+            $offres[] = new Offre(null, null, null, "", 7, 5, 4.05, null, null, $datecreation, null, null, null, $anneeencours, $iduser, "", $datecreation, null);
+            if ($resultat == false) return $offres;
+            foreach ($resultat as $offre_data) {
+                $offres[] = $this->construireDepuisTableau($offre_data);
+            }
+            return $offres;
+        } catch (PDOException){
+            throw new ServerErrorException();
+        }
     }
 
     public function tableChecker($filter): string
@@ -218,6 +288,37 @@ class OffresRepository extends AbstractRepository
     protected function getNomTable(): string
     {
         return $this->nomTable;
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function updateToApproved(mixed $id)
+    {
+        try {
+        $sql = "UPDATE $this->nomTable SET status = 'approved' WHERE idoffre = :idoffre";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idoffre' => $id]);
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function checkIfCreatorOffreIsArchived(Offre $offre): bool
+    {
+        try {
+        $sql = "SELECT archiver FROM Offre o JOIN Utilisateur u ON u.idUtilisateur = o.idUtilisateur WHERE idoffre = :idoffre";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idoffre' => $offre->getIdoffre()]);
+        $resultat = $requete->fetch();
+        if ($resultat['archiver'] == 1) return true;
+        else return false;
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
     }
 
     protected function getNomColonnes(): array
@@ -245,13 +346,19 @@ class OffresRepository extends AbstractRepository
         return false;
     }
 
-    public function checkIfCreatorOffreIsArchived(Offre $offre): bool
-    {
-        $sql = "SELECT archiver FROM Offre o JOIN Utilisateur u ON u.idUtilisateur = o.idUtilisateur WHERE idoffre = :idoffre";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idoffre' => $offre->getIdoffre()]);
-        $resultat = $requete->fetch();
-        if ($resultat['archiver'] == 1) return true;
-        else return false;
+    /**
+     * @throws ServerErrorException
+     */
+    public function checkArchived(Offre $offre){
+        try {
+            $sql = "SELECT archiver FROM Offre JOIN Utilisateur WHERE idoffre = :idoffre";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idoffre' => $offre->getIdoffre()]);
+            $resultat = $requete->fetch();
+            if ($resultat['archiver'] == 1) return true;
+            else return false;
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
     }
 }

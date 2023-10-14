@@ -107,32 +107,32 @@
 						</tr>
 						</thead>
 
-						<tbody class="divide-y divide-gray-200">
-						<?php
-						if ($offres != null)
-							foreach ($offres as $offre) { ?>
-								<tr class="odd:bg-gray-50">
-									<td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-										<?= $offre['sujet']; ?>
-									</td>
-									<td class="whitespace-nowrap px-4 py-2 text-gray-700">
-										<?php
-										$thematique = $offre['thematique'];
-										if ($thematique != null) echo $thematique;
-										else echo("Non renseigné");
-										?>
-									</td>
-									<td class="whitespace-nowrap px-4 py-2 text-gray-700">
-										<?php
-										$dateCreation = new DateTime($offre['datecreation']);
-										$dateCreation = $dateCreation->format('d/m/Y H:i:s');
-										echo $dateCreation;
-										?>
-									</td>
-									<td class="whitespace-nowrap px-4 py-2 text-gray-700">
-										<?php
-										if ($offre['status'] == "pending") {
-											echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-yellow-100 text-yellow-800\">
+                        <tbody class="divide-y divide-zinc-200">
+                        <?php
+                        if ($offres != null)
+                            foreach ($offres as $offre) { ?>
+                                <tr class="odd:bg-zinc-50">
+                                    <td class="whitespace-nowrap px-4 py-2 font-medium text-zinc-900">
+                                        <?= $offre['sujet']; ?>
+                                    </td>
+                                    <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
+                                        <?php
+                                        $thematique = $offre['thematique'];
+                                        if ($thematique != null) echo $thematique;
+                                        else echo("Non renseigné");
+                                        ?>
+                                    </td>
+                                    <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
+                                        <?php
+                                        $dateCreation = new DateTime($offre['datecreation']);
+                                        $dateCreation = $dateCreation->format('d/m/Y H:i:s');
+                                        echo $dateCreation;
+                                        ?>
+                                    </td>
+                                    <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
+                                        <?php
+                                        if ($offre['status'] == "pending") {
+                                            echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-yellow-100 text-yellow-800\">
     En attente
 </span>";
 										} else if ($offre['status'] == "approved") {

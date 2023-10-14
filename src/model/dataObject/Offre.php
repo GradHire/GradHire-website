@@ -6,20 +6,20 @@ class Offre extends AbstractDataObject
 {
     private ?int $idoffre;
     private ?string $duree;
-    private string $thematique;
-    private string $sujet;
+    private ?string $thematique;
+    private ?string $sujet;
     private ?int $nbjourtravailhebdo;
     private ?float $nbHeureTravailHebdo;
     private ?float $gratification;
     private ?string $unitegratification;
     private ?string $avantageNature;
-    private string $dateDebut;
+    private ?string $dateDebut;
     private ?string $dateFin;
     private ?string $statut;
     private ?string $anneeVisee;
     private string $idAnnee;
     private int $idutilisateur;
-    private string $description;
+    private ?string $description;
     private string $datecreation;
     private ?string $nomutilisateur;
 
@@ -99,7 +99,7 @@ class Offre extends AbstractDataObject
     /**
      * @return string
      */
-    public function getThematique(): string
+    public function getThematique(): ?string
     {
         return $this->thematique;
     }
