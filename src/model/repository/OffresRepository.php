@@ -5,6 +5,7 @@ namespace app\src\model\repository;
 use app\src\core\db\Database;
 use app\src\model\Application;
 use app\src\core\exception\ServerErrorException;
+use app\src\model\Auth;
 use app\src\model\dataObject\Offre;
 use PDOException;
 
@@ -358,6 +359,22 @@ class OffresRepository extends AbstractRepository
             $resultat = $requete->fetch();
             if ($resultat['archiver'] == 1) return true;
             else return false;
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function checkIfUserPostuled(Offre $offre): bool{
+        try {
+            $sql = "SELECT * FROM Candidature WHERE idoffre = :idoffre AND idutilisateur = :idutilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idoffre' => $offre->getIdoffre(), 'idutilisateur' => Auth::get_user()->id()]);
+            $resultat = $requete->fetch();
+            if ($resultat == false) return false;
+            else return true;
         } catch (PDOException) {
             throw new ServerErrorException();
         }

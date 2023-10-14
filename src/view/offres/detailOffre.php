@@ -3,6 +3,7 @@
 /** @var $offre \app\src\model\dataObject\Offre */
 
 use app\src\model\Application;
+use app\src\model\repository\OffresRepository;
 use app\src\model\Users\Roles;
 use app\src\model\Auth;
 
@@ -129,7 +130,7 @@ use app\src\model\Auth;
             </div>
         </dl>
     </div>
-    <?php if(Application::getUser()->role()===Roles::Student){ ?>
+    <?php if(Auth::has_role(Roles::Student) && !$offre->getUserPostuled() ){ ?>
     <a href="<?php echo $offre->getIdOffre(); ?>/postuler"
        class="mt-6 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-zinc-600 hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 sm:w-auto">
         Postuler
