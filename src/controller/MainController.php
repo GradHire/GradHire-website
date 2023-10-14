@@ -9,19 +9,17 @@ use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Offre;
-use app\src\model\Form\FormFile;
 use app\src\model\Form\FormModel;
-use app\src\model\Form\FormString;
 use app\src\model\OffreForm;
 use app\src\model\repository\CandidatureRepository;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
+use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurRepository;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\Request;
-use app\src\model\Users\Profile\EnterpriseProfile;
 use app\src\model\Users\Roles;
 
 class MainController extends Controller
@@ -269,15 +267,25 @@ class MainController extends Controller
 
     public function editOffre(Request $request): string
     {
-        if ($request->getMethod() === 'post') {
-            $id = $request->getRouteParams()['id'] ?? null;
-            $offre = (new OffresRepository())->getById($id);
-            if ($offre == null && $id != null) throw new NotFoundException();
-            else if ($offre != null && $id != null) {
-                return $this->render('/offres/edit', ['offre' => $offre]);
-            }
-        }
-        return $this->render('/offres/edit');
+        $id = $request->getRouteParams()['id'] ?? null;
+        $offre = (new OffresRepository())->getById($id);
+        if ($offre == null && $id != null) throw new NotFoundException();
+        $attr = [];
+        $attr = array_merge($attr, [
+            "sujet" => FormModel::string("Sujet")->default($offre->getSujet()),
+            "thematique" => FormModel::string("Thématique")->default($offre->getThematique()),
+            "nbjourtravailhebdo" => FormModel::int("Nombre de jours de travail hebdomadaire")->default($offre->getNbjourtravailhebdo()),
+            "nbHeureTravailHebdo" => FormModel::double("Nombre d'heures de travail hebdomadaire")->default($offre->getNbHeureTravailHebdo()),
+            "gratification" => FormModel::double("Gratification")->default($offre->getGratification()),
+            "unitegratification" => FormModel::string("Unité de la gratification")->default($offre->getUnitegratification()),
+            "avantageNature" => FormModel::string("Avantage en nature")->default($offre->getAvantageNature()),
+            "anneeVisee" => FormModel::string("Année visée")->default($offre->getAnneeVisee()),
+            "description" => FormModel::string("Description")->default($offre->getDescription()),
+            "dateDebut" => FormModel::date("Date de début")->default($offre->getDateDebut())->id("dateDebut"),
+            "dateFin" => FormModel::date("Date de fin")->default($offre->getDateFin())->id("dateFin"),
+        ]);
+        $form = new FormModel($attr);
+        return $this->render('/offres/edit', ['offre' => $offre, 'form' => $form]);
     }
 
     public function validateOffre(Request $request): string
@@ -292,20 +300,6 @@ class MainController extends Controller
             return $this->render('offres/detailOffre', ['offre' => $offre]);
         }
         return $this->render('offres/detailOffre', ['offre' => $offre]);
-    }
-
-    public function deleteOffre(Request $request): void
-    {
-        if ($request->getMethod() === 'post') {
-            $id = $request->getRouteParams()['id'] ?? null;
-            $offre = (new OffresRepository())->getById($id);
-            $url = $_POST['link'];
-            if ($offre == null && $id != null) throw new NotFoundException();
-            else if ($offre != null && $id != null) {
-                (new OffresRepository())->updateToDraft($id);
-                Application::$app->response->redirect($url);
-            }
-        }
     }
 
     public function offres(Request $request): string

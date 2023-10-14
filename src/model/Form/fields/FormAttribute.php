@@ -12,6 +12,7 @@ abstract class FormAttribute
 {
 	protected string $name;
 	protected bool $forget = false;
+	protected bool $asterisk = false;
 	protected mixed $default;
 	protected array $params = [];
 	/**
@@ -25,15 +26,16 @@ abstract class FormAttribute
 	 */
 	private array $modifiers = [];
 
-	public function __construct(string $name)
+	public function __construct(string $name = "")
 	{
 		$this->name = $name;
 	}
 
 	public function getName(): string
 	{
-		return $this->name;
+		return $this->name . ($this->asterisk ? '<span class="text-red-500"> *</span>' : '');
 	}
+
 
 	public function validate(string $name, array $fields, array $body): array
 	{
@@ -99,6 +101,16 @@ abstract class FormAttribute
 	public function getJS(): string
 	{
 		return '';
+	}
+
+	public function checkValue($value): bool
+	{
+		try {
+			$this->type_rule->process(new FormInputValue($value, [], []));
+			return true;
+		} catch (FormValidationException $e) {
+			return false;
+		}
 	}
 
 	protected function getValue(mixed $value): mixed
