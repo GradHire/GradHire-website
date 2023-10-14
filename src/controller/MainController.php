@@ -8,7 +8,6 @@ use app\src\core\exception\NotFoundException;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
-use app\src\model\dataObject\Candidature;
 use app\src\model\dataObject\Offre;
 use app\src\model\Form\FormFile;
 use app\src\model\Form\FormModel;
@@ -195,8 +194,8 @@ class MainController extends Controller
 
     public function ListeTuteurPro(Request $request): string
     {
-        if(Auth::has_role(Roles::Manager))$tuteurs = (new TuteurProRepository())->getAll();
-        else if (Auth::has_role(Roles::Enterprise)) $tuteurs = (new TuteurProRepository())->getAllTuteursByIdEntreprise(Application::getUser()->id());
+        $id = Application::getUser()->id();
+        $tuteurs = (new TuteurProRepository())->getAllTuteursByIdEntreprise($id);
         return $this->render('tuteurPro/listeTuteurPro', ['tuteurs' => $tuteurs]);
     }
 

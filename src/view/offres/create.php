@@ -235,7 +235,7 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
         var elements = document.querySelectorAll('[required]');
         for (var i = 0; i < elements.length; i++) {
             elements[i].removeAttribute('required');
-            if(elements[i].id==="nbheure" || elements[i].id==="dated" || elements[i].id==="salaire") elements[i].setAttribute('required', 'required');
+            if(elements[i].id==="nbheure" || elements[i].id==="dated" || elements[i].id==="salaire" || elements[i].id==="datef") elements[i].setAttribute('required', 'required');
         }
     }
 
