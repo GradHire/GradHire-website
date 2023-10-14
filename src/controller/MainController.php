@@ -10,19 +10,17 @@ use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Candidature;
 use app\src\model\dataObject\Offre;
-use app\src\model\Form\FormFile;
 use app\src\model\Form\FormModel;
-use app\src\model\Form\FormString;
 use app\src\model\OffreForm;
 use app\src\model\repository\CandidatureRepository;
 use app\src\model\repository\EntrepriseRepository;
+use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurRepository;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\Request;
-use app\src\model\Users\Profile\EnterpriseProfile;
 use app\src\model\Users\Roles;
 
 class MainController extends Controller

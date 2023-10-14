@@ -61,7 +61,7 @@ $id_offre = $offre->getIdoffre();
             </div>
             <div class="mt-4 flex w-full gap-1">
                 <div class="flex flex-row gap-1 items-center">
-                    <img class="w-5 h-5 rounded-full" src="<?= Application::getUser()->get_picture() ?>"
+                    <img class="w-5 h-5 rounded-full" src="<?= $offre->getPicture() ?>"
                          alt="Jese Leos avatar"/>
                     <span class="whitespace-nowrap px-1 py-0.5 font-medium text-center flex justify-center items-center text-xs text-zinc-400">
             <?php
