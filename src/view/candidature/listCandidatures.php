@@ -8,7 +8,7 @@ use app\src\model\repository\UtilisateurRepository;
 
 ?>
 
-<form method="GET" action="offres" class="w-full gap-4 flex flex-col">
+<form method="GET" action="offres" class="w-full gap-4 flex flex-col pt-12 pb-24">
     <div class="w-full grid-cols-1 gap-4 lg:grid-cols-4 ">
         <div class="w-full lg:col-span-3 rounded-lg flex flex-col gap-4">
 
