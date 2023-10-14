@@ -9,11 +9,11 @@ class FormFile extends FormAttribute
 {
 	function field(string $name, string $value): string
 	{
-		return '<input type="file" name="' . $name . '" ' . $this->getParams() . ' class="block w-full border border-gray-200 shadow-sm rounded-md text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400
+		return '<input type="file" name="' . $name . '" ' . $this->getParams() . ' class="block w-full border border-zinc-200 shadow-sm rounded-md text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-zinc-700 dark:text-zinc-400
 		    file:bg-transparent file:border-0
-		    file:bg-gray-200 file:mr-4
+		    file:bg-zinc-200 file:mr-4
 		    file:py-3 file:px-4
-		    dark:file:bg-gray-700 dark:file:text-gray-400"/>';
+		    dark:file:bg-zinc-700 dark:file:text-zinc-400"/>';
 	}
 
 	public function image(): static

@@ -10,19 +10,19 @@
         <?php if ($offres != null) { ?>
             <div class="px-4 py-6 sm:gap-4 sm:px-0">
                 <div class="w-full">
-                    <table class="w-full divide-y-2 divide-gray-200 bg-white text-sm">
+                    <table class="w-full divide-y-2 divide-zinc-200 bg-white text-sm">
                         <thead class="ltr:text-left rtl:text-right">
                         <tr>
-                            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-gray-900">
+                            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900">
                                 Sujet
                             </th>
-                            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-gray-900">
+                            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900">
                                 Thématique
                             </th>
-                            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-gray-900">
+                            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900">
                                 Date de création
                             </th>
-                            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-gray-900">
+                            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900">
                                 Statut
                             </th>
                         </tr>
@@ -65,7 +65,7 @@
     Refusée
     </span>";
                                         } else if ($offre['status'] == "draft") {
-                                            echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-gray-100 text-gray-800\">
+                                            echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-zinc-100 text-zinc-800\">
     Archivée
     </span>";
                                         }

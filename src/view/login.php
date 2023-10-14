@@ -19,10 +19,10 @@ use app\src\model\Form\FormModel;
 	</div>
 	<?php $form->end(); ?>
 	<div class="text-center my-4">
-		<hr class="border-t-2 border-gray-300 w-full mx-auto">
+		<hr class="border-t-1 border-zinc-300 w-full mx-auto">
 		<span class="bg-white px-2 relative" style="top: -0.75rem;">ou</span>
 	</div>
-	<a class="text-white w-full bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
+	<a class="text-white w-full bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800"
 	   href="/pro_login">Connexion compte professionnel</a>
 
 </div>
