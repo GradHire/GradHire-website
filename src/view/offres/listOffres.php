@@ -98,12 +98,14 @@ Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff, Roles::Teacher, R
                             if ($offre->getStatut() === "approved") {
                                 if (Auth::has_role(Roles::Manager, Roles::Staff)) {
                                     require __DIR__ . '/offre.php';
-                                } else if (!Auth::has_role(Roles::Manager, Roles::Staff) && !(new OffresRepository())->checkArchived($offre)){
+                                } else if (!Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise) && !(new OffresRepository())->checkArchived($offre)){
                                     if (Application::getUser()->attributes()["annee"] == 3 && $offre->getAnneeVisee() == 2) {
                                         continue;
                                     } else {
                                         require __DIR__ . '/offre.php';
                                     }
+                                } else if(Auth::has_role(Roles::Enterprise)&& $offre->getIdutilisateur()==Application::getUser()->id()){
+                                    require __DIR__ . '/offre.php';
                                 }
                             }
                         }

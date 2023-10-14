@@ -349,7 +349,8 @@ class OffresRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public function checkArchived(Offre $offre){
+    public function checkArchived(Offre $offre): bool
+    {
         try {
             $sql = "SELECT archiver FROM Offre JOIN Utilisateur WHERE idoffre = :idoffre";
             $requete = Database::get_conn()->prepare($sql);
