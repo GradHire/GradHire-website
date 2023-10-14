@@ -77,7 +77,7 @@ $this->title = 'Home';
 				<div class="-my-2">
 					<div class="relative box-content h-80 overflow-x-auto py-2 xl:overflow-visible">
 						<div class="absolute flex space-x-8 px-4 sm:px-6 lg:px-8 xl:relative xl:grid xl:grid-cols-5 xl:gap-x-8 xl:space-x-0 xl:px-0">
-							<a href="#"
+							<a href="/offres?thematique[]=DevWeb"
 							   class="relative flex h-80 w-56 flex-col overflow-hidden rounded-lg p-6 hover:opacity-75 xl:w-auto">
                 <span aria-hidden="true" class="absolute inset-0">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -91,7 +91,7 @@ $this->title = 'Home';
 								      class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-zinc-800 opacity-50"></span>
 								<span class="relative mt-auto text-center text-xl font-bold text-white">Developpement Web</span>
 							</a>
-							<a href="#"
+							<a href="/offres?thematique[]=DevApp"
 							   class="relative flex h-80 w-56 flex-col overflow-hidden rounded-lg p-6 hover:opacity-75 xl:w-auto">
                 <span aria-hidden="true" class="absolute inset-0">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -104,7 +104,7 @@ $this->title = 'Home';
 								      class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-zinc-800 opacity-50"></span>
 								<span class="relative mt-auto text-center text-xl font-bold text-white">Developpement Mobile</span>
 							</a>
-							<a href="#"
+							<a href="/offres?thematique[]=DevApp"
 							   class="relative flex h-80 w-56 flex-col overflow-hidden rounded-lg p-6 hover:opacity-75 xl:w-auto">
                 <span aria-hidden="true" class="absolute inset-0">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -117,7 +117,7 @@ $this->title = 'Home';
 								      class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-zinc-800 opacity-50"></span>
 								<span class="relative mt-auto text-center text-xl font-bold text-white">Developpement Logiciel</span>
 							</a>
-							<a href="#"
+							<a href="/offres?thematique[]=BDD"
 							   class="relative flex h-80 w-56 flex-col overflow-hidden rounded-lg p-6 hover:opacity-75 xl:w-auto">
                 <span aria-hidden="true" class="absolute inset-0">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -130,7 +130,7 @@ $this->title = 'Home';
 								      class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-zinc-800 opacity-50"></span>
 								<span class="relative mt-auto text-center text-xl font-bold text-white">Data Science et IA</span>
 							</a>
-							<a href="#"
+							<a href="/offres?thematique[]=Reseaux&thematique[]=Securite"
 							   class="relative flex h-80 w-56 flex-col overflow-hidden rounded-lg p-6 hover:opacity-75 xl:w-auto">
                 <span aria-hidden="true" class="absolute inset-0">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
