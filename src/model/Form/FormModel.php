@@ -109,6 +109,12 @@ class FormModel
 			$this->field($name);
 	}
 
+	public function print_fields(array $fields): void
+	{
+		foreach ($fields as $name)
+			$this->field($name);
+	}
+
 	public function field(string $name): void
 	{
 		$field = $this->fields[$name] ?? null;

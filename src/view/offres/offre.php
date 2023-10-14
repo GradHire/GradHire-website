@@ -8,7 +8,6 @@ use app\src\model\Application;
 
 $id_offre = $offre->getIdoffre();
 
-include_once "modal-delete.php";
 ?>
 <div class="relative offreBox">
     <div class="absolute top-0 right-0 flex flex-row gap-1 mt-11 mr-4 z-10">
@@ -24,7 +23,7 @@ include_once "modal-delete.php";
 
             </button>
         </form>
-        <button id="btn-danger-delete-<?= $id_offre ?>"
+        <button onclick="showModal(<?= $id_offre ?>)"
                 class="formAdminSupprimer  flex items-center justify-center w-7 h-7 border-[1px] border-zinc-100 duration-150 bg-zinc-50 hover:invert  rounded-full">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                  stroke="currentColor"
@@ -56,14 +55,13 @@ include_once "modal-delete.php";
             <div>
                 <p class="text-sm text-zinc-500">
                     <?php
-                    //if description is too long (more than 50 characters), we cut it and add "..."
                     if (strlen($offre->getDescription()) > 50) echo substr(ucfirst($offre->getDescription()), 0, 50) . "…";
                     else echo ucfirst($offre->getDescription()) ?>
                 </p>
             </div>
             <div class="mt-4 flex w-full gap-1">
                 <div class="flex flex-row gap-1 items-center">
-                    <img class="w-5 h-5 rounded-full" src="<?= Application::getUser()->get_picture() ?>"
+                    <img class="w-5 h-5 rounded-full" src="<?= $offre->getPicture() ?>"
                          alt="Jese Leos avatar"/>
                     <span class="whitespace-nowrap px-1 py-0.5 font-medium text-center flex justify-center items-center text-xs text-zinc-400">
             <?php
@@ -80,23 +78,6 @@ include_once "modal-delete.php";
         </a>
     </div>
 </div>
-<script>
-    const modal<?= $id_offre ?>= document.getElementById("myModal-<?= $id_offre ?>");
-    const bg<?= $id_offre ?> = document.getElementById("blur-background")
-    const btn<?= $id_offre ?> = document.getElementById("btn-danger-delete-<?= $id_offre ?>");
-    const closeBtns<?= $id_offre ?> = document.querySelectorAll(".close-modal-btn-<?= $id_offre ?>");
-    btn<?= $id_offre ?>.onclick = function () {
-        modal<?= $id_offre ?>.classList.remove("hidden");
-        modal<?= $id_offre ?>.classList.add("block");
-        bg<?= $id_offre ?>.classList.remove("hidden");
-    }
-    closeBtns<?= $id_offre ?>.forEach(function (btn) {
-        btn.onclick = function () {
-            modal<?= $id_offre ?>.classList.add("hidden");
-            modal<?= $id_offre ?>.classList.remove("block");
-            bg<?= $id_offre ?>.classList.add("hidden");
-        }
-    });
-</script>
+
 
 
