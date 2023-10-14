@@ -2,9 +2,11 @@
 
 /** @var $candidatures \app\src\model\dataObject\Candidature */
 
+use app\src\model\Auth;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\repository\OffresRepository;
+use app\src\model\Users\Roles;
 
 $etudiant = (new EtudiantRepository())->getByIdFull($candidatures->getIdutilisateur());
 $nometudiant = (new UtilisateurRepository())->getUserById($candidatures->getIdutilisateur())->getNomutilisateur();
@@ -76,7 +78,7 @@ echo '<h2 class="font-bold text-lg">Candidature de
 
 
 <?php
-if($candidatures->getEtatcandidature() == "on hold"){
+if($candidatures->getEtatcandidature() == "on hold" && Auth::has_role(Roles::Enterprise,Roles::Manager,Roles::Staff)){
     echo "<div class='flex flex-col mb-3'>
     <form action='/candidatures' method='POST'>
     <input type='hidden' name='idcandidature' value='".$candidatures->getIdcandidature()."'>
