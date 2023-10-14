@@ -254,11 +254,12 @@ class MainController extends Controller
         $unitesalaire = "heures";
         $avantage = $_POST['avantage'];
         $description = $_POST['description'];
-        $dated = $_POST['dated'] ?? date("Y-m-d H:i:s");
-        $datef = $_POST['datef'] ?? date("Y-m-d H:i:s");
+        $dated = $_POST['dated'] ?? date("Y-m-d");
+        $datef = $_POST['datef'] ?? null;
         $duree = $_POST['duree'] ?? null;
         $idUtilisateur = Application::getUser()->role() === Roles::Enterprise ? Application::getUser()->id() : $_POST['entreprise'];
         $idOffre = $_POST['id_offre'];
+        if ($idOffre === "") $idOffre = null;
         $idAnnee = date("Y");
         $datecreation = date("Y-m-d H:i:s");
 
@@ -275,13 +276,12 @@ class MainController extends Controller
         $offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage,
             $dated, $datef,$statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation,null);
 
-        if($idOffre === ""){
+        if($idOffre === null){
             OffreForm::creerOffre($offre, $distanciel);
         }
         else{
             OffreForm::updateOffre($offre, $distanciel);
         }
-
         return $this->render('/offres/create');
     }
 
