@@ -101,8 +101,7 @@ class MainController extends Controller
     {
         if (Application::isGuest()) throw new ForbiddenException();
         $id = $request->getRouteParams()["id"] ?? null;
-        if (!is_null($id) && !Auth::has_role(Roles::Manager, Roles::Staff))
-            throw new ForbiddenException();
+        if (!is_null($id) && !Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise)) throw new ForbiddenException();
         $user = is_null($id) ? Application::getUser() : Auth::load_user_by_id($id);
         if (is_null($user)) throw new NotFoundException();
         $attr = [];
@@ -293,7 +292,7 @@ class MainController extends Controller
         $idAnnee = date("Y");
         $datecreation = date("Y-m-d H:i:s");
 
-        if($action == 'Supprimer Brouillon'){
+        if ($action == 'Supprimer Brouillon') {
             OffreForm::deleteOffre($idOffre);
             return $this->render('/offres/create');
         }
@@ -304,12 +303,11 @@ class MainController extends Controller
         $anneeVisee = $duree == 1 ? "2" : "3";
 
         $offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage,
-            $dated, $datef,$statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation,null);
+            $dated, $datef, $statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation, null);
 
         if($idOffre === null){
             OffreForm::creerOffre($offre, $distanciel);
-        }
-        else{
+        } else {
             OffreForm::updateOffre($offre, $distanciel);
         }
         return $this->render('/offres/create');
@@ -329,23 +327,27 @@ class MainController extends Controller
             $userid = Application::getUser()->id();
             $id = $request->getRouteParams()['id'] ?? null;
             $offre = (new OffresRepository())->getById($id);
-            if ($offre->getIdutilisateur() != $userid) throw new ForbiddenException();
-            if ($offre == null && $id != null) throw new NotFoundException();
-
-            if ($request->getMethod() === 'post') {
-                $url = $_POST['link'];
+            if (Auth::has_role(Roles::Enterprise)) {
+                if ($offre->getIdutilisateur() != $userid) throw new ForbiddenException();
+            } else {
                 if ($offre == null && $id != null) throw new NotFoundException();
-                else if ($offre != null && $id != null) {
+
+                if ($request->getMethod() === 'post') {
+                    $url = $_POST['link'];
+                    if ($offre == null && $id != null) throw new NotFoundException();
+                    else if ($offre != null && $id != null) {
+                        (new OffresRepository())->updateToDraft($id);
+                        Application::$app->response->redirect($url);
+                    }
+                } elseif ($request->getMethod() === 'get') {
                     (new OffresRepository())->updateToDraft($id);
-                    Application::$app->response->redirect($url);
+                    $offre = (new OffresRepository())->getByIdWithUser($id);
+                    return $this->render('offres/detailOffre', ['offre' => $offre]);
                 }
-            } elseif ($request->getMethod() === 'get') {
-                (new OffresRepository())->updateToDraft($id);
-                $offre = (new OffresRepository())->getByIdWithUser($id);
                 return $this->render('offres/detailOffre', ['offre' => $offre]);
             }
-            return $this->render('offres/detailOffre', ['offre' => $offre]);
         }
+        return '';
     }
 
     /**
@@ -355,53 +357,66 @@ class MainController extends Controller
      */
     public function editOffre(Request $request): string
     {
-        if (!Auth::has_role(Roles::Staff, Roles::Manager)) {
+        if (!Auth::has_role(Roles::Staff, Roles::Manager, Roles::Enterprise)) {
             throw new ForbiddenException();
         } else {
             $userid = Application::getUser()->id();
             $id = $request->getRouteParams()['id'] ?? null;
             $offre = (new OffresRepository())->getById($id);
-            if ($offre->getIdutilisateur() != $userid) throw new ForbiddenException();
-
-            if ($offre == null && $id != null) throw new NotFoundException();
-            $attr = [];
-            $attr = array_merge($attr, [
-                "sujet" => FormModel::string("Sujet")->default($offre->getSujet()),
-                "thematique" => FormModel::string("Thématique")->default($offre->getThematique()),
-                "nbjourtravailhebdo" => FormModel::int("Nombre de jours de travail hebdomadaire")->default($offre->getNbjourtravailhebdo()),
-                "nbHeureTravailHebdo" => FormModel::double("Nombre d'heures de travail hebdomadaire")->default($offre->getNbHeureTravailHebdo()),
-                "gratification" => FormModel::double("Gratification")->default($offre->getGratification()),
-                "unitegratification" => FormModel::string("Unité de la gratification")->default($offre->getUnitegratification()),
-                "avantageNature" => FormModel::string("Avantage en nature")->default($offre->getAvantageNature()),
-                "anneeVisee" => FormModel::string("Année visée")->default($offre->getAnneeVisee()),
-                "description" => FormModel::string("Description")->default($offre->getDescription()),
-                "dateDebut" => FormModel::date("Date de début")->default($offre->getDateDebut())->id("dateDebut"),
-                "dateFin" => FormModel::date("Date de fin")->default($offre->getDateFin())->id("dateFin"),
-            ]);
-            $form = new FormModel($attr);
-            return $this->render('/offres/edit', ['offre' => $offre, 'form' => $form]);
+            if (Auth::has_role(Roles::Enterprise)) {
+                if ($offre->getIdutilisateur() != $userid) throw new ForbiddenException();
+            } else {
+                if ($offre == null && $id != null) throw new NotFoundException();
+                $attr = [];
+                $attr = array_merge($attr, [
+                    "sujet" => FormModel::string("Sujet")->default($offre->getSujet()),
+                    "thematique" => FormModel::string("Thématique")->default($offre->getThematique()),
+                    "nbjourtravailhebdo" => FormModel::int("Nombre de jours de travail hebdomadaire")->default($offre->getNbjourtravailhebdo()),
+                    "nbHeureTravailHebdo" => FormModel::double("Nombre d'heures de travail hebdomadaire")->default($offre->getNbHeureTravailHebdo()),
+                    "gratification" => FormModel::double("Gratification")->default($offre->getGratification()),
+                    "unitegratification" => FormModel::string("Unité de la gratification")->default($offre->getUnitegratification()),
+                    "avantageNature" => FormModel::string("Avantage en nature")->default($offre->getAvantageNature()),
+                    "anneeVisee" => FormModel::string("Année visée")->default($offre->getAnneeVisee()),
+                    "description" => FormModel::string("Description")->default($offre->getDescription()),
+                    "dateDebut" => FormModel::date("Date de début")->default($offre->getDateDebut())->id("dateDebut"),
+                    "dateFin" => FormModel::date("Date de fin")->default($offre->getDateFin())->id("dateFin"),
+                ]);
+                $form = new FormModel($attr);
+                return $this->render('/offres/edit', ['offre' => $offre, 'form' => $form]);
+            }
         }
+        return '';
     }
 
     public function validateOffre(Request $request): string
     {
-        $id = $request->getRouteParams()['id'] ?? null;
-        $offre = (new OffresRepository())->getByIdWithUser($id);
-        if ($offre == null && $id != null) throw new NotFoundException();
-
-        if ($request->getMethod() === 'get') {
-            (new OffresRepository())->updateToApproved($id);
+        if (!Auth::has_role(Roles::Staff, Roles::Manager, Roles::Enterprise)) {
+            throw new ForbiddenException();
+        } else {
+            $userid = Application::getUser()->id();
+            $id = $request->getRouteParams()['id'] ?? null;
             $offre = (new OffresRepository())->getByIdWithUser($id);
-            return $this->render('offres/detailOffre', ['offre' => $offre]);
+            if (Auth::has_role(Roles::Enterprise)) {
+                if ($offre->getIdutilisateur() != $userid) throw new ForbiddenException();
+            } else {
+                if ($offre == null && $id != null) throw new NotFoundException();
+                if ($request->getMethod() === 'get') {
+                    (new OffresRepository())->updateToApproved($id);
+                    $offre = (new OffresRepository())->getByIdWithUser($id);
+                    return $this->render('offres/detailOffre', ['offre' => $offre]);
+                }
+                return $this->render('offres/detailOffre', ['offre' => $offre]);
+            }
         }
-        return $this->render('offres/detailOffre', ['offre' => $offre]);
+        return '';
     }
 
     /**
      * @throws NotFoundException
      * @throws ServerErrorException
      */
-    public function offres(Request $request): string
+    public
+    function offres(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
         $offre = (new OffresRepository())->getByIdWithUser($id);
