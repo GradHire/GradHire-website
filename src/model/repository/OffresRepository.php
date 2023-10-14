@@ -244,7 +244,11 @@ class OffresRepository extends AbstractRepository
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetchAll();
             if ($resultat == false) return null;
-            return $resultat;
+            $offres = [];
+            foreach ($resultat as $offre_data) {
+                $offres[] = $this->construireDepuisTableau($offre_data);
+            }
+            return $offres;
         } catch (PDOException) {
             throw new ServerErrorException();
         }

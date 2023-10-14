@@ -70,6 +70,11 @@ class Offre extends AbstractDataObject
         $this->nomutilisateur = $nomutilisateur;
     }
 
+    public function getId(): ?int
+    {
+        return $this->idoffre;
+    }
+
     public function __toString(): string
     {
         return "Offre : " . $this->getSujet() . " " . $this->getThematique() . " " . $this->getDuree() . " " . $this->getNbjourtravailhebdo() . " " . $this->getNbHeureTravailHebdo() . " " . $this->getGratification() . " " . $this->getUnitegratification() . " " . $this->getAvantageNature() . " " . $this->getDateDebut() . " " . $this->getDateFin() . " " . $this->getStatut() . " " . $this->getAnneeVisee() . " " . $this->getIdAnnee() . " " . $this->getIdutilisateur() . " " . $this->getDescription();
