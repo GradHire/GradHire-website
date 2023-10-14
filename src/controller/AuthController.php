@@ -19,6 +19,7 @@ class AuthController extends Controller
 	 */
 	public function register(Request $request): string
 	{
+		if (!Application::isGuest()) header("Location: /");
 		$form = new FormModel([
 			"name" => FormModel::string("Nom entreprise")->required()->min(10)->asterisk(),
 			"email" => FormModel::email("Adresse mail")->required()->asterisk(),
@@ -47,6 +48,7 @@ class AuthController extends Controller
 	 */
 	public function pro_login(Request $request): string|null
 	{
+		if (!Application::isGuest()) header("Location: /");
 		$loginForm = new FormModel([
 			"email" => FormModel::email("Adresse mail")->required(),
 			"password" => FormModel::password("Mot de passe")->min(8),
@@ -71,16 +73,17 @@ class AuthController extends Controller
 	 */
 	public function login(Request $request): string|null
 	{
+		if (!Application::isGuest()) header("Location: /");
 		$loginForm = new FormModel([
 			"username" => FormModel::string("Login ldap")->required(),
 			"password" => FormModel::password("Mot de passe")->required(),
-			"remember" => FormModel::switch("Rester connecté")->default(true)->forget()
+			"remember" => FormModel::switch("Rester connecté")->default(true)
 		]);
 		if ($request->getMethod() === 'post') {
 			if ($loginForm->validate($request->getBody())) {
 				$dt = $loginForm->getParsedBody();
 				if (LdapUser::login($dt["username"], $dt["password"], $dt["remember"], $loginForm)) {
-					Application::$app->response->redirect('/');
+					Application::redirectFromParam('/');
 					return null;
 				}
 			}

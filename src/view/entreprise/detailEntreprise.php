@@ -6,8 +6,8 @@
 
 
 ?>
-<div class="w-full">
-	<div class="w-full flex md:flex-row flex-col justify-between items-start">
+<div class="w-full pt-12 pb-24">
+	<div class="w-full flex md:flex-row flex-col  justify-between items-start">
 		<div class="px-4 sm:px-0">
 			<h3 class="text-lg font-semibold leading-7 text-gray-900"><?= $entreprise->getNomutilisateur() ?></h3>
 			<p class="mt-1 max-w-2xl text-sm leading-6 text-gray-500"><?= $entreprise->getTypestructure() ?></p>

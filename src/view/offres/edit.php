@@ -6,7 +6,7 @@ use app\src\model\Form\FormModel;
 $this->title = 'Modifier offre';
 
 ?>
-<div class="w-full md:max-w-[75%] gap-4 flex flex-col">
+<div class="w-full pt-12 pb-24 gap-4 flex flex-col">
     <?php $form->start(); ?>
     <div class="w-full gap-4 flex flex-col">
         <?php
@@ -21,7 +21,7 @@ $this->title = 'Modifier offre';
         $form->print_fields(["gratification", "unitegratification"]);
         echo "</div>";
         $form->print_fields(["avantageNature", "anneeVisee", "description"]);
-        $form->submit("Update");
+        $form->submit("Enregistrer les modifications");
         $form->getError();
         ?>
     </div>

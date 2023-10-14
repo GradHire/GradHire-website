@@ -11,8 +11,8 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
 <div class="w-full flex flex-col max-w-[75%]">
     <?php
     $offred= (new OffresRepository)->draftExist( Application::getUser()->id() );
-        $offrechoisi=$offred[0];
-        if(Application::getUser()->role()===Roles::Enterprise){
+    $offrechoisi=$offred[0];
+    if(Application::getUser()->role()===Roles::Enterprise){
 
         ?>
 
@@ -39,15 +39,15 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
             </div>
         </form>
         <?php
-            if(isset($_GET["entreprise"])){
-                $offrechoisi = (new OffresRepository)->getById($_GET["entreprise"]);
-                if($offrechoisi===null){
-                    $offrechoisi=$offred[0];
-                }
+        if(isset($_GET["entreprise"])){
+            $offrechoisi = (new OffresRepository)->getById($_GET["entreprise"]);
+            if($offrechoisi===null){
+                $offrechoisi=$offred[0];
             }
         }
-        ?>
-                    <form action="create" method="post" class="w-full flex flex-col" id="myform">
+    }
+    ?>
+    <form action="create" method="post" class="w-full flex flex-col" id="myform">
         <div class="w-full gap-4 flex flex-col">
 
             <?php
@@ -141,6 +141,7 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
                     <input type="date" placeholder="2021-01-01" name="datef" id="datef" min=required value="<?php echo $offrechoisi->getDateFin(); ?>"
                            class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
                 </div>
+                <input type='hidden' name='id_offre' value='<?php echo $offrechoisi->getIdoffre() ?>'>
                 <div class="w-full">
                     <label for="theme">Durée</label>
                     <select name="duree"
@@ -166,17 +167,21 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
 <?= $offrechoisi->getDescription() ?>
 </textarea>
             <div class="flex flex-row gap-4 w-full">
-            <input type='hidden' name='action' value='create'>
-            <input type="submit" value="Envoyer"
-                   class="w-full text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800"/>
+                <input type="submit" name="action" value="Envoyer"
+                       class="w-full text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800"/>
 
                 <?php if(Application::getUser()->role()===Roles::Enterprise){ ?>
-            <input type='hidden' name='action' value='sauvegarder'>
-            <input onclick="saveForm()" type="submit" value="sauvegarder"
-                   class=" max-w-[150px] text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800"/>
+                    <input type='hidden' name='sauvegarder_action' value='sauvegarder'>
+                    <input onclick="saveForm()" type="submit" name="action" value="sauvegarder"
+                           class=" max-w-[150px] text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800"/>
                 <?php } ?>
             </div>
-            </div>
+            <?php if(Application::getUser()->role()===Roles::Enterprise && $offrechoisi->getIdoffre()!=""){ ?>
+            <input type='hidden' name='supprimer_action' value='supprimer'>
+            <input onclick="saveForm()" type="submit" name="action" value="Supprimer Brouillon"
+                   class="w-full text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800"/>
+            <?php } ?>
+        </div>
     </form>
 </div>
 <script>
@@ -212,26 +217,26 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
 
         nbjour.addEventListener('change', function() {
             if (distanciel.value && (this.value < distanciel.value)) {
-                this.setCustomValidity("Nombre de jour a distanciel ne peut pas être supérieur au nombre de jour par semaine!");
+                this.setCustomValidity("Insérer une valeur valide");
             } else {
                 this.setCustomValidity("");
             }
         });
         distanciel.addEventListener('change', function() {
             if (nbjour.value && (this.value > nbjour.value)) {
-                this.setCustomValidity("Nombre de jour a distanciel ne peut pas être supérieur au nombre de jour par semaine!");
+                this.setCustomValidity("Insérer une valeur valide");
             } else {
                 this.setCustomValidity("");
             }
         });
 
     });
-        function saveForm() {
+    function saveForm() {
         var elements = document.querySelectorAll('[required]');
         for (var i = 0; i < elements.length; i++) {
-        elements[i].removeAttribute('required');
-    }
-            document.getElementById('myForm').submit();
+            elements[i].removeAttribute('required');
+            if(elements[i].id==="nbheure" || elements[i].id==="dated" || elements[i].id==="salaire") elements[i].setAttribute('required', 'required');
+        }
     }
 
 

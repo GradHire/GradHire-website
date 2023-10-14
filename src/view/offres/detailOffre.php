@@ -2,9 +2,14 @@
 
 /** @var $offre \app\src\model\dataObject\Offre */
 
+use app\src\model\Application;
+use app\src\model\repository\OffresRepository;
+use app\src\model\Users\Roles;
+use app\src\model\Auth;
+
 ?>
 
-<div class="w-full">
+<div class="w-full pt-12 pb-24">
     <div class="w-full flex md:flex-row flex-col justify-between items-start">
         <div class="px-4 sm:px-0">
             <h3 class="text-lg font-semibold leading-7 text-zinc-900"><?= $offre->getSujet() ?></h3>
@@ -18,7 +23,9 @@
                 }
                 ?></p>
         </div>
-        <span class="inline-flex cursor-pointer  -space-x-px overflow-hidden rounded-md border bg-white shadow-sm">
+        <?php if (Auth::has_role(Roles::Staff, Roles::Manager) || Auth::get_user()->getId() == $offre->getIdutilisateur()) { ?>
+
+            <span class="inline-flex cursor-pointer  -space-x-px overflow-hidden rounded-md border bg-white shadow-sm">
   <a href="/offres/<?= $offre->getIdOffre() ?>/edit"
      class="cursor-pointer inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -36,18 +43,20 @@
   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
 </svg>
                 </a><?php endif; ?>
-            <?php if ($offre->getStatut() != "draft"): ?>
-                <a href="/offres/<?= $offre->getIdOffre() ?>/archive"
-                   class="inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative">
+                <?php if ($offre->getStatut() != "draft"): ?>
+                    <a href="/offres/<?= $offre->getIdOffre() ?>/archive"
+                       class="inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
          class="w-5 h-5">
   <path stroke-linecap="round" stroke-linejoin="round"
         d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
 </svg>
   </a>
-            <?php endif; ?>
+                <?php endif; ?>
 
 </span>
+        <?php } ?>
+
     </div>
     <div class="mt-6 border-t border-zinc-100">
         <dl class="divide-y divide-zinc-100">
@@ -121,8 +130,10 @@
             </div>
         </dl>
     </div>
+    <?php if(Auth::has_role(Roles::Student) && !$offre->getUserPostuled() ){ ?>
     <a href="<?php echo $offre->getIdOffre(); ?>/postuler"
        class="mt-6 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-zinc-600 hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 sm:w-auto">
         Postuler
     </a>
+    <?php } ?>
 </div>

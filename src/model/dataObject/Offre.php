@@ -2,6 +2,9 @@
 
 namespace app\src\model\dataObject;
 
+use app\src\core\exception\ServerErrorException;
+use app\src\model\repository\OffresRepository;
+
 class Offre extends AbstractDataObject
 {
     private ?int $idoffre;
@@ -312,6 +315,13 @@ class Offre extends AbstractDataObject
     protected function getValueColonne(string $nomColonne): string
     {
         return $this->$nomColonne;
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function getUserPostuled(): bool{
+        return (new OffresRepository())->checkIfUserPostuled($this);
     }
 
 }

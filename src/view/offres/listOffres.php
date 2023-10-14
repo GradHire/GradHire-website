@@ -13,6 +13,7 @@ Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff, Roles::Teacher, R
 
 
 ?>
+<?php if (Auth::has_role(Roles::Staff, Roles::Manager)) { ?>
 <div id="myModal" tabindex="-1" aria-hidden="true" class="fixed hidden z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md">
     <div class="relative p-10 text-center bg-white rounded-lg border-2 border-zinc-100 dark:bg-zinc-800 sm:p-10">
         <button type="button"
@@ -52,7 +53,8 @@ Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff, Roles::Teacher, R
         </div>
     </div>
 </div>
-<div class="w-full flex flex-col">
+<?php } ?>
+<div class="w-full flex flex-col pt-12 pb-24">
     <form method="GET" action="offres" class="flex flex-row gap-2 w-full">
         <?php
         if (!Auth::has_role(Roles::Student)) {
@@ -74,7 +76,7 @@ Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff, Roles::Teacher, R
                 </div>
                 <input type="search" id="default-search" name="sujet"
                        class="block w-full p-4 pl-10 text-sm text-zinc-900 border-2 border-zinc-200 rounded-lg bg-zinc-50 focus:ring-zinc-500 focus:border-zinc-500 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500"
-                       placeholder="Search Stages, Alternances...">
+                       placeholder="Rechercher une offre">
                 <button type="submit"
                         class="text-white absolute right-2.5 bottom-2.5 bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800">
                     Search
@@ -96,12 +98,14 @@ Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff, Roles::Teacher, R
                             if ($offre->getStatut() === "approved") {
                                 if (Auth::has_role(Roles::Manager, Roles::Staff)) {
                                     require __DIR__ . '/offre.php';
-                                } else if (!Auth::has_role(Roles::Manager, Roles::Staff) && !(new OffresRepository())->checkArchived($offre)){
+                                } else if (!Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise) && !(new OffresRepository())->checkArchived($offre)){
                                     if (Application::getUser()->attributes()["annee"] == 3 && $offre->getAnneeVisee() == 2) {
                                         continue;
                                     } else {
                                         require __DIR__ . '/offre.php';
                                     }
+                                } else if(Auth::has_role(Roles::Enterprise)&& $offre->getIdutilisateur()==Application::getUser()->id()){
+                                    require __DIR__ . '/offre.php';
                                 }
                             }
                         }
@@ -351,7 +355,6 @@ Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff, Roles::Teacher, R
 
 
 </script>
-
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function () {
         const checkbox = document.querySelector('#AcceptConditions');

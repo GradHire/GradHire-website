@@ -134,4 +134,9 @@ abstract class User
     {
         return $this->attributes["archiver"] === 1;
     }
+
+    public function getId()
+    {
+        return $this->id;
+    }
 }

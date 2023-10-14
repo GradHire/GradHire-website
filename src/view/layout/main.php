@@ -41,17 +41,25 @@ use app\src\model\Users\Roles;
             <div class="hidden lg:ml-8 lg:block lg:self-stretch">
                 <div class="flex h-full space-x-8">
                     <?php if (!Application::isGuest()): ?>
-                        <a href="/offres"
-                           class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Offres</a>
-                        <a href="/entreprises"
-                           class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Entreprises</a>
+                        <?php if (!Auth::has_role(Roles::Enterprise)): ?>
+                            <a href="/offres"
+                               class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Offres</a>
+                            <a href="/entreprises"
+                               class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Entreprises</a>
+                        <?php endif; ?>
+                        <?php if (Auth::has_role(Roles::Enterprise)): ?>
+                            <a href="/offres/create"
+                               class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Créer une
+                                offre</a>
+                        <?php endif; ?>
+                        <?php if (Auth::has_role(Roles::Manager, Roles::Staff)): ?>
+                            <a href="/utilisateurs"
+                               class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Utilisateurs</a>
+                            <a href="/candidatures"
+                               class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
+                        <?php endif; ?>
                     <?php endif; ?>
-                    <?php if (Auth::has_role(Roles::Manager, Roles::Staff)): ?>
-                        <a href="/utilisateurs"
-                           class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Utilisateurs</a>
-                        <a href="/candidatures"
-                           class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
-                    <?php endif; ?>
+
                 </div>
             </div>
 
@@ -81,121 +89,132 @@ use app\src\model\Users\Roles;
         </div>
     </div>
 </nav>
-<div id="nav-container" class="hidden fixed top-0 left-0 w-full h-screen bg-white bg-opacity-90 backdrop-blur-xl backdrop-filter z-50  mt-[65px]">
+<div id="nav-container"
+     class="hidden fixed top-0 left-0 w-full h-screen bg-white bg-opacity-90 backdrop-blur-xl backdrop-filter z-50  mt-[65px]">
     <div class="flex flex-col justify-center items-center space-y-8 uppercase mt-[50px]">
+
         <?php if (!Application::isGuest()): ?>
-            <a href="/offres"
-               class="flex items-center text-xl font-medium text-zinc-700 hover:text-zinc-800">Offres</a>
-            <a href="/entreprises"
-               class="flex items-center text-xl font-medium text-zinc-700 hover:text-zinc-800">Entreprises</a>
+            <?php if (!Auth::has_role(Roles::Enterprise)): ?>
+                <a href="/offres"
+                   class="flex items-center text-xl font-medium text-zinc-700 hover:text-zinc-800">Offres</a>
+                <a href="/entreprises"
+                   class="flex items-center text-xl font-medium text-zinc-700 hover:text-zinc-800">Entreprises</a>
+            <?php endif; ?>
+            <?php if (Auth::has_role(Roles::Enterprise)): ?>
+                <a href="/offres/create"
+                   class="flex items-center text-xl font-medium text-zinc-700 hover:text-zinc-800">Créer une
+                    offre</a>
+            <?php endif; ?>
+            <?php if (Auth::has_role(Roles::Manager, Roles::Staff)): ?>
+                <a href="/utilisateurs"
+                   class="flex items-center text-xl font-medium text-zinc-700 hover:text-zinc-800">Utilisateurs</a>
+                <a href="/candidatures"
+                   class="flex items-center text-xl font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
+            <?php endif; ?>
         <?php endif; ?>
-        <?php if (Auth::has_role(Roles::Manager, Roles::Staff)): ?>
-            <a href="/utilisateurs"
-               class="flex items-center text-xl font-medium text-zinc-700 hover:text-zinc-800">Utilisateurs</a>
-            <a href="/candidatures"
-               class="flex items-center text-xl font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
-        <?php endif; ?>
+
     </div>
 </div>
 <div id="blur-background" class="hidden w-screen h-screen fixed z-50 top-0 left-0 backdrop-blur-md"></div>
-<div class="w-full flex justify-center items-center">
+<div class="w-full flex flex-col justify-center items-center">
     <div class="max-w-7xl w-full px-4 sm:px-6 lg:px-8 flex flex-col justify-center mt-[65px] items-center">
         {{content}}
-        <footer aria-labelledby="footer-heading" class="bg-white border-t border-zinc-200 py-10">
+        <footer aria-labelledby="footer-heading" class="bg-white w-full">
             <h2 id="footer-heading" class="sr-only">Footer</h2>
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="py-20 xl:grid xl:grid-cols-3 xl:gap-8">
-                    <div class="grid grid-cols-2 gap-8 xl:col-span-2">
-                        <div class="space-y-16 md:grid md:grid-cols-2 md:gap-8 md:space-y-0">
-                            <div>
-                                <h3 class="text-sm font-medium text-zinc-900">Offres</h3>
-                                <ul role="list" class="mt-6 space-y-6">
-                                    <li class="text-sm">
-                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">
-                                    </li>
-                                    <li class="text-sm">
-                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
-                                    </li>
-                                    <li class="text-sm">
-                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
-                                    </li>
-                                    <li class="text-sm">
-                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h3 class="text-sm font-medium text-zinc-900">Entreprises</h3>
-                                <ul role="list" class="mt-6 space-y-6">
-                                    <li class="text-sm">
-                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
-                                    </li>
-                                    <li class="text-sm">
-                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
-                                    </li>
-                                    <li class="text-sm">
-                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
-                                    </li>
-                                    <li class="text-sm">
-                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="space-y-16 md:grid md:grid-cols-2 md:gap-8 md:space-y-0">
-                            <div>
-                                <h3 class="text-sm font-medium text-zinc-900">Profile</h3>
-                                <ul role="list" class="mt-6 space-y-6">
-                                    <li class="text-sm">
-                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
-                                    </li>
-                                    <li class="text-sm">
-                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
-                                    </li>
-                                    <li class="text-sm">
-                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h3 class="text-sm font-medium text-zinc-900">Social</h3>
-                                <ul role="list" class="mt-6 space-y-6">
-                                    <li class="text-sm">
-                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
-                                    </li>
-                                    <li class="text-sm">
-                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
-                                    </li>
-                                    <li class="text-sm">
-                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
-                                    </li>
-                                    <li class="text-sm">
-                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-16 md:mt-16 xl:mt-0">
-                        <h3 class="text-sm font-medium text-zinc-900">S'inscrire à la newsletter</h3>
-                        <p class="mt-6 text-sm text-zinc-500">Les dernières nouvelles et offres</p>
-                        <form class="mt-2 flex sm:max-w-md">
-                            <label for="email-address" class="sr-only">Email address</label>
-                            <input id="email-address" type="text" autocomplete="email" required
-                                   class="w-full min-w-0 appearance-none rounded-md border border-zinc-300 bg-white px-4 py-2 text-base text-zinc-500 placeholder-zinc-500 shadow-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500">
-                            <div class="ml-4 flex-shrink-0">
-                                <button type="submit"
-                                        class="flex w-full items-center justify-center rounded-md border border-transparent bg-zinc-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2">
-                                    S'inscrire
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
+            <div class="mx-auto max-w-7xl ">
+                <!--                <div class="py-20 xl:grid xl:grid-cols-3 xl:gap-8">
+                                    <div class="grid grid-cols-2 gap-8 xl:col-span-2">
+                                        <div class="space-y-16 md:grid md:grid-cols-2 md:gap-8 md:space-y-0">
+                                            <div>
+                                                <h3 class="text-sm font-medium text-zinc-900">Offres</h3>
+                                                <ul role="list" class="mt-6 space-y-6">
+                                                    <li class="text-sm">
+                                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">
+                                                    </li>
+                                                    <li class="text-sm">
+                                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
+                                                    </li>
+                                                    <li class="text-sm">
+                                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
+                                                    </li>
+                                                    <li class="text-sm">
+                                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div>
+                                                <h3 class="text-sm font-medium text-zinc-900">Entreprises</h3>
+                                                <ul role="list" class="mt-6 space-y-6">
+                                                    <li class="text-sm">
+                                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
+                                                    </li>
+                                                    <li class="text-sm">
+                                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
+                                                    </li>
+                                                    <li class="text-sm">
+                                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
+                                                    </li>
+                                                    <li class="text-sm">
+                                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="space-y-16 md:grid md:grid-cols-2 md:gap-8 md:space-y-0">
+                                            <div>
+                                                <h3 class="text-sm font-medium text-zinc-900">Profile</h3>
+                                                <ul role="list" class="mt-6 space-y-6">
+                                                    <li class="text-sm">
+                                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
+                                                    </li>
+                                                    <li class="text-sm">
+                                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
+                                                    </li>
+                                                    <li class="text-sm">
+                                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div>
+                                                <h3 class="text-sm font-medium text-zinc-900">Social</h3>
+                                                <ul role="list" class="mt-6 space-y-6">
+                                                    <li class="text-sm">
+                                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
+                                                    </li>
+                                                    <li class="text-sm">
+                                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
+                                                    </li>
+                                                    <li class="text-sm">
+                                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
+                                                    </li>
+                                                    <li class="text-sm">
+                                                        <a href="#" class="text-zinc-500 hover:text-zinc-600">Lorem</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-16 md:mt-16 xl:mt-0">
+                                        <h3 class="text-sm font-medium text-zinc-900">S'inscrire à la newsletter</h3>
+                                        <p class="mt-6 text-sm text-zinc-500">Les dernières nouvelles et offres</p>
+                                        <form class="mt-2 flex sm:max-w-md">
+                                            <label for="email-address" class="sr-only">Email address</label>
+                                            <input id="email-address" type="text" autocomplete="email" required
+                                                   class="w-full min-w-0 appearance-none rounded-md border border-zinc-300 bg-white px-4 py-2 text-base text-zinc-500 placeholder-zinc-500 shadow-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500">
+                                            <div class="ml-4 flex-shrink-0">
+                                                <button type="submit"
+                                                        class="flex w-full items-center justify-center rounded-md border border-transparent bg-zinc-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2">
+                                                    S'inscrire
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                -->
                 <div class="border-t border-zinc-200 py-10">
                     <p class="text-sm text-zinc-500">Copyright &copy; 2023 -
                         <span class="text-zinc-900">GradHire</span>
+                    </p>
                 </div>
             </div>
         </footer>
