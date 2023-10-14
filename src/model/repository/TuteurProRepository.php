@@ -55,7 +55,7 @@ class TuteurProRepository extends UtilisateurRepository
         if ($resultat == false) {
             return null;
         }
-        return $this->construireEntrepriseDepuisTableau($resultat);
+        return $this->construireTuteurProDepuisTableau($resultat);
     }
 
 

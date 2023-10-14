@@ -87,6 +87,7 @@
 					else echo("Non renseigné");
 					?></dd>
 			</div>
+            <?php if($offres != null) { ?>
 			<div class="px-4 py-6 sm:gap-4 sm:px-0">
 				<div class="w-full">
 					<table class="w-full divide-y-2 divide-gray-200 bg-white text-sm">
@@ -164,6 +165,7 @@
 					</table>
 				</div>
 			</div>
+            <?php } ?>
 		</dl>
 	</div>
 </div>
