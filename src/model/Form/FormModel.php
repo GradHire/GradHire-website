@@ -133,13 +133,14 @@ class FormModel
 			if ($script != "" && (count($this->js) === 0 || !in_array($script, $this->js)))
 				$this->js[] = $script;
 			$error = $this->errors[$name] ?? null;
+			$err = $error && $error !== "" ? '<p class="text-red-600/[.9]"><i class="fa-solid fa-circle-exclamation text-sm mr-2"></i>' . $error . '</p>' : '';
 			echo <<<HTML
 <div>
 	<label class="text-zinc-800 font-bold">{$field->getName()}</label>
 	<div class="mt-2">
 		{$field->field($name, $value)}
-	</div>	
-	<span class="text-red-600 font-semibold">$error</span>
+	</div>
+	$err
 </div>
 HTML;
 		}
@@ -227,7 +228,12 @@ HTML;
 	public function getSuccess(): void
 	{
 		if (strlen($this->success) > 0)
-			echo '<p>' . $this->success . '</p>';
+			echo <<<HTML
+<div class="w-full items-center my-1 p-4 bg-green-600/[.2] text-green-600/[.9] rounded-xl flex">
+<i class="fa-solid fa-circle-check text-xl mr-3"></i>
+<p>{$this->success}</p>
+</div>
+HTML;
 	}
 
 	public function setSuccess(string $text): void
@@ -238,6 +244,11 @@ HTML;
 	public function getError(): void
 	{
 		if (strlen($this->error) > 0)
-			echo '<p>' . $this->error . '</p>';
+			echo <<<HTML
+<div class="w-full items-center my-1 p-4 bg-red-600/[.2] text-red-600/[.9] rounded-xl flex">
+<i class="fa-solid fa-circle-exclamation text-xl mr-3"></i>
+<p>{$this->error}</p>
+</div>
+HTML;
 	}
 }

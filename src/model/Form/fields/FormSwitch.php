@@ -29,7 +29,7 @@ class FormSwitch extends AnyAttribute
 	function field(string $name, string $value): string
 	{
 		$value = $this->getValue($value);
-		$checked = ($value === "true" ? "checked" : '');
+		$checked = ($value === "on" ? "checked" : '');
 		if ($this->style === "basic")
 			return <<<HTML
 				<input type="checkbox" name="{$name}" {$checked} {$this->getParams()}/>
