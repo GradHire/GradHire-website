@@ -48,6 +48,10 @@ use app\src\model\Users\Roles;
                                class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Entreprises</a>
 
                         <?php endif; ?>
+                        <?php if (Auth::has_role(Roles::Teacher)): ?>
+                            <a href="/candidatures"
+                               class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
+                        <?php endif; ?>
                         <?php if (Auth::has_role(Roles::Enterprise)): ?>
                             <a href="/offres/create"
                                class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Créer une

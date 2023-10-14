@@ -36,8 +36,9 @@ use app\src\model\repository\UtilisateurRepository;
             <tbody class="divide-y divide-gray-200">
             <?php
             foreach ($candidatures as $candidature) {
-                $entreprise=(new UtilisateurRepository())->getUserById($candidature->getIdutilisateur());
+
                 $offre=(new OffresRepository())->getById($candidature->getIdoffre());
+                $entreprise=(new UtilisateurRepository())->getUserById($offre->getIdutilisateur());
                 $etudiant=(new UtilisateurRepository())->getUserById($candidature->getIdutilisateur());
                 ?>
                 <tr class="odd:bg-gray-50">
@@ -45,7 +46,7 @@ use app\src\model\repository\UtilisateurRepository;
                         <?= $entreprise->getNomutilisateur(); ?>
                     </td>
                     <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                        <?php echo $offre->getSujet(); ?>
+                        <?php echo $offre->getNomutilisateur(); ?>
                     </td>
                     <td class="whitespace-nowrap px-4 py-2 text-gray-700">
                         <?php

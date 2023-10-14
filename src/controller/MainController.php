@@ -404,20 +404,21 @@ class MainController extends Controller
             }
         }
         if(Auth::has_role(Roles::Enterprise)) {
-            return $this->render(
-                'candidature/listCandidatures',
-                ['candidaturesAttente' => (new CandidatureRepository())->getByIdEntreprise($userid, 'on hold'),
-                    'candidaturesAutres' => array_merge((new CandidatureRepository())->getByIdEntreprise($userid, 'accepted'), (new CandidatureRepository())->getByIdEntreprise($userid, 'declined'))
-                ]);
+            $array=['candidaturesAttente' => (new CandidatureRepository())->getByIdEntreprise($userid, 'on hold'),
+                'candidaturesAutres' => array_merge((new CandidatureRepository())->getByIdEntreprise($userid, 'accepted'), (new CandidatureRepository())->getByIdEntreprise($userid, 'declined'))
+            ];
         }
-        else if(Auth::has_role(Roles::Manager)){
-            return $this->render(
-                'candidature/listCandidatures',
-                ['candidaturesAttente' => (new CandidatureRepository())->getByStatement('on hold'),
-                    'candidaturesAutres' => array_merge((new CandidatureRepository())->getByStatement('accepted'), (new CandidatureRepository())->getByStatement('declined'))
-                ]);
+        else if(Auth::has_role(Roles::Manager,Roles::Staff)){
+
+            $array=['candidaturesAttente' => (new CandidatureRepository())->getByStatement('on hold'),
+                'candidaturesAutres' => array_merge((new CandidatureRepository())->getByStatement('accepted'), (new CandidatureRepository())->getByStatement('declined'))
+            ];
         }
-        return "null";
+        else if(Auth::has_role(Roles::Teacher)){
+            $array=['candidaturesAutres'=>(new CandidatureRepository())->getByStatement('accepted')];
+        }
+        return $this->render(
+            'candidature/listCandidatures', $array);
     }
 
 
