@@ -12,6 +12,7 @@ abstract class FormAttribute
 {
 	protected string $name;
 	protected bool $forget = false;
+	protected bool $asterisk = false;
 	protected mixed $default;
 	protected array $params = [];
 	/**
@@ -32,8 +33,9 @@ abstract class FormAttribute
 
 	public function getName(): string
 	{
-		return $this->name;
+		return $this->name . ($this->asterisk ? '<span class="text-red-500"> *</span>' : '');
 	}
+
 
 	public function validate(string $name, array $fields, array $body): array
 	{

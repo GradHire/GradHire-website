@@ -20,12 +20,12 @@ class AuthController extends Controller
 	public function register(Request $request): string
 	{
 		$form = new FormModel([
-			"name" => FormModel::string("Nom entreprise")->required()->min(10),
-			"email" => FormModel::email("Adresse mail")->required(),
-			"siret" => FormModel::string("Siret")->required()->numeric(),
-			"phone" => FormModel::phone("Téléphone")->required(),
-			"password" => FormModel::password("Mot de passe")->min(8),
-			"password2" => FormModel::password("Répéter mot de passe")->match('password'),
+			"name" => FormModel::string("Nom entreprise")->required()->min(10)->asterisk(),
+			"email" => FormModel::email("Adresse mail")->required()->asterisk(),
+			"siret" => FormModel::string("Siret")->required()->numeric()->asterisk(),
+			"phone" => FormModel::phone("Téléphone")->required()->asterisk(),
+			"password" => FormModel::password("Mot de passe")->min(8)->asterisk(),
+			"password2" => FormModel::password("Répéter mot de passe")->match('password')->asterisk(),
 
 		]);
 		if ($request->getMethod() === 'post') {
