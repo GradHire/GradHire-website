@@ -22,7 +22,7 @@ class FormSwitch extends AnyAttribute
 	 */
 	public function default($value): static
 	{
-		$this->default = $value ? "true" : "";
+		$this->default = $value ? "on" : "";
 		return $this;
 	}
 
