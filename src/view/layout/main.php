@@ -52,7 +52,6 @@ use app\src\model\Users\Roles;
                         <?php if (!Auth::has_role(Roles::Enterprise)): ?>
                             <a href="/entreprises"
                                class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Entreprises</a>
-
                         <?php endif; ?>
                         <?php if (Auth::has_role(Roles::Teacher)): ?>
                             <a href="/candidatures"

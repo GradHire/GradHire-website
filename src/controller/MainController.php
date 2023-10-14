@@ -203,7 +203,7 @@ class MainController extends Controller
             return $this->render('entreprise/detailEntreprise', ['entreprise' => $entreprise, 'offres' => $offres]);
         }
 
-        if (Auth::has_role(Roles::Manager, Roles::Staff)) {
+        if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Student)) {
             $entreprises = (new EntrepriseRepository())->getAll();
             return $this->render('entreprise/entreprise', ['entreprises' => $entreprises]);
         }
