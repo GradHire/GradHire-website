@@ -90,7 +90,7 @@ use app\src\model\Users\Roles;
 				<?php else: ?>
 					<div class="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
 						<a class="flex flex-row gap-4 items-center justify-center text-sm font-medium text-zinc-700 hover:text-zinc-800"
-						   href="<?= Auth::has_role(Roles::Enterprise) ? "/entreprises/" . Application::getUser()->id() : '/profile' ?>">
+						   href="/profile">
 							<?= Application::getUser()->full_name() ?>
 							<div class="rounded-full overflow-hidden h-7 w-7">
 								<img src="<?= Application::getUser()->get_picture() ?>" alt="Photo de profil"

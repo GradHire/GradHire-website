@@ -18,6 +18,7 @@ abstract class AbstractRepository
         $values = array();
         $arraySearch = array();
         $sql = "";
+        $dataObjects = array();
 
         if ($filter['sujet'] == "" && !empty($filter)) {
             $sql = "SELECT * FROM " . (new OffresRepository())->tableChecker($filter);
@@ -69,9 +70,7 @@ abstract class AbstractRepository
         foreach ($pdoStatement as $dataObjectFormatTableau) {
             $dataObjects[] = $this->construireDepuisTableau($dataObjectFormatTableau);
         }
-
         return $dataObjects;
-
     }
 
     protected abstract function construireDepuisTableau(array $dataObjectFormatTableau): AbstractDataObject;

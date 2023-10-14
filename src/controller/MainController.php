@@ -49,27 +49,26 @@ class MainController extends Controller
 		return $this->render('contact');
 	}
 
-	/**
-	 * @throws ForbiddenException
-	 * @throws NotFoundException
-	 * @throws ServerErrorException
-	 */
-	public function profile(Request $req): string
-	{
-		$id = $req->getRouteParams()["id"] ?? null;
-		if (!is_null($id)) {
-			$user = Auth::load_user_by_id($id);
-			if (is_null($user)) throw new NotFoundException();
-		} else {
-			$user = Application::getUser();
-			if (is_null($user)) throw new ForbiddenException();
-		}
-		if ($user->role() === Roles::Enterprise) throw new NotFoundException();
-		return $this->render('profile', [
-			'user' => $user,
-			'form' => null
-		]);
-	}
+    /**
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws ServerErrorException
+     */
+    public function profile(Request $req): string
+    {
+        $id = $req->getRouteParams()["id"] ?? null;
+        if (!is_null($id)) {
+            $user = Auth::load_user_by_id($id);
+            if (is_null($user)) throw new NotFoundException();
+        } else {
+            $user = Application::getUser();
+            if (is_null($user)) throw new ForbiddenException();
+        }
+        return $this->render('/profile', [
+            'user' => $user,
+            'form' => null
+        ]);
+    }
 
 	public function archiver(Request $req): string
 	{
@@ -189,19 +188,27 @@ class MainController extends Controller
 		return $this->render('utilisateurs/utilisateurs', ['utilisateurs' => $utilisateur]);
 	}
 
-	public function entreprises(Request $request): string
-	{
-		$id = $request->getRouteParams()['id'] ?? null;
-		$entreprise = (new EntrepriseRepository())->getByIdFull($id);
-		if ($entreprise == null && $id != null) throw new NotFoundException();
-		else if ($entreprise != null && $id != null) {
-			$offres = (new OffresRepository())->getOffresByIdEntreprise($id);
-			return $this->render('entreprise/detailEntreprise', ['entreprise' => $entreprise, 'offres' => $offres]);
-		}
+    /**
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
+    public function entreprises(Request $request): string
+    {
+        $id = $request->getRouteParams()['id'] ?? null;
+        $entreprise = (new EntrepriseRepository())->getByIdFull($id);
+        if ($entreprise == null && $id != null) throw new NotFoundException();
+        else if ($entreprise != null && $id != null) {
+            $offres = (new OffresRepository())->getOffresByIdEntreprise($id);
+            return $this->render('entreprise/detailEntreprise', ['entreprise' => $entreprise, 'offres' => $offres]);
+        }
 
-		$entreprises = (new EntrepriseRepository())->getAll();
-		return $this->render('entreprise/entreprise', ['entreprises' => $entreprises]);
-	}
+        if (Auth::has_role(Roles::Manager, Roles::Staff)) {
+            $entreprises = (new EntrepriseRepository())->getAll();
+            return $this->render('entreprise/entreprise', ['entreprises' => $entreprises]);
+        }
+        else throw new ForbiddenException();
+    }
 
 	public function ListeTuteurPro(Request $request): string
 	{
@@ -450,6 +457,4 @@ class MainController extends Controller
 		return $this->render(
 			'candidature/listCandidatures', $array);
 	}
-
-
 }
