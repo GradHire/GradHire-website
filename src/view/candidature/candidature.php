@@ -36,12 +36,12 @@ global $etatCandidature;
         <?php
         foreach ($candidatures as $candidature) {
             if($etatCandidature==="En attente") {
-                if ($candidature["etatcandidature"] != "En attente") {
+                if ($candidature["etatcandidature"] != "on hold") {
                     continue;
                 }
             }
             if($etatCandidature!="En attente") {
-                if ($candidature["etatcandidature"] === "En attente") {
+                if ($candidature["etatcandidature"] === "on hold") {
                     continue;
                 }
             }

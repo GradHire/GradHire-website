@@ -11,7 +11,7 @@ $filepath = "/uploads/". $candidatures->getIdoffre()."_".$candidatures->getIduti
 echo "<a href='".$filepath."' download target='_blank'>📥 Téléchargez la Lettre de Motivation</a>
 </div>";
 
-if($candidatures->getEtatcandidature() == "En attente"){
+if($candidatures->getEtatcandidature() == "on hold"){
     echo "<div class='flex flex-col mb-3'>
     <form action='/candidatures' method='POST'>
     <input type='hidden' name='idcandidature' value='".$candidatures->getIdcandidature()."'>
