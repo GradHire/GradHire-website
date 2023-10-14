@@ -132,13 +132,16 @@ class FormModel
 			$script = $field->getJS();
 			if ($script != "" && (count($this->js) === 0 || !in_array($script, $this->js)))
 				$this->js[] = $script;
-			echo '<div class="form-group">
-                <label>' . $field->getName() . '</label>
-                    ' . $field->field($name, $value) . '            
-			<div class="invalid-feedback">
-                    ' . ($this->errors[$name] ?? null) . '
-			</div>
-            </div>';
+			$error = $this->errors[$name] ?? null;
+			echo <<<HTML
+<div>
+	<label class="text-zinc-800 font-bold">{$field->getName()}</label>
+	<div class="mt-2">
+		{$field->field($name, $value)}
+	</div>	
+	<span class="text-red-600 font-semibold">$error</span>
+</div>
+HTML;
 		}
 	}
 
@@ -187,12 +190,12 @@ class FormModel
         </button>';
 	}
 
-    public function reset(string $text = "Reset"): void
-    {
-        echo '<button onclick="window.location = window.location.href" class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+	public function reset(string $text = "Reset"): void
+	{
+		echo '<button onclick="window.location = window.location.href" class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
             ' . $text . '
         </button>';
-    }
+	}
 
 	public function useFile(): void
 	{
@@ -214,6 +217,11 @@ class FormModel
 	public function setError(string $text): void
 	{
 		$this->error = $text;
+	}
+
+	public function setFieldError(string $field, string $error): void
+	{
+		$this->errors[$field] = $error;
 	}
 
 	public function getSuccess(): void
