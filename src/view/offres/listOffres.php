@@ -13,6 +13,7 @@ Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff, Roles::Teacher, R
 
 
 ?>
+<?php if (Auth::has_role(Roles::Staff, Roles::Manager)) { ?>
 <div id="myModal" tabindex="-1" aria-hidden="true" class="fixed hidden z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md">
     <div class="relative p-10 text-center bg-white rounded-lg border-2 border-zinc-100 dark:bg-zinc-800 sm:p-10">
         <button type="button"
@@ -52,6 +53,7 @@ Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff, Roles::Teacher, R
         </div>
     </div>
 </div>
+<?php } ?>
 <div class="w-full flex flex-col pt-12 pb-24">
     <form method="GET" action="offres" class="flex flex-row gap-2 w-full">
         <?php

@@ -17,11 +17,17 @@ use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\StaffRepository;
+use app\src\model\repository\TuteurProRepository;
 use app\src\model\repository\TuteurRepository;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\Request;
 use app\src\model\Users\Roles;
 
+/**
+ * @throws ForbiddenException
+ * @throws NotFoundException
+ * @throws ServerErrorException
+ */
 class MainController extends Controller
 {
     public function __construct()
@@ -73,11 +79,6 @@ class MainController extends Controller
         return '';
     }
 
-    /**
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     * @throws ServerErrorException
-     */
     public function edit_profile(Request $request): string
     {
         if (Application::isGuest()) throw new ForbiddenException();
@@ -196,6 +197,73 @@ class MainController extends Controller
         return $this->render('tuteurPro/listeTuteurPro', ['tuteurs' => $tuteurs]);
     }
 
+    public function postuler(Request $request): string
+    {
+        if (!Auth::has_role(Roles::Student)) throw new ForbiddenException();
+        $id = $request->getRouteParams()['id'] ?? null;
+        $offre = (new OffresRepository())->getById($id);
+
+        if (!$offre) throw  new NotFoundException();
+
+        $form = new FormModel([
+            "cv" => FormModel::file("CV")->required()->pdf(),
+            "ltm" => FormModel::file("Lettre de motivation")->required()->pdf()
+        ]);
+        $form->useFile();
+
+        if ($request->getMethod() === 'post') {
+            if ($form->validate($request->getBody())) {
+                $path = "uploads/" . $id . "_" . Application::getUser()->id();
+                if (!$form->getFile("cv")->save($path, "cv") ||
+                    !$form->getFile("ltm")->save($path, "ltm")) {
+                    $form->setError("Impossible de télécharger tous les fichiers");
+                    return '';
+                }
+                $stmt = Database::get_conn()->prepare("INSERT INTO `Candidature`(`idoffre`, `idutilisateur`) VALUES (?,?)");
+                $stmt->execute([$id, Application::getUser()->id()]);
+                Application::$app->response->redirect('/offres');
+            }
+
+        }
+        return $this->render('candidature/postuler', [
+            'form' => $form
+        ]);
+    }
+
+    public function candidatures(Request $request): string
+    {
+
+
+        $id = $request->getRouteParams()['id'] ?? null;
+        $candidatures = (new CandidatureRepository())->getById($id);
+        if ($candidatures != null && $id != null) {
+            return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
+        }
+
+        $candidaturesrepose = new CandidatureRepository();
+        $candidatures = ($candidaturesrepose->getAll());
+
+        if ($request->getMethod() === 'post') {
+            $id = $request->getBody()['idcandidature'] ?? null;
+            if ($request->getBody()['action'] === 'Accepter') {
+                $sql = "UPDATE Candidature SET etatcandidature='Validé par secrétariat' WHERE idcandidature=$id";
+                $requete = Database::get_conn()->prepare($sql);
+                $requete->execute();
+                $candidaturesrepose = new CandidatureRepository();
+                $candidatures = ($candidaturesrepose->getAll());
+                return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+            } else {
+                $sql = "UPDATE Candidature SET etatcandidature='Refusé' WHERE idcandidature=$id";
+                $requete = Database::get_conn()->prepare($sql);
+                $requete->execute();
+                $candidaturesrepose = new CandidatureRepository();
+                $candidatures = ($candidaturesrepose->getAll());
+                return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+            }
+        }
+        return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+    }
+
 	public function creeroffre(Request $request): string
 	{
 		if ($request->getMethod() === 'get') {
@@ -262,46 +330,54 @@ class MainController extends Controller
 
     public function archiveOffre(Request $request): string
     {
-        $id = $request->getRouteParams()['id'] ?? null;
-        $offre = (new OffresRepository())->getById($id);
-        if ($offre == null && $id != null) throw new NotFoundException();
-
-        if ($request->getMethod() === 'post') {
-            $url = $_POST['link'];
+        if (!Auth::has_role(Roles::Staff, Roles::Manager)) {
+            throw new ForbiddenException();
+        } else {
+            $id = $request->getRouteParams()['id'] ?? null;
+            $offre = (new OffresRepository())->getById($id);
             if ($offre == null && $id != null) throw new NotFoundException();
-            else if ($offre != null && $id != null) {
+
+            if ($request->getMethod() === 'post') {
+                $url = $_POST['link'];
+                if ($offre == null && $id != null) throw new NotFoundException();
+                else if ($offre != null && $id != null) {
+                    (new OffresRepository())->updateToDraft($id);
+                    Application::$app->response->redirect($url);
+                }
+            } elseif ($request->getMethod() === 'get') {
                 (new OffresRepository())->updateToDraft($id);
-                Application::$app->response->redirect($url);
+                $offre = (new OffresRepository())->getByIdWithUser($id);
+                return $this->render('offres/detailOffre', ['offre' => $offre]);
             }
-        } elseif ($request->getMethod() === 'get') {
-            (new OffresRepository())->updateToDraft($id);
-            $offre = (new OffresRepository())->getByIdWithUser($id);
             return $this->render('offres/detailOffre', ['offre' => $offre]);
         }
-        return $this->render('offres/detailOffre', ['offre' => $offre]);
     }
 
     public function editOffre(Request $request): string
     {
-        $id = $request->getRouteParams()['id'] ?? null;
-        $offre = (new OffresRepository())->getById($id);
-        if ($offre == null && $id != null) throw new NotFoundException();
-        $attr = [];
-        $attr = array_merge($attr, [
-            "sujet" => FormModel::string("Sujet")->default($offre->getSujet()),
-            "thematique" => FormModel::string("Thématique")->default($offre->getThematique()),
-            "nbjourtravailhebdo" => FormModel::int("Nombre de jours de travail hebdomadaire")->default($offre->getNbjourtravailhebdo()),
-            "nbHeureTravailHebdo" => FormModel::double("Nombre d'heures de travail hebdomadaire")->default($offre->getNbHeureTravailHebdo()),
-            "gratification" => FormModel::double("Gratification")->default($offre->getGratification()),
-            "unitegratification" => FormModel::string("Unité de la gratification")->default($offre->getUnitegratification()),
-            "avantageNature" => FormModel::string("Avantage en nature")->default($offre->getAvantageNature()),
-            "anneeVisee" => FormModel::string("Année visée")->default($offre->getAnneeVisee()),
-            "description" => FormModel::string("Description")->default($offre->getDescription()),
-            "dateDebut" => FormModel::date("Date de début")->default($offre->getDateDebut())->id("dateDebut"),
-            "dateFin" => FormModel::date("Date de fin")->default($offre->getDateFin())->id("dateFin"),
-        ]);
-        $form = new FormModel($attr);
-        return $this->render('/offres/edit', ['offre' => $offre, 'form' => $form]);
+        if (!Auth::has_role(Roles::Staff, Roles::Manager)) {
+            throw new ForbiddenException();
+        } else {
+            $id = $request->getRouteParams()['id'] ?? null;
+            $offre = (new OffresRepository())->getById($id);
+            if ($offre == null && $id != null) throw new NotFoundException();
+            $attr = [];
+            $attr = array_merge($attr, [
+                "sujet" => FormModel::string("Sujet")->default($offre->getSujet()),
+                "thematique" => FormModel::string("Thématique")->default($offre->getThematique()),
+                "nbjourtravailhebdo" => FormModel::int("Nombre de jours de travail hebdomadaire")->default($offre->getNbjourtravailhebdo()),
+                "nbHeureTravailHebdo" => FormModel::double("Nombre d'heures de travail hebdomadaire")->default($offre->getNbHeureTravailHebdo()),
+                "gratification" => FormModel::double("Gratification")->default($offre->getGratification()),
+                "unitegratification" => FormModel::string("Unité de la gratification")->default($offre->getUnitegratification()),
+                "avantageNature" => FormModel::string("Avantage en nature")->default($offre->getAvantageNature()),
+                "anneeVisee" => FormModel::string("Année visée")->default($offre->getAnneeVisee()),
+                "description" => FormModel::string("Description")->default($offre->getDescription()),
+                "dateDebut" => FormModel::date("Date de début")->default($offre->getDateDebut())->id("dateDebut"),
+                "dateFin" => FormModel::date("Date de fin")->default($offre->getDateFin())->id("dateFin"),
+            ]);
+            $form = new FormModel($attr);
+            return $this->render('/offres/edit', ['offre' => $offre, 'form' => $form]);
+        }
     }
 
     public function validateOffre(Request $request): string
@@ -352,109 +428,22 @@ class MainController extends Controller
 
     private static function constructFilter(): array
     {
-        $filter = array();
-//        if (Auth::has_role(["student"])) {
-//            if (isset($_GET['statut'])) $filter['statut'] = $_GET['statut'];
-//        } else {
-//            $filter['statut'] = "staff";
-//        }
-        if (isset($_GET['sujet'])) $filter['sujet'] = $_GET['sujet'];
-        else $filter['sujet'] = "";
-        if (isset($_GET['thematique'])) {
-            $filter['thematique'] = "";
-            foreach ($_GET['thematique'] as $key => $value) {
-                if ($filter['thematique'] == null) $filter['thematique'] = $value;
-                else if ($filter['thematique'] != null) $filter['thematique'] .= ',' . $value;
-            }
-        }
-        if (isset($_GET['anneeVisee'])) $filter['anneeVisee'] = $_GET['anneeVisee'];
-        if (isset($_GET['duree'])) $filter['duree'] = $_GET['duree'];
-        if (isset($_GET['alternance'])) $filter['alternance'] = $_GET['alternance'];
-        if (isset($_GET['stage'])) $filter['stage'] = $_GET['stage'];
-        if (isset($_GET['gratificationMin'])) {
-            if ($_GET['gratificationMin'] == "") $filter['gratificationMin'] = null;
-            else if ($_GET['gratificationMin'] < 4.05) $filter['gratificationMin'] = 4.05;
-            else if ($_GET['gratificationMin'] > 15) $filter['gratificationMin'] = 15;
-            else $filter['gratificationMin'] = $_GET['gratificationMin'];
-        }
-        if (isset($_GET['gratificationMax'])) {
-            if ($_GET['gratificationMax'] == "") $filter['gratificationMax'] = null;
-            else if ($_GET['gratificationMax'] < 4.05) $filter['gratificationMax'] = 4.05;
-            else if ($_GET['gratificationMax'] > 15) $filter['gratificationMax'] = 15;
-            else $filter['gratificationMax'] = $_GET['gratificationMax'];
-        }
-        return $filter;
+        return array(
+            'sujet' => $_GET['sujet'] ?? "",
+            'thematique' => isset($_GET['thematique']) ? implode(',', $_GET['thematique']) : "",
+            'anneeVisee' => $_GET['anneeVisee'] ?? null,
+            'duree' => $_GET['duree'] ?? null,
+            'alternance' => $_GET['alternance'] ?? null,
+            'stage' => $_GET['stage'] ?? null,
+            'gratificationMin' => self::filterGratification($_GET['gratificationMin'] ?? null),
+            'gratificationMax' => self::filterGratification($_GET['gratificationMax'] ?? null)
+        );
     }
 
-    public function candidatures(Request $request): string
+    private static function filterGratification($value)
     {
-
-
-        $id = $request->getRouteParams()['id'] ?? null;
-        $candidatures = (new CandidatureRepository())->getById($id);
-        if ($candidatures != null && $id != null) {
-            return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
-        }
-
-        $candidaturesrepose = new CandidatureRepository();
-        $candidatures = ($candidaturesrepose->getAll());
-
-        if ($request->getMethod() === 'post') {
-            $id = $request->getBody()['idcandidature'] ?? null;
-            if ($request->getBody()['action'] === 'Accepter') {
-                $sql = "UPDATE Candidature SET etatcandidature='Validé par secrétariat' WHERE idcandidature=$id";
-                $requete = Database::get_conn()->prepare($sql);
-                $requete->execute();
-                $candidaturesrepose = new CandidatureRepository();
-                $candidatures = ($candidaturesrepose->getAll());
-                return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
-            } else {
-                $sql = "UPDATE Candidature SET etatcandidature='Refusé' WHERE idcandidature=$id";
-                $requete = Database::get_conn()->prepare($sql);
-                $requete->execute();
-                $candidaturesrepose = new CandidatureRepository();
-                $candidatures = ($candidaturesrepose->getAll());
-                return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
-            }
-        }
-        return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+        if ($value === "") return null;
+        return min(max((float)$value, 4.05), 15);
     }
 
-    /**
-     * @throws NotFoundException
-     * @throws ServerErrorException
-     * @throws ForbiddenException
-     */
-    public function postuler(Request $request): string
-    {
-        if (!Auth::has_role(Roles::Student)) throw new ForbiddenException();
-        $id = $request->getRouteParams()['id'] ?? null;
-        $offre = (new OffresRepository())->getById($id);
-
-        if (!$offre) throw  new NotFoundException();
-
-        $form = new FormModel([
-            "cv" => FormModel::file("CV")->required()->pdf(),
-            "ltm" => FormModel::file("Lettre de motivation")->required()->pdf()
-        ]);
-        $form->useFile();
-
-        if ($request->getMethod() === 'post') {
-            if ($form->validate($request->getBody())) {
-                $path = "uploads/" . $id . "_" . Application::getUser()->id();
-                if (!$form->getFile("cv")->save($path, "cv") ||
-                    !$form->getFile("ltm")->save($path, "ltm")) {
-                    $form->setError("Impossible de télécharger tous les fichiers");
-                    return '';
-                }
-                $stmt = Database::get_conn()->prepare("INSERT INTO `Candidature`(`idoffre`, `idutilisateur`) VALUES (?,?)");
-                $stmt->execute([$id, Application::getUser()->id()]);
-                Application::$app->response->redirect('/offres');
-            }
-
-        }
-        return $this->render('candidature/postuler', [
-            'form' => $form
-        ]);
-    }
 }

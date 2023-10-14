@@ -71,4 +71,9 @@ class Auth
         setcookie('token', '', -1);
         session_destroy();
     }
+
+    public static function get_user()
+    {
+        return Application::getUser();
+    }
 }
