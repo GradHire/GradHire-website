@@ -70,7 +70,25 @@ global $etatCandidature;
                 </td>
                 <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                     <?php
-                    echo $candidature["etatcandidature"];
+                    if ($candidature["etatcandidature"] == "on hold") {
+                        echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-yellow-100 text-yellow-800\">
+    En attente
+    </span>";
+                    } else if ($candidature["etatcandidature"] == "accepted") {
+                        echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-green-100 text-green-800\">
+    Acceptée
+    </span>";
+                    } else if ($candidature["etatcandidature"] == "declined") {
+                        echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-red-100 text-red-800\">
+    Refusée
+    </span>";
+                    } else if ($candidature["etatcandidature"] == "draft") {
+                        echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-zinc-100 text-zinc-800\">
+    Archivée
+    </span>";
+                    }else{
+                        echo $candidature["etatcandidature"];
+                    }
                     ?>
                 </td>
                 <td class="whitespace-nowrap px-4 py-2">
