@@ -404,9 +404,12 @@ class MainController extends Controller
                 $candidature->setEtatcandidature("declined");
             }
         }
-        if(Auth::has_role(Roles::Enterprise)) {
-            $array=['candidaturesAttente' => (new CandidatureRepository())->getByIdEntreprise($userid, 'on hold'),
-                'candidaturesAutres' => array_merge((new CandidatureRepository())->getByIdEntreprise($userid, 'accepted'), (new CandidatureRepository())->getByIdEntreprise($userid, 'declined'))
+        $array=[];
+        if(Auth::has_role(Roles::Enterprise,Roles::Tutor)) {
+            if(Auth::has_role(Roles::Tutor)) $entrepriseid=(new TuteurProRepository())->getById($userid)->getIdentreprise();
+            else $entrepriseid=$userid;
+            $array=['candidaturesAttente' => (new CandidatureRepository())->getByIdEntreprise($entrepriseid, 'on hold'),
+                'candidaturesAutres' => array_merge((new CandidatureRepository())->getByIdEntreprise($entrepriseid, 'accepted'), (new CandidatureRepository())->getByIdEntreprise($entrepriseid, 'declined'))
             ];
         }
         else if(Auth::has_role(Roles::Manager,Roles::Staff)){

@@ -41,7 +41,7 @@ use app\src\model\Users\Roles;
             <div class="hidden lg:ml-8 lg:block lg:self-stretch">
                 <div class="flex h-full space-x-8">
                     <?php if (!Application::isGuest()): ?>
-                        <?php if (!Auth::has_role(Roles::Enterprise)): ?>
+                        <?php if (!Auth::has_role(Roles::Enterprise) && !Auth::has_role(Roles::Tutor)): ?>
                             <a href="/offres"
                                class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Offres</a>
                             <a href="/entreprises"
@@ -49,6 +49,10 @@ use app\src\model\Users\Roles;
 
                         <?php endif; ?>
                         <?php if (Auth::has_role(Roles::Teacher)): ?>
+                            <a href="/candidatures"
+                               class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
+                        <?php endif; ?>
+                        <?php if (Auth::has_role(Roles::Tutor)): ?>
                             <a href="/candidatures"
                                class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
                         <?php endif; ?>

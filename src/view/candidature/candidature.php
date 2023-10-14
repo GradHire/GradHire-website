@@ -19,7 +19,7 @@ use app\src\model\repository\UtilisateurRepository;
                     Nom de l'entreprise
                 </th>
                 <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-gray-900">
-                    Nom de l'offre
+                    Sujet de l'offre
                 </th>
                 <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-gray-900">
                     Email étudiant
@@ -46,7 +46,7 @@ use app\src\model\repository\UtilisateurRepository;
                         <?= $entreprise->getNomutilisateur(); ?>
                     </td>
                     <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                        <?php echo $offre->getNomutilisateur(); ?>
+                        <?php echo $offre->getSujet(); ?>
                     </td>
                     <td class="whitespace-nowrap px-4 py-2 text-gray-700">
                         <?php
