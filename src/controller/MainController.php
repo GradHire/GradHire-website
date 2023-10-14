@@ -38,6 +38,9 @@ class MainController extends Controller
         //$this->registerMiddleware(new AuthMiddleware());
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function user_test(Request $req)
     {
         if (session_status() !== PHP_SESSION_NONE)
@@ -52,6 +55,11 @@ class MainController extends Controller
         return $this->render('contact');
     }
 
+    /**
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws ServerErrorException
+     */
     public function profile(Request $req): string
     {
         $id = $req->getRouteParams()["id"] ?? null;
@@ -68,6 +76,9 @@ class MainController extends Controller
         ]);
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function archiver(Request $req): string
     {
         $user = (new UtilisateurRepository())->getUserById($req->getRouteParams()["id"]);
@@ -82,6 +93,11 @@ class MainController extends Controller
         return '';
     }
 
+    /**
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws ServerErrorException
+     */
     public function edit_profile(Request $request): string
     {
         if (Application::isGuest()) throw new ForbiddenException();
@@ -158,6 +174,9 @@ class MainController extends Controller
         return $this->render('dashboard/dashboard');
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function utilisateurs(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
@@ -179,6 +198,10 @@ class MainController extends Controller
         return $this->render('utilisateurs/utilisateurs', ['utilisateurs' => $utilisateur]);
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws ServerErrorException
+     */
     public function entreprises(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
@@ -200,6 +223,11 @@ class MainController extends Controller
         return $this->render('tuteurPro/listeTuteurPro', ['tuteurs' => $tuteurs]);
     }
 
+    /**
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws ServerErrorException
+     */
     public function postuler(Request $request): string
     {
         if (!Auth::has_role(Roles::Student)) throw new ForbiddenException();
@@ -226,7 +254,6 @@ class MainController extends Controller
                 $stmt->execute([$id, Application::getUser()->id()]);
                 Application::$app->response->redirect('/offres');
             }
-
         }
         return $this->render('candidature/postuler', [
             'form' => $form
@@ -234,6 +261,9 @@ class MainController extends Controller
     }
 
 
+    /**
+     * @throws ForbiddenException
+     */
     public function creeroffre(Request $request): string
     {
         if(!Auth::has_role(Roles::Manager, Roles::Enterprise)) {
@@ -286,6 +316,11 @@ class MainController extends Controller
     }
 
 
+    /**
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
     public function archiveOffre(Request $request): string
     {
         if (!Auth::has_role(Roles::Staff, Roles::Manager)) {
@@ -311,6 +346,11 @@ class MainController extends Controller
         }
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
     public function editOffre(Request $request): string
     {
         if (!Auth::has_role(Roles::Staff, Roles::Manager)) {
@@ -338,6 +378,10 @@ class MainController extends Controller
         }
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws ServerErrorException
+     */
     public function validateOffre(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
@@ -352,6 +396,10 @@ class MainController extends Controller
         return $this->render('offres/detailOffre', ['offre' => $offre]);
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws ServerErrorException
+     */
     public function offres(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
