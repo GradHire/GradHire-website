@@ -4,7 +4,7 @@
 use app\src\model\repository\TuteurProRepository;
 
 ?>
-<div class="overflow-x-auto w-full">
+<div class="overflow-x-auto w-full pt-12 pb-24">
 <?php
 if(empty($tuteurs)) echo'<h2> Pas de Tuteurs Pro </h2>';
 else{?> <h2 class="font-bold text-lg">Liste des Tuteurs Pro de l'entreprise</h2>
