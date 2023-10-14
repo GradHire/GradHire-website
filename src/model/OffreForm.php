@@ -99,4 +99,19 @@ class OffreForm extends Model{
         }
 
     }
+
+    public static function deleteOffre(mixed $idOffre)
+    {
+        $sql = "DELETE FROM Offre WHERE idOffre=:idOffreTag";
+        $pdoStatement = Database::get_conn()->prepare($sql);
+        $values = array(
+            "idOffreTag" => $idOffre,
+        );
+        try {
+            $pdoStatement->execute($values);
+        } catch (PDOException $e) {
+            return false;
+        }
+        return true;
+    }
 }

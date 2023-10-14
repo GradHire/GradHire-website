@@ -200,6 +200,12 @@ class MainController extends Controller
 		} else {
             $action=$_POST['action'];
 
+            if($action == 'Supprimer Brouillon'){
+                $idOffre = $_POST['id_offre'];
+                OffreForm::deleteOffre($idOffre);
+                return $this->render('/offres/create');
+            }
+
 			$type = $_POST['radios'];
 			$titre = $_POST['titre'];
             $theme = $_POST['theme'] ?? null;

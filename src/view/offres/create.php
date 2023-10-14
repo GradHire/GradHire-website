@@ -176,6 +176,11 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
                            class=" max-w-[150px] text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800"/>
                 <?php } ?>
             </div>
+            <?php if(Application::getUser()->role()===Roles::Enterprise && $offrechoisi->getIdoffre()!=""){ ?>
+            <input type='hidden' name='supprimer_action' value='supprimer'>
+            <input onclick="saveForm()" type="submit" name="action" value="Supprimer Brouillon"
+                   class="w-full text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800"/>
+            <?php } ?>
         </div>
     </form>
 </div>
@@ -212,14 +217,14 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
 
         nbjour.addEventListener('change', function() {
             if (distanciel.value && (this.value < distanciel.value)) {
-                this.setCustomValidity("Nombre de jour a distanciel ne peut pas être supérieur au nombre de jour par semaine!");
+                this.setCustomValidity("Insérer une valeur valide");
             } else {
                 this.setCustomValidity("");
             }
         });
         distanciel.addEventListener('change', function() {
             if (nbjour.value && (this.value > nbjour.value)) {
-                this.setCustomValidity("Nombre de jour a distanciel ne peut pas être supérieur au nombre de jour par semaine!");
+                this.setCustomValidity("Insérer une valeur valide");
             } else {
                 this.setCustomValidity("");
             }
@@ -230,8 +235,8 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
         var elements = document.querySelectorAll('[required]');
         for (var i = 0; i < elements.length; i++) {
             elements[i].removeAttribute('required');
+            if(elements[i].id==="nbheure" || elements[i].id==="dated" || elements[i].id==="salaire") elements[i].setAttribute('required', 'required');
         }
-        document.getElementById('myForm').submit();
     }
 
 
