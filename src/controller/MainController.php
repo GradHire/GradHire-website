@@ -372,9 +372,14 @@ class MainController extends Controller
         return $this->render('offres/detailOffre', ['offre' => $offre]);
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
     public function offres(Request $request): string
     {
-        if (!Auth::has_role(Roles::Staff, Roles::Manager, Roles::Enterprise)) throw new ForbiddenException();
+        if (!Auth::has_role(Roles::Staff, Roles::Manager, Roles::Enterprise, Roles::Student)) throw new ForbiddenException();
         elseif (Auth::has_role(Roles::Enterprise)) {
             $id = Application::getUser()->id();
             $offres = (new OffresRepository())->getOffresByIdEntreprise($id);
