@@ -24,7 +24,11 @@ class CandidatureRepository extends AbstractRepository
         if ($resultat == false) return null;
         return $this->construireDepuisTableau($resultat);
     }
-    public function getByIdEntreprise($identreprise): array
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function getByIdEntreprise($identreprise): ?array
     {
         $sql = "SELECT idcandidature,datec,etatcandidature,$this->nomTable.idoffre,$this->nomTable.idutilisateur FROM $this->nomTable JOIN Offre ON Offre.idoffre=$this->nomTable.idoffre WHERE Offre.idutilisateur= :id";
         $requete = Database::get_conn()->prepare($sql);
@@ -34,7 +38,6 @@ class CandidatureRepository extends AbstractRepository
             $resultat[]=$this->construireDepuisTableau($item);
         }
         return $resultat;
-
     }
 
 

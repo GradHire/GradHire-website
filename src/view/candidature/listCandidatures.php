@@ -66,7 +66,25 @@ use app\src\model\repository\UtilisateurRepository;
                                     </td>
                                     <td class="whitespace-nowrap px-4 py-2 text-gray-700">
                                         <?php
-                                        echo $candidature->getEtatcandidature();
+                                        if ($candidature->getEtatcandidature() == "on hold") {
+                                            echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-yellow-100 text-yellow-800\">
+    En attente
+    </span>";
+                                        } else if ($candidature->getEtatcandidature() == "accepted") {
+                                            echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-green-100 text-green-800\">
+    Acceptée
+    </span>";
+                                        } else if ($candidature->getEtatcandidature() == "declined") {
+                                            echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-red-100 text-red-800\">
+    Refusée
+    </span>";
+                                        } else if ($candidature->getEtatcandidature() == "draft") {
+                                            echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-zinc-100 text-zinc-800\">
+    Archivée
+    </span>";
+                                        }else{
+                                            echo $candidature->getEtatcandidature();
+                                        }
                                         ?>
                                     </td>
                                     <td class="whitespace-nowrap px-4 py-2">
@@ -137,7 +155,25 @@ use app\src\model\repository\UtilisateurRepository;
                                     </td>
                                     <td class="whitespace-nowrap px-4 py-2 text-gray-700">
                                         <?php
-                                        echo $candidature->getEtatcandidature();
+                                        if ($candidature->getEtatcandidature() == "on hold") {
+                                            echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-yellow-100 text-yellow-800\">
+    En attente
+    </span>";
+                                        } else if ($candidature->getEtatcandidature() == "accepted") {
+                                            echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-green-100 text-green-800\">
+    Acceptée
+    </span>";
+                                        } else if ($candidature->getEtatcandidature() == "declined") {
+                                            echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-red-100 text-red-800\">
+    Refusée
+    </span>";
+                                        } else if ($candidature->getEtatcandidature() == "draft") {
+                                            echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-zinc-100 text-zinc-800\">
+    Archivée
+    </span>";
+                                        }else{
+                                            echo $candidature->getEtatcandidature();
+                                        }
                                         ?>
                                     </td>
                                     <td class="whitespace-nowrap px-4 py-2">
