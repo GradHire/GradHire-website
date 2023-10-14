@@ -16,25 +16,18 @@ class Request
 		return $path;
 	}
 
-	public function getBody()
+	public function getBody(): array
 	{
+		$body = $this->isGet() ? $_GET : ($this->isPost() ? $_POST : []);
 		$data = [];
 
-		if ($this->isGet()) {
-			foreach ($_GET as $key => $value) {
-				$data[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
-			}
-		}
-
-		if ($this->isPost()) {
-			foreach ($_POST as $key => $value) {
-				if (is_array($value))
-					$data[$key] = array_map(function ($item) {
-						return filter_var($item, FILTER_SANITIZE_SPECIAL_CHARS);
-					}, $value);
-				else
-					$data[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
-			}
+		foreach ($body as $key => $value) {
+			if (is_array($value))
+				$data[$key] = array_map(function ($item) {
+					return filter_var($item, FILTER_SANITIZE_SPECIAL_CHARS);
+				}, $value);
+			else
+				$data[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
 		}
 
 		return $data;
