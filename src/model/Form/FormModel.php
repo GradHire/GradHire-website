@@ -103,19 +103,25 @@ class FormModel
             $this->field($name);
     }
 
-    public function field(string $name): void
+    public function print_fields(array $fields): void
     {
-        $field = $this->fields[$name] ?? null;
-        $value = '';
-        if (is_null($field))
-            echo "Le champs '" . $name . "' n'existe pas";
-        if ($this->memorize && count($this->body) > 0 && isset($this->body[$name]))
-            $value = $this->body[$name];
-        if ($field instanceof FormAttribute) {
-            $script = $field->getJS();
-            if ($script != "" && (count($this->js) === 0 || !in_array($script, $this->js)))
-                $this->js[] = $script;
-            echo '<div class="form-group">
+        foreach ($fields as $name)
+            $this->field($name);
+    }
+
+	public function field(string $name): void
+	{
+		$field = $this->fields[$name] ?? null;
+		$value = '';
+		if (is_null($field))
+			echo "Le champs '" . $name . "' n'existe pas";
+		if ($this->memorize && count($this->body) > 0 && isset($this->body[$name]))
+			$value = $this->body[$name];
+		if ($field instanceof FormAttribute) {
+			$script = $field->getJS();
+			if ($script != "" && (count($this->js) === 0 || !in_array($script, $this->js)))
+				$this->js[] = $script;
+			echo '<div class="form-group w-full">
                 <label>' . $field->getName() . '</label>                
 			<div class="invalid-feedback">
                     ' . $field->field($name, $value) . '
@@ -157,9 +163,9 @@ class FormModel
         return $this->files[$name] ?? null;
     }
 
-    public function submit(string $text = "Submit"): void
-    {
-        echo '<button class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+	public function submit(string $text = "Submit"): void
+	{
+		echo '<button id="submit" class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
             ' . $text . '
         </button>';
     }

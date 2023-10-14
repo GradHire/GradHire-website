@@ -7,6 +7,7 @@
     .tablink.active {
         @apply text-zinc-900 bg-zinc-100
     }
+
     .btn-red {
         @apply focus:outline-none text-white bg-red-700 hover:bg-red-800 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700
     }
@@ -30,7 +31,7 @@ input, select {
     --tw-ring-shadow: 0 0 #000 !important;
 }
 
-input[type="range"]{
+input[type="range"] {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -43,7 +44,8 @@ input[type="range"]{
     background-color: transparent;
     pointer-events: none;
 }
-.slider-track{
+
+.slider-track {
     width: 100%;
     height: 5px;
     position: absolute;
@@ -52,19 +54,23 @@ input[type="range"]{
     bottom: 0;
     border-radius: 5px;
 }
-input[type="range"]::-webkit-slider-runnable-track{
+
+input[type="range"]::-webkit-slider-runnable-track {
     -webkit-appearance: none;
     height: 5px;
 }
-input[type="range"]::-moz-range-track{
+
+input[type="range"]::-moz-range-track {
     -moz-appearance: none;
     height: 5px;
 }
-input[type="range"]::-ms-track{
+
+input[type="range"]::-ms-track {
     appearance: none;
     height: 5px;
 }
-input[type="range"]::-webkit-slider-thumb{
+
+input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     height: 15px;
     width: 15px;
@@ -74,7 +80,8 @@ input[type="range"]::-webkit-slider-thumb{
     pointer-events: auto;
     border-radius: 50%;
 }
-input[type="range"]::-moz-range-thumb{
+
+input[type="range"]::-moz-range-thumb {
     -webkit-appearance: none;
     height: 15px;
     width: 15px;
@@ -83,7 +90,8 @@ input[type="range"]::-moz-range-thumb{
     background-color: #71717a;
     pointer-events: auto;
 }
-input[type="range"]::-ms-thumb{
+
+input[type="range"]::-ms-thumb {
     appearance: none;
     height: 15px;
     width: 15px;
@@ -92,7 +100,8 @@ input[type="range"]::-ms-thumb{
     background-color: #71717a;
     pointer-events: auto;
 }
-input[type="range"]:active::-webkit-slider-thumb{
+
+input[type="range"]:active::-webkit-slider-thumb {
     background-color: #ffffff;
     border: 3px solid #71717a;
 }
@@ -107,6 +116,7 @@ input[type="range"]:active::-webkit-slider-thumb{
     -ms-user-select: none;
     user-select: none;
 }
+
 .noSelect:focus {
     outline: none !important;
 }
@@ -126,7 +136,7 @@ input[type="range"]:active::-webkit-slider-thumb{
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
 .modal-content {
@@ -149,4 +159,30 @@ input[type="range"]:active::-webkit-slider-thumb{
     color: #000;
     text-decoration: none;
     cursor: pointer;
+}
+
+@keyframes slideIn {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOut {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.animate-slide-in {
+    animation: slideIn 0.5s forwards;
+}
+
+.animate-slide-out {
+    animation: slideOut 0.5s forwards;
 }

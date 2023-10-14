@@ -73,27 +73,19 @@ class Offre extends AbstractDataObject
     }
 
     /**
-     * @return int
-     */
-    public function getIdoffre(): ?int
-    {
-        return $this->idoffre;
-    }
-
-    /**
      * @return string
      */
-    public function getDuree(): ?string
+    public function getSujet(): string
     {
-        return $this->duree;
+        return $this->sujet;
     }
 
     /**
-     * @param string $duree
+     * @param string $sujet
      */
-    public function setDuree(string $duree): void
+    public function setSujet(string $sujet): void
     {
-        $this->duree = $duree;
+        $this->sujet = $sujet;
     }
 
     /**
@@ -115,17 +107,17 @@ class Offre extends AbstractDataObject
     /**
      * @return string
      */
-    public function getSujet(): string
+    public function getDuree(): ?string
     {
-        return $this->sujet;
+        return $this->duree;
     }
 
     /**
-     * @param string $sujet
+     * @param string $duree
      */
-    public function setSujet(string $sujet): void
+    public function setDuree(string $duree): void
     {
-        $this->sujet = $sujet;
+        $this->duree = $duree;
     }
 
     /**
@@ -288,10 +280,17 @@ class Offre extends AbstractDataObject
         return $this->idutilisateur;
     }
 
-
     public function getDescription(): string
     {
         return $this->description;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIdoffre(): ?int
+    {
+        return $this->idoffre;
     }
 
     public function getDatecreation(): string
@@ -304,12 +303,15 @@ class Offre extends AbstractDataObject
         return $this->nomutilisateur;
     }
 
-
+    public function getPicture(): string
+    {
+        if (file_exists("./pictures/" . $this->idoffre . ".jpg")) return "/pictures/" . $this->idoffre . ".jpg";
+        return "https://as2.ftcdn.net/v2/jpg/00/64/67/63/1000_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg";
+    }
 
     protected function getValueColonne(string $nomColonne): string
     {
         return $this->$nomColonne;
     }
-
 
 }
