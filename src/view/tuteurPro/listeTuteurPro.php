@@ -4,7 +4,8 @@
 use app\src\model\repository\TuteurProRepository;
 
 ?>
-<div class="overflow-x-auto w-full">Liste des Tuteurs Pro de l'entreprise
+<div class="overflow-x-auto w-full">
+    <h2 class="font-bold text-lg">Liste des Tuteurs Pro de l'entreprise</h2>
     <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
         <thead class="ltr:text-left rtl:text-right">
         <tr>

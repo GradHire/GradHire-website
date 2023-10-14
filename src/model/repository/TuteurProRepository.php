@@ -17,6 +17,16 @@ class TuteurProRepository extends UtilisateurRepository
         if ($resultat == false) return null;
         return $resultat;
     }
+    public function getAll(): ?array
+    {
+        $sql = "SELECT * FROM $this->nomtable JOIN Utilisateur u ON u.idutilisateur=$this->nomtable.idutilisateur";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute();
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetchAll();
+        if ($resultat == false) return null;
+        return $resultat;
+    }
 
     protected function getNomColonnes(): array
     {

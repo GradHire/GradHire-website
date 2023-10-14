@@ -195,8 +195,8 @@ class MainController extends Controller
 
     public function ListeTuteurPro(Request $request): string
     {
-        $id = Application::getUser()->id();
-        $tuteurs = (new TuteurProRepository())->getAllTuteursByIdEntreprise($id);
+        if(Auth::has_role(Roles::Manager))$tuteurs = (new TuteurProRepository())->getAll();
+        else if (Auth::has_role(Roles::Enterprise)) $tuteurs = (new TuteurProRepository())->getAllTuteursByIdEntreprise(Application::getUser()->id());
         return $this->render('tuteurPro/listeTuteurPro', ['tuteurs' => $tuteurs]);
     }
 
