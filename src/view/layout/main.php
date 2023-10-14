@@ -44,27 +44,29 @@ use app\src\model\Users\Roles;
 				</a>
 			</div>
 
-			<div class="hidden lg:ml-8 lg:block lg:self-stretch">
-				<div class="flex h-full space-x-8">
-					<?php if (!Application::isGuest()): ?>
-						<?php if (!Auth::has_role(Roles::Enterprise)): ?>
-							<a href="/offres"
-							   class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Offres</a>
-							<a href="/entreprises"
-							   class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Entreprises</a>
-						<?php endif; ?>
-						<?php if (Auth::has_role(Roles::Enterprise)): ?>
-							<a href="/offres/create"
-							   class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Créer une
-							                                                                                   offre</a>
-						<?php endif; ?>
-						<?php if (Auth::has_role(Roles::Manager, Roles::Staff)): ?>
-							<a href="/utilisateurs"
-							   class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Utilisateurs</a>
-							<a href="/candidatures"
-							   class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
-						<?php endif; ?>
-					<?php endif; ?>
+            <div class="hidden lg:ml-8 lg:block lg:self-stretch">
+                <div class="flex h-full space-x-8">
+                    <?php if (!Application::isGuest()): ?>
+                        <?php if (!Auth::has_role(Roles::Enterprise)): ?>
+                            <a href="/offres"
+                               class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Offres</a>
+                            <a href="/entreprises"
+                               class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Entreprises</a>
+                        <?php endif; ?>
+                        <?php if (Auth::has_role(Roles::Enterprise)): ?>
+                            <a href="/offres/create"
+                               class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Créer une
+                                offre</a>
+                            <a href="/candidatures"
+                               class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
+                        <?php endif; ?>
+                        <?php if (Auth::has_role(Roles::Manager, Roles::Staff)): ?>
+                            <a href="/utilisateurs"
+                               class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Utilisateurs</a>
+                            <a href="/candidatures"
+                               class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
+                        <?php endif; ?>
+                    <?php endif; ?>
 
 				</div>
 			</div>

@@ -12,8 +12,6 @@ use app\src\model\repository\UtilisateurRepository;
             <h3 class="text-lg font-semibold leading-7 text-zinc-900"><?= $utilisateur->getNomutilisateur() ?></h3>
         </div>
         <div class="flex flex-row gap-4">
-            <a class="inline-block rounded bg-orange-400 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700"
-               href="/edit_profile/<?= $utilisateur->getIdutilisateur() ?>">Edit</a>
             <?php
             echo "<span class=\"inline-flex cursor-pointer  -space-x-px overflow-hidden rounded-md border bg-white shadow-sm\">";
             echo("<a href=\"/edit_profile/" . $utilisateur->getIdutilisateur() . "?" . Application::getRedirect() . "\" class=\"cursor-pointer inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative\">

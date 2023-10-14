@@ -30,12 +30,10 @@ class OffreForm extends Model
             "statutTag" => $offre->getStatut(),
             "dateCreationTag" => $offre->getDateCreation(),
         );
-        try {
-            $pdoStatement->execute($values);
-            $id = Database::get_conn()->lastInsertId();
-        } catch (PDOException $e) {
-            return false;
-        }
+
+        $pdoStatement->execute($values);
+        $id = Database::get_conn()->lastInsertId();
+
         if ($distanciel != null) {
             $sql = "INSERT INTO Offrealternance VALUES (:idOffreTag, :alternanceTag)";
             $pdoStatement = Database::get_conn()->prepare($sql);

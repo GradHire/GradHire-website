@@ -6,9 +6,9 @@ class Etudiant extends Utilisateur {
     private int $idUtilisateur;
     private ?string $mailperso;
     private ?string $codesexeetudiant;
-    private ?int $numEtudiant;
+    private ?string $numEtudiant;
     private ?string $datenaissance;
-    private ?int $idgroupe;
+    private ?string $idgroupe;
     private int $annee;
     private string $prenomutilisateurldap;
     private string $loginLDAP;
