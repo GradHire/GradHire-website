@@ -53,8 +53,22 @@ $this->title = 'Profile';
 								Dashboard
 							</a>
 						</li>
-					<?php } ?>
-				<?php } else { ?>
+					<?php }
+                        if (Auth::has_role(Roles::Enterprise)){
+                    ?>
+                            <li>
+                            <a href="/entreprises/<?php echo $user->id() ?>"
+                               class="text-zinc-700 hover:text-zinc-600 hover:bg-zinc-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">
+                                <svg class="h-6 w-6 shrink-0 text-zinc-400 group-hover:text-zinc-600" fill="none"
+                                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/>
+                                </svg>
+                                Information Entreprise
+                            </a>
+                        </li>
+				<?php }
+                } else { ?>
 					<li>
 						<a href="mailto:<?= $user->attributes()["emailutilisateur"] ?>" target="_blank"
 						   class="text-zinc-700 hover:text-zinc-600 hover:bg-zinc-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">
