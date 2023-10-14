@@ -45,7 +45,10 @@ abstract class FormAttribute
 				if (!is_null($file) && (is_null($file["name"]) || $file["name"] === "")) $file = null;
 				$value = new FormInputValue($file, $fields, $body);
 			} else {
-				$value = new FormInputValue($body[$name] ?? null, $fields, $body);
+				$val = $body[$name] ?? null;
+				if (is_null($val) && $this->default != null)
+					$val = $this->default;
+				$value = new FormInputValue($val, $fields, $body);
 				foreach ($this->priority_rules as $rule)
 					$rule->process($value);
 				$this->type_rule->process($value);

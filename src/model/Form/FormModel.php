@@ -103,15 +103,19 @@ class FormModel
 		return new FormRangeSlider($name, $min, $max);
 	}
 
+	public function setAction(string $action): void
+	{
+		$this->action = $action;
+	}
+
+	public function setMethod(string $method): void
+	{
+		$this->method = $method;
+	}
+
 	public function print_all_fields(): void
 	{
 		foreach ($this->fields as $name => $field)
-			$this->field($name);
-	}
-
-	public function print_fields(array $fields): void
-	{
-		foreach ($fields as $name)
 			$this->field($name);
 	}
 
@@ -136,6 +140,12 @@ class FormModel
 			</div>
             </div>';
 		}
+	}
+
+	public function print_fields(array $fields): void
+	{
+		foreach ($fields as $name)
+			$this->field($name);
 	}
 
 	public function validate(array $body): bool
