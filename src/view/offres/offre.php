@@ -9,7 +9,7 @@ use app\src\model\Application;
 $id_offre = $offre->getIdoffre();
 
 ?>
-<div class="relative offreBox">
+<div class="relative offreBox ">
     <div class="absolute top-0 right-0 flex flex-row gap-1 mt-11 mr-4 z-10">
         <form class="formAdminSupprimer flex items-center justify-center w-7 h-7 border-[1px] border-zinc-100 duration-150 bg-zinc-50 hover:invert rounded-full"
               method="POST" action="/offres/<?= $id_offre ?>/edit">

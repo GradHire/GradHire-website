@@ -6,7 +6,7 @@ use app\src\model\Form\FormModel;
 $this->title = 'Profile';
 
 ?>
-<div class="w-full md:max-w-[75%] gap-4 flex flex-col">
+<div class="w-full pt-12 pb-24 gap-4 flex flex-col">
 
 	<h1>Modifier profile</h1>
 
@@ -19,7 +19,7 @@ $this->title = 'Profile';
 		</div>
 		<?php
 		$form->print_all_fields();
-		$form->submit("Update");
+		$form->submit("Enregistrer les modifications");
 		$form->getError();
 		?>
 	</div>

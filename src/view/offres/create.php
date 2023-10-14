@@ -2,20 +2,17 @@
 
 use app\src\model\Application;
 use app\src\model\Auth;
+use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\Users\Roles;
 
-use app\src\model\repository\EntrepriseRepository;
-
 Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
-<div class="w-full flex flex-col max-w-[75%]">
+<div class="w-full flex flex-col pt-12 pb-24">
     <?php
-    $offred= (new OffresRepository)->draftExist( Application::getUser()->id() );
-        $offrechoisi=$offred[0];
-        if(Application::getUser()->role()===Roles::Enterprise){
-
+    $offred = (new OffresRepository)->draftExist(Application::getUser()->id());
+    $offrechoisi = $offred[0];
+    if (Application::getUser()->role() === Roles::Enterprise) {
         ?>
-
         <form method="get" id="offreForm" class="w-full flex flex-col">
             <div class="w-full gap-4 flex flex-col">
                 <div class="flex mt-4">
@@ -29,7 +26,7 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
                         <?php
                         $x = 0;
                         foreach ($offred as $offre) {
-                            if($x===0) echo "<option value='" . $offre->getIdoffre() . "'>" . "Page création offre" ."</option>";
+                            if ($x === 0) echo "<option value='" . $offre->getIdoffre() . "'>" . "Page création offre" . "</option>";
                             else echo "<option value='" . $offre->getIdoffre() . "'>" . "Brouillon " . $x . " - " . $offre->getSujet() . "</option>";
                             $x++;
                         }
@@ -39,19 +36,19 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
             </div>
         </form>
         <?php
-            if(isset($_GET["entreprise"])){
-                $offrechoisi = (new OffresRepository)->getById($_GET["entreprise"]);
-                if($offrechoisi===null){
-                    $offrechoisi=$offred[0];
-                }
+        if (isset($_GET["entreprise"])) {
+            $offrechoisi = (new OffresRepository)->getById($_GET["entreprise"]);
+            if ($offrechoisi === null) {
+                $offrechoisi = $offred[0];
             }
         }
-        ?>
-                    <form action="create" method="post" class="w-full flex flex-col" id="myform">
+    }
+    ?>
+    <form action="create" method="post" class="w-full flex flex-col" id="myform">
         <div class="w-full gap-4 flex flex-col">
 
             <?php
-            if(Application::getUser()->role()===Roles::Manager){
+            if (Application::getUser()->role() === Roles::Manager) {
                 ?>
                 <div>
                     <label for="entreprise">Entreprise</label>
@@ -85,7 +82,8 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
             </div>
             <div>
                 <label for="titre">Titre du poste</label>
-                <input type="text" placeholder="Développeur web" name="titre" id="titre" required value="<?php echo $offrechoisi->getSujet(); ?>"
+                <input type="text" placeholder="Développeur web" name="titre" id="titre" required
+                       value="<?php echo $offrechoisi->getSujet(); ?>"
                        class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
             </div>
             <div>
@@ -104,12 +102,14 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
             <div class="flex flex-row gap-4">
                 <div class="w-full">
                     <label for="nbjour">Nombre jours semaine</label>
-                    <input type="number" placeholder="5" min="1" max="7" name="nbjour" id="nbjour" value="<?php echo $offrechoisi->getNbjourtravailhebdo();?>" required
+                    <input type="number" placeholder="5" min="1" max="7" name="nbjour" id="nbjour"
+                           value="<?php echo $offrechoisi->getNbjourtravailhebdo(); ?>" required
                            class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
                 </div>
                 <div class="w-full">
                     <label for="nbheure">Nombre d'heure par jour</label>
-                    <input type="number" placeholder="7" min="1" max="12" name="nbheure" id="nbheure" value="<?php echo $offrechoisi->getNbHeureTravailHebdo();?>" required
+                    <input type="number" placeholder="7" min="1" max="12" name="nbheure" id="nbheure"
+                           value="<?php echo $offrechoisi->getNbHeureTravailHebdo(); ?>" required
                            class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
                 </div>
                 <div class="w-full" id="distancielDiv" style="display: none;">
@@ -121,24 +121,28 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
 
             <div>
                 <label for="salaire">Tarif Horraire</label>
-                <input type="number" name="salaire" id="salaire" min="4.05" step="0.01" value="<?php echo $offrechoisi->getGratification();?>" required
+                <input type="number" name="salaire" id="salaire" min="4.05" step="0.01"
+                       value="<?php echo $offrechoisi->getGratification(); ?>" required
                        class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
             </div>
 
             <div>
                 <label for="avantage">Avantage</label>
-                <input type="text" placeholder="Avantage" name="avantage" id="avantage" required value="<?php echo $offrechoisi->getAvantageNature(); ?>"
+                <input type="text" placeholder="Avantage" name="avantage" id="avantage" required
+                       value="<?php echo $offrechoisi->getAvantageNature(); ?>"
                        class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
             </div>
             <div class="flex flex-row gap-4">
                 <div class="w-full">
                     <label for="dated">Date de début</label>
-                    <input type="date" placeholder="2021-01-01" name="dated" id="dated" required value="<?php echo $offrechoisi->getDateDebut(); ?>"
+                    <input type="date" placeholder="2021-01-01" name="dated" id="dated" required
+                           value="<?php echo $offrechoisi->getDateDebut(); ?>"
                            class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
                 </div>
                 <div class="w-full">
                     <label for="datef">Date de fin</label>
-                    <input type="date" placeholder="2021-01-01" name="datef" id="datef" min=required value="<?php echo $offrechoisi->getDateFin(); ?>"
+                    <input type="date" placeholder="2021-01-01" name="datef" id="datef" min=required
+                           value="<?php echo $offrechoisi->getDateFin(); ?>"
                            class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
                 </div>
                 <div class="w-full">
@@ -149,7 +153,8 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
                             class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:text-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light">
                         <option disabled value="">Selectionne une durée</option>
                         <option value="1" <?= $offrechoisi->getDuree() == 1 ? 'selected' : ''; ?>>1 an</option>
-                        <option value="1.5" <?= $offrechoisi->getDuree() == 1.5 ? 'selected' : ''; ?>>1 an et 6 mois</option>
+                        <option value="1.5" <?= $offrechoisi->getDuree() == 1.5 ? 'selected' : ''; ?>>1 an et 6 mois
+                        </option>
                         <option value="2" <?= $offrechoisi->getDuree() == 2 ? 'selected' : ''; ?>>2 ans</option>
                     </select>
                 </div>
@@ -166,17 +171,17 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
 <?= $offrechoisi->getDescription() ?>
 </textarea>
             <div class="flex flex-row gap-4 w-full">
-            <input type='hidden' name='action' value='create'>
-            <input type="submit" value="Envoyer"
-                   class="w-full text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800"/>
+                <input type='hidden' name='action' value='create'>
+                <input type="submit" value="Envoyer"
+                       class="w-full text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800"/>
 
-                <?php if(Application::getUser()->role()===Roles::Enterprise){ ?>
-            <input type='hidden' name='action' value='sauvegarder'>
-            <input onclick="saveForm()" type="submit" value="sauvegarder"
-                   class=" max-w-[150px] text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800"/>
+                <?php if (Application::getUser()->role() === Roles::Enterprise) { ?>
+                    <input type='hidden' name='action' value='sauvegarder'>
+                    <input onclick="saveForm()" type="submit" value="sauvegarder"
+                           class=" max-w-[150px] text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800"/>
                 <?php } ?>
             </div>
-            </div>
+        </div>
     </form>
 </div>
 <script>
@@ -194,7 +199,7 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
         var nbjour = document.getElementById('nbjour');
         var distanciel = document.getElementById('distanciel');
 
-        datedElem.addEventListener('change', function() {
+        datedElem.addEventListener('change', function () {
             if (datefElem.value && (this.value > datefElem.value)) {
                 datefElem.setCustomValidity("Date de début ne peut pas être postérieure à la date de fin!");
             } else {
@@ -202,7 +207,7 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
             }
         });
 
-        datefElem.addEventListener('change', function() {
+        datefElem.addEventListener('change', function () {
             if (datedElem.value && (this.value < datedElem.value)) {
                 this.setCustomValidity("Date de fin ne peut pas être antérieure à la date de début!");
             } else {
@@ -210,14 +215,14 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
             }
         });
 
-        nbjour.addEventListener('change', function() {
+        nbjour.addEventListener('change', function () {
             if (distanciel.value && (this.value < distanciel.value)) {
                 this.setCustomValidity("Nombre de jour a distanciel ne peut pas être supérieur au nombre de jour par semaine!");
             } else {
                 this.setCustomValidity("");
             }
         });
-        distanciel.addEventListener('change', function() {
+        distanciel.addEventListener('change', function () {
             if (nbjour.value && (this.value > nbjour.value)) {
                 this.setCustomValidity("Nombre de jour a distanciel ne peut pas être supérieur au nombre de jour par semaine!");
             } else {
@@ -226,12 +231,13 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
         });
 
     });
-        function saveForm() {
+
+    function saveForm() {
         var elements = document.querySelectorAll('[required]');
         for (var i = 0; i < elements.length; i++) {
-        elements[i].removeAttribute('required');
-    }
-            document.getElementById('myForm').submit();
+            elements[i].removeAttribute('required');
+        }
+        document.getElementById('myForm').submit();
     }
 
 
@@ -242,12 +248,13 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
 
         document.getElementById('offreForm').submit();
     }
-    window.onload = function() {
+
+    window.onload = function () {
         var selectElement = document.getElementById('entreprise');
 
         var storedValue = localStorage.getItem('selectedValue');
 
-        if(storedValue) {
+        if (storedValue) {
             selectElement.value = storedValue;
         }
     }

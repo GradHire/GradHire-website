@@ -98,13 +98,13 @@ use app\src\model\Users\Roles;
     </div>
 </div>
 <div id="blur-background" class="hidden w-screen h-screen fixed z-50 top-0 left-0 backdrop-blur-md"></div>
-<div class="w-full flex justify-center items-center">
+<div class="w-full flex flex-col justify-center items-center">
     <div class="max-w-7xl w-full px-4 sm:px-6 lg:px-8 flex flex-col justify-center mt-[65px] items-center">
         {{content}}
-        <footer aria-labelledby="footer-heading" class="bg-white border-t border-zinc-200 py-10">
+        <footer aria-labelledby="footer-heading" class="bg-white w-full">
             <h2 id="footer-heading" class="sr-only">Footer</h2>
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="py-20 xl:grid xl:grid-cols-3 xl:gap-8">
+            <div class="mx-auto max-w-7xl ">
+<!--                <div class="py-20 xl:grid xl:grid-cols-3 xl:gap-8">
                     <div class="grid grid-cols-2 gap-8 xl:col-span-2">
                         <div class="space-y-16 md:grid md:grid-cols-2 md:gap-8 md:space-y-0">
                             <div>
@@ -192,10 +192,11 @@ use app\src\model\Users\Roles;
                         </form>
                     </div>
                 </div>
-
+-->
                 <div class="border-t border-zinc-200 py-10">
                     <p class="text-sm text-zinc-500">Copyright &copy; 2023 -
                         <span class="text-zinc-900">GradHire</span>
+                    </p>
                 </div>
             </div>
         </footer>

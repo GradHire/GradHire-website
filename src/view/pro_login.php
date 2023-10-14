@@ -4,9 +4,7 @@
 
 ?>
 
-<div class="w-full md:max-w-[75%] gap-4 flex flex-col">
-
-	<h1>Pro Login</h1>
+<div class="w-full pt-12 pb-24 gap-4 flex flex-col">
 
 	<?php $form->start(); ?>
 	<div class="w-full gap-4 flex flex-col">

@@ -172,17 +172,17 @@ class FormModel
 
 	public function submit(string $text = "Submit"): void
 	{
-		echo '<button class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+		echo '<button id="submit" class="text-white w-full bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
             ' . $text . '
         </button>';
 	}
 
-	public function reset(string $text = "Reset"): void
-	{
-		echo '<button onclick="window.location = window.location.href" class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+    public function reset(string $text = "Reset"): void
+    {
+        echo '<button onclick="window.location = window.location.href" class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
             ' . $text . '
         </button>';
-	}
+    }
 
 	public function useFile(): void
 	{
