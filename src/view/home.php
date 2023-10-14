@@ -170,7 +170,7 @@ $this->title = 'Home';
 						                                   convient le mieux. Vous pouvez également trouver des
 						                                   candidats pour votre entreprise.</p>
 						<a href="/offres"
-						   class="mt-8 block w-full rounded-md border border-transparent bg-white px-8 py-3 text-base font-medium text-zinc-900 hover:bg-zinc-100 sm:w-auto">Voire
+						   class="mt-8 block w-full rounded-md border border-transparent bg-white px-8 py-3 text-base font-medium text-zinc-900 hover:bg-zinc-100 sm:w-auto">Voir
 						                                                                                                                                                     plus</a>
 					</div>
 				</div>
@@ -192,8 +192,7 @@ $this->title = 'Home';
 						<div class="mt-8 sm:ml-6 sm:mt-0 lg:ml-0 lg:mt-10">
 							<p class="text-lg text-gray-600">J'ai trouvé un stage en quelques jours. Je suis très
 							                                 satisfait de ce site.</p>
-							<cite class="mt-4 block font-semibold not-italic text-gray-900">Lionel Messi,
-							                                                                Barcelone</cite>
+							<cite class="mt-4 block font-semibold not-italic text-gray-900">Giovanni Gozzo</cite>
 						</div>
 					</blockquote>
 					<blockquote class="sm:flex lg:block">
@@ -206,8 +205,7 @@ $this->title = 'Home';
 							<p class="text-lg text-gray-600">Je n'ai pas eu de chance avec les autres sites, mais
 							                                 GradHire m'a aidé à trouver un stage en quelques
 							                                 semaines.</p>
-							<cite class="mt-4 block font-semibold not-italic text-gray-900">Cristiano Ronaldo,
-							                                                                Turin</cite>
+							<cite class="mt-4 block font-semibold not-italic text-gray-900">Clement Garro</cite>
 						</div>
 					</blockquote>
 					<blockquote class="sm:flex lg:block">
@@ -219,7 +217,7 @@ $this->title = 'Home';
 						<div class="mt-8 sm:ml-6 sm:mt-0 lg:ml-0 lg:mt-10">
 							<p class="text-lg text-gray-600">Ce site est incroyable. J'ai pu trouver une entreprise
 							                                 magnifique pour mon stage.</p>
-							<cite class="mt-4 block font-semibold not-italic text-gray-900">Kylian Mbappé, Paris</cite>
+							<cite class="mt-4 block font-semibold not-italic text-gray-900">Lucas Romero</cite>
 						</div>
 					</blockquote>
 				</div>
