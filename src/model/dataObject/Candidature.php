@@ -2,6 +2,8 @@
 
 namespace app\src\model\dataObject;
 
+use app\src\model\repository\CandidatureRepository;
+
 class Candidature extends AbstractDataObject
 {
 private ?int $idcandidature;
@@ -56,9 +58,10 @@ private int $idutilisateur;
         return $this->etatcandidature;
     }
 
-    public function setEtatcandidature(?string $etatcandidature): void
+    public function setEtatcandidature(string $etatcandidature): void
     {
         $this->etatcandidature = $etatcandidature;
+        (new CandidatureRepository())->setEtatCandidature($this->idcandidature,$etatcandidature);
     }
 
     public function getIdoffre(): int

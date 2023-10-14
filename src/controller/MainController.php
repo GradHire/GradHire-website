@@ -386,32 +386,38 @@ class MainController extends Controller
 
 
     public function candidatures(Request $request): string{
+        $userid=Application::getUser()->id();
 
         $id= $request->getRouteParams()['id'] ?? null;
         $candidatures = (new CandidatureRepository())->getById($id);
         if ($candidatures != null && $id != null) {
             return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
         }
-        $idEntreprise= Application::getUser()->id();
-        $candidatures = (new CandidatureRepository())->getByIdEntreprise($idEntreprise);
         if($request->getMethod()==='post'){
             $id= $request->getBody()['idcandidature'] ?? null;
+            $candidature=(new CandidatureRepository())->getById($id);
             if($request->getBody()['action']==='Accepter'){
-                $sql= "UPDATE Candidature SET etatcandidature='accepted' WHERE idcandidature=$id";
-                $requete = Database::get_conn()->prepare($sql);
-                $requete->execute();
-                $candidatures = (new CandidatureRepository())->getByIdEntreprise($idEntreprise);
-                return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+                $candidature->setEtatcandidature("accepted");
             }
             else{
-                $sql= "UPDATE Candidature SET etatcandidature='declined' WHERE idcandidature=$id";
-                $requete = Database::get_conn()->prepare($sql);
-                $requete->execute();
-                $candidatures = (new CandidatureRepository())->getByIdEntreprise($idEntreprise);
-                return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+                $candidature->setEtatcandidature("declined");
             }
         }
-        return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+        if(Auth::has_role(Roles::Enterprise)) {
+            return $this->render(
+                'candidature/listCandidatures',
+                ['candidaturesAttente' => (new CandidatureRepository())->getByIdEntreprise($userid, 'on hold'),
+                    'candidaturesAutres' => array_merge((new CandidatureRepository())->getByIdEntreprise($userid, 'accepted'), (new CandidatureRepository())->getByIdEntreprise($userid, 'declined'))
+                ]);
+        }
+        else if(Auth::has_role(Roles::Manager)){
+            return $this->render(
+                'candidature/listCandidatures',
+                ['candidaturesAttente' => (new CandidatureRepository())->getByStatement('on hold'),
+                    'candidaturesAutres' => array_merge((new CandidatureRepository())->getByStatement('accepted'), (new CandidatureRepository())->getByStatement('declined'))
+                ]);
+        }
+        return "null";
     }
 
 

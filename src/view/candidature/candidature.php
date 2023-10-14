@@ -1,12 +1,9 @@
 <?php
 /** @var $candidatures \app\src\model\dataObject\Candidature */
 /** @var $enAttente */
-echo'test';
-use app\src\model\dataObject\Entreprise;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\OffresRepository;
-use app\src\model\repository\UtilisateurRepository;
                         foreach ($candidatures as $candidature) {
                             if(($candidature->getEtatcandidature()=='on hold')==$enAttente){
 

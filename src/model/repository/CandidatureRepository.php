@@ -24,20 +24,37 @@ class CandidatureRepository extends AbstractRepository
         if ($resultat == false) return null;
         return $this->construireDepuisTableau($resultat);
     }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public function getByIdEntreprise($identreprise): ?array
+    public function getByIdEntreprise($identreprise,string $etat): ?array
     {
-        $sql = "SELECT idcandidature,datec,etatcandidature,$this->nomTable.idoffre,$this->nomTable.idutilisateur FROM $this->nomTable JOIN Offre ON Offre.idoffre=$this->nomTable.idoffre WHERE Offre.idutilisateur= :id";
+        $sql = "SELECT idcandidature,datec,etatcandidature,$this->nomTable.idoffre,$this->nomTable.idutilisateur FROM $this->nomTable JOIN Offre ON Offre.idoffre=$this->nomTable.idoffre WHERE Offre.idutilisateur= :id AND etatcandidature=:etat";
         $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['id' => $identreprise]);
+        $requete->execute(['id' => $identreprise,'etat'=>$etat]);
         $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat=[];
         foreach($requete as $item){
             $resultat[]=$this->construireDepuisTableau($item);
         }
         return $resultat;
+
+    }
+
+    public function getByStatement(string $etat)
+    {
+        $sql = "SELECT idcandidature,datec,etatcandidature,$this->nomTable.idoffre,$this->nomTable.idutilisateur FROM $this->nomTable JOIN Offre ON Offre.idoffre=$this->nomTable.idoffre WHERE etatcandidature=:etat";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['etat'=>$etat]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat=[];
+        foreach($requete as $item){
+            $resultat[]=$this->construireDepuisTableau($item);
+        }
+        return $resultat;
+    }
+    public function setEtatCandidature(int $idCandidature,string $etat){
+        $sql="UPDATE $this->nomTable SET etatcandidature=:etat WHERE idcandidature=:id;";
+        $requete= Database::get_conn()->prepare($sql);
+        $requete->execute(['id'=>$idCandidature, 'etat'=>$etat]);
+
     }
 
 
@@ -51,6 +68,9 @@ class CandidatureRepository extends AbstractRepository
             $dataObjectFormatTableau['idutilisateur']
         );
     }
+
+
+
     protected function getNomColonnes(): array
     {
         return [
