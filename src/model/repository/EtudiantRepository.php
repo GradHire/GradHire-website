@@ -12,7 +12,6 @@ class EtudiantRepository extends UtilisateurRepository{
     private static string $view = "EtudiantVue";
     protected function construireDepuisTableau(array $dataObjectFormatTableau): Etudiant
     {
-        print_r($dataObjectFormatTableau);
         return new Etudiant(
             $dataObjectFormatTableau["idutilisateur"],
             $dataObjectFormatTableau["emailutilisateur"],
