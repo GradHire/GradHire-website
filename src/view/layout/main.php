@@ -52,6 +52,11 @@ use app\src\model\Users\Roles;
                                class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Offres</a>
                             <a href="/entreprises"
                                class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Entreprises</a>
+
+                        <?php endif; ?>
+                        <?php if (Auth::has_role(Roles::Teacher)): ?>
+                            <a href="/candidatures"
+                               class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
                         <?php endif; ?>
                         <?php if (Auth::has_role(Roles::Enterprise)): ?>
                             <a href="/offres/create"
@@ -59,12 +64,16 @@ use app\src\model\Users\Roles;
                                 offre</a>
                             <a href="/candidatures"
                                class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
+                            <a href="/ListeTuteurPro"
+                               class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Tuteurs</a>
                         <?php endif; ?>
                         <?php if (Auth::has_role(Roles::Manager, Roles::Staff)): ?>
                             <a href="/utilisateurs"
                                class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Utilisateurs</a>
                             <a href="/candidatures"
                                class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
+                            <a href="/ListeTuteurPro"
+                               class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Tuteurs</a>
                         <?php endif; ?>
                     <?php endif; ?>
 

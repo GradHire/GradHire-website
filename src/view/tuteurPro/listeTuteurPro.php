@@ -4,7 +4,10 @@
 use app\src\model\repository\TuteurProRepository;
 
 ?>
-<div class="overflow-x-auto w-full">Liste des Tuteurs Pro de l'entreprise
+<div class="overflow-x-auto w-full">
+<?php
+if(empty($tuteurs)) echo'<h2> Pas de Tuteurs Pro </h2>';
+else{?> <h2 class="font-bold text-lg">Liste des Tuteurs Pro de l'entreprise</h2>
     <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
         <thead class="ltr:text-left rtl:text-right">
         <tr>
@@ -27,7 +30,10 @@ use app\src\model\repository\TuteurProRepository;
         </thead>
 
         <tbody class="divide-y divide-gray-200">
-        <?php foreach ($tuteurs as $tuteur) {
+        <?php
+
+
+        foreach ($tuteurs as $tuteur) {
             $tuteur=(new TuteurProRepository())->construireTuteurProDepuisTableau($tuteur);?>
             <tr class="odd:bg-gray-50">
                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">
@@ -59,7 +65,7 @@ use app\src\model\repository\TuteurProRepository;
                     else echo $tuteur->getFonctiontuteurp(); ?>
                 </td>
                 <td class="whitespace-nowrap px-4 py-2">
-                    <?php $tuteur->getIdutilisateur(); ?>"
+                    <?php $tuteur->getIdutilisateur(); ?>
                 </td>
             </tr>
         <?php } ?>
@@ -67,3 +73,4 @@ use app\src\model\repository\TuteurProRepository;
 
     </table>
 </div>
+<?php } ?>

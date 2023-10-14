@@ -13,9 +13,7 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
     $offred= (new OffresRepository)->draftExist( Application::getUser()->id() );
     $offrechoisi=$offred[0];
     if(Application::getUser()->role()===Roles::Enterprise){
-
         ?>
-
         <form method="get" id="offreForm" class="w-full flex flex-col">
             <div class="w-full gap-4 flex flex-col">
                 <div class="flex mt-4">
