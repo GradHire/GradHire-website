@@ -17,9 +17,8 @@ use app\src\model\Form\FormModel;
             <?php
             $form->submit("Se connecter");
             ?>
-            <button type="button" class="text-white w-full max-w-[30%] bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
-                <a href="pro_login">Connexion en tant que professionnel</a>
-            </button>
+            <a href="pro_login" class="text-white w-full max-w-[30%] bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">Connexion en tant que professionnel
+            </a>
         </div>
         <?php
         $form->getError();

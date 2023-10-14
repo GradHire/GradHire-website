@@ -8,7 +8,6 @@ use app\src\core\exception\NotFoundException;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
-use app\src\model\dataObject\Candidature;
 use app\src\model\dataObject\Offre;
 use app\src\model\Form\FormFile;
 use app\src\model\Form\FormModel;
@@ -38,6 +37,9 @@ class MainController extends Controller
         //$this->registerMiddleware(new AuthMiddleware());
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function user_test(Request $req)
     {
         if (session_status() !== PHP_SESSION_NONE)
@@ -52,6 +54,11 @@ class MainController extends Controller
         return $this->render('contact');
     }
 
+    /**
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws ServerErrorException
+     */
     public function profile(Request $req): string
     {
         $id = $req->getRouteParams()["id"] ?? null;
@@ -68,6 +75,9 @@ class MainController extends Controller
         ]);
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function archiver(Request $req): string
     {
         $user = (new UtilisateurRepository())->getUserById($req->getRouteParams()["id"]);
@@ -82,6 +92,11 @@ class MainController extends Controller
         return '';
     }
 
+    /**
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws ServerErrorException
+     */
     public function edit_profile(Request $request): string
     {
         if (Application::isGuest()) throw new ForbiddenException();
@@ -158,6 +173,9 @@ class MainController extends Controller
         return $this->render('dashboard/dashboard');
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function utilisateurs(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
@@ -179,6 +197,10 @@ class MainController extends Controller
         return $this->render('utilisateurs/utilisateurs', ['utilisateurs' => $utilisateur]);
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws ServerErrorException
+     */
     public function entreprises(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
@@ -200,6 +222,11 @@ class MainController extends Controller
         return $this->render('tuteurPro/listeTuteurPro', ['tuteurs' => $tuteurs]);
     }
 
+    /**
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws ServerErrorException
+     */
     public function postuler(Request $request): string
     {
         if (!Auth::has_role(Roles::Student)) throw new ForbiddenException();
@@ -234,9 +261,12 @@ class MainController extends Controller
     }
 
 
+    /**
+     * @throws ForbiddenException
+     */
     public function creeroffre(Request $request): string
     {
-        if(!Auth::has_role(Roles::Manager, Roles::Enterprise)) {
+        if (!Auth::has_role(Roles::Manager, Roles::Enterprise)) {
             throw new ForbiddenException();
         }
 
@@ -286,13 +316,20 @@ class MainController extends Controller
     }
 
 
+    /**
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
     public function archiveOffre(Request $request): string
     {
-        if (!Auth::has_role(Roles::Staff, Roles::Manager)) {
+        if (!Auth::has_role(Roles::Staff, Roles::Manager, Roles::Enterprise)) {
             throw new ForbiddenException();
         } else {
+            $userid = Application::getUser()->id();
             $id = $request->getRouteParams()['id'] ?? null;
             $offre = (new OffresRepository())->getById($id);
+            if ($offre->getIdutilisateur() != $userid) throw new ForbiddenException();
             if ($offre == null && $id != null) throw new NotFoundException();
 
             if ($request->getMethod() === 'post') {
@@ -311,13 +348,21 @@ class MainController extends Controller
         }
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
     public function editOffre(Request $request): string
     {
         if (!Auth::has_role(Roles::Staff, Roles::Manager)) {
             throw new ForbiddenException();
         } else {
+            $userid = Application::getUser()->id();
             $id = $request->getRouteParams()['id'] ?? null;
             $offre = (new OffresRepository())->getById($id);
+            if ($offre->getIdutilisateur() != $userid) throw new ForbiddenException();
+
             if ($offre == null && $id != null) throw new NotFoundException();
             $attr = [];
             $attr = array_merge($attr, [
@@ -352,6 +397,10 @@ class MainController extends Controller
         return $this->render('offres/detailOffre', ['offre' => $offre]);
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws ServerErrorException
+     */
     public function offres(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
@@ -384,45 +433,8 @@ class MainController extends Controller
         return $this->render('offres/listOffres', ['offres' => $offres, 'utilisateurs' => $utilisateurs, 'currentFilterURL' => $currentFilterURL]);
     }
 
-
-    public function candidatures(Request $request): string{
-        $userid=Application::getUser()->id();
-
-        $id= $request->getRouteParams()['id'] ?? null;
-        $candidatures = (new CandidatureRepository())->getById($id);
-        if ($candidatures != null && $id != null) {
-            return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
-        }
-        if($request->getMethod()==='post'){
-            $id= $request->getBody()['idcandidature'] ?? null;
-            $candidature=(new CandidatureRepository())->getById($id);
-            if($request->getBody()['action']==='Accepter'){
-                $candidature->setEtatcandidature("accepted");
-            }
-            else{
-                $candidature->setEtatcandidature("declined");
-            }
-        }
-        if(Auth::has_role(Roles::Enterprise)) {
-            return $this->render(
-                'candidature/listCandidatures',
-                ['candidaturesAttente' => (new CandidatureRepository())->getByIdEntreprise($userid, 'on hold'),
-                    'candidaturesAutres' => array_merge((new CandidatureRepository())->getByIdEntreprise($userid, 'accepted'), (new CandidatureRepository())->getByIdEntreprise($userid, 'declined'))
-                ]);
-        }
-        else if(Auth::has_role(Roles::Manager)){
-            return $this->render(
-                'candidature/listCandidatures',
-                ['candidaturesAttente' => (new CandidatureRepository())->getByStatement('on hold'),
-                    'candidaturesAutres' => array_merge((new CandidatureRepository())->getByStatement('accepted'), (new CandidatureRepository())->getByStatement('declined'))
-                ]);
-        }
-        return "null";
-    }
-
-
-
-    private static function constructFilter(): array
+    private
+    static function constructFilter(): array
     {
         return array(
             'sujet' => $_GET['sujet'] ?? "",
@@ -436,11 +448,45 @@ class MainController extends Controller
         );
     }
 
-    private static function filterGratification($value)
+    private
+    static function filterGratification($value)
     {
         if ($value === "") return null;
         return min(max((float)$value, 4.05), 15);
     }
 
+    public
+    function candidatures(Request $request): string
+    {
+        $userid = Application::getUser()->id();
+        $id = $request->getRouteParams()['id'] ?? null;
+        $candidatures = (new CandidatureRepository())->getById($id);
+        if ($candidatures != null && $id != null) {
+            return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
+        }
+        if ($request->getMethod() === 'post') {
+            $id = $request->getBody()['idcandidature'] ?? null;
+            $candidature = (new CandidatureRepository())->getById($id);
+            if ($request->getBody()['action'] === 'Accepter') {
+                $candidature->setEtatcandidature("accepted");
+            } else {
+                $candidature->setEtatcandidature("declined");
+            }
+        }
+        if (Auth::has_role(Roles::Enterprise)) {
+            return $this->render(
+                'candidature/listCandidatures',
+                ['candidaturesAttente' => (new CandidatureRepository())->getByIdEntreprise($userid, 'on hold'),
+                    'candidaturesAutres' => array_merge((new CandidatureRepository())->getByIdEntreprise($userid, 'accepted'), (new CandidatureRepository())->getByIdEntreprise($userid, 'declined'))
+                ]);
+        } else if (Auth::has_role(Roles::Manager)) {
+            return $this->render(
+                'candidature/listCandidatures',
+                ['candidaturesAttente' => (new CandidatureRepository())->getByStatement('on hold'),
+                    'candidaturesAutres' => array_merge((new CandidatureRepository())->getByStatement('accepted'), (new CandidatureRepository())->getByStatement('declined'))
+                ]);
+        }
+        return "null";
+    }
 
 }
