@@ -24,7 +24,7 @@ class FormRadio extends AnyAttribute
 		foreach ($this->options as $fValue => $label) {
 			$id = $fValue . '-' . $name;
 			$select .= '<div>
-		    <input type="radio" id="' . $id . '" name="' . $name . '" value="' . $fValue . '" ' . ($value === $fValue ? 'checked' : '') . ' ' . (in_array("required", $this->params) ? 'required' : '') . '/>
+		    <input type="radio" id="' . $id . '" name="' . $name . '" value="' . $fValue . '" ' . ($value === $fValue ? 'checked' : '') . ' ' . (in_array("required", $this->params) ? 'required' : '') . $this->getParams() . '/>
 		    <label for="' . $id . '">' . $label . '</label>
 		  </div>';
 		}

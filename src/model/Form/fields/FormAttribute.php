@@ -26,7 +26,7 @@ abstract class FormAttribute
 	 */
 	private array $modifiers = [];
 
-	public function __construct(string $name)
+	public function __construct(string $name = "")
 	{
 		$this->name = $name;
 	}
@@ -101,6 +101,16 @@ abstract class FormAttribute
 	public function getJS(): string
 	{
 		return '';
+	}
+
+	public function checkValue($value): bool
+	{
+		try {
+			$this->type_rule->process(new FormInputValue($value, [], []));
+			return true;
+		} catch (FormValidationException $e) {
+			return false;
+		}
 	}
 
 	protected function getValue(mixed $value): mixed
