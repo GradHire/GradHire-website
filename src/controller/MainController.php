@@ -263,70 +263,57 @@ class MainController extends Controller
         }
         return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
     }
+    public function creeroffre(Request $request): string
+    {
+        if(!Auth::has_role(Roles::Manager, Roles::Enterprise)) {
+            throw new ForbiddenException();
+        }
 
-	public function creeroffre(Request $request): string
-	{
-		if ($request->getMethod() === 'get') {
-			return $this->render('/offres/create');
-		} else {
-            $action=$_POST['action'];
+        if ($request->getMethod() === 'get') {
+            return $this->render('/offres/create');
+        }
 
-            if($action == 'Supprimer Brouillon'){
-                $idOffre = $_POST['id_offre'];
-                OffreForm::deleteOffre($idOffre);
-                return $this->render('/offres/create');
-            }
+        $action = $_POST['action'];
+        $type = $_POST['radios'];
+        $theme = $_POST['theme'] ?? null;
+        $nbjour = $_POST['nbjour'] ?? null;
+        $nbheure = $_POST['nbheure'];
+        $distanciel = $type == "alternance" ? $_POST['distanciel'] : null;
+        $salaire = $_POST['salaire'];
+        $unitesalaire = "heures";
+        $avantage = $_POST['avantage'];
+        $description = $_POST['description'];
+        $dated = $_POST['dated'] ?? date("Y-m-d H:i:s");
+        $datef = $_POST['datef'] ?? date("Y-m-d H:i:s");
+        $duree = $_POST['duree'] ?? null;
+        $idUtilisateur = Application::getUser()->role() === Roles::Enterprise ? Application::getUser()->id() : $_POST['entreprise'];
+        $idOffre = $_POST['id_offre'];
+        $idAnnee = date("Y");
+        $datecreation = date("Y-m-d H:i:s");
 
-            $type = $_POST['radios'];
-            $titre = $_POST['titre'];
-            $theme = $_POST['theme'] ?? null;
-            $nbjour = $_POST['nbjour'] ?? null;
-            $nbheure = $_POST['nbheure'];
-			if ($type == "alternance") $distanciel = $_POST['distanciel'];
-			else $distanciel = null;
-			$salaire = $_POST['salaire'];
-			$unitesalaire = "heures";
-            if (isset($action)) {
-                if ($action == 'Envoyer') {
-                    $statut= "pending";
-                } else if ($action == 'sauvegarder') {
-                    $statut= "draft";
-                }
-            }
-			$avantage = $_POST['avantage'];
-			$dated = $_POST['dated'] ?? null;
-            if($dated == null)
-                $dated = date("Y-m-d H:i:s");
-            $datef = $_POST['datef'] ?? null;
-            if ($datef == null)
-                $datef = date("Y-m-d H:i:s");
-            $duree = $_POST['duree'] ?? null;
-            $description = $_POST['description'];
-            if (Application::getUser()->role() === Roles::Enterprise)
-                $idUtilisateur = Application::getUser()->id();
-            else
-                $idUtilisateur = $_POST['entreprise'];
-			$idOffre = $_POST['id_offre'];
-            echo $idOffre;
-			if ($duree == 1) {
-				$anneeVisee = "2";
-			} else {
-				$anneeVisee = "3";
-			}
-			$idAnnee = date("Y");
+        if($action == 'Supprimer Brouillon'){
+            OffreForm::deleteOffre($idOffre);
+            return $this->render('/offres/create');
+        }
 
-			$datecreation = date("Y-m-d H:i:s");
-            if($idOffre===""){
-                $offre = new Offre(null, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef,$statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation,null);
-                OffreForm::creerOffre($offre, $distanciel);
-            }
-            else{
-                $offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage, $dated, $datef,$statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation,null);
-                OffreForm::updateOffre($offre, $distanciel);
-            }
-			return $this->render('/offres/create');
-		}
-	}
+        $titre = $_POST['titre'];
+        $statut = $action == 'Envoyer' ? "pending" : "draft";
+
+        $anneeVisee = $duree == 1 ? "2" : "3";
+
+        $offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage,
+            $dated, $datef,$statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation,null);
+
+        if($idOffre === ""){
+            OffreForm::creerOffre($offre, $distanciel);
+        }
+        else{
+            OffreForm::updateOffre($offre, $distanciel);
+        }
+
+        return $this->render('/offres/create');
+    }
+
 
     public function archiveOffre(Request $request): string
     {
