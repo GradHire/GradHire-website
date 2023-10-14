@@ -6,7 +6,6 @@ use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\AbstractDataObject;
 use app\src\model\dataObject\Candidature;
-use PDOException;
 
 class CandidatureRepository extends AbstractRepository
 {
@@ -14,20 +13,30 @@ class CandidatureRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
+    private string $nomTable = "Candidature";
     public function getById($id): ?Candidature
     {
-        try {
-        $sql = "SELECT * FROM Candidature WHERE idcandidature = :id";
+        $sql = "SELECT * FROM $this->nomTable WHERE idcandidature = :id;";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['id' => $id]);
         $requete->setFetchMode(\PDO::FETCH_ASSOC);
         $resultat = $requete->fetch();
         if ($resultat == false) return null;
         return $this->construireDepuisTableau($resultat);
-        } catch (PDOException) {
-            throw new ServerErrorException();
-        }
     }
+    public function getByIdEntreprise($identreprise): array
+    {
+        $sql = "SELECT idcandidature,datec,etatcandidature,$this->nomTable.idoffre,$this->nomTable.idutilisateur FROM $this->nomTable JOIN Offre ON Offre.idoffre=$this->nomTable.idoffre WHERE Offre.idutilisateur= :id";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['id' => $identreprise]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        foreach($requete as $item){
+            $resultat[]=$this->construireDepuisTableau($item);
+        }
+        return $resultat;
+
+    }
+
 
     protected function construireDepuisTableau(array $dataObjectFormatTableau): Candidature
     {

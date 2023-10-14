@@ -5,19 +5,19 @@ namespace app\src\model\dataObject;
 class Candidature extends AbstractDataObject
 {
 private ?int $idcandidature;
-private string $datecandidature;
-private string $etatcandidature;
-private string $idoffre;
-private string $idutilisateur;
+private ?string $datecandidature;
+private ?string $etatcandidature;
+private int $idoffre;
+private int $idutilisateur;
 
     /**
      * @param int|null $idcandidature
      * @param string $datecandidature
      * @param string $etatcandidature
      * @param string $idoffre
-     * @param string $idutilisateur
+     * @param int $idutilisateur
      */
-    public function __construct(?int $idcandidature, string $datecandidature, string $etatcandidature, string $idoffre, string $idutilisateur)
+    public function __construct(?int $idcandidature, ?string $datecandidature, ?string $etatcandidature, int $idoffre, int $idutilisateur)
     {
         $this->idcandidature = $idcandidature;
         $this->datecandidature = $datecandidature;
@@ -36,24 +36,51 @@ private string $idutilisateur;
         return $this->idcandidature;
     }
 
-    public function getDatecandidature(): string
+    public function setIdcandidature(?int $idcandidature): void
+    {
+        $this->idcandidature = $idcandidature;
+    }
+
+    public function getDatecandidature(): ?string
     {
         return $this->datecandidature;
     }
 
-    public function getEtatcandidature(): string
+    public function setDatecandidature(?string $datecandidature): void
+    {
+        $this->datecandidature = $datecandidature;
+    }
+
+    public function getEtatcandidature(): ?string
     {
         return $this->etatcandidature;
     }
 
-    public function getIdoffre(): string
+    public function setEtatcandidature(?string $etatcandidature): void
+    {
+        $this->etatcandidature = $etatcandidature;
+    }
+
+    public function getIdoffre(): int
     {
         return $this->idoffre;
     }
 
-    public function getIdutilisateur(): string
+    public function setIdoffre(int $idoffre): void
+    {
+        $this->idoffre = $idoffre;
+    }
+
+    public function getIdutilisateur(): int
     {
         return $this->idutilisateur;
     }
+
+    public function setIdutilisateur(int $idutilisateur): void
+    {
+        $this->idutilisateur = $idutilisateur;
+    }
+
+
 
 }

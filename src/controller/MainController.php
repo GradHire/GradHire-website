@@ -8,8 +8,11 @@ use app\src\core\exception\NotFoundException;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
+use app\src\model\dataObject\Candidature;
 use app\src\model\dataObject\Offre;
+use app\src\model\Form\FormFile;
 use app\src\model\Form\FormModel;
+use app\src\model\Form\FormString;
 use app\src\model\OffreForm;
 use app\src\model\repository\CandidatureRepository;
 use app\src\model\repository\EntrepriseRepository;
@@ -230,39 +233,7 @@ class MainController extends Controller
         ]);
     }
 
-    public function candidatures(Request $request): string
-    {
 
-
-        $id = $request->getRouteParams()['id'] ?? null;
-        $candidatures = (new CandidatureRepository())->getById($id);
-        if ($candidatures != null && $id != null) {
-            return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
-        }
-
-        $candidaturesrepose = new CandidatureRepository();
-        $candidatures = ($candidaturesrepose->getAll());
-
-        if ($request->getMethod() === 'post') {
-            $id = $request->getBody()['idcandidature'] ?? null;
-            if ($request->getBody()['action'] === 'Accepter') {
-                $sql = "UPDATE Candidature SET etatcandidature='Validé par secrétariat' WHERE idcandidature=$id";
-                $requete = Database::get_conn()->prepare($sql);
-                $requete->execute();
-                $candidaturesrepose = new CandidatureRepository();
-                $candidatures = ($candidaturesrepose->getAll());
-                return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
-            } else {
-                $sql = "UPDATE Candidature SET etatcandidature='Refusé' WHERE idcandidature=$id";
-                $requete = Database::get_conn()->prepare($sql);
-                $requete->execute();
-                $candidaturesrepose = new CandidatureRepository();
-                $candidatures = ($candidaturesrepose->getAll());
-                return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
-            }
-        }
-        return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
-    }
     public function creeroffre(Request $request): string
     {
         if(!Auth::has_role(Roles::Manager, Roles::Enterprise)) {
@@ -413,6 +384,38 @@ class MainController extends Controller
         return $this->render('offres/listOffres', ['offres' => $offres, 'utilisateurs' => $utilisateurs, 'currentFilterURL' => $currentFilterURL]);
     }
 
+
+    public function candidatures(Request $request): string{
+
+        $id= $request->getRouteParams()['id'] ?? null;
+        $candidatures = (new CandidatureRepository())->getById($id);
+        if ($candidatures != null && $id != null) {
+            return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
+        }
+        $idEntreprise= Application::getUser()->id();
+        $candidatures = (new CandidatureRepository())->getByIdEntreprise($idEntreprise);
+        if($request->getMethod()==='post'){
+            $id= $request->getBody()['idcandidature'] ?? null;
+            if($request->getBody()['action']==='Accepter'){
+                $sql= "UPDATE Candidature SET etatcandidature='accepted' WHERE idcandidature=$id";
+                $requete = Database::get_conn()->prepare($sql);
+                $requete->execute();
+                $candidatures = (new CandidatureRepository())->getByIdEntreprise($idEntreprise);
+                return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+            }
+            else{
+                $sql= "UPDATE Candidature SET etatcandidature='declined' WHERE idcandidature=$id";
+                $requete = Database::get_conn()->prepare($sql);
+                $requete->execute();
+                $candidatures = (new CandidatureRepository())->getByIdEntreprise($idEntreprise);
+                return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+            }
+        }
+        return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+    }
+
+
+
     private static function constructFilter(): array
     {
         return array(
@@ -432,5 +435,6 @@ class MainController extends Controller
         if ($value === "") return null;
         return min(max((float)$value, 4.05), 15);
     }
+
 
 }
