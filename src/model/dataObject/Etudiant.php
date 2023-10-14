@@ -6,7 +6,7 @@ class Etudiant extends Utilisateur {
     private int $idUtilisateur;
     private ?string $mailperso;
     private ?string $codesexeetudiant;
-    private ?int $numEtudiant;
+    private ?string $numEtudiant;
     private ?string $datenaissance;
     private ?string $idgroupe;
     private int $annee;
