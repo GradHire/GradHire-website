@@ -105,8 +105,10 @@ use app\src\model\Auth;
                 <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?php
                     try {
                         $dateDebut = new DateTime($offre->getDatedebut());
-                        $dateFin = new DateTime($offre->getDatefin());
-                        if ($dateFin < new DateTime()) echo "Terminée";
+                        if ($offre->getDatefin() != null) $dateFin = new DateTime($offre->getDatefin());
+                        else $dateFin = null;
+                        if ($dateFin == null) echo 'Date non renseignée';
+                        else if ($dateFin < new DateTime()) echo "Terminée";
                         else if (is_null($offre->getDatefin())) echo "Indéterminée";
                         else echo "Du " . $dateDebut->format('d/m/Y') . " au " . $dateFin->format('d/m/Y');
                     } catch (Exception $e) {
