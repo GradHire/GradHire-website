@@ -6,17 +6,24 @@ use app\src\model\Form\FormModel;
 
 ?>
 
-<div class="w-full md:max-w-[75%] gap-4 flex flex-col">
+<div class="w-full pt-12 pb-24 gap-2 flex flex-col">
 
-	<h1>Login</h1>
-
-	<?php $form->start(); ?>
-	<div class="w-full gap-4 flex flex-col">
-		<?php
-		$form->print_all_fields();
-		$form->submit("Se connecter");
-		$form->getError();
-		?>
-	</div>
-	<?php $form->end(); ?>
+    <?php $form->start(); ?>
+    <div class="w-full gap-4 flex flex-col">
+        <?php
+        $form->print_all_fields();
+        ?>
+        <div class="w-full flex lg:flex-row flex-col gap-2">
+            <?php
+            $form->submit("Se connecter");
+            ?>
+            <button type="button" class="text-white w-full max-w-[30%] bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                <a href="pro_login">Connexion en tant que professionnel</a>
+            </button>
+        </div>
+        <?php
+        $form->getError();
+        ?>
+    </div>
+    <?php $form->end(); ?>
 </div>

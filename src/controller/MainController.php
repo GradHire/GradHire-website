@@ -8,21 +8,18 @@ use app\src\core\exception\NotFoundException;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
-use app\src\model\dataObject\Candidature;
 use app\src\model\dataObject\Offre;
-use app\src\model\Form\FormFile;
 use app\src\model\Form\FormModel;
-use app\src\model\Form\FormString;
 use app\src\model\OffreForm;
 use app\src\model\repository\CandidatureRepository;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
+use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurRepository;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\Request;
-use app\src\model\Users\Profile\EnterpriseProfile;
 use app\src\model\Users\Roles;
 
 class MainController extends Controller
@@ -67,7 +64,11 @@ class MainController extends Controller
         $user = (new UtilisateurRepository())->getUserById($req->getRouteParams()["id"]);
         if ((new UtilisateurRepository())->isArchived($user)) {
             (new UtilisateurRepository())->setUserToArchived($user, false);
-        } else (new UtilisateurRepository())->setUserToArchived($user, true);
+            (new MailRepository())->send_mail([$user->getEmailutilisateur()], "Désarchivage de votre compte", "Votre compte a été désarchivé");
+        } else {
+            (new UtilisateurRepository())->setUserToArchived($user, true);
+            (new MailRepository())->send_mail([$user->getEmailutilisateur()], "Archivage de votre compte", "Votre compte a été archivé");
+        }
         Application::$app->response->redirect('/utilisateurs/' . $req->getRouteParams()["id"]);
         return '';
     }
@@ -138,7 +139,7 @@ class MainController extends Controller
                 $picture = $form->getFile("picture");
                 if (!is_null($picture)) $picture->save("pictures", $user->id());
                 $user->update($form->getParsedBody());
-                Application::$app->response->redirect('/profile');
+                Application::redirectFromParam('/profile');
                 return '';
             }
 
@@ -187,9 +188,11 @@ class MainController extends Controller
         $entreprises = (new EntrepriseRepository())->getAll();
         return $this->render('entreprise/entreprise', ['entreprises' => $entreprises]);
     }
-    public function ListeTuteurPro(Request $request):string{
-        $id= Application::getUser()->id();
-        $tuteurs= (new TuteurProRepository())->getAllTuteursByIdEntreprise($id);
+
+    public function ListeTuteurPro(Request $request): string
+    {
+        $id = Application::getUser()->id();
+        $tuteurs = (new TuteurProRepository())->getAllTuteursByIdEntreprise($id);
         return $this->render('tuteurPro/listeTuteurPro', ['tuteurs' => $tuteurs]);
     }
 
@@ -206,8 +209,8 @@ class MainController extends Controller
                 return $this->render('/offres/create');
             }
 
-			$type = $_POST['radios'];
-			$titre = $_POST['titre'];
+            $type = $_POST['radios'];
+            $titre = $_POST['titre'];
             $theme = $_POST['theme'] ?? null;
             $nbjour = $_POST['nbjour'] ?? null;
             $nbheure = $_POST['nbheure'];
@@ -226,12 +229,12 @@ class MainController extends Controller
 			$dated = $_POST['dated'] ?? null;
             if($dated == null)
                 $dated = date("Y-m-d H:i:s");
-			$datef = $_POST['datef'] ?? null;
-            if($datef == null)
+            $datef = $_POST['datef'] ?? null;
+            if ($datef == null)
                 $datef = date("Y-m-d H:i:s");
-			$duree = $_POST['duree'] ?? null;
-			$description = $_POST['description'];
-			if(Application::getUser()->role() === Roles::Enterprise)
+            $duree = $_POST['duree'] ?? null;
+            $description = $_POST['description'];
+            if (Application::getUser()->role() === Roles::Enterprise)
                 $idUtilisateur = Application::getUser()->id();
             else
                 $idUtilisateur = $_POST['entreprise'];
@@ -280,15 +283,25 @@ class MainController extends Controller
 
     public function editOffre(Request $request): string
     {
-        if ($request->getMethod() === 'post') {
-            $id = $request->getRouteParams()['id'] ?? null;
-            $offre = (new OffresRepository())->getById($id);
-            if ($offre == null && $id != null) throw new NotFoundException();
-            else if ($offre != null && $id != null) {
-                return $this->render('/offres/edit', ['offre' => $offre]);
-            }
-        }
-        return $this->render('/offres/edit');
+        $id = $request->getRouteParams()['id'] ?? null;
+        $offre = (new OffresRepository())->getById($id);
+        if ($offre == null && $id != null) throw new NotFoundException();
+        $attr = [];
+        $attr = array_merge($attr, [
+            "sujet" => FormModel::string("Sujet")->default($offre->getSujet()),
+            "thematique" => FormModel::string("Thématique")->default($offre->getThematique()),
+            "nbjourtravailhebdo" => FormModel::int("Nombre de jours de travail hebdomadaire")->default($offre->getNbjourtravailhebdo()),
+            "nbHeureTravailHebdo" => FormModel::double("Nombre d'heures de travail hebdomadaire")->default($offre->getNbHeureTravailHebdo()),
+            "gratification" => FormModel::double("Gratification")->default($offre->getGratification()),
+            "unitegratification" => FormModel::string("Unité de la gratification")->default($offre->getUnitegratification()),
+            "avantageNature" => FormModel::string("Avantage en nature")->default($offre->getAvantageNature()),
+            "anneeVisee" => FormModel::string("Année visée")->default($offre->getAnneeVisee()),
+            "description" => FormModel::string("Description")->default($offre->getDescription()),
+            "dateDebut" => FormModel::date("Date de début")->default($offre->getDateDebut())->id("dateDebut"),
+            "dateFin" => FormModel::date("Date de fin")->default($offre->getDateFin())->id("dateFin"),
+        ]);
+        $form = new FormModel($attr);
+        return $this->render('/offres/edit', ['offre' => $offre, 'form' => $form]);
     }
 
     public function validateOffre(Request $request): string
@@ -303,20 +316,6 @@ class MainController extends Controller
             return $this->render('offres/detailOffre', ['offre' => $offre]);
         }
         return $this->render('offres/detailOffre', ['offre' => $offre]);
-    }
-
-    public function deleteOffre(Request $request): void
-    {
-        if ($request->getMethod() === 'post') {
-            $id = $request->getRouteParams()['id'] ?? null;
-            $offre = (new OffresRepository())->getById($id);
-            $url = $_POST['link'];
-            if ($offre == null && $id != null) throw new NotFoundException();
-            else if ($offre != null && $id != null) {
-                (new OffresRepository())->updateToDraft($id);
-                Application::$app->response->redirect($url);
-            }
-        }
     }
 
     public function offres(Request $request): string
@@ -349,41 +348,6 @@ class MainController extends Controller
 
         $currentFilterURL = "/offres?" . http_build_query($filter);
         return $this->render('offres/listOffres', ['offres' => $offres, 'utilisateurs' => $utilisateurs, 'currentFilterURL' => $currentFilterURL]);
-    }
-
-
-    public function candidatures(Request $request): string{
-
-
-        $id= $request->getRouteParams()['id'] ?? null;
-        $candidatures = (new CandidatureRepository())->getById($id);
-        if ($candidatures != null && $id != null) {
-            return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
-        }
-
-        $candidaturesrepose= new CandidatureRepository();
-        $candidatures = ($candidaturesrepose->getAll());
-
-        if($request->getMethod()==='post'){
-            $id= $request->getBody()['idcandidature'] ?? null;
-            if($request->getBody()['action']==='Accepter'){
-                $sql= "UPDATE Candidature SET etatcandidature='Validé par secrétariat' WHERE idcandidature=$id";
-                $requete = Database::get_conn()->prepare($sql);
-                $requete->execute();
-                $candidaturesrepose= new CandidatureRepository();
-                $candidatures = ($candidaturesrepose->getAll());
-                return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
-            }
-            else{
-                $sql= "UPDATE Candidature SET etatcandidature='Refusé' WHERE idcandidature=$id";
-                $requete = Database::get_conn()->prepare($sql);
-                $requete->execute();
-                $candidaturesrepose= new CandidatureRepository();
-                $candidatures = ($candidaturesrepose->getAll());
-                return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
-            }
-        }
-        return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
     }
 
     private static function constructFilter(): array
@@ -422,6 +386,39 @@ class MainController extends Controller
         return $filter;
     }
 
+    public function candidatures(Request $request): string
+    {
+
+
+        $id = $request->getRouteParams()['id'] ?? null;
+        $candidatures = (new CandidatureRepository())->getById($id);
+        if ($candidatures != null && $id != null) {
+            return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
+        }
+
+        $candidaturesrepose = new CandidatureRepository();
+        $candidatures = ($candidaturesrepose->getAll());
+
+        if ($request->getMethod() === 'post') {
+            $id = $request->getBody()['idcandidature'] ?? null;
+            if ($request->getBody()['action'] === 'Accepter') {
+                $sql = "UPDATE Candidature SET etatcandidature='Validé par secrétariat' WHERE idcandidature=$id";
+                $requete = Database::get_conn()->prepare($sql);
+                $requete->execute();
+                $candidaturesrepose = new CandidatureRepository();
+                $candidatures = ($candidaturesrepose->getAll());
+                return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+            } else {
+                $sql = "UPDATE Candidature SET etatcandidature='Refusé' WHERE idcandidature=$id";
+                $requete = Database::get_conn()->prepare($sql);
+                $requete->execute();
+                $candidaturesrepose = new CandidatureRepository();
+                $candidatures = ($candidaturesrepose->getAll());
+                return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+            }
+        }
+        return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
+    }
 
     /**
      * @throws NotFoundException

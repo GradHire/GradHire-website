@@ -9,7 +9,7 @@ $this->title = 'Utilisateurs';
 <?php
 if (Auth::has_role(Roles::Staff, Roles::Manager)){
 ?>
-<div class="overflow-x-auto w-full">
+<div class="overflow-x-auto w-full pt-12 pb-24">
     <table class="min-w-full divide-y-2 divide-zinc-200 bg-white text-sm">
         <thead class="ltr:text-left rtl:text-right">
         <tr>

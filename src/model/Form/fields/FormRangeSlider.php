@@ -13,6 +13,7 @@ class FormRangeSlider extends AnyAttribute
 	{
 		parent::__construct($name);
 
+		$this->default = [$min, $max];
 		$this->setType(new RuleIsRange(["useInt" => $this->step === "1"]));
 		$this->min = $min;
 		$this->max = $max;
@@ -36,21 +37,9 @@ class FormRangeSlider extends AnyAttribute
 	}
 
 
-	function field(string $name, string $value): string
+	function field(string $name, $value): string
 	{
-		$prev = null;
-		if ($value != "" && !$this->forget && $this->parseRange($value, $prev)) {
-			$min = $prev[0];
-			$max = $prev[1];
-		} else {
-			if ($this->default) {
-				$min = $this->default[0];
-				$max = $this->default[1];
-			} else {
-				$min = $this->min;
-				$max = $this->max;
-			}
-		}
+		$value = $this->getValue($value);
 		$required = in_array("required", $this->params) ? 'required' : '';
 		return <<<HTML
 	<div class="range-slider">
@@ -60,12 +49,22 @@ class FormRangeSlider extends AnyAttribute
 		</div>
 		<div class="range-sliders relative w-full h-[25px]">
 		    <div class="slider-track"></div>
-		    <input type="text" hidden name="{$name}" {$required}>
-		    <input type="range" min="{$this->min}" max="{$this->max}" value="{$min}" step="{$this->step}">
-		    <input type="range" min="{$this->min}" max="{$this->max}" value="{$max}" step="{$this->step}">
+		    <input type="range" min="{$this->min}" max="{$this->max}" value="{$value[0]}" step="{$this->step}" name="{$name}[]" $required>
+		    <input type="range" min="{$this->min}" max="{$this->max}" value="{$value[1]}" step="{$this->step}" name="{$name}[]" $required>
 		</div>
 	</div>
 HTML;
+	}
+
+	public function int(): static
+	{
+		$this->step = "1";
+		return $this;
+	}
+
+	public function getJS(): string
+	{
+		return 'rangeSlider.js';
 	}
 
 	private function parseRange(string $value, &$prev): bool
@@ -79,16 +78,5 @@ HTML;
 		if ($value1 === false || $value2 === false || $value2 < $value1) return false;
 		$prev = [$value1, $value2];
 		return true;
-	}
-
-	public function int(): static
-	{
-		$this->step = "1";
-		return $this;
-	}
-
-	public function getJS(): string
-	{
-		return 'rangeSlider.js';
 	}
 }

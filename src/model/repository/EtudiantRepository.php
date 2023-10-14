@@ -1,9 +1,12 @@
 <?php
 namespace app\src\model\repository;
 use app\src\core\db\Database;
+use app\src\core\exception\ServerErrorException;
 use app\src\model\repository\AbstractRepository;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\dataObject\Etudiant;
+use PDOException;
+
 class EtudiantRepository extends UtilisateurRepository{
 
     private static string $view = "EtudiantVue";
@@ -26,17 +29,24 @@ class EtudiantRepository extends UtilisateurRepository{
         );
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getByIdFull($idutilisateur): ?Etudiant
     {
-        $sql = "SELECT * FROM ".self::$view." WHERE idutilisateur = :idutilisateur";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idutilisateur' => $idutilisateur]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetch();
-        if ($resultat == false) {
-            return null;
+        try {
+            $sql = "SELECT * FROM " . self::$view . " WHERE idutilisateur = :idutilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idutilisateur' => $idutilisateur]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetch();
+            if ($resultat == false) {
+                return null;
+            }
+            return $this->construireDepuisTableau($resultat);
+        } catch (PDOException) {
+            throw new ServerErrorException();
         }
-        return $this->construireDepuisTableau($resultat);
     }
 
     protected function getNomColonnes(): array

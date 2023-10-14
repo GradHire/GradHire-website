@@ -13,14 +13,13 @@ class RuleIsRange extends FormAttributeRule
 	 */
 	public function process(FormInputValue $value): void
 	{
-		if (gettype($value->getValue()) !== "string")
-			throw new FormValidationException("Veuillez saisir une string");
-		$values = explode(',', $value->getValue());
-		$useInt = $this->getOption("useInt");
-
+		$values = $value->getValue();
+		if (!is_array($values))
+			throw new FormValidationException("Ce champs doit être sous la forme d'une array");
 		if (count($values) !== 2)
-			throw new FormValidationException("Format invalid");
+			throw new FormValidationException("Taille invalide");
 
+		$useInt = $this->getOption("useInt");
 		$value1 = $useInt ? filter_var($values[0], FILTER_VALIDATE_INT) : filter_var($values[0], FILTER_VALIDATE_FLOAT);
 		$value2 = $useInt ? filter_var($values[1], FILTER_VALIDATE_INT) : filter_var($values[1], FILTER_VALIDATE_FLOAT);
 

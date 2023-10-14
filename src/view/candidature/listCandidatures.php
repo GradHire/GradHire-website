@@ -2,15 +2,13 @@
 /** @var $candidatures \app\src\model\dataObject\Candidature */
 
 use app\src\model\Auth\Auth;
-use app\src\model\Users\Roles;
 
 $this->title = 'Candidates';
 
 
 global $etatCandidature;
 ?>
-
-<form method="GET" action="offres" class="w-full gap-4 flex flex-col">
+<form method="GET" action="offres" class="w-full gap-4 flex flex-col pt-12 pb-24 ">
     <div class="w-full grid-cols-1 gap-4 lg:grid-cols-4 ">
         <div class="w-full lg:col-span-3 rounded-lg flex flex-col gap-4">
             <div class="flex flex-col gap-1 w-full">
@@ -25,9 +23,9 @@ global $etatCandidature;
                 </div>
             </div>
             <?php
-                echo '<div class="w-full bg-zinc-200 h-[1px] rounded-full"></div>';
-                echo '<div class="flex flex-col gap-1 w-full">';
-                echo '<h2 class="font-bold text-lg">Candidatures déja Vue</h2>';
+            echo '<div class="w-full bg-zinc-200 h-[1px] rounded-full"></div>';
+            echo '<div class="flex flex-col gap-1 w-full">';
+            echo '<h2 class="font-bold text-lg">Candidatures déja Vue</h2>';
             ?>
             <div class="w-full">
                 <?php
@@ -38,6 +36,5 @@ global $etatCandidature;
                 echo "</div>"; ?>
             </div>
         </div>
-    </div>
     </div>
 </form>

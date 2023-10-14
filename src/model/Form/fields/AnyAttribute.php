@@ -27,4 +27,10 @@ abstract class AnyAttribute extends FormAttribute
 		$this->default = $value;
 		return $this;
 	}
+
+	public function asterisk(): static
+	{
+		$this->asterisk = true;
+		return $this;
+	}
 }
