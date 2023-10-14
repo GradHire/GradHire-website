@@ -303,7 +303,7 @@ use app\src\model\Users\Roles;
                 <div class="slider-track"></div>
                 <input type="range" min="4.05" name="gratificationMin" max="15" value="4.05" step="0.01"
                        id="slider-1" oninput="slideOne()">
-                <input type="range" min="4.05" name="gratificationMax" max="15" value="12" step="0.01" id="slider-2"
+                <input type="range" min="4.05" name="gratificationMax" max="15" value="15" step="0.01" id="slider-2"
                        oninput="slideTwo()">
 
             </div>
