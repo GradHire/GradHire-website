@@ -263,10 +263,12 @@ class MainController extends Controller
         }
         return $this->render('candidature/listCandidatures', ['candidatures' => $candidatures]);
     }
-
 	public function creeroffre(Request $request): string
 	{
-		if ($request->getMethod() === 'get') {
+        if(!Auth::has_role(Roles::Manager,Roles::Enterprise)) {
+            throw new ForbiddenException();
+        }
+        if ($request->getMethod() === 'get') {
 			return $this->render('/offres/create');
 		} else {
             $action=$_POST['action'];

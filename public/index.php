@@ -88,7 +88,6 @@ $app->router->get('/user_test/{id}', [MainController::class, 'user_test']);
 $app->router->get('/candidatures', [MainController::class, 'candidatures']);
 $app->router->get('/candidatures/{id:\d+}', [MainController::class, 'candidatures']);
 $app->router->post('/candidatures', [MainController::class, 'candidatures']);
-
 $app->router->get('/utilisateurs/{id}/archiver', [MainController::class, 'archiver']);
 
 $app->router->get('/utilisateurs', [MainController::class, 'utilisateurs']);
