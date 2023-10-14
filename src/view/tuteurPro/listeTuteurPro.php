@@ -64,9 +64,6 @@ else{?> <h2 class="font-bold text-lg">Liste des Tuteurs Pro de l'entreprise</h2>
                     if ($tuteur->getFonctiontuteurp() == null) echo("Non renseigné");
                     else echo $tuteur->getFonctiontuteurp(); ?>
                 </td>
-                <td class="whitespace-nowrap px-4 py-2">
-                    <?php $tuteur->getIdutilisateur(); ?>
-                </td>
             </tr>
         <?php } ?>
         </tbody>
