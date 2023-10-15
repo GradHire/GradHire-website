@@ -168,6 +168,7 @@ class MainController extends Controller
     public function utilisateurs(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
+        if(!is_null($id) && !Auth::has_role(Roles::Manager, Roles::Staff)) throw new ForbiddenException();
         $utilisateur = null;
         if ((new EntrepriseRepository())->getByIdFull($id) != null) {
             $utilisateur = (new EntrepriseRepository())->getByIdFull($id);
@@ -209,6 +210,9 @@ class MainController extends Controller
 
     public function ListeTuteurPro(Request $request): string
     {
+        if (!Auth::has_role(Roles::Manager, Roles::Enterprise, Roles::Staff)) {
+            throw new ForbiddenException();
+        }
         $tuteurs = [];
         if (Auth::has_role(Roles::Manager)) $tuteurs = (new TuteurProRepository())->getAll();
         else if (Auth::has_role(Roles::Enterprise)) $tuteurs = (new TuteurProRepository())->getAllTuteursByIdEntreprise(Application::getUser()->id());

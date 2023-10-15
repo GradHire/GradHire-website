@@ -58,7 +58,7 @@ use app\src\model\Users\Roles;
 						   class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Accueil</a>
 						<a href="/offres"
 						   class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Offres</a>
-						<?php if (!Auth::has_role(Roles::Enterprise)): ?>
+						<?php if (!Auth::has_role(Roles::Enterprise, Roles::Tutor)): ?>
 							<a href="/entreprises"
 							   class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Entreprises</a>
 						<?php endif; ?>
