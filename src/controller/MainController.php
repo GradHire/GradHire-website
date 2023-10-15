@@ -201,7 +201,7 @@ class MainController extends Controller
             return $this->render('entreprise/detailEntreprise', ['entreprise' => $entreprise, 'offres' => $offres]);
         }
 
-        if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Student)) {
+        if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Student, Roles::Teacher)) {
             $entreprises = (new EntrepriseRepository())->getAll();
             return $this->render('entreprise/entreprise', ['entreprises' => $entreprises]);
         } else throw new ForbiddenException();
@@ -378,7 +378,7 @@ class MainController extends Controller
      */
     public function offres(Request $request): string
     {
-        if (!Auth::has_role(Roles::Staff, Roles::Manager, Roles::Enterprise, Roles::Student)) throw new ForbiddenException();
+        if (!Auth::has_role(Roles::Staff, Roles::Manager, Roles::Enterprise, Roles::Teacher, Roles::Student)) throw new ForbiddenException();
         elseif (Auth::has_role(Roles::Enterprise)) {
             $id = Application::getUser()->id();
             $offres = (new OffresRepository())->getOffresByIdEntreprise($id);

@@ -101,9 +101,9 @@ Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff, Roles::Teacher, R
                     if ($offres != null) {
                         foreach ($offres as $offre) {
                             if ($offre->getStatut() === "approved") {
-                                if (Auth::has_role(Roles::Manager, Roles::Staff)) {
+                                if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher)) {
                                     require __DIR__ . '/offre.php';
-                                } else if (!Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise) && !(new OffresRepository())->checkArchived($offre)) {
+                                } else if (!Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Teacher) && !(new OffresRepository())->checkArchived($offre)) {
                                     if (Application::getUser()->attributes()["annee"] == 3 && $offre->getAnneeVisee() == 2) {
                                         continue;
                                     } else {
