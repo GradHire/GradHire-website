@@ -9,9 +9,7 @@ use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Offre;
-use app\src\model\Form\FormFile;
 use app\src\model\Form\FormModel;
-use app\src\model\Form\FormString;
 use app\src\model\OffreForm;
 use app\src\model\repository\CandidatureRepository;
 use app\src\model\repository\EntrepriseRepository;
@@ -206,8 +204,7 @@ class MainController extends Controller
         if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Student)) {
             $entreprises = (new EntrepriseRepository())->getAll();
             return $this->render('entreprise/entreprise', ['entreprises' => $entreprises]);
-        }
-        else throw new ForbiddenException();
+        } else throw new ForbiddenException();
     }
 
     public function ListeTuteurPro(Request $request): string
@@ -244,7 +241,6 @@ class MainController extends Controller
                 $stmt->execute([$id, Application::getUser()->id()]);
                 Application::$app->response->redirect('/offres');
             }
-
         }
         return $this->render('candidature/postuler', [
             'form' => $form
@@ -456,22 +452,22 @@ class MainController extends Controller
                 $candidature->setEtatcandidature("declined");
             }
         }
-        $array=[];
-        if(Auth::has_role(Roles::Enterprise,Roles::Tutor)) {
-            if(Auth::has_role(Roles::Tutor)) $entrepriseid=(new TuteurProRepository())->getById($userid)->getIdentreprise();
-            else $entrepriseid=$userid;
-            $array=['candidaturesAttente' => (new CandidatureRepository())->getByIdEntreprise($entrepriseid, 'on hold'),
+        $array = [];
+        if (Auth::has_role(Roles::Enterprise, Roles::Tutor)) {
+            if (Auth::has_role(Roles::Tutor)) $entrepriseid = (new TuteurProRepository())->getById($userid)->getIdentreprise();
+            else $entrepriseid = $userid;
+            $array = ['candidaturesAttente' => (new CandidatureRepository())->getByIdEntreprise($entrepriseid, 'on hold'),
                 'candidaturesAutres' => array_merge((new CandidatureRepository())->getByIdEntreprise($entrepriseid, 'accepted'), (new CandidatureRepository())->getByIdEntreprise($entrepriseid, 'declined'))
             ];
         } else if (Auth::has_role(Roles::Manager, Roles::Staff)) {
 
-			$array = ['candidaturesAttente' => (new CandidatureRepository())->getByStatement('on hold'),
-				'candidaturesAutres' => array_merge((new CandidatureRepository())->getByStatement('accepted'), (new CandidatureRepository())->getByStatement('declined'))
-			];
-		} else if (Auth::has_role(Roles::Teacher)) {
-			$array = ['candidaturesAutres' => (new CandidatureRepository())->getByStatement('accepted')];
-		}
-		return $this->render(
-			'candidature/listCandidatures', $array);
-	}
+            $array = ['candidaturesAttente' => (new CandidatureRepository())->getByStatement('on hold'),
+                'candidaturesAutres' => array_merge((new CandidatureRepository())->getByStatement('accepted'), (new CandidatureRepository())->getByStatement('declined'))
+            ];
+        } else if (Auth::has_role(Roles::Teacher)) {
+            $array = ['candidaturesAutres' => (new CandidatureRepository())->getByStatement('accepted')];
+        }
+        return $this->render(
+            'candidature/listCandidatures', $array);
+    }
 }

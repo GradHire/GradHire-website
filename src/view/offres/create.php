@@ -8,7 +8,7 @@ use app\src\model\Users\Roles;
 use app\src\model\repository\EntrepriseRepository;
 
 Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
-<div class="w-full flex flex-col pt-12 pb-24">
+<div class="w-full max-w-md flex flex-col pt-12 pb-24">
     <?php
     $offred= (new OffresRepository)->draftExist( Application::getUser()->id() );
     $offrechoisi=$offred[0];
