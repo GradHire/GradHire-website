@@ -56,6 +56,7 @@ $this->title = 'Profile';
 					<?php }
 					if (Auth::has_role(Roles::Enterprise)) {
 						?>
+						?>
 						<li>
 							<a href="/entreprises/<?php echo $user->id() ?>"
 							   class="text-zinc-700 hover:text-zinc-600 hover:bg-zinc-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">
@@ -162,7 +163,7 @@ $this->title = 'Profile';
 								<div class="pt-6 sm:flex">
 									<dt class="font-medium text-zinc-900 sm:w-64 sm:flex-none sm:pr-6">Année</dt>
 									<dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-										<div class="text-zinc-900"><?= $user->attributes()["annee"] ?></div>
+										<div class="text-zinc-900">BUT<?= $user->attributes()["annee"] ?></div>
 									</dd>
 								</div>
 								<?php
