@@ -103,13 +103,13 @@ Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff, Roles::Teacher, R
                             if ($offre->getStatut() === "approved") {
                                 if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher)) {
                                     require __DIR__ . '/offre.php';
-                                } else if (!Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Teacher) && !(new OffresRepository())->checkArchived($offre)) {
+                                } else if (!Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Teacher,Roles::Tutor) && !(new OffresRepository())->checkArchived($offre)) {
                                     if (Application::getUser()->attributes()["annee"] == 3 && $offre->getAnneeVisee() == 2) {
                                         continue;
                                     } else {
                                         require __DIR__ . '/offre.php';
                                     }
-                                } else if (Auth::has_role(Roles::Enterprise) && $offre->getIdutilisateur() == Application::getUser()->id()) {
+                                } else if (Auth::has_role(Roles::Enterprise,Roles::Tutor) && $offre->getIdutilisateur() == Application::getUser()->id()) {
                                     require __DIR__ . '/offre.php';
                                 }
                             }

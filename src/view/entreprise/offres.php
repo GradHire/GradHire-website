@@ -3,6 +3,9 @@
 /** @var $offres \app\src\model\dataObject\Offre
  */
 
+use app\src\model\Auth;
+use app\src\model\Users\Roles;
+
 
 ?>
 
@@ -32,6 +35,11 @@
                     <?php
                     if ($offres != null)
                         foreach ($offres as $offre) {
+                            if(Auth::has_role(Roles::Tutor)){
+                                if($offre->getStatut() != "approved"){
+                                    continue;
+                                }
+                            }
                             ?>
                             <tr class="odd:bg-zinc-50">
                                 <td class="whitespace-nowrap px-4 py-2 font-medium text-zinc-900">
