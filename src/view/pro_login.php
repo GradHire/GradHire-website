@@ -4,6 +4,7 @@
 
 use app\src\model\Form\FormModel;
 
+$this->title = 'Login';
 ?>
 
 

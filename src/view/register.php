@@ -3,6 +3,8 @@
 
 use app\src\model\Form\FormModel;
 
+$this->title = 'Register';
+
 ?>
 
 <div class="w-full max-w-md pt-12 pb-24 gap-2 flex flex-col">
