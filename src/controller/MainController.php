@@ -383,7 +383,8 @@ class MainController extends Controller
     public function offres(Request $request): string
     {
         if (!Auth::has_role(Roles::Staff, Roles::Manager, Roles::Enterprise, Roles::Teacher, Roles::Student,Roles::Tutor)) throw new ForbiddenException();
-        elseif (Auth::has_role(Roles::Enterprise, Roles::Tutor) && $request->getRouteParams()['id']==null) {
+
+        elseif (Auth::has_role(Roles::Enterprise, Roles::Tutor) && !isset($request->getRouteParams()['id'])) {
             $id = Application::getUser()->id();
             if(Auth::has_role(Roles::Tutor)){
                 $tuteur= (new TuteurProRepository())->getById($id);
@@ -392,7 +393,6 @@ class MainController extends Controller
             $offres = (new OffresRepository())->getOffresByIdEntreprise($id);
             return $this->render('entreprise/offres', ['offres' => $offres]);
         }
-
 
         $id = $request->getRouteParams()['id'] ?? null;
         $offre = (new OffresRepository())->getByIdWithUser($id);
