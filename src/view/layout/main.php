@@ -18,6 +18,12 @@ use app\src\model\Users\Roles;
 	<link rel="icon" type="image/png" sizes="16x16" href="/resources/images/favicon-16x16.png">
 	<style>
         @import url('https://fonts.googleapis.com/css2?family=Gabarito:wght@400;500;600;700;800&display=swap');
+
+        nav {
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(20px) saturate(160%) contrast(45%) brightness(140%);
+            -webkit-backdrop-filter: blur(20px) saturate(160%) contrast(45%) brightness(140%);
+        }
 	</style>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
 	      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
@@ -25,7 +31,8 @@ use app\src\model\Users\Roles;
 </head>
 <body class="font-sans">
 
-<nav aria-label="Top" class="fixed z-20 bg-white w-full bg-opacity-90 backdrop-blur-xl backdrop-filter border-b">
+<nav aria-label="Top"
+     class="fixed z-20 w-full border-b border-gray-200">
 	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 top-0 z-50">
 		<div class="flex h-16 items-center">
 			<button id="burger-btn" type="button" class="relative rounded-md bg-white p-2 text-zinc-400 lg:hidden">
@@ -46,9 +53,9 @@ use app\src\model\Users\Roles;
 
 			<div class="hidden lg:ml-8 lg:block lg:self-stretch">
 				<div class="flex h-full space-x-8">
-					<a href="/"
-					   class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Accueil</a>
 					<?php if (!Application::isGuest()): ?>
+						<a href="/"
+						   class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Accueil</a>
 						<a href="/offres"
 						   class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Offres</a>
 						<?php if (!Auth::has_role(Roles::Enterprise)): ?>
@@ -89,7 +96,7 @@ use app\src\model\Users\Roles;
 				<?php if (Application::isGuest()): ?>
 					<div class="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
 						<a href="/login" class="text-sm font-medium text-zinc-700 hover:text-zinc-800">Se connecter</a>
-						<span class="h-6 w-px bg-zinc-200" aria-hidden="true"></span>
+						<span class="h-6 w-px bg-zinc-400" aria-hidden="true"></span>
 						<a href="/register" class="text-sm font-medium text-zinc-700 hover:text-zinc-800">S'inscrire</a>
 					</div>
 				<?php else: ?>
