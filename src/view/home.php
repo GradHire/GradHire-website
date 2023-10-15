@@ -4,7 +4,7 @@ $this->title = 'Home';
 <div class="bg-white">
 	<header class="relative overflow-hidden">
 		<div class="pb-80 pt-16 sm:pb-40 sm:pt-24 lg:pb-48 lg:pt-40">
-			<div class="relative mx-auto max-w-7xl px-4 sm:static sm:px-6 lg:px-8">
+			<div class="relative w-full">
 				<div class="sm:max-w-lg">
 					<h1 class="text-4xl font-bold tracking-tight text-zinc-900 sm:text-6xl">Trouvez votre stage ou
 					                                                                        alternance facilement</h1>
@@ -56,14 +56,16 @@ $this->title = 'Home';
 						</div>
 
 						<a href="/offres"
-						   class="inline-block rounded-md border border-transparent bg-zinc-600 px-8 py-3 text-center font-medium text-white hover:bg-zinc-700">Commencer</a>
+						   class="inline-block rounded-md border border-transparent px-8 py-3 text-center font-medium text-white hover:bg-blue-800 bg-blue-600">Trouver
+						                                                                                                                                        une
+						                                                                                                                                        offre</a>
 					</div>
 				</div>
 			</div>
 		</div>
 	</header>
 	<main>
-		<section aria-labelledby="category-heading" class="pt-24 sm:pt-32 xl:mx-auto xl:max-w-7xl xl:px-8">
+		<section aria-labelledby="category-heading" class="pt-24 sm:pt-32 w-full">
 			<div class="px-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8 xl:px-0">
 				<h2 id="category-heading" class="text-2xl font-bold tracking-tight text-zinc-900">Offres par
 				                                                                                  catégorie</h2>
@@ -155,7 +157,7 @@ $this->title = 'Home';
 				</a>
 			</div>
 		</section>
-		<section aria-labelledby="social-impact-heading" class="mx-auto max-w-7xl px-4 pt-24 sm:px-6 sm:pt-32 lg:px-8">
+		<section aria-labelledby="social-impact-heading" class="w-full pt-24 sm:pt-32">
 			<div class="relative overflow-hidden rounded-lg">
 				<div class="absolute inset-0">
 					<img src="/resources/images/home/8.png" alt="" class="h-full w-full object-cover object-center">
@@ -177,7 +179,7 @@ $this->title = 'Home';
 			</div>
 		</section>
 		<section aria-labelledby="testimonial-heading"
-		         class="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
+		         class="relative w-full py-24 lg:py-32">
 			<div class="mx-auto max-w-2xl lg:max-w-none">
 				<h2 id="testimonial-heading" class="text-2xl font-bold tracking-tight text-zinc-900">Ce que les gens
 				                                                                                     disent</h2>

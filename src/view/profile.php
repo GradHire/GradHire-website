@@ -19,8 +19,8 @@ $this->title = 'Profile';
 
 				<li>
 					<a href="<?= $user->role() === Roles::Enterprise ? "/entreprises/{$user->id()}" : "/profile" ?>"
-					   class="<?= is_null($form) ? "bg-zinc-50" : '' ?> text-zinc-600 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">
-						<svg class="h-6 w-6 shrink-0 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+					   class="<?= is_null($form) ? "bg-zinc-100" : '' ?> text-zinc-700 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold hover:bg-zinc-200">
+						<svg class="h-6 w-6 shrink-0 text-zinc-700" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
 						     stroke="currentColor" aria-hidden="true">
 							<path stroke-linecap="round" stroke-linejoin="round"
 							      d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -31,8 +31,8 @@ $this->title = 'Profile';
 				<?php if ($user->is_me()) { ?>
 					<li>
 						<a href="/edit_profile"
-						   class="<?= !is_null($form) ? "bg-zinc-50" : '' ?> text-zinc-700 hover:text-zinc-600 hover:bg-zinc-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">
-							<svg class="h-6 w-6 shrink-0 text-zinc-400 group-hover:text-zinc-600" fill="none"
+						   class="<?= !is_null($form) ? "bg-zinc-100" : '' ?> text-zinc-700 hover:bg-zinc-200 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">
+							<svg class="h-6 w-6 shrink-0 text-zinc-700 group-hover:text-zinc-600" fill="none"
 							     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
 								<path stroke-linecap="round" stroke-linejoin="round"
 								      d="M7.864 4.243A7.5 7.5 0 0119.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 004.5 10.5a7.464 7.464 0 01-1.15 3.993m1.989 3.559A11.209 11.209 0 008.25 10.5a3.75 3.75 0 117.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 01-3.6 9.75m6.633-4.596a18.666 18.666 0 01-2.485 5.33"/>
@@ -45,7 +45,7 @@ $this->title = 'Profile';
 						<li>
 							<a href="dashboard"
 							   class="text-zinc-700 hover:text-zinc-600 hover:bg-zinc-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">
-								<svg class="h-6 w-6 shrink-0 text-zinc-400 group-hover:text-zinc-600" fill="none"
+								<svg class="h-6 w-6 shrink-0 text-zinc-700 group-hover:text-zinc-600" fill="none"
 								     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
 									<path stroke-linecap="round" stroke-linejoin="round"
 									      d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/>
@@ -54,21 +54,21 @@ $this->title = 'Profile';
 							</a>
 						</li>
 					<?php }
-                        if (Auth::has_role(Roles::Enterprise)){
-                    ?>
-                            <li>
-                            <a href="/entreprises/<?php echo $user->id() ?>"
-                               class="text-zinc-700 hover:text-zinc-600 hover:bg-zinc-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">
-                                <svg class="h-6 w-6 shrink-0 text-zinc-400 group-hover:text-zinc-600" fill="none"
-                                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                          d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/>
-                                </svg>
-                                Information Entreprise
-                            </a>
-                        </li>
-				<?php }
-                } else { ?>
+					if (Auth::has_role(Roles::Enterprise)) {
+						?>
+						<li>
+							<a href="/entreprises/<?php echo $user->id() ?>"
+							   class="text-zinc-700 hover:text-zinc-600 hover:bg-zinc-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">
+								<svg class="h-6 w-6 shrink-0 text-zinc-700 group-hover:text-zinc-600" fill="none"
+								     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+									<path stroke-linecap="round" stroke-linejoin="round"
+									      d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/>
+								</svg>
+								Information Entreprise
+							</a>
+						</li>
+					<?php }
+				} else { ?>
 					<li>
 						<a href="mailto:<?= $user->attributes()["emailutilisateur"] ?>" target="_blank"
 						   class="text-zinc-700 hover:text-zinc-600 hover:bg-zinc-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">

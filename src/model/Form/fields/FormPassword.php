@@ -17,7 +17,7 @@ class FormPassword extends FormString
 		return <<<HTML
 <div class="relative">
   $input
-   <i onclick="togglePasswordVisibility(this)" class="fa-solid fa-eye cursor-pointer absolute right-4 top-1/2 transform -translate-y-1/2"></i>
+   <i onclick="togglePasswordVisibility(this)" class="fa-solid fa-eye text-zinc-500 cursor-pointer absolute right-4 top-1/2 transform -translate-y-1/2"></i>
 </div>
 HTML;
 	}
