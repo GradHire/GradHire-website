@@ -19,7 +19,6 @@ abstract class AbstractRepository
         $arraySearch = array();
         $sql = "";
         $dataObjects = array();
-        print_r($filter);
 
         if ($filter['sujet'] == "" && !empty($filter)) {
             $sql = "SELECT * FROM " . (new OffresRepository())->tableChecker($filter);
@@ -61,11 +60,9 @@ abstract class AbstractRepository
             $sql = (new OffresRepository())->removeEndifAlone($sql);
 
             $pdoStatement = Database::get_conn()->prepare($sql);
-            print_r($sql);
             $values = (new OffresRepository())->constructSQLValues($values, $arraySearch, $filter);
             $pdoStatement->execute($values);
         } else {
-            print_r($sql);
             $pdoStatement = Database::get_conn()->prepare($sql);
             $pdoStatement->execute($arraySearch);
         }
