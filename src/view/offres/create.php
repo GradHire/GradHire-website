@@ -83,7 +83,7 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
             </div>
             <div>
                 <label for="titre">Titre du poste</label>
-                <input type="text" placeholder="Développeur web" name="titre" id="titre" required value="<?php echo $offrechoisi->getSujet(); ?>"
+                <input type="text" placeholder="Développeur web" name="titre" id="titre" required value="<?php echo $offrechoisi->getSujet(); ?>" maxlength="50"
                        class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
             </div>
             <div>
