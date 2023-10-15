@@ -383,7 +383,7 @@ class MainController extends Controller
     public function offres(Request $request): string
     {
         if (!Auth::has_role(Roles::Staff, Roles::Manager, Roles::Enterprise, Roles::Teacher, Roles::Student,Roles::Tutor)) throw new ForbiddenException();
-        elseif (Auth::has_role(Roles::Enterprise, Roles::Tutor)) {
+        elseif (Auth::has_role(Roles::Enterprise, Roles::Tutor) && $request->getRouteParams()['id']==null) {
             $id = Application::getUser()->id();
             if(Auth::has_role(Roles::Tutor)){
                 $tuteur= (new TuteurProRepository())->getById($id);
