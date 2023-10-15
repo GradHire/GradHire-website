@@ -250,7 +250,7 @@ class MainController extends Controller
 
     public function creeroffre(Request $request): string
     {
-        if (!Auth::has_role(Roles::Manager, Roles::Enterprise)) {
+        if (!Auth::has_role(Roles::Manager, Roles::Enterprise, Roles::Staff)) {
             throw new ForbiddenException();
         }
 
