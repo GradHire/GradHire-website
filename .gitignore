@@ -1,7 +1,7 @@
 vendor
 .idea
 node_modules
-public/resources/css/output.css
-public/uploads
-public/pictures
+public_html/resources/css/output.css
+public_html/uploads
+public_html/pictures
 .phplint.cache

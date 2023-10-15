@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "dev": "cd ./public && php -S localhost:8080",
-    "watch": "npx tailwindcss -i ./public/resources/css/input.css -o ./public/resources/css/output.css --watch"
+    "dev": "cd public_html && php -S localhost:8080",
+    "watch": "npx tailwindcss -i public_html/resources/css/input.css -o public_html/resources/css/output.css --watch"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",
