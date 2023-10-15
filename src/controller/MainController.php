@@ -394,7 +394,6 @@ class MainController extends Controller
             return $this->render('entreprise/offres', ['offres' => $offres]);
         }
 
-
         $id = $request->getRouteParams()['id'] ?? null;
         $offre = (new OffresRepository())->getByIdWithUser($id);
 
