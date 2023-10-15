@@ -41,8 +41,6 @@ $app->router->get('/logout', [AuthController::class, 'logout']);
 
 $app->router->get('/contact', [MainController::class, 'contact']);
 
-$app->router->get('/about', [OpenController::class, 'index']);
-
 $app->router->get('/profile', [MainController::class, 'profile']);
 $app->router->get('/profile/{id}', [MainController::class, 'profile']);
 
@@ -50,12 +48,6 @@ $app->router->get('/edit_profile', [MainController::class, 'edit_profile']);
 $app->router->get('/edit_profile/{id}', [MainController::class, 'edit_profile']);
 $app->router->post('/edit_profile', [MainController::class, 'edit_profile']);
 $app->router->post('/edit_profile/{id}', [MainController::class, 'edit_profile']);
-
-$app->router->get('/search', [MainController::class, 'search']);
-
-$app->router->get('/readAll', [MainController::class, 'readAll']);
-
-$app->router->get('/mailtest', [MainController::class, 'mailtest']);
 
 $app->router->get('/offres', [MainController::class, 'offres']);
 
