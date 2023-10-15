@@ -28,6 +28,7 @@ abstract class AbstractRepository
             $arraySearch = explode(' ', $filter['sujet']);
             $sql .= (new OffresRepository())->prepareSQLQSearch($arraySearch);
         }
+
         if (array_key_exists('gratificationMin', $filter) && array_key_exists('gratificationMax', $filter)) {
             if ($filter['gratificationMin'] == null && $filter['gratificationMax'] == null) unset($filter['gratificationMin'], $filter['gratificationMax']);
         }
@@ -59,7 +60,6 @@ abstract class AbstractRepository
             $sql = (new OffresRepository())->removeEndifAlone($sql);
 
             $pdoStatement = Database::get_conn()->prepare($sql);
-
             $values = (new OffresRepository())->constructSQLValues($values, $arraySearch, $filter);
             $pdoStatement->execute($values);
         } else {
