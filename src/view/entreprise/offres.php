@@ -3,9 +3,6 @@
 /** @var $offres \app\src\model\dataObject\Offre
  */
 
-use app\src\model\Auth;
-use app\src\model\Users\Roles;
-
 
 ?>
 
@@ -38,37 +35,39 @@ use app\src\model\Users\Roles;
                             ?>
                             <tr class="odd:bg-zinc-50">
                                 <td class="whitespace-nowrap px-4 py-2 font-medium text-zinc-900">
-                                    <?= $offre['sujet']; ?>
+                                    <?= $offre->getSujet() ?>
                                 </td>
                                 <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                                     <?php
-                                    $thematique = $offre['thematique'];
+                                    $thematique = $offre->getThematique();
                                     if ($thematique != null) echo $thematique;
                                     else echo("Non renseigné");
                                     ?>
                                 </td>
                                 <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                                     <?php
-                                    $dateCreation = new DateTime($offre['datecreation']);
+                                    $dateCreation = new DateTime($offre->getDateCreation());
                                     $dateCreation = $dateCreation->format('d/m/Y H:i:s');
                                     echo $dateCreation;
                                     ?>
                                 </td>
                                 <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                                     <?php
-                                    if ($offre['status'] == "pending") {
+                                    $status = $offre->getStatut();
+
+                                    if ($status == "pending") {
                                         echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-yellow-100 text-yellow-800\">
     En attente
 </span>";
-                                    } else if ($offre['status'] == "approved") {
+                                    } else if ($status == "approved") {
                                         echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-green-100 text-green-800\">
     Validée
     </span>";
-                                    } else if ($offre['status'] == "blocked") {
+                                    } else if ($status == "blocked") {
                                         echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-red-100 text-red-800\">
     Refusée
     </span>";
-                                    } else if ($offre['status'] == "draft") {
+                                    } else if ($status == "draft") {
                                         echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-zinc-100 text-zinc-800\">
     Archivée
     </span>";
@@ -76,7 +75,7 @@ use app\src\model\Users\Roles;
                                     ?>
                                 </td>
                                 <td class="whitespace-nowrap px-4 py-2">
-                                    <a href="/offres/<?= $offre['idoffre']; ?>"
+                                    <a href="/offres/<?= $offre->getId() ?>"
                                        class="inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">Voir
                                         plus</a>
                                 </td>
