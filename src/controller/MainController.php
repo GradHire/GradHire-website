@@ -416,25 +416,51 @@ class MainController extends Controller
 
     private static function constructFilter(): array
     {
-        return array(
-            'sujet' => $_GET['sujet'] ?? "",
-            'thematique' => isset($_GET['thematique']) ? implode(',', $_GET['thematique']) : "",
-            'anneeVisee' => $_GET['anneeVisee'] ?? null,
-            'duree' => $_GET['duree'] ?? null,
-            'alternance' => $_GET['alternance'] ?? null,
-            'stage' => $_GET['stage'] ?? null,
-            'gratificationMin' => self::filterGratification($_GET['gratificationMin'] ?? null),
-            'gratificationMax' => self::filterGratification($_GET['gratificationMax'] ?? null)
-        );
+        $filter = array();
+//        if (Auth::has_role(["student"])) {
+//            if (isset($_GET['statut'])) $filter['statut'] = $_GET['statut'];
+//        } else {
+//            $filter['statut'] = "staff";
+//        }
+        if (isset($_GET['sujet'])) $filter['sujet'] = $_GET['sujet'];
+        else $filter['sujet'] = "";
+        if (isset($_GET['thematique'])) {
+            $filter['thematique'] = "";
+            foreach ($_GET['thematique'] as $key => $value) {
+                if ($filter['thematique'] == null) $filter['thematique'] = $value;
+                else if ($filter['thematique'] != null) $filter['thematique'] .= ',' . $value;
+            }
+        }
+        if (isset($_GET['anneeVisee'])) $filter['anneeVisee'] = $_GET['anneeVisee'];
+        if (isset($_GET['duree'])) $filter['duree'] = $_GET['duree'];
+        if (isset($_GET['alternance'])) $filter['alternance'] = $_GET['alternance'];
+        if (isset($_GET['stage'])) $filter['stage'] = $_GET['stage'];
+        $_GET['gratificationMin'] = 4.05;
+        $_GET['gratificationMax'] = 15;
+        if (isset($_GET['gratificationMin'])) {
+            if ($_GET['gratificationMin'] == "") $filter['gratificationMin'] = null;
+            else if ($_GET['gratificationMin'] < 4.05) $filter['gratificationMin'] = 4.05;
+            else if ($_GET['gratificationMin'] > 15) $filter['gratificationMin'] = 15;
+            else $filter['gratificationMin'] = $_GET['gratificationMin'];
+        }
+        if (isset($_GET['gratificationMax'])) {
+            if ($_GET['gratificationMax'] == "") $filter['gratificationMax'] = null;
+            else if ($_GET['gratificationMax'] < 4.05) $filter['gratificationMax'] = 4.05;
+            else if ($_GET['gratificationMax'] > 15) $filter['gratificationMax'] = 15;
+            else $filter['gratificationMax'] = $_GET['gratificationMax'];
+        }
+        return $filter;
     }
 
-    private static function filterGratification($value)
+    private
+    static function filterGratification($value)
     {
         if ($value === "") return null;
         return min(max((float)$value, 4.05), 15);
     }
 
-    public function candidatures(Request $request): string
+    public
+    function candidatures(Request $request): string
     {
         $userid = Application::getUser()->id();
 
