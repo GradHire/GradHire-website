@@ -56,7 +56,6 @@ $this->title = 'Profile';
 					<?php }
 					if (Auth::has_role(Roles::Enterprise)) {
 						?>
-						?>
 						<li>
 							<a href="/entreprises/<?php echo $user->id() ?>"
 							   class="text-zinc-700 hover:text-zinc-600 hover:bg-zinc-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">
