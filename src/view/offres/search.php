@@ -140,7 +140,7 @@ use app\src\model\Users\Roles;
                 <input
                         type="checkbox"
                         name="thematique[]"
-                        value="Reseaux"
+                        value="Réseaux"
                         id="Reseaux"
                         class="peer hidden [&:checked_+_label_svg]:block"
                 />
@@ -171,7 +171,7 @@ use app\src\model\Users\Roles;
                 <input
                         type="checkbox"
                         name="thematique[]"
-                        value="Securite"
+                        value="Sécurité"
                         id="Securite"
                         class="peer hidden [&:checked_+_label_svg]:block"
                 />
@@ -233,7 +233,7 @@ use app\src\model\Users\Roles;
                 <input
                         type="checkbox"
                         name="thematique[]"
-                        value="DevWeb"
+                        value="Développement web"
                         id="DevWeb"
                         class="peer hidden [&:checked_+_label_svg]:block"
                 />
@@ -264,7 +264,7 @@ use app\src\model\Users\Roles;
                 <input
                         type="checkbox"
                         name="thematique[]"
-                        value="DevApp"
+                        value="Développement d'application"
                         id="DevApp"
                         class="peer hidden [&:checked_+_label_svg]:block"
                 />

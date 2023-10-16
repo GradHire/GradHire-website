@@ -79,7 +79,6 @@ class Application
 
     public static function redirectFromParam(string $else): void
     {
-        print_r($_GET);
         if (isset($_GET["redirect"]))
             header("Location: " . urldecode($_GET["redirect"]));
         else
