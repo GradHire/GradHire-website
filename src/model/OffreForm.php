@@ -4,6 +4,9 @@ namespace app\src\model;
 
 use app\src\core\db\Database;
 use app\src\model\dataObject\Offre;
+use app\src\model\repository\MailRepository;
+use app\src\model\repository\StaffRepository;
+
 use PDOException;
 
 class OffreForm extends Model
@@ -33,6 +36,15 @@ class OffreForm extends Model
 
         $pdoStatement->execute($values);
         $id = Database::get_conn()->lastInsertId();
+
+        if($offre->getStatut() == "pending"){
+            $emails = (new StaffRepository())->getManagersEmail();
+            MailRepository::send_mail($emails, "Nouvelle offre", '
+ <div>
+ <p>L\'entreprise '.Application::getUser()->attributes()["nomutilisateur"].' viens de créer une nouvelle offre</p>
+ <a href="http://localhost:8080/offres/'.$id.'">Voir l\'offre</a>
+ </div>');
+        }
 
         if ($distanciel != null) {
             $sql = "INSERT INTO Offrealternance VALUES (:idOffreTag, :alternanceTag)";
