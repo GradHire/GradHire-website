@@ -11,7 +11,6 @@ $this->title = 'Offres';
 
 Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff, Roles::Teacher, Roles::Tutor);
 
-
 ?>
 <?php if (Auth::has_role(Roles::Staff, Roles::Manager)) { ?>
     <div id="myModal" tabindex="-1" aria-hidden="true"
@@ -44,102 +43,105 @@ Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff, Roles::Teacher, R
                     Annuler
                 </button>
 
-                <form class="m-0" method="POST" action="" id="modal-form">
+                <div class="m-0" id="modal-form">
                     <input type="hidden" name="link" value="" id="modal-redirect">
                     <input type="hidden" name="delete" value="" id="modal-delete">
-                    <button type="submit" value="Delete"
-                            class="close-modal-btn  py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">
+                    <a id="modal-a-delete"
+                       class="close-modal-btn  py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">
                         Oui, Archivez
-                    </button>
-                </form>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 <?php } ?>
-<div class="w-full flex flex-col pt-12 pb-24">
-    <form method="GET" action="offres" class="flex flex-row gap-2 w-full">
-        <?php
-        if (!Auth::has_role(Roles::Student, Roles::Tutor, Roles::Teacher)) {
-            echo " <a href=\"/offres/create\" class=\"border-2 border-zinc-200 rounded-lg bg-zinc-50 p-3 px-4 flex justify-center items-center cursor-pointer\">
+<form class="m-0 p-0" method="GET" action="offres">
+    <div class="w-full flex flex-col pt-12 pb-24 gap-4">
+        <div class="flex flex-row gap-2 w-full">
+            <?php
+            if (!Auth::has_role(Roles::Student, Roles::Tutor, Roles::Teacher)) {
+                echo " <a href=\"/offres/create\" class=\"border-2 border-zinc-200 rounded-lg bg-zinc-50 p-3 px-4 flex justify-center items-center cursor-pointer\">
             <svg class=\"w-5 h-5 text-zinc-500 dark:text-zinc-400\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"currentColor\">
                 <path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M12 4.5v15m7.5-7.5h-15\" />
             </svg>
         </a>";
-        } ?>
-        <div class="w-full">
-            <label for="default-search" class="text-sm font-medium text-zinc-900 sr-only dark:text-white">Search</label>
-            <div class="relative">
-                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <svg class="w-4 h-4 text-zinc-500 dark:text-zinc-400" aria-hidden="true"
-                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                    </svg>
+            } ?>
+            <div class="w-full">
+                <label for="default-search"
+                       class="text-sm font-medium text-zinc-900 sr-only dark:text-white">Search</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-zinc-500 dark:text-zinc-400" aria-hidden="true"
+                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                        </svg>
+                    </div>
+                    <input type="search" id="default-search" name="sujet"
+                           class="block w-full p-4 pl-10 text-sm text-zinc-900 border-2 border-zinc-200 rounded-lg bg-zinc-50 focus:ring-zinc-500 focus:border-zinc-500 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500"
+                           placeholder="Rechercher une offre">
+                    <button type="submit"
+                            class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800">
+                        Rechercher
+                    </button>
                 </div>
-                <input type="search" id="default-search" name="sujet"
-                       class="block w-full p-4 pl-10 text-sm text-zinc-900 border-2 border-zinc-200 rounded-lg bg-zinc-50 focus:ring-zinc-500 focus:border-zinc-500 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500"
-                       placeholder="Rechercher une offre">
-                <button type="submit"
-                        class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800">
-                    Rechercher
-                </button>
             </div>
         </div>
-    </form>
-    <div class="grid grid-cols-1 gap-4 lg:grid-cols-4">
-        <form method="GET" action="offres">
-        <div class="rounded-lg p-4 border-2 border-zinc-200">
-            <?php require_once __DIR__ . '/search.php'; ?>
-        </div>
-        </form>
+        <div class="grid grid-cols-1 gap-4 lg:grid-cols-4">
+            <form method="GET" action="offres">
+                <div class="rounded-lg p-4 border-2 border-zinc-200">
+                    <?php require_once __DIR__ . '/search.php'; ?>
+                </div>
+            </form>
 
-        <div class="lg:col-span-3 rounded-lg flex flex-col gap-4">
-            <div class="flex flex-col gap-1 w-full">
-                <h2 class="font-bold text-lg">Offres validées</h2>
+            <div class="lg:col-span-3 rounded-lg flex flex-col gap-4">
+                <div class="flex flex-col gap-1 w-full">
+                    <h2 class="font-bold text-lg">Offres validées</h2>
+                    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
+                        <?php
+                        if ($offres != null) {
+                            foreach ($offres as $offre) {
+                                if ($offre->getStatut() === "approved") {
+                                    if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher)) {
+                                        require __DIR__ . '/offre.php';
+                                    } else if (!Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Teacher, Roles::Tutor) && !(new OffresRepository())->checkArchived($offre)) {
+                                        if (Application::getUser()->attributes()["annee"] == 3 && $offre->getAnneeVisee() == 2) {
+                                            continue;
+                                        } else {
+                                            require __DIR__ . '/offre.php';
+                                        }
+                                    } else if (Auth::has_role(Roles::Enterprise, Roles::Tutor) && $offre->getIdutilisateur() == Application::getUser()->id()) {
+                                        require __DIR__ . '/offre.php';
+                                    }
+                                }
+                            }
+                        } else {
+                            require __DIR__ . '/errorOffre.php';
+                        }
+                        ?>
+                    </div>
+                </div>
+                <?php if (Auth::has_role(Roles::Manager, Roles::Staff)) {
+                    echo '<div class="w-full bg-zinc-200 h-[1px] rounded-full"></div>';
+                    echo '<div class="flex flex-col gap-1 w-full">';
+                    echo '<h2 class="font-bold text-lg">Offres en attente</h2>';
+                }
+                ?>
                 <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
                     <?php
                     if ($offres != null) {
                         foreach ($offres as $offre) {
-                            if ($offre->getStatut() === "approved") {
-                                if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher)) {
-                                    require __DIR__ . '/offre.php';
-                                } else if (!Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Teacher,Roles::Tutor) && !(new OffresRepository())->checkArchived($offre)) {
-                                    if (Application::getUser()->attributes()["annee"] == 3 && $offre->getAnneeVisee() == 2) {
-                                        continue;
-                                    } else {
-                                        require __DIR__ . '/offre.php';
-                                    }
-                                } else if (Auth::has_role(Roles::Enterprise,Roles::Tutor) && $offre->getIdutilisateur() == Application::getUser()->id()) {
-                                    require __DIR__ . '/offre.php';
-                                }
+                            if ($offre->getStatut() === "pending" && Auth::has_role(Roles::Manager, Roles::Staff)) {
+                                require __DIR__ . '/offre.php';
                             }
                         }
-                    } else {
-                        require __DIR__ . '/errorOffre.php';
                     }
-                    ?>
+                    echo "</div>"; ?>
                 </div>
-            </div>
-            <?php if (Auth::has_role(Roles::Manager, Roles::Staff)) {
-                echo '<div class="w-full bg-zinc-200 h-[1px] rounded-full"></div>';
-                echo '<div class="flex flex-col gap-1 w-full">';
-                echo '<h2 class="font-bold text-lg">Offres en attente</h2>';
-            }
-            ?>
-            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
-                <?php
-                if ($offres != null) {
-                    foreach ($offres as $offre) {
-                        if ($offre->getStatut() === "pending" && Auth::has_role(Roles::Manager, Roles::Staff)) {
-                            require __DIR__ . '/offre.php';
-                        }
-                    }
-                }
-                echo "</div>"; ?>
             </div>
         </div>
     </div>
-</div>
+</form>
 <script>
     window.addEventListener('DOMContentLoaded', function () {
 
@@ -408,12 +410,13 @@ Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff, Roles::Teacher, R
         modal.classList.add("block");
         bg.classList.remove("hidden");
         const form = document.getElementById("modal-form");
+        const a = document.getElementById("modal-a-delete");
         const redirect = document.getElementById("modal-redirect");
         const deleteInput = document.getElementById("modal-delete");
         deleteInput.value = id;
-        redirect.value = window.location.href;
-        form.action = "/offres/" + id + "/archive";
-
+        // redirect.value = window.location.href;
+        //form.action = "/offres/" + id + "/archive?<?php //=Application::getRedirect()?>//";
+        a.href = "/offres/" + id + "/archive?<?=Application::getRedirect()?>";
     }
 </script>
 

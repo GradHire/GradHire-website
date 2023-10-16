@@ -2,10 +2,8 @@
 
 /** @var $offre \app\src\model\dataObject\Offre */
 
-use app\src\model\Application;
-use app\src\model\repository\OffresRepository;
-use app\src\model\Users\Roles;
 use app\src\model\Auth;
+use app\src\model\Users\Roles;
 
 ?>
 
@@ -24,7 +22,6 @@ use app\src\model\Auth;
                 ?></p>
         </div>
         <?php if (Auth::has_role(Roles::Staff, Roles::Manager) || Auth::get_user()->getId() == $offre->getIdutilisateur()) { ?>
-
             <span class="inline-flex cursor-pointer  -space-x-px overflow-hidden rounded-md border bg-white shadow-sm">
   <a href="/offres/<?= $offre->getIdOffre() ?>/edit"
      class="cursor-pointer inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative">
@@ -44,14 +41,16 @@ use app\src\model\Auth;
 </svg>
                 </a><?php endif; ?>
                 <?php if ($offre->getStatut() != "draft"): ?>
-                    <a href="/offres/<?= $offre->getIdOffre() ?>/archive"
-                       class="inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative">
+                    <form class="m-0 p-0" method="post" action="/offres/<?= $offre->getIdOffre() ?>/archive">
+                        <input type="hidden" name="archive" value="1">
+                        <button type="submit" class="cursor-pointer inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
          class="w-5 h-5">
   <path stroke-linecap="round" stroke-linejoin="round"
         d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
 </svg>
-  </a>
+                        </button>
+                </form>
                 <?php endif; ?>
 
 </span>
@@ -132,10 +131,10 @@ use app\src\model\Auth;
             </div>
         </dl>
     </div>
-    <?php if(Auth::has_role(Roles::Student) && !$offre->getUserPostuled() ){ ?>
-    <a href="<?php echo $offre->getIdOffre(); ?>/postuler"
-       class="mt-6 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-zinc-600 hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 sm:w-auto">
-        Postuler
-    </a>
+    <?php if (Auth::has_role(Roles::Student) && !$offre->getUserPostuled()) { ?>
+        <a href="<?php echo $offre->getIdOffre(); ?>/postuler"
+           class="mt-6 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-zinc-600 hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 sm:w-auto">
+            Postuler
+        </a>
     <?php } ?>
 </div>

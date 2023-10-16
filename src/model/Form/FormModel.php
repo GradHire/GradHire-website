@@ -135,7 +135,7 @@ class FormModel
 			$error = $this->errors[$name] ?? null;
 			$err = $error && $error !== "" ? '<p class="text-red-600/[.9]"><i class="fa-solid fa-circle-exclamation text-sm mr-2"></i>' . $error . '</p>' : '';
 			echo <<<HTML
-<div>
+<div class="w-full">
 	<label class="text-zinc-800 font-bold">{$field->getName()}</label>
 	<div class="mt-2">
 		{$field->field($name, $value)}
