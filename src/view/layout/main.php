@@ -168,7 +168,7 @@ use app\src\model\Users\Roles;
     </div>
 </div>
 <div id="blur-background" class="hidden w-screen h-screen fixed z-50 top-0 left-0 backdrop-blur-md"></div>
-<div class="w-full flex flex-col justify-center items-center animate-slide-start">
+<div class="w-full flex flex-col justify-center items-center">
     <div class="max-w-7xl w-full px-4 sm:px-6 lg:px-8 flex flex-col justify-center mt-[65px] items-center">
         {{content}}
         <footer aria-labelledby="footer-heading" class="bg-white w-full">
