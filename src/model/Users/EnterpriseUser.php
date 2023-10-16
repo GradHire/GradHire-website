@@ -42,7 +42,7 @@ class EnterpriseUser extends ProUser
         }
     }
 
-    /**
+        /**
      * @throws ServerErrorException
      */
     public static function exist(string $email, string $siret): bool

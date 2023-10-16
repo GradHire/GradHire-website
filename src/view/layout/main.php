@@ -10,7 +10,7 @@ use app\src\model\Users\Roles;
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title> GradHire | <?= $this->title ?></title>
     <link rel="stylesheet" href="/resources/css/input.css">
     <link rel="stylesheet" href="/resources/css/output.css">
@@ -114,7 +114,7 @@ use app\src\model\Users\Roles;
                             </span>
                             <div class="rounded-full overflow-hidden h-7 w-7">
                                 <img src="<?= Application::getUser()->get_picture() ?>" alt="Photo de profil"
-                                     class="w-full h-full object-cover rounded-full"/>
+                                     class="w-full h-full object-cover rounded-full aspect-square"/>
                             </div>
                         </a>
 
