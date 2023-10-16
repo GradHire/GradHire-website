@@ -152,7 +152,7 @@ $this->title = 'Home';
 
 			<div class="mt-6 px-4 sm:hidden">
 				<a href="#" class="block text-sm font-semibold text-zinc-600 hover:text-zinc-500">
-					Browse all categories
+					Voir toutes les catégories
 					<span aria-hidden="true"> &rarr;</span>
 				</a>
 			</div>

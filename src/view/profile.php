@@ -99,11 +99,12 @@ $this->title = 'Profile';
 			<?php
 			if (!is_null($form)) {
 				?>
+                <?php print_r(ini_get('upload_max_filesize')); print_r(ini_get('post_max_size'));?>
 				<?php $form->start(); ?>
 				<div class="w-full gap-4 flex flex-col">
 
                     <img src="<?= $user->get_picture() ?>" alt="Photo de profil"
-                         class="h-14 w-14 object-cover rounded-full"/>
+                         class="h-14 w-14 object-cover rounded-full" id="preview"/>
 					<?php
 					$form->print_all_fields();
 					$form->submit("Enregistrer les modifications");
