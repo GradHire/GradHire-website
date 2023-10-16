@@ -68,6 +68,10 @@ use app\src\model\Users\Roles;
                             <a href="/candidatures"
                                class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
                         <?php endif; ?>
+                        <?php if (Auth::has_role(Roles::Student)): ?>
+                            <a href="/candidatures"
+                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
+                        <?php endif; ?>
                         <?php if (Auth::has_role(Roles::Tutor)): ?>
                             <a href="/candidatures"
                                class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>

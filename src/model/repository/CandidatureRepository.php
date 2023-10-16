@@ -37,6 +37,19 @@ class CandidatureRepository extends AbstractRepository
         return $resultat;
 
     }
+    public function getByIdEtudiant($idEtudiant,string $etat): ?array
+    {
+        $sql = "SELECT idcandidature,datec,etatcandidature,$this->nomTable.idoffre,$this->nomTable.idutilisateur FROM $this->nomTable  WHERE idutilisateur= :id AND etatcandidature=:etat";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['id' => $idEtudiant,'etat'=>$etat]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat=[];
+        foreach($requete as $item){
+            $resultat[]=$this->construireDepuisTableau($item);
+        }
+        return $resultat;
+
+    }
 
     public function getByStatement(string $etat)
     {

@@ -208,14 +208,15 @@ class MainController extends Controller
         } else throw new ForbiddenException();
     }
 
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
     public function ListeTuteurPro(Request $request): string
     {
-        if (!Auth::has_role(Roles::Manager, Roles::Enterprise, Roles::Staff)) {
-            throw new ForbiddenException();
-        }
-        $tuteurs = [];
-        if (Auth::has_role(Roles::Manager)) $tuteurs = (new TuteurProRepository())->getAll();
+        if (Auth::has_role(Roles::Manager,Roles::Staff)) $tuteurs = (new TuteurProRepository())->getAll();
         else if (Auth::has_role(Roles::Enterprise)) $tuteurs = (new TuteurProRepository())->getAllTuteursByIdEntreprise(Application::getUser()->id());
+        else throw new ForbiddenException();
         return $this->render('tuteurPro/listeTuteurPro', ['tuteurs' => $tuteurs]);
     }
 
@@ -469,15 +470,27 @@ class MainController extends Controller
         return min(max((float)$value, 4.05), 15);
     }
 
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
+
+
     public
     function candidatures(Request $request): string
     {
+
         $userid = Application::getUser()->id();
 
         $id = $request->getRouteParams()['id'] ?? null;
         $candidatures = (new CandidatureRepository())->getById($id);
+        if (Auth::has_role(Roles::Tutor)) $entrepriseid = (new TuteurProRepository())->getById($userid)->getIdentreprise();
+        else if(Auth::has_role(Roles::Enterprise)) $entrepriseid = $userid;
         if ($candidatures != null && $id != null) {
-            return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
+            $offre=(new OffresRepository())->getById($candidatures->getIdoffre());
+            if(Auth::has_role(Roles::Staff,Roles::Manager,Roles::Teacher) || $candidatures->getIdutilisateur()==$userid || $offre->getIdutilisateur()==$entrepriseid) {
+                return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
+            }else throw new ForbiddenException();
         }
         if ($request->getMethod() === 'post') {
             $id = $request->getBody()['idcandidature'] ?? null;
@@ -488,21 +501,22 @@ class MainController extends Controller
                 $candidature->setEtatcandidature("declined");
             }
         }
-        $array = [];
         if (Auth::has_role(Roles::Enterprise, Roles::Tutor)) {
-            if (Auth::has_role(Roles::Tutor)) $entrepriseid = (new TuteurProRepository())->getById($userid)->getIdentreprise();
-            else $entrepriseid = $userid;
             $array = ['candidaturesAttente' => (new CandidatureRepository())->getByIdEntreprise($entrepriseid, 'on hold'),
                 'candidaturesAutres' => array_merge((new CandidatureRepository())->getByIdEntreprise($entrepriseid, 'accepted'), (new CandidatureRepository())->getByIdEntreprise($entrepriseid, 'declined'))
             ];
-        } else if (Auth::has_role(Roles::Manager, Roles::Staff)) {
+        } else if (Auth::has_role(Roles::Manager, Roles::Staff,Roles::Teacher)) {
 
             $array = ['candidaturesAttente' => (new CandidatureRepository())->getByStatement('on hold'),
                 'candidaturesAutres' => array_merge((new CandidatureRepository())->getByStatement('accepted'), (new CandidatureRepository())->getByStatement('declined'))
             ];
-        } else if (Auth::has_role(Roles::Teacher)) {
-            $array = ['candidaturesAutres' => (new CandidatureRepository())->getByStatement('accepted')];
         }
+        else if (Auth::has_role(Roles::Student)){
+            $array = ['candidaturesAttente' => (new CandidatureRepository())->getByIdEtudiant($userid,'on hold'),
+                'candidaturesAutres' => array_merge((new CandidatureRepository())->getByIdEtudiant($userid,'accepted'), (new CandidatureRepository())->getByIdEtudiant($userid,'declined'))
+            ];
+        }
+        else throw new ForbiddenException();
         return $this->render(
             'candidature/listCandidatures', $array);
     }
