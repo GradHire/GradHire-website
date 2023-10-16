@@ -10,7 +10,7 @@ use app\src\model\Users\Roles;
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title> GradHire | <?= $this->title ?></title>
     <link rel="stylesheet" href="/resources/css/input.css">
     <link rel="stylesheet" href="/resources/css/output.css">

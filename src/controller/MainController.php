@@ -298,6 +298,7 @@ class MainController extends Controller
 
         if ($idOffre === null) {
             OffreForm::creerOffre($offre, $distanciel);
+
         } else {
             OffreForm::updateOffre($offre, $distanciel);
         }
