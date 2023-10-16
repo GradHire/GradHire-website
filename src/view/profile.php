@@ -102,10 +102,8 @@ $this->title = 'Profile';
 				<?php $form->start(); ?>
 				<div class="w-full gap-4 flex flex-col">
 
-					<div class="rounded-full overflow-hidden h-20 w-20 ml-2">
-						<img src="<?= $user->get_picture() ?>" alt="Photo de profil" id="preview"
-						     class="w-full h-full object-cover rounded-full"/>
-					</div>
+                    <img src="<?= $user->get_picture() ?>" alt="Photo de profil"
+                         class="h-14 w-14 object-cover rounded-full"/>
 					<?php
 					$form->print_all_fields();
 					$form->submit("Enregistrer les modifications");
@@ -136,10 +134,8 @@ $this->title = 'Profile';
 			} else { ?>
 				<div>
 					<div class="flex flex-row gap-4">
-						<div class="rounded-full overflow-hidden h-14 w-14">
 							<img src="<?= $user->get_picture() ?>" alt="Photo de profil"
-							     class="w-full h-full object-cover rounded-full"/>
-						</div>
+							     class="h-14 w-14 object-cover rounded-full"/>
 						<div>
 							<h2 class="text-base font-semibold leading-7 text-zinc-900">Profile</h2>
 							<p class="mt-1 text-sm leading-6 text-zinc-500">Ces informations seront partagées avec les

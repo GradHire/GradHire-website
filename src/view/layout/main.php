@@ -110,7 +110,7 @@ use app\src\model\Users\Roles;
                             </span>
                             <div class="rounded-full overflow-hidden h-7 w-7">
                                 <img src="<?= Application::getUser()->get_picture() ?>" alt="Photo de profil"
-                                     class="w-full h-full object-cover rounded-full"/>
+                                     class="w-full h-full object-cover rounded-full aspect-square"/>
                             </div>
                         </a>
 
