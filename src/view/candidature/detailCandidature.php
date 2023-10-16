@@ -11,13 +11,14 @@ use app\src\model\Users\Roles;
 $etudiant = (new EtudiantRepository())->getByIdFull($candidatures->getIdutilisateur());
 $nometudiant = (new UtilisateurRepository())->getUserById($candidatures->getIdutilisateur())->getNomutilisateur();
 $offre = (new OffresRepository())->getById($candidatures->getIdoffre());
-
-echo '<h2 class="font-bold text-lg">Candidature de
-'.$nometudiant. " " . $etudiant->getPrenomutilisateurldap() .'
-</h2>';
 ?>
 
-<div class="mt-6 border-t border-zinc-100">
+<div class="mt-6 border-zinc-100 pt-12 pb-24">
+    <?php
+    echo '<h2 class="font-bold text-lg">Candidature de
+'.$nometudiant. " " . $etudiant->getPrenomutilisateurldap() .'
+</h2>';
+    ?>
     <dl class="divide-y divide-zinc-100">
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Statut</dt>

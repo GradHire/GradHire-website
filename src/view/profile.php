@@ -99,7 +99,6 @@ $this->title = 'Profile';
 			<?php
 			if (!is_null($form)) {
 				?>
-                <?php print_r(ini_get('upload_max_filesize')); print_r(ini_get('post_max_size'));?>
 				<?php $form->start(); ?>
 				<div class="w-full gap-4 flex flex-col">
 
