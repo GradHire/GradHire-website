@@ -1,13 +1,16 @@
 <?php
 
-namespace app\src\model\Users;
+namespace app\src\model\repository;
 
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Auth;
 use app\src\model\Form\FormModel;
+use app\src\model\repository\UtilisateurRepository;
+use app\src\model\repository\TuteurRepository;
+use app\src\model\repository\EntrepriseRepository;
 
-class ProUser extends User
+class ProRepository extends UtilisateurRepository
 {
 	protected static string $id_attributes = "emailutilisateur";
 
@@ -36,11 +39,11 @@ class ProUser extends User
 	/**
 	 * @throws ServerErrorException
 	 */
-	private static function find_account(string $email, string $password): ProUser|null
+	private static function find_account(string $email, string $password): ProRepository|null
 	{
-		$user = EnterpriseUser::check_credentials($email, $password);
+		$user = EntrepriseRepository::check_credentials($email, $password);
 		if (!is_null($user)) return $user;
-		return TutorUser::check_credentials($email, $password);
+		return TuteurRepository::check_credentials($email, $password);
 	}
 
 	/**

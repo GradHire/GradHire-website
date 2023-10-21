@@ -3,7 +3,7 @@
 /** @var $offre \app\src\model\dataObject\Offre */
 
 use app\src\model\Auth;
-use app\src\model\Users\Roles;
+use app\src\model\dataObject\Roles;
 
 ?>
 

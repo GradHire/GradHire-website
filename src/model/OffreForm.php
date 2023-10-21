@@ -38,7 +38,7 @@ class OffreForm extends Model
         $id = Database::get_conn()->lastInsertId();
 
         if($offre->getStatut() == "pending"){
-            $emails = (new StaffRepository())->getManagersEmail();
+            $emails = (new StaffRepository([]))->getManagersEmail();
             MailRepository::send_mail($emails, "Nouvelle offre", '
  <div>
  <p>L\'entreprise '.Application::getUser()->attributes()["nomutilisateur"].' viens de créer une nouvelle offre</p>

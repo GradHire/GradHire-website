@@ -21,7 +21,7 @@ use app\src\model\repository\TuteurProRepository;
 use app\src\model\repository\TuteurRepository;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\Request;
-use app\src\model\Users\Roles;
+use app\src\model\dataObject\Roles;
 
 /**
  * @throws ForbiddenException
@@ -70,12 +70,12 @@ class MainController extends Controller
 
     public function archiver(Request $req): string
     {
-        $user = (new UtilisateurRepository())->getUserById($req->getRouteParams()["id"]);
-        if ((new UtilisateurRepository())->isArchived($user)) {
-            (new UtilisateurRepository())->setUserToArchived($user, false);
+        $user = (new UtilisateurRepository([]))->getUserById($req->getRouteParams()["id"]);
+        if ((new UtilisateurRepository([]))->isArchived($user)) {
+            (new UtilisateurRepository([]))->setUserToArchived($user, false);
             (new MailRepository())->send_mail([$user->getEmailutilisateur()], "Désarchivage de votre compte", "Votre compte a été désarchivé");
         } else {
-            (new UtilisateurRepository())->setUserToArchived($user, true);
+            (new UtilisateurRepository([]))->setUserToArchived($user, true);
             (new MailRepository())->send_mail([$user->getEmailutilisateur()], "Archivage de votre compte", "Votre compte a été archivé");
         }
         Application::$app->response->redirect('/utilisateurs/' . $req->getRouteParams()["id"]);
@@ -170,20 +170,20 @@ class MainController extends Controller
         $id = $request->getRouteParams()['id'] ?? null;
         if (!is_null($id) && !Auth::has_role(Roles::Manager, Roles::Staff)) throw new ForbiddenException();
         $utilisateur = null;
-        if ((new EntrepriseRepository())->getByIdFull($id) != null) {
-            $utilisateur = (new EntrepriseRepository())->getByIdFull($id);
+        if ((new EntrepriseRepository([]))->getByIdFull($id) != null) {
+            $utilisateur = (new EntrepriseRepository([]))->getByIdFull($id);
             return $this->render('utilisateurs/detailEntreprise', ['utilisateur' => $utilisateur]);
-        } elseif ((new EtudiantRepository())->getByIdFull($id) != null) {
-            $utilisateur = (new EtudiantRepository())->getByIdFull($id);
+        } elseif ((new EtudiantRepository([]))->getByIdFull($id) != null) {
+            $utilisateur = (new EtudiantRepository([]))->getByIdFull($id);
             return $this->render('utilisateurs/detailEtudiant', ['utilisateur' => $utilisateur]);
-        } elseif ((new TuteurRepository())->getByIdFull($id) != null) {
-            $utilisateur = (new TuteurRepository())->getByIdFull($id);
+        } elseif ((new TuteurRepository([]))->getByIdFull($id) != null) {
+            $utilisateur = (new TuteurRepository([]))->getByIdFull($id);
             return $this->render('utilisateurs/detailTuteur', ['utilisateur' => $utilisateur]);
-        } elseif ((new StaffRepository())->getByIdFull($id) != null) {
-            $utilisateur = (new StaffRepository())->getByIdFull($id);
+        } elseif ((new StaffRepository([]))->getByIdFull($id) != null) {
+            $utilisateur = (new StaffRepository([]))->getByIdFull($id);
             return $this->render('utilisateurs/detailStaff', ['utilisateur' => $utilisateur]);
         }
-        $utilisateur = (new UtilisateurRepository())->getAll();
+        $utilisateur = (new UtilisateurRepository([]))->getAll();
         return $this->render('utilisateurs/utilisateurs', ['utilisateurs' => $utilisateur]);
     }
 
@@ -195,7 +195,7 @@ class MainController extends Controller
     public function entreprises(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
-        $entreprise = (new EntrepriseRepository())->getByIdFull($id);
+        $entreprise = (new EntrepriseRepository([]))->getByIdFull($id);
         if ($entreprise == null && $id != null) throw new NotFoundException();
         else if ($entreprise != null && $id != null) {
             $offres = (new OffresRepository())->getOffresByIdEntreprise($id);
@@ -203,7 +203,7 @@ class MainController extends Controller
         }
 
         if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Student, Roles::Teacher)) {
-            $entreprises = (new EntrepriseRepository())->getAll();
+            $entreprises = (new EntrepriseRepository([]))->getAll();
             return $this->render('entreprise/entreprise', ['entreprises' => $entreprises]);
         } else throw new ForbiddenException();
     }
@@ -318,12 +318,12 @@ class MainController extends Controller
 
             if ($request->getMethod() === 'post') {
                 (new OffresRepository())->updateToDraft($id);
-                (new MailRepository())->send_mail([(new UtilisateurRepository())->getUserById($offre->getIdutilisateur())->getEmailutilisateur()], "Archivage de votre offre", "Votre offre a été archivée");
+                (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmailutilisateur()], "Archivage de votre offre", "Votre offre a été archivée");
                 $offre = (new OffresRepository())->getByIdWithUser($id);
                 return $this->render('offres/detailOffre', ['offre' => $offre]);
             } elseif ($request->getMethod() === 'get') {
                 (new OffresRepository())->updateToDraft($id);
-                (new MailRepository())->send_mail([(new UtilisateurRepository())->getUserById($offre->getIdutilisateur())->getEmailutilisateur()], "Archivage de votre offre", "Votre offre a été archivée");
+                (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmailutilisateur()], "Archivage de votre offre", "Votre offre a été archivée");
                 Application::redirectFromParam("/offres");
             }
             return $this->render('offres/detailOffre', ['offre' => $offre]);
@@ -353,11 +353,15 @@ class MainController extends Controller
                 "dateFin" => FormModel::date("Date de fin")->default($offre->getDateFin())->id("dateFin"),
             ]);
             $form = new FormModel($attr);
-            (new MailRepository())->send_mail([(new UtilisateurRepository())->getUserById($offre->getIdutilisateur())->getEmailutilisateur()], "Modification de votre offre", "Votre offre a été modifiée");
+            (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmailutilisateur()], "Modification de votre offre", "Votre offre a été modifiée");
             return $this->render('/offres/edit', ['offre' => $offre, 'form' => $form]);
         }
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws ServerErrorException
+     */
     public function validateOffre(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
@@ -366,7 +370,7 @@ class MainController extends Controller
 
         if ($request->getMethod() === 'get') {
             (new OffresRepository())->updateToApproved($id);
-            (new MailRepository())->send_mail([(new UtilisateurRepository())->getUserById($offre->getIdutilisateur())->getEmailutilisateur()], "Validation de votre offre", "Votre offre a été validée");
+            (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmailutilisateur()], "Validation de votre offre", "Votre offre a été validée");
             $offre = (new OffresRepository())->getByIdWithUser($id);
             return $this->render('offres/detailOffre', ['offre' => $offre]);
         }
@@ -406,7 +410,7 @@ class MainController extends Controller
 
         $userIdList = [];
         foreach ($offres as $offre) $userIdList[] = $offre->getIdutilisateur();
-        $utilisateurRepository = new UtilisateurRepository();
+        $utilisateurRepository = new UtilisateurRepository([]);
         $utilisateurs = array();
 
         if (!empty($userIdList)) {

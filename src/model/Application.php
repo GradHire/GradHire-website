@@ -4,7 +4,7 @@ namespace app\src\model;
 
 use app\src\controller\Controller;
 use app\src\core\exception\ServerErrorException;
-use app\src\model\Users\User;
+use app\src\model\repository\UtilisateurRepository;
 
 class Application
 {
@@ -12,7 +12,7 @@ class Application
     const EVENT_AFTER_REQUEST = 'afterRequest';
     public static Application $app;
     public static string $ROOT_DIR;
-    private static ?User $user = null;
+    private static ?UtilisateurRepository $user = null;
     public string $layout = 'main';
     public Router $router;
     public Request $request;
@@ -49,7 +49,7 @@ class Application
         header("Location: /");
     }
 
-    public static function getUser(): User|null
+    public static function getUser(): UtilisateurRepository|null
     {
         if (!is_null(self::$user))
             return self::$user;
@@ -57,7 +57,7 @@ class Application
         return unserialize($_SESSION["user"]);
     }
 
-    public static function setUser(User|null $user): void
+    public static function setUser(UtilisateurRepository|null $user): void
     {
         if (is_null($user) || $user->archived()) {
             Auth::logout();

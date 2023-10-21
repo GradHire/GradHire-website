@@ -6,12 +6,11 @@ use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\Form\FormModel;
+use app\src\model\repository\LdapRepository;
+use app\src\model\repository\ProRepository;
 use app\src\model\Request;
 use app\src\model\Response;
-use app\src\model\Users\EnterpriseUser;
-use app\src\model\Users\LdapUser;
-use app\src\model\Users\ProUser;
-
+use app\src\model\repository\EntrepriseRepository;
 class AuthController extends Controller
 {
 	/**
@@ -32,7 +31,7 @@ class AuthController extends Controller
 		if ($request->getMethod() === 'post') {
 			if ($form->validate($request->getBody())) {
 				$dt = $form->getParsedBody();
-				if (EnterpriseUser::register($dt, $form)) {
+				if (EntrepriseRepository::register($dt, $form)) {
 					Application::$app->response->redirect('/');
 					return '';
 				}
@@ -57,7 +56,7 @@ class AuthController extends Controller
 		if ($request->getMethod() === 'post') {
 			if ($loginForm->validate($request->getBody())) {
 				$dt = $loginForm->getParsedBody();
-				if (ProUser::login($dt["email"], $dt["password"], $dt["remember"], $loginForm)) {
+				if (ProRepository::login($dt["email"], $dt["password"], $dt["remember"], $loginForm)) {
 					Application::$app->response->redirect('/');
 					return null;
 				}
@@ -82,7 +81,7 @@ class AuthController extends Controller
 		if ($request->getMethod() === 'post') {
 			if ($loginForm->validate($request->getBody())) {
 				$dt = $loginForm->getParsedBody();
-				if (LdapUser::login($dt["username"], $dt["password"], $dt["remember"], $loginForm)) {
+				if (LdapRepository::login($dt["username"], $dt["password"], $dt["remember"], $loginForm)) {
 					Application::redirectFromParam('/');
 					return null;
 				}

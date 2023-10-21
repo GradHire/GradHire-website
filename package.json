@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "cd public_html && php -S 172.20.10.2:8888",
+    "dev": "cd public_html && php -S localhost:8080",
     "watch": "npx tailwindcss -i public_html/resources/css/input.css -o public_html/resources/css/output.css --watch"
   },
   "devDependencies": {

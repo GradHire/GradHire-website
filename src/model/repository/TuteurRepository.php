@@ -7,11 +7,23 @@ use app\src\model\dataObject\Staff;
 use app\src\model\dataObject\Tuteur;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\dataObject\Utilisateur;
+use app\src\model\repository\ProRepository;
+use app\src\model\dataObject\Roles;
 
-class TuteurRepository extends UtilisateurRepository
+class TuteurRepository extends ProRepository
 {
+    protected static string $view = "TuteurVue";
+    protected static string $update_function = "updateTuteur";
 
-    private static string $view = "TuteurVue";
+    public function role(): Roles
+    {
+        return Roles::Tutor;
+    }
+
+    public function full_name(): string
+    {
+        return $this->attributes["prenomtuteurp"] . " " . $this->attributes["nomutilisateur"];
+    }
 
     protected function construireDepuisTableau(array $dataObjectFormatTableau): Tuteur
     {

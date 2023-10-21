@@ -6,10 +6,10 @@ use app\src\model\Auth;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\repository\OffresRepository;
-use app\src\model\Users\Roles;
+use app\src\model\dataObject\Roles;
 
-$etudiant = (new EtudiantRepository())->getByIdFull($candidatures->getIdutilisateur());
-$nometudiant = (new UtilisateurRepository())->getUserById($candidatures->getIdutilisateur())->getNomutilisateur();
+$etudiant = (new EtudiantRepository([]))->getByIdFull($candidatures->getIdutilisateur());
+$nometudiant = (new UtilisateurRepository([]))->getUserById($candidatures->getIdutilisateur())->getNomutilisateur();
 $offre = (new OffresRepository())->getById($candidatures->getIdoffre());
 ?>
 

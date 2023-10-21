@@ -5,12 +5,12 @@ namespace app\src\model;
 use app\src\core\db\Database;
 use app\src\core\exception\ForbiddenException;
 use app\src\core\exception\ServerErrorException;
-use app\src\model\Users\EnterpriseUser;
-use app\src\model\Users\Roles;
-use app\src\model\Users\StaffUser;
-use app\src\model\Users\StudentUser;
-use app\src\model\Users\TutorUser;
-use app\src\model\Users\User;
+use app\src\model\repository\EntrepriseRepository;
+use app\src\model\repository\EtudiantRepository;
+use app\src\model\repository\StaffRepository;
+use app\src\model\repository\TuteurRepository;
+use app\src\model\repository\UtilisateurRepository;
+use app\src\model\dataObject\Roles;
 
 
 class Auth
@@ -29,7 +29,7 @@ class Auth
 		return !Application::isGuest() && in_array(Application::getUser()->role(), $roles);
 	}
 
-	public static function generate_token(User $user, bool $remember): void
+	public static function generate_token(UtilisateurRepository $user, bool $remember): void
 	{
 		if (session_status() == PHP_SESSION_NONE)
 			session_start();
@@ -41,7 +41,7 @@ class Auth
 	/**
 	 * @throws ServerErrorException
 	 */
-	public static function load_user_by_id(string $id): User|null
+	public static function load_user_by_id(string $id): UtilisateurRepository|null
 	{
 		try {
 			$statement = Database::get_conn()->prepare("SELECT getRole(?) FROM DUAL");
@@ -51,13 +51,13 @@ class Auth
 				return null;
 			switch ($role) {
 				case Roles::Tutor->value:
-					return TutorUser::find_by_id($id);
+					return TuteurRepository::find_by_id($id);
 				case Roles::Student->value:
-					return StudentUser::find_by_id($id);
+					return EtudiantRepository::find_by_id($id);
 				case Roles::Enterprise->value:
-					return EnterpriseUser::find_by_id($id);
+					return EntrepriseRepository::find_by_id($id);
 				case "staff";
-					return StaffUser::find_by_id($id);
+					return StaffRepository::find_by_id($id);
 			}
 		} catch (\Exception) {
 			throw new ServerErrorException();

@@ -1,12 +1,11 @@
 <?php
-/** @var $user User */
+/** @var $user \app\src\model\repository\UtilisateurRepository */
 
 /** @var $form FormModel */
 
 use app\src\model\Auth;
 use app\src\model\Form\FormModel;
-use app\src\model\Users\Roles;
-use app\src\model\Users\User;
+use app\src\model\dataObject\Roles;
 
 $this->title = 'Profile';
 ?>

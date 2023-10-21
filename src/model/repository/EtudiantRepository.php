@@ -5,11 +5,32 @@ use app\src\core\exception\ServerErrorException;
 use app\src\model\repository\AbstractRepository;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\dataObject\Etudiant;
+use app\src\model\dataObject\Roles;
 use PDOException;
 
-class EtudiantRepository extends UtilisateurRepository{
+class EtudiantRepository extends LdapRepository {
 
-    private static string $view = "EtudiantVue";
+    protected static string $view = "EtudiantVue";
+    protected static string $create_function = "creerEtu";
+    protected static string $update_function = "updateEtudiant";
+
+    public function role(): Roles
+    {
+        return Roles::Student;
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function update_year(string $new_year): void
+    {
+        try {
+            $statement = Database::get_conn()->prepare("UPDATE `EtudiantVue` SET `annee`=? WHERE idutilisateur=?");
+            $statement->execute([$new_year, $this->id]);
+        } catch (\Exception) {
+            throw new ServerErrorException();
+        }
+    }
     protected function construireDepuisTableau(array $dataObjectFormatTableau): Etudiant
     {
         return new Etudiant(
@@ -72,5 +93,4 @@ class EtudiantRepository extends UtilisateurRepository{
     {
         return "EtudiantVue";
     }
-
 }

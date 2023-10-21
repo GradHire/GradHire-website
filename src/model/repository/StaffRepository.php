@@ -7,12 +7,20 @@ use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\Staff;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\dataObject\Utilisateur;
+use app\src\model\dataObject\Roles;
 use PDOException;
+use app\src\model\repository\LdapRepository;
 
-class StaffRepository extends UtilisateurRepository
+class StaffRepository extends LdapRepository
 {
+    protected static string $view = "StaffVue";
+    protected static string $create_function = "creerStaff";
+    protected static string $update_function = "updateStaff";
 
-    private static string $view = "StaffVue";
+    public function role(): Roles
+    {
+        return Roles::tryFrom($this->attributes["role"]);
+    }
 
     protected function construireDepuisTableau(array $dataObjectFormatTableau): Staff
     {

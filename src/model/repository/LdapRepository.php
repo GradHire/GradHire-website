@@ -1,13 +1,14 @@
 <?php
 
-namespace app\src\model\Users;
+namespace app\src\model\repository;
 
 
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Auth;
 use app\src\model\Form\FormModel;
+use app\src\model\repository\UtilisateurRepository;
 
-class LdapUser extends User
+class LdapRepository extends UtilisateurRepository
 {
 	protected static string $id_attributes = "loginldap";
 
@@ -36,14 +37,14 @@ class LdapUser extends User
 			if ($response !== false) {
 				$response = json_decode($response);
 				if ($response->success === "true") {
-					$user = $response->data->type === "staff" ? StaffUser::find_by_attribute($response->data->uid) : StudentUser::find_by_attribute($response->data->uid);
+					$user = $response->data->type === "staff" ? StaffRepository::find_by_attribute($response->data->uid) : EtudiantRepository::find_by_attribute($response->data->uid);
 					if (!$user) {
-						$user = $response->data->type === "staff" ? StaffUser::save([
+						$user = $response->data->type === "staff" ? StaffRepository::save([
 							$response->data->lastname,
 							$response->data->name,
 							$response->data->email,
 							$response->data->uid
-						]) : StudentUser::save([
+						]) : EtudiantRepository::save([
 							$response->data->lastname,
 							$response->data->name,
 							$response->data->email,

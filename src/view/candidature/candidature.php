@@ -37,8 +37,8 @@ use app\src\model\repository\UtilisateurRepository;
                 foreach ($candidatures as $candidature) {
 
                     $offre = (new OffresRepository())->getById($candidature->getIdoffre());
-                    $entreprise = (new UtilisateurRepository())->getUserById($offre->getIdutilisateur());
-                    $etudiant = (new UtilisateurRepository())->getUserById($candidature->getIdutilisateur());
+                    $entreprise = (new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur());
+                    $etudiant = (new UtilisateurRepository([]))->getUserById($candidature->getIdutilisateur());
                     ?>
                     <tr class="odd:bg-zinc-50">
                         <td class="whitespace-nowrap px-4 py-2 font-medium text-zinc-900">

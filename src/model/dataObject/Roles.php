@@ -1,6 +1,6 @@
 <?php
 
-namespace app\src\model\Users;
+namespace app\src\model\dataObject;
 enum Roles: string
 {
     case Student = 'etudiant';
