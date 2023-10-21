@@ -48,7 +48,7 @@ class StaffRepository extends LdapRepository
             $requete->execute(['idutilisateur' => $idutilisateur]);
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
-            if ($resultat == false) {
+            if (!$resultat) {
                 return null;
             }
             return $this->construireDepuisTableau($resultat);

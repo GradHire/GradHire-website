@@ -165,23 +165,30 @@ class MainController extends Controller
         return $this->render('dashboard/dashboard');
     }
 
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
     public function utilisateurs(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
         if (!is_null($id) && !Auth::has_role(Roles::Manager, Roles::Staff)) throw new ForbiddenException();
         $utilisateur = null;
-        if ((new EntrepriseRepository([]))->getByIdFull($id) != null) {
-            $utilisateur = (new EntrepriseRepository([]))->getByIdFull($id);
-            return $this->render('utilisateurs/detailEntreprise', ['utilisateur' => $utilisateur]);
-        } elseif ((new EtudiantRepository([]))->getByIdFull($id) != null) {
-            $utilisateur = (new EtudiantRepository([]))->getByIdFull($id);
-            return $this->render('utilisateurs/detailEtudiant', ['utilisateur' => $utilisateur]);
-        } elseif ((new TuteurRepository([]))->getByIdFull($id) != null) {
-            $utilisateur = (new TuteurRepository([]))->getByIdFull($id);
-            return $this->render('utilisateurs/detailTuteur', ['utilisateur' => $utilisateur]);
-        } elseif ((new StaffRepository([]))->getByIdFull($id) != null) {
-            $utilisateur = (new StaffRepository([]))->getByIdFull($id);
-            return $this->render('utilisateurs/detailStaff', ['utilisateur' => $utilisateur]);
+        if ($id != null) {
+            print_r($id);
+            if ((new EntrepriseRepository([]))->getByIdFull($id) != null) {
+                $utilisateur = (new EntrepriseRepository([]))->getByIdFull($id);
+                return $this->render('utilisateurs/detailEntreprise', ['utilisateur' => $utilisateur]);
+            } elseif ((new EtudiantRepository([]))->getByIdFull($id) != null && $id != null) {
+                $utilisateur = (new EtudiantRepository([]))->getByIdFull($id);
+                return $this->render('utilisateurs/detailEtudiant', ['utilisateur' => $utilisateur]);
+            } elseif ((new TuteurRepository([]))->getByIdFull($id) != null && $id != null) {
+                $utilisateur = (new TuteurRepository([]))->getByIdFull($id);
+                return $this->render('utilisateurs/detailTuteur', ['utilisateur' => $utilisateur]);
+            } elseif ((new StaffRepository([]))->getByIdFull($id) != null && $id != null) {
+                $utilisateur = (new StaffRepository([]))->getByIdFull($id);
+                return $this->render('utilisateurs/detailStaff', ['utilisateur' => $utilisateur]);
+            }
         }
         $utilisateur = (new UtilisateurRepository([]))->getAll();
         return $this->render('utilisateurs/utilisateurs', ['utilisateurs' => $utilisateur]);
@@ -195,9 +202,11 @@ class MainController extends Controller
     public function entreprises(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
-        $entreprise = (new EntrepriseRepository([]))->getByIdFull($id);
-        if ($entreprise == null && $id != null) throw new NotFoundException();
-        else if ($entreprise != null && $id != null) {
+        $entreprise = null;
+        if ($id != null) $entreprise = (new EntrepriseRepository([]))->getByIdFull($id);
+        if ($entreprise == null && $id != null) {
+            throw new NotFoundException();
+        } else if ($entreprise != null && $id != null) {
             $offres = (new OffresRepository())->getOffresByIdEntreprise($id);
             return $this->render('entreprise/detailEntreprise', ['entreprise' => $entreprise, 'offres' => $offres]);
         }
@@ -205,7 +214,9 @@ class MainController extends Controller
         if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Student, Roles::Teacher)) {
             $entreprises = (new EntrepriseRepository([]))->getAll();
             return $this->render('entreprise/entreprise', ['entreprises' => $entreprises]);
-        } else throw new ForbiddenException();
+        } else {
+            throw new ForbiddenException();
+        }
     }
 
     /**
@@ -214,8 +225,8 @@ class MainController extends Controller
      */
     public function ListeTuteurPro(Request $request): string
     {
-        if (Auth::has_role(Roles::Manager,Roles::Staff)) $tuteurs = (new TuteurProRepository())->getAll();
-        else if (Auth::has_role(Roles::Enterprise)) $tuteurs = (new TuteurProRepository())->getAllTuteursByIdEntreprise(Application::getUser()->id());
+        if (Auth::has_role(Roles::Manager, Roles::Staff)) $tuteurs = (new TuteurProRepository([]))->getAll();
+        else if (Auth::has_role(Roles::Enterprise)) $tuteurs = (new TuteurProRepository([]))->getAllTuteursByIdEntreprise(Application::getUser()->id());
         else throw new ForbiddenException();
         return $this->render('tuteurPro/listeTuteurPro', ['tuteurs' => $tuteurs]);
     }
@@ -389,7 +400,7 @@ class MainController extends Controller
         elseif (Auth::has_role(Roles::Enterprise, Roles::Tutor) && !isset($request->getRouteParams()['id'])) {
             $id = Application::getUser()->id();
             if (Auth::has_role(Roles::Tutor)) {
-                $tuteur = (new TuteurProRepository())->getById($id);
+                $tuteur = (new TuteurProRepository([]))->getById($id);
                 $id = $tuteur->getIdentreprise();
             }
             $offres = (new OffresRepository())->getOffresByIdEntreprise($id);
@@ -479,12 +490,12 @@ class MainController extends Controller
         $id = $request->getRouteParams()['id'] ?? null;
         $candidatures = (new CandidatureRepository())->getById($id);
         if (Auth::has_role(Roles::Tutor)) $entrepriseid = (new TuteurProRepository())->getById($userid)->getIdentreprise();
-        else if(Auth::has_role(Roles::Enterprise)) $entrepriseid = $userid;
+        else if (Auth::has_role(Roles::Enterprise)) $entrepriseid = $userid;
         if ($candidatures != null && $id != null) {
-            $offre=(new OffresRepository())->getById($candidatures->getIdoffre());
-            if(Auth::has_role(Roles::Staff,Roles::Manager,Roles::Teacher) || $candidatures->getIdutilisateur()==$userid || $offre->getIdutilisateur()==$entrepriseid) {
+            $offre = (new OffresRepository())->getById($candidatures->getIdoffre());
+            if (Auth::has_role(Roles::Staff, Roles::Manager, Roles::Teacher) || $candidatures->getIdutilisateur() == $userid || $offre->getIdutilisateur() == $entrepriseid) {
                 return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
-            }else throw new ForbiddenException();
+            } else throw new ForbiddenException();
         }
         if ($request->getMethod() === 'post') {
             $id = $request->getBody()['idcandidature'] ?? null;
@@ -499,18 +510,16 @@ class MainController extends Controller
             $array = ['candidaturesAttente' => (new CandidatureRepository())->getByIdEntreprise($entrepriseid, 'on hold'),
                 'candidaturesAutres' => array_merge((new CandidatureRepository())->getByIdEntreprise($entrepriseid, 'accepted'), (new CandidatureRepository())->getByIdEntreprise($entrepriseid, 'declined'))
             ];
-        } else if (Auth::has_role(Roles::Manager, Roles::Staff,Roles::Teacher)) {
+        } else if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher)) {
 
             $array = ['candidaturesAttente' => (new CandidatureRepository())->getByStatement('on hold'),
                 'candidaturesAutres' => array_merge((new CandidatureRepository())->getByStatement('accepted'), (new CandidatureRepository())->getByStatement('declined'))
             ];
-        }
-        else if (Auth::has_role(Roles::Student)){
-            $array = ['candidaturesAttente' => (new CandidatureRepository())->getByIdEtudiant($userid,'on hold'),
-                'candidaturesAutres' => array_merge((new CandidatureRepository())->getByIdEtudiant($userid,'accepted'), (new CandidatureRepository())->getByIdEtudiant($userid,'declined'))
+        } else if (Auth::has_role(Roles::Student)) {
+            $array = ['candidaturesAttente' => (new CandidatureRepository())->getByIdEtudiant($userid, 'on hold'),
+                'candidaturesAutres' => array_merge((new CandidatureRepository())->getByIdEtudiant($userid, 'accepted'), (new CandidatureRepository())->getByIdEtudiant($userid, 'declined'))
             ];
-        }
-        else throw new ForbiddenException();
+        } else throw new ForbiddenException();
         return $this->render(
             'candidature/listCandidatures', $array);
     }

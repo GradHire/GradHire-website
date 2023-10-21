@@ -69,12 +69,12 @@ class EntrepriseRepository extends ProRepository
     public function getByIdFull($idEntreprise): ?Entreprise
     {
         try {
-            $sql = "SELECT * FROM".$this->getNomTable()." WHERE ".$this->getNomTable().".idutilisateur = :idutilisateur";
+            $sql = "SELECT * FROM " .$this->getNomTable()." WHERE ".$this->getNomTable().".idutilisateur = :idutilisateur";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idutilisateur' => $idEntreprise]);
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
-            if ($resultat == false) {
+            if (!$resultat){
                 return null;
             }
             return $this->construireDepuisTableau($resultat);
