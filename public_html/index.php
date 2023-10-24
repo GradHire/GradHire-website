@@ -88,4 +88,8 @@ $app->router->post('/utilisateurs/{id}', [MainController::class, 'utilisateurs']
 
 $app->router->get('/ListeTuteurPro', [MainController::class, 'ListeTuteurPro']);
 
+$app->router->get('/importer', [MainController::class, 'importercsv']);
+$app->router->post('/importer', [MainController::class, 'importercsv']);
+
+
 $app->run();

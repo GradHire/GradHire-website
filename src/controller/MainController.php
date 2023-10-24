@@ -510,4 +510,34 @@ class MainController extends Controller
         return $this->render(
             'candidature/listCandidatures', $array);
     }
+
+    public function importercsv(Request $request){
+
+        $form = new FormModel([
+            "file" => FormModel::file("File")->required(),
+        ]);
+        $form->useFile();
+
+        if ($request->getMethod() === 'post') {
+            if ($form->validate($request->getBody())) {
+                $path = "Import/";
+                if (!$form->getFile("file")->save($path, "file") ) {
+                    $form->setError("Impossible de télécharger tous les fichiers");
+                    return '';
+                }
+            }
+            $path = fopen("Import/file.csv", "r");
+            while (($data = fgetcsv($path, 100000, ",")) !== FALSE) {
+                $num = count($data);
+
+                echo "<p> $num champs: <br /></p>\n";
+                for ($c=0; $c < $num; $c++) {
+                    echo $data[$c] ;
+                }
+            }
+        }
+        return $this->render('Import', [
+            'form' => $form
+        ]);
+    }
 }
