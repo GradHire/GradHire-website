@@ -37,27 +37,27 @@ class LdapRepository extends UtilisateurRepository
             if ($response !== false) {
                 $response = json_decode($response);
                 if ($response->success) {
-                    $user = $response->data->type === "staff" ? StaffRepository::find_by_attribute($response->data->uid) : EtudiantRepository::find_by_attribute($response->data->uid);
+                    $user = $response->type === "staff" ? StaffRepository::find_by_attribute($response->uid) : EtudiantRepository::find_by_attribute($response->uid);
                     if (!$user) {
-                        $user = $response->data->type === "staff" ? StaffRepository::save([
-                            $response->data->lastname,
-                            $response->data->name,
-                            $response->data->email,
-                            $response->data->uid
+                        $user = $response->type === "staff" ? StaffRepository::save([
+                            $response->lastname,
+                            $response->name,
+                            $response->email,
+                            $response->uid
                         ]) : EtudiantRepository::save([
-                            $response->data->lastname,
-                            $response->data->name,
-                            $response->data->email,
-                            $response->data->uid,
-                            $response->data->year
+                            $response->lastname,
+                            $response->name,
+                            $response->email,
+                            $response->uid,
+                            $response->year
                         ]);
                     } else {
                         if ($user->archived()) {
                             $form->setError("Ce compte à été archivé");
                             return false;
                         }
-                        if ($response->data->type !== "staff")
-                            $user->update_year($response->data->year);
+                        if ($response->type !== "staff")
+                            $user->update_year($response->year);
                     }
                     Auth::generate_token($user, $remember);
                     return true;
