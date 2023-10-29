@@ -6,51 +6,59 @@ use app\src\core\db\Database;
 
 class ImportPstage
 {
-    public function importerligne($row){
-        if(!empty($row[8]) && !$this->exist($row[8],"Uniteformationrecherche","codeufr")) {
-            $this->insertIntoUniteformationrecherche($row[8],$row[9]);
+    private $db;
+
+    public function __construct()
+    {
+        $this->db = Database::get_conn();
+    }
+
+    public function importerligne($row)
+    {
+        if (!$this->recordExists('etudiant', 'numetudiant', $row[1])) $this->insertEtudiant($row);
+        if (!$this->recordExists('Annee', 'idannee', $row[36])) $this->insertAnnee($row);
+        if (!$this->recordExists('Entreprise', 'siret', $row[55])) $this->insertEntreprise($row);
+        else {
+            $entreprise = $this->find('Entreprise', 'siret', $row[55], 'identreprise');
+            $this->insertOffre($row, $entreprise);
         }
-        $this->insertIntoDepartement($row[8],$row[10]);
-        $this->insertIntoEtape($row[11],$row[12],$row[10]);
-        $this->insertIntoEtudiant($row[1],$row[2],$row[3],$row[4],$row[6],$row[7],$row[43],$row[45],$row[46],$row[47],$row[48]);
-    }
-    private function insertIntoEtudiant($numetudiant, $nom, $prenom, $tel, $mailperso, $mailetu, $sexe, $adresse, $codepostal, $pays, $ville){
-        $sql= "SELECT creerEtu FROM Dual";
     }
 
-    protected function insertIntoUniteformationrecherche($codeufr, $libelleufr){
-        $sql = "INSERT INTO Uniteformationrecherche (codeufr,libelleufr) VALUES (?, ?)";
-        $this->executeQuery($sql, [$codeufr, $libelleufr]);
+    private function find($table, $field, $value, $selectField)
+    {
+        $stmt = $this->db->prepare("SELECT $selectField FROM $table WHERE $field = $value");
+        $stmt->execute();
+        return $stmt->fetch();
     }
 
-    protected function executeQuery($sql, array $params = []){
-        $stmt = Database::get_conn()->prepare($sql);
-        $stmt->execute($params);
+    private function recordExists($table, $field, $value)
+    {
+        return $this->find($table, $field, $value, $field) ? true : false;
     }
 
-    protected function insertIntoDepartement($codeufr = null, $codedepartement = null){
-        $codedepartement = $codedepartement ?? $codeufr;
-        $codeufr = $codeufr ?? $codedepartement;
-
-        if(empty($codedepartement) || empty($codeufr) || $this->exist($codedepartement, "Departement", "codedepartement")) return;
-
-        $sql = "INSERT INTO Departement VALUES (?, ?)";
-        $this->executeQuery($sql, [$codedepartement, $codeufr]);
+    private function insertEtudiant($row)
+    {
+        $this->execute("SELECT creerEtu2 ($row[1],$row[2],$row[3], $row[4], $row[6],$row[7], $row[43], $row[45], $row[46], $row[47], $row[48]) FROM dual");
     }
 
-    public function exist($data, $table, $colonne): bool{
-        $sql = "SELECT $colonne FROM $table WHERE $colonne = ?";
-        $stmt = Database::get_conn()->prepare($sql);
-        $stmt->execute([$data]);
-        return $stmt->fetchColumn() !== false;
+    private function insertAnnee($row)
+    {
+        $this->execute("INSERT INTO Annee ($row[36])");
     }
 
-    private function insertIntoEtape($codeetape, $libelleetape, $codedepartement){
-        if(empty($codeetape) || $this->exist($codeetape, "Etape", "codeetape")) return;
-
-        $sql = "INSERT INTO Etape VALUES (?, ?, ?)";
-        $this->executeQuery($sql, [$codeetape, $libelleetape, $codedepartement]);
+    private function insertOffre($row, $entreprise)
+    {
+        $this->execute("INSERT INTO Offre (null,row[22],row[18],row[19],$row[23],row[24],row[25],row[26],row[43],row[13],row[14],null,row[36],$entreprise,row[20],null,'attribue')");
     }
 
+    private function execute($sql)
+    {
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+    }
 
+    private function insertEntreprise($row)
+    {
+        
+    }
 }
