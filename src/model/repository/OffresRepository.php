@@ -129,7 +129,7 @@ class OffresRepository extends AbstractRepository
     public function getAll(): ?array
     {
         try {
-            $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idutilisateur = Utilisateur.idutilisateur";
+            $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idUtilisateur = Utilisateur.idUtilisateur";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute();
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
@@ -162,7 +162,7 @@ class OffresRepository extends AbstractRepository
     public function updateToDraft($idOffre): bool
     {
         try {
-            $sql = "UPDATE $this->nomTable SET status = 'draft' WHERE idoffre = :idoffre";
+            $sql = "UPDATE $this->nomTable SET statut = 'draft' WHERE idoffre = :idoffre";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idoffre' => $idOffre]);
             return true;
@@ -191,26 +191,26 @@ class OffresRepository extends AbstractRepository
 
     protected function construireDepuisTableau(array $dataObjectFormatTableau): Offre
     {
-        if (!isset($dataObjectFormatTableau['nomutilisateur'])) $dataObjectFormatTableau['nomutilisateur'] = null;
+        if (!isset($dataObjectFormatTableau['nomUtilisateur'])) $dataObjectFormatTableau['nomUtilisateur'] = null;
         return new Offre(
             $dataObjectFormatTableau['idoffre'],
             $dataObjectFormatTableau['duree'],
             $dataObjectFormatTableau['thematique'],
             $dataObjectFormatTableau['sujet'],
-            $dataObjectFormatTableau['nbjourtravailhebdo'],
-            $dataObjectFormatTableau['nbheuretravailhebdo'],
+            $dataObjectFormatTableau['nbJourTravailHebdo'],
+            $dataObjectFormatTableau['nbHeureTravailHebdo'],
             $dataObjectFormatTableau['gratification'],
-            $dataObjectFormatTableau['unitegratification'],
-            $dataObjectFormatTableau['avantagenature'],
-            $dataObjectFormatTableau['datedebut'],
-            $dataObjectFormatTableau['datefin'],
-            $dataObjectFormatTableau['status'],
-            $dataObjectFormatTableau['anneevisee'],
+            $dataObjectFormatTableau['uniteGratification'],
+            $dataObjectFormatTableau['avantageNature'],
+            $dataObjectFormatTableau['dateDebut'],
+            $dataObjectFormatTableau['dateFin'],
+            $dataObjectFormatTableau['statut'],
+            $dataObjectFormatTableau['anneeVisee'],
             $dataObjectFormatTableau['idannee'],
-            $dataObjectFormatTableau['idutilisateur'],
+            $dataObjectFormatTableau['idUtilisateur'],
             $dataObjectFormatTableau['description'],
             $dataObjectFormatTableau['datecreation'],
-            $dataObjectFormatTableau['nomutilisateur']
+            $dataObjectFormatTableau['nomUtilisateur']
         );
     }
 
@@ -220,7 +220,7 @@ class OffresRepository extends AbstractRepository
     public function getByIdWithUser($idOffre): ?Offre
     {
         try {
-            $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idutilisateur = Utilisateur.idutilisateur WHERE idoffre = :idoffre";
+            $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idUtilisateur = Utilisateur.idUtilisateur WHERE idoffre = :idoffre";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idoffre' => $idOffre]);
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
@@ -238,9 +238,9 @@ class OffresRepository extends AbstractRepository
     public function getOffresByIdEntreprise($idEntreprise): ?array
     {
         try {
-            $sql = "SELECT * FROM Offre WHERE idutilisateur = :idutilisateur";
+            $sql = "SELECT * FROM Offre WHERE idUtilisateur = :idUtilisateur";
             $requete = Database::get_conn()->prepare($sql);
-            $requete->execute(['idutilisateur' => $idEntreprise]);
+            $requete->execute(['idUtilisateur' => $idEntreprise]);
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetchAll();
             if ($resultat == false) return null;
@@ -257,11 +257,12 @@ class OffresRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public function draftExist($idEntreprise): array {
+    public function draftExist($idEntreprise): array
+    {
         try {
-            $sql = "SELECT * FROM Offre WHERE idutilisateur = :idutilisateur AND status = 'draft'";
+            $sql = "SELECT * FROM Offre WHERE idUtilisateur = :idUtilisateur AND statut = 'draft'";
             $requete = Database::get_conn()->prepare($sql);
-            $requete->execute(['idutilisateur' => $idEntreprise]);
+            $requete->execute(['idUtilisateur' => $idEntreprise]);
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetchAll();
             $offres = [];
@@ -274,7 +275,7 @@ class OffresRepository extends AbstractRepository
                 $offres[] = $this->construireDepuisTableau($offre_data);
             }
             return $offres;
-        } catch (PDOException){
+        } catch (PDOException) {
             throw new ServerErrorException();
         }
     }
@@ -301,9 +302,9 @@ class OffresRepository extends AbstractRepository
     public function updateToApproved(mixed $id)
     {
         try {
-        $sql = "UPDATE $this->nomTable SET status = 'approved' WHERE idoffre = :idoffre";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idoffre' => $id]);
+            $sql = "UPDATE $this->nomTable SET statut = 'approved' WHERE idoffre = :idoffre";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idoffre' => $id]);
         } catch (PDOException) {
             throw new ServerErrorException();
         }
@@ -315,40 +316,15 @@ class OffresRepository extends AbstractRepository
     public function checkIfCreatorOffreIsArchived(Offre $offre): bool
     {
         try {
-        $sql = "SELECT archiver FROM Offre o JOIN Utilisateur u ON u.idUtilisateur = o.idUtilisateur WHERE idoffre = :idoffre";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idoffre' => $offre->getIdoffre()]);
-        $resultat = $requete->fetch();
-        if ($resultat['archiver'] == 1) return true;
-        else return false;
+            $sql = "SELECT archiver FROM Offre o JOIN Utilisateur u ON u.idUtilisateur = o.idUtilisateur WHERE idoffre = :idoffre";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idoffre' => $offre->getIdoffre()]);
+            $resultat = $requete->fetch();
+            if ($resultat['archiver'] == 1) return true;
+            else return false;
         } catch (PDOException) {
             throw new ServerErrorException();
         }
-    }
-
-    protected function getNomColonnes(): array
-    {
-        return [
-            "duree",
-            "thematique",
-            "sujet",
-            "nbjourtravailhebdo",
-            "nbheureTravailhebdo",
-            "gratification",
-            "unitegratification",
-            "avantagenature",
-            "datedebut",
-            "datefin",
-            "statut",
-            "anneevisee",
-            "datecreation"
-        ];
-    }
-
-    protected function checkFilterNotEmpty(array $filter): bool
-    {
-        foreach ($filter as $key => $value) if ($value != "") return true;
-        return false;
     }
 
     /**
@@ -371,16 +347,42 @@ class OffresRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public function checkIfUserPostuled(Offre $offre): bool{
+    public function checkIfUserPostuled(Offre $offre): bool
+    {
         try {
-            $sql = "SELECT * FROM Candidature WHERE idoffre = :idoffre AND idutilisateur = :idutilisateur";
+            $sql = "SELECT * FROM Candidature WHERE idoffre = :idoffre AND idUtilisateur = :idUtilisateur";
             $requete = Database::get_conn()->prepare($sql);
-            $requete->execute(['idoffre' => $offre->getIdoffre(), 'idutilisateur' => Auth::get_user()->id()]);
+            $requete->execute(['idoffre' => $offre->getIdoffre(), 'idUtilisateur' => Auth::get_user()->id()]);
             $resultat = $requete->fetch();
             if ($resultat == false) return false;
             else return true;
         } catch (PDOException) {
             throw new ServerErrorException();
         }
+    }
+
+    protected function getNomColonnes(): array
+    {
+        return [
+            "duree",
+            "thematique",
+            "sujet",
+            "nbJourTravailHebdo",
+            "nbheureTravailhebdo",
+            "gratification",
+            "uniteGratification",
+            "avantageNature",
+            "dateDebut",
+            "dateFin",
+            "statut",
+            "anneeVisee",
+            "datecreation"
+        ];
+    }
+
+    protected function checkFilterNotEmpty(array $filter): bool
+    {
+        foreach ($filter as $key => $value) if ($value != "") return true;
+        return false;
     }
 }

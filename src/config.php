@@ -1,6 +1,6 @@
 <?php
 
-const DB_HOSTNAME = 'webinfo.iutmontp.univ-montp2.fr';
+const DB_HOSTNAME = 'srv1046.hstgr.io';
 const DB_DB = 'u542990794_gradhire';
 const DB_PORT = '3306';
 const DB_LOGIN = 'u542990794_admin_gradhire';

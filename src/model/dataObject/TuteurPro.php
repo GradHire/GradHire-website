@@ -9,57 +9,58 @@ class TuteurPro extends Utilisateur
     private ?string $fonctiontuteurp;
     private int $identreprise;
 
-    public function __construct(int $idutilisateur,string $prenom,string $fonction,int $identreprise, string $emailutilisateur, string $nomutilisateur, string $numtelutilisateur)
+    public function __construct(int $idutilisateur, string $prenom, string $fonction, int $identreprise, string $emailutilisateur, string $nomutilisateur, string $numtelutilisateur)
     {
-        parent::__construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur,"");
-        $this->idutilisateur = $idutilisateur;
-        $this->prenomtuteurp=$prenom;
-        $this->fonctiontuteurp=$fonction;
-        $this->identreprise=$identreprise;
-    }
-    protected function getValueColonne(string $nomColonne): string
-    {
-        return $this->$nomColonne;
+        parent::__construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur, "");
+        $this->idUtilisateur = $idutilisateur;
+        $this->prenom = $prenom;
+        $this->fonction = $fonction;
+        $this->idEntreprise = $identreprise;
     }
 
     public function getIdutilisateur(): int
     {
-        return $this->idutilisateur;
+        return $this->idUtilisateur;
     }
 
     public function setIdutilisateur(int $idutilisateur): void
     {
-        $this->idutilisateur = $idutilisateur;
+        $this->idUtilisateur = $idutilisateur;
     }
 
     public function getPrenomtuteurp(): ?string
     {
-        return $this->prenomtuteurp;
+        return $this->prenom;
     }
 
     public function setPrenomtuteurp(?string $prenomtuteurp): void
     {
-        $this->prenomtuteurp = $prenomtuteurp;
+        $this->prenom = $prenomtuteurp;
     }
 
     public function getFonctiontuteurp(): ?string
     {
-        return $this->fonctiontuteurp;
+        return $this->fonction;
     }
 
     public function setFonctiontuteurp(?string $fonctiontuteurp): void
     {
-        $this->fonctiontuteurp = $fonctiontuteurp;
+        $this->fonction = $fonctiontuteurp;
     }
 
     public function getIdentreprise(): int
     {
-        return $this->identreprise;
+        return $this->idEntreprise;
     }
 
     public function setIdentreprise(int $identreprise): void
     {
-        $this->identreprise = $identreprise;
+        $this->idEntreprise = $identreprise;
+    }
+
+    protected function getValueColonne(string $nomColonne): string
+    {
+        return $this->$nomColonne;
     }
 
 }

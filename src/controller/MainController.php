@@ -100,28 +100,28 @@ class MainController extends Controller
         switch ($user->role()) {
             case Roles::Enterprise:
                 $attr = array_merge($attr, [
-                    "name" => FormModel::string("Nom entreprise")->required()->default($user->attributes()["nomutilisateur"]),
-                    "email" => FormModel::email("Adresse mail")->required()->default($user->attributes()["emailutilisateur"]),
-                    "phone" => FormModel::phone("Téléphone")->default($user->attributes()["numtelutilisateur"]),
+                    "name" => FormModel::string("Nom entreprise")->required()->default($user->attributes()["nomUtilisateur"]),
+                    "email" => FormModel::email("Adresse mail")->required()->default($user->attributes()["emailUtilisateur"]),
+                    "phone" => FormModel::phone("Téléphone")->default($user->attributes()["numTelUtilisateur"]),
                 ]);
                 break;
             case Roles::Tutor:
                 $attr = array_merge($attr, [
-                    "name" => FormModel::string("Prénom")->required()->default($user->attributes()["nomutilisateur"]),
-                    "surname" => FormModel::string("Nom")->required()->default($user->attributes()["prenomtuteurp"]),
-                    "email" => FormModel::string("Adresse mail")->required()->default($user->attributes()["emailutilisateur"]),
+                    "name" => FormModel::string("Prénom")->required()->default($user->attributes()["nomUtilisateur"]),
+                    "surname" => FormModel::string("Nom")->required()->default($user->attributes()["prenom"]),
+                    "email" => FormModel::string("Adresse mail")->required()->default($user->attributes()["emailUtilisateur"]),
                     "fonction" => FormModel::select("Fonction", [
                         "tuteur" => "Tuteur",
                         "responsable" => "Responsable"
-                    ])->required()->default($user->attributes()["fonctiontuteurp"]),
+                    ])->required()->default($user->attributes()["fonction"]),
                 ]);
                 break;
             case  Roles::Student:
                 $attr = array_merge($attr, [
-                    "email" => FormModel::email("Adresse mail perso")->default($user->attributes()["mailperso"]),
-                    "tel" => FormModel::phone("Téléphone")->numeric()->default($user->attributes()["numtelutilisateur"]),
+                    "email" => FormModel::email("Adresse mail perso")->default($user->attributes()["mailPerso"]),
+                    "tel" => FormModel::phone("Téléphone")->numeric()->default($user->attributes()["numTelUtilisateur"]),
                     "date" => FormModel::date("Date de naissance")->default($user->attributes()["datenaissance"])->before(new \DateTime()),
-                    "studentnum" => FormModel::string("Numéro Etudiant")->default($user->attributes()["numetudiant"]),
+                    "studentnum" => FormModel::string("Numéro Etudiant")->default($user->attributes()["numEtudiant"]),
                 ]);
                 break;
             case Roles::Teacher:
@@ -253,7 +253,7 @@ class MainController extends Controller
                     $form->setError("Impossible de télécharger tous les fichiers");
                     return '';
                 }
-                $stmt = Database::get_conn()->prepare("INSERT INTO `Candidature`(`idoffre`, `idutilisateur`) VALUES (?,?)");
+                $stmt = Database::get_conn()->prepare("INSERT INTO `Candidature`(`idoffre`, `idUtilisateur`) VALUES (?,?)");
                 $stmt->execute([$id, Application::getUser()->id()]);
                 Application::$app->response->redirect('/offres');
             }
@@ -353,10 +353,10 @@ class MainController extends Controller
             $attr = array_merge($attr, [
                 "sujet" => FormModel::string("Sujet")->default($offre->getSujet()),
                 "thematique" => FormModel::string("Thématique")->default($offre->getThematique()),
-                "nbjourtravailhebdo" => FormModel::int("Nombre de jours de travail hebdomadaire")->default($offre->getNbjourtravailhebdo()),
+                "nbJourTravailHebdo" => FormModel::int("Nombre de jours de travail hebdomadaire")->default($offre->getNbjourtravailhebdo()),
                 "nbHeureTravailHebdo" => FormModel::double("Nombre d'heures de travail hebdomadaire")->default($offre->getNbHeureTravailHebdo()),
                 "gratification" => FormModel::double("Gratification")->default($offre->getGratification()),
-                "unitegratification" => FormModel::string("Unité de la gratification")->default($offre->getUnitegratification()),
+                "uniteGratification" => FormModel::string("Unité de la gratification")->default($offre->getUnitegratification()),
                 "avantageNature" => FormModel::string("Avantage en nature")->default($offre->getAvantageNature()),
                 "anneeVisee" => FormModel::string("Année visée")->default($offre->getAnneeVisee()),
                 "description" => FormModel::string("Description")->default($offre->getDescription()),

@@ -1,5 +1,7 @@
 <?php
+
 namespace app\src\model\repository;
+
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\repository\AbstractRepository;
@@ -8,7 +10,8 @@ use app\src\model\dataObject\Etudiant;
 use app\src\model\dataObject\Roles;
 use PDOException;
 
-class EtudiantRepository extends LdapRepository {
+class EtudiantRepository extends LdapRepository
+{
 
     protected static string $view = "EtudiantVue";
     protected static string $create_function = "creerEtu";
@@ -25,29 +28,11 @@ class EtudiantRepository extends LdapRepository {
     public function update_year(string $new_year): void
     {
         try {
-            $statement = Database::get_conn()->prepare("UPDATE `EtudiantVue` SET `annee`=? WHERE idutilisateur=?");
+            $statement = Database::get_conn()->prepare("UPDATE `EtudiantVue` SET `annee`=? WHERE idUtilisateur=?");
             $statement->execute([$new_year, $this->id]);
         } catch (\Exception) {
             throw new ServerErrorException();
         }
-    }
-    protected function construireDepuisTableau(array $dataObjectFormatTableau): Etudiant
-    {
-        return new Etudiant(
-            $dataObjectFormatTableau["idutilisateur"],
-            $dataObjectFormatTableau["emailutilisateur"],
-            $dataObjectFormatTableau["nomutilisateur"],
-            $dataObjectFormatTableau["numtelutilisateur"],
-            $dataObjectFormatTableau["bio"],
-            $dataObjectFormatTableau["mailperso"],
-            $dataObjectFormatTableau["codesexeetudiant"],
-            $dataObjectFormatTableau["numetudiant"],
-            $dataObjectFormatTableau["datenaissance"],
-            $dataObjectFormatTableau["idgroupe"],
-            $dataObjectFormatTableau["annee"],
-            $dataObjectFormatTableau["prenomutilisateurldap"],
-            $dataObjectFormatTableau["loginldap"]
-        );
     }
 
     /**
@@ -56,12 +41,12 @@ class EtudiantRepository extends LdapRepository {
     public function getByIdFull($idutilisateur): ?Etudiant
     {
         try {
-            $sql = "SELECT * FROM " . self::$view . " WHERE idutilisateur = :idutilisateur";
+            $sql = "SELECT * FROM " . self::$view . " WHERE idUtilisateur = :idUtilisateur";
             $requete = Database::get_conn()->prepare($sql);
-            $requete->execute(['idutilisateur' => $idutilisateur]);
+            $requete->execute(['idUtilisateur' => $idutilisateur]);
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
-            if (!$resultat){
+            if (!$resultat) {
                 return null;
             }
             return $this->construireDepuisTableau($resultat);
@@ -70,22 +55,41 @@ class EtudiantRepository extends LdapRepository {
         }
     }
 
+    protected function construireDepuisTableau(array $dataObjectFormatTableau): Etudiant
+    {
+        return new Etudiant(
+            $dataObjectFormatTableau["idUtilisateur"],
+            $dataObjectFormatTableau["emailUtilisateur"],
+            $dataObjectFormatTableau["nomUtilisateur"],
+            $dataObjectFormatTableau["numTelUtilisateur"],
+            $dataObjectFormatTableau["bio"],
+            $dataObjectFormatTableau["mailPerso"],
+            $dataObjectFormatTableau["codeSexe"],
+            $dataObjectFormatTableau["numEtudiant"],
+            $dataObjectFormatTableau["datenaissance"],
+            $dataObjectFormatTableau["idgroupe"],
+            $dataObjectFormatTableau["annee"],
+            $dataObjectFormatTableau["prenomLdap"],
+            $dataObjectFormatTableau["loginLdap"]
+        );
+    }
+
     protected function getNomColonnes(): array
     {
         return [
             "idUtilisateur",
             "bio",
-            "emailutilisateur",
-            "nomutilisateur",
-            "numtelutilisateur",
-            "mailperso",
-            "codesexeetudiant",
-            "numetudiant",
+            "emailUtilisateur",
+            "nomUtilisateur",
+            "numTelUtilisateur",
+            "mailPerso",
+            "codeSexe",
+            "numEtudiant",
             "datenaissance",
             "idgroupe",
             "annee",
-            "prenomutilisateurldap",
-            "loginldap"
+            "prenomLdap",
+            "loginLdap"
         ];
     }
 

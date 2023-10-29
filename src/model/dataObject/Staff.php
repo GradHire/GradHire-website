@@ -1,8 +1,11 @@
 <?php
+
 namespace app\src\model\dataObject;
+
 use app\src\model\dataObject\Utilisateur;
 
-class Staff extends Utilisateur {
+class Staff extends Utilisateur
+{
 
     private int $idUtilisateur;
     private string $prenomUtilisateurLDAP;
@@ -17,7 +20,7 @@ class Staff extends Utilisateur {
         $this->prenomUtilisateurLDAP = $prenomUtilisateurLDAP;
         $this->loginLDAP = $loginLDAP;
         $this->role = $role;
-        $this->mailuni = $mailuni;
+        $this->mailUni = $mailuni;
     }
 
     public function getIdUtilisateur(): int
@@ -62,12 +65,12 @@ class Staff extends Utilisateur {
 
     public function getMailuni(): ?string
     {
-        return $this->mailuni;
+        return $this->mailUni;
     }
 
     public function setMailuni(?string $mailuni): void
     {
-        $this->mailuni = $mailuni;
+        $this->mailUni = $mailuni;
     }
 
 }

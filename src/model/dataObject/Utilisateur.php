@@ -19,56 +19,51 @@ class Utilisateur extends AbstractDataObject
      */
     public function __construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur, $bio)
     {
-        $this->idutilisateur = $idutilisateur;
-        $this->emailutilisateur = $emailutilisateur;
-        $this->nomutilisateur = $nomutilisateur;
-        $this->numtelutilisateur = $numtelutilisateur;
+        $this->idUtilisateur = $idutilisateur;
+        $this->emailUtilisateur = $emailutilisateur;
+        $this->nomUtilisateur = $nomutilisateur;
+        $this->numTelUtilisateur = $numtelutilisateur;
         $this->bio = $bio;
     }
 
     public function getNumtelutilisateur(): ?string
     {
-        return $this->numtelutilisateur;
+        return $this->numTelUtilisateur;
     }
 
     public function setNumtelutilisateur(?string $numtelutilisateur): void
     {
-        $this->numtelutilisateur = $numtelutilisateur;
+        $this->numTelUtilisateur = $numtelutilisateur;
     }
 
     public function getNomutilisateur(): string
     {
-        return $this->nomutilisateur;
+        return $this->nomUtilisateur;
     }
 
     public function setNomutilisateur(string $nomutilisateur): void
     {
-        $this->nomutilisateur = $nomutilisateur;
+        $this->nomUtilisateur = $nomutilisateur;
     }
 
     public function getEmailutilisateur(): string
     {
-        return $this->emailutilisateur;
+        return $this->emailUtilisateur;
     }
 
     public function setEmailutilisateur(string $emailutilisateur): void
     {
-        $this->emailutilisateur = $emailutilisateur;
+        $this->emailUtilisateur = $emailutilisateur;
     }
 
     public function getIdutilisateur(): int
     {
-        return $this->idutilisateur;
+        return $this->idUtilisateur;
     }
 
     public function setIdutilisateur(int $idutilisateur): void
     {
-        $this->idutilisateur = $idutilisateur;
-    }
-
-    protected function getValueColonne(string $nomColonne): string
-    {
-        return $this->$nomColonne;
+        $this->idUtilisateur = $idutilisateur;
     }
 
     public function getBio(): ?string
@@ -79,6 +74,11 @@ class Utilisateur extends AbstractDataObject
     public function setBio(?string $bio): void
     {
         $this->bio = $bio;
+    }
+
+    protected function getValueColonne(string $nomColonne): string
+    {
+        return $this->$nomColonne;
     }
 
 }

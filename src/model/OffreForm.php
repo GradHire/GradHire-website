@@ -37,12 +37,12 @@ class OffreForm extends Model
         $pdoStatement->execute($values);
         $id = Database::get_conn()->lastInsertId();
 
-        if($offre->getStatut() == "pending"){
+        if ($offre->getStatut() == "pending") {
             $emails = (new StaffRepository([]))->getManagersEmail();
             MailRepository::send_mail($emails, "Nouvelle offre", '
  <div>
- <p>L\'entreprise '.Application::getUser()->attributes()["nomutilisateur"].' viens de créer une nouvelle offre</p>
- <a href="http://localhost:8080/offres/'.$id.'">Voir l\'offre</a>
+ <p>L\'entreprise ' . Application::getUser()->attributes()["nomUtilisateur"] . ' viens de créer une nouvelle offre</p>
+ <a href="http://localhost:8080/offres/' . $id . '">Voir l\'offre</a>
  </div>');
         }
 
@@ -72,8 +72,10 @@ class OffreForm extends Model
         }
         return true;
     }
-    public static function updateOffre(Offre $offre, ?float $distanciel){
-        $sql = "UPDATE Offre SET duree=:dureeTag, thematique=:thematiqueTag, sujet=:sujetTag, nbjourtravailhebdo=:nbJourTravailHebdoTag, nbHeureTravailHebdo=:nbHeureTravailHebdoTag, gratification=:gratificationTag, unitegratification=:unitegratificationTag, avantageNature=:avantageNatureTag, dateDebut=:dateDebutTag, dateFin=:dateFinTag, anneeVisee=:anneeViseeTag, idAnnee=:idAnneeTag, idUtilisateur=:idUtilisateurTag, description=:descriptionTag, status=:statutTag WHERE idOffre=:idOffreTag";
+
+    public static function updateOffre(Offre $offre, ?float $distanciel)
+    {
+        $sql = "UPDATE Offre SET duree=:dureeTag, thematique=:thematiqueTag, sujet=:sujetTag, nbJourTravailHebdo=:nbJourTravailHebdoTag, nbHeureTravailHebdo=:nbHeureTravailHebdoTag, gratification=:gratificationTag, uniteGratification=:unitegratificationTag, avantageNature=:avantageNatureTag, dateDebut=:dateDebutTag, dateFin=:dateFinTag, anneeVisee=:anneeViseeTag, idAnnee=:idAnneeTag, idUtilisateur=:idUtilisateurTag, description=:descriptionTag, statut=:statutTag WHERE idOffre=:idOffreTag";
         $pdoStatement = Database::get_conn()->prepare($sql);
         $values = array(
             "idOffreTag" => $offre->getIdOffre(),
@@ -98,7 +100,7 @@ class OffreForm extends Model
         } catch (PDOException $e) {
             return false;
         }
-        if($distanciel!=null){
+        if ($distanciel != null) {
             $sql = "UPDATE Offrealternance SET alternance=:alternanceTag WHERE idOffre=:idOffreTag";
             $pdoStatement = Database::get_conn()->prepare($sql);
             $values = array(

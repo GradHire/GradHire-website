@@ -13,123 +13,19 @@ use PDOException;
 class UtilisateurRepository extends AbstractRepository
 {
 
-    private string $nomTable = "Utilisateur";
     protected static string $view = '';
     protected static string $id_attributes = '';
     protected static string $create_function = '';
-
     protected static string $update_function = '';
     protected int $id;
     protected array $attributes;
+    private string $nomTable = "Utilisateur";
 
     public function __construct(array $attributes)
     {
         if (count($attributes) == 0) return;
         $this->attributes = $attributes;
-        $this->id = $attributes["idutilisateur"] ?? 0;
-    }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public function getAll(): ?array
-    {
-        try {
-            $sql = "SELECT * FROM $this->nomTable";
-            $requete = Database::get_conn()->prepare($sql);
-            $requete->execute();
-            $resultat = $requete->fetchAll();
-            $utilisateurs = [];
-            foreach ($resultat as $utilisateur) {
-                $utilisateurs[] = $this->construireDepuisTableau($utilisateur);
-            }
-            return $utilisateurs;
-        } catch (PDOException) {
-            throw new ServerErrorException();
-        }
-    }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public function getUserById($idUtilisateur): ?Utilisateur
-    {
-        try {
-            $sql = "SELECT * FROM $this->nomTable WHERE idutilisateur = :idutilisateur";
-            $requete = Database::get_conn()->prepare($sql);
-            $requete->execute(['idutilisateur' => $idUtilisateur]);
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
-            $resultat = $requete->fetch();
-            if ($resultat == false) {
-                return null;
-            }
-            return $this->construireDepuisTableau($resultat);
-        } catch (PDOException) {
-            throw new ServerErrorException();
-        }
-    }
-
-    protected function construireDepuisTableau(array $dataObjectFormatTableau): Utilisateur
-    {
-        return new Utilisateur(
-            $dataObjectFormatTableau['idutilisateur'],
-            $dataObjectFormatTableau['emailutilisateur'] ?? "",
-            $dataObjectFormatTableau['nomutilisateur'] ?? "",
-            $dataObjectFormatTableau['numtelutilisateur'] ?? "",
-            $dataObjectFormatTableau['bio'] ?? "",
-        );
-    }
-
-    protected function getNomColonnes(): array
-    {
-        return [
-            "numtelutilisateur",
-            "nomutilisateur",
-            "emailutilisateur",
-            "idutilisateur"
-        ];
-    }
-
-    protected function getNomTable(): string
-    {
-        return $this->nomTable;
-    }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public function setUserToArchived(Utilisateur $user, bool $bool): void
-    {
-        try {
-            $sql = "UPDATE Utilisateur SET archiver = :bool WHERE idutilisateur = :idutilisateur";
-            $requete = Database::get_conn()->prepare($sql);
-            $values = [
-                'idutilisateur' => $user->getIdutilisateur(),
-                'bool' => $bool ? 1 : 0
-            ];
-            $requete->execute($values);
-            echo "L'utilisateur a été archivé";
-        } catch (PDOException) {
-            throw new ServerErrorException();
-        }
-    }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public function isArchived(Utilisateur $utilisateur): ?bool{
-        try {
-            $sql = "SELECT archiver FROM Utilisateur WHERE idutilisateur = :idutilisateur";
-            $requete = Database::get_conn()->prepare($sql);
-            $requete->execute(['idutilisateur' => $utilisateur->getIdutilisateur()]);
-            $resultat = $requete->fetch();
-            if ($resultat == false) {
-                return null;
-            }
-            return $resultat['archiver'];
-        } catch (PDOException) {
-            throw new ServerErrorException();
-        }
+        $this->id = $attributes["idUtilisateur"] ?? 0;
     }
 
     /**
@@ -169,12 +65,101 @@ class UtilisateurRepository extends AbstractRepository
     public static function find_by_id(string $id): null|static
     {
         try {
-            $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE idutilisateur = ?");
+            $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE idUtilisateur = ?");
             $statement->execute([$id]);
             $user = $statement->fetch();
             if (is_null($user) || $user === false) return null;
             return new static($user);
         } catch (\Exception) {
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function getAll(): ?array
+    {
+        try {
+            $sql = "SELECT * FROM $this->nomTable";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute();
+            $resultat = $requete->fetchAll();
+            $utilisateurs = [];
+            foreach ($resultat as $utilisateur) {
+                $utilisateurs[] = $this->construireDepuisTableau($utilisateur);
+            }
+            return $utilisateurs;
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
+    }
+
+    protected function construireDepuisTableau(array $dataObjectFormatTableau): Utilisateur
+    {
+        return new Utilisateur(
+            $dataObjectFormatTableau['idUtilisateur'],
+            $dataObjectFormatTableau['emailUtilisateur'] ?? "",
+            $dataObjectFormatTableau['nomUtilisateur'] ?? "",
+            $dataObjectFormatTableau['numTelUtilisateur'] ?? "",
+            $dataObjectFormatTableau['bio'] ?? "",
+        );
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function getUserById($idUtilisateur): ?Utilisateur
+    {
+        try {
+            $sql = "SELECT * FROM $this->nomTable WHERE idUtilisateur = :idUtilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idUtilisateur' => $idUtilisateur]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetch();
+            if ($resultat == false) {
+                return null;
+            }
+            return $this->construireDepuisTableau($resultat);
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function setUserToArchived(Utilisateur $user, bool $bool): void
+    {
+        try {
+            $sql = "UPDATE Utilisateur SET archiver = :bool WHERE idUtilisateur = :idUtilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $values = [
+                'idUtilisateur' => $user->getIdutilisateur(),
+                'bool' => $bool ? 1 : 0
+            ];
+            $requete->execute($values);
+            echo "L'utilisateur a été archivé";
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function isArchived(Utilisateur $utilisateur): ?bool
+    {
+        try {
+            $sql = "SELECT archiver FROM Utilisateur WHERE idUtilisateur = :idUtilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idUtilisateur' => $utilisateur->getIdutilisateur()]);
+            $resultat = $requete->fetch();
+            if ($resultat == false) {
+                return null;
+            }
+            return $resultat['archiver'];
+        } catch (PDOException) {
             throw new ServerErrorException();
         }
     }
@@ -214,7 +199,7 @@ class UtilisateurRepository extends AbstractRepository
     public function refresh(): void
     {
         try {
-            $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE idutilisateur = ?");
+            $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE idUtilisateur = ?");
             $statement->execute([$this->id]);
             $user = $statement->fetch();
             if (is_null($user)) throw new ServerErrorException();
@@ -242,7 +227,7 @@ class UtilisateurRepository extends AbstractRepository
 
     public function full_name(): string
     {
-        return $this->attributes["nomutilisateur"];
+        return $this->attributes["nomUtilisateur"];
     }
 
     public function archived(): bool
@@ -253,5 +238,20 @@ class UtilisateurRepository extends AbstractRepository
     public function getId()
     {
         return $this->id;
+    }
+
+    protected function getNomColonnes(): array
+    {
+        return [
+            "numTelUtilisateur",
+            "nomUtilisateur",
+            "emailUtilisateur",
+            "idUtilisateur"
+        ];
+    }
+
+    protected function getNomTable(): string
+    {
+        return $this->nomTable;
     }
 }

@@ -22,30 +22,15 @@ class StaffRepository extends LdapRepository
         return Roles::tryFrom($this->attributes["role"]);
     }
 
-    protected function construireDepuisTableau(array $dataObjectFormatTableau): Staff
-    {
-        return new Staff(
-            $dataObjectFormatTableau["idutilisateur"],
-            $dataObjectFormatTableau["bio"],
-            $dataObjectFormatTableau["emailutilisateur"],
-            $dataObjectFormatTableau["nomutilisateur"],
-            $dataObjectFormatTableau["numtelutilisateur"],
-            $dataObjectFormatTableau["prenomutilisateurldap"],
-            $dataObjectFormatTableau["loginldap"],
-            $dataObjectFormatTableau["role"],
-            $dataObjectFormatTableau["mailuni"]
-        );
-    }
-
     /**
      * @throws ServerErrorException
      */
     public function getByIdFull($idutilisateur): ?Staff
     {
         try {
-            $sql = "SELECT * FROM " . self::$view . " WHERE idutilisateur = :idutilisateur";
+            $sql = "SELECT * FROM " . self::$view . " WHERE idUtilisateur = :idUtilisateur";
             $requete = Database::get_conn()->prepare($sql);
-            $requete->execute(['idutilisateur' => $idutilisateur]);
+            $requete->execute(['idUtilisateur' => $idutilisateur]);
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
             if (!$resultat) {
@@ -57,17 +42,32 @@ class StaffRepository extends LdapRepository
         }
     }
 
+    protected function construireDepuisTableau(array $dataObjectFormatTableau): Staff
+    {
+        return new Staff(
+            $dataObjectFormatTableau["idUtilisateur"],
+            $dataObjectFormatTableau["bio"],
+            $dataObjectFormatTableau["emailUtilisateur"],
+            $dataObjectFormatTableau["nomUtilisateur"],
+            $dataObjectFormatTableau["numTelUtilisateur"],
+            $dataObjectFormatTableau["prenomLdap"],
+            $dataObjectFormatTableau["loginLdap"],
+            $dataObjectFormatTableau["role"],
+            $dataObjectFormatTableau["mailUni"]
+        );
+    }
+
     /**
      * @throws ServerErrorException
      */
     public function getManagersEmail(): array
     {
         try {
-            $stmt = Database::get_conn()->prepare("SELECT emailutilisateur FROM StaffVue WHERE role='responsable'");
+            $stmt = Database::get_conn()->prepare("SELECT emailUtilisateur FROM StaffVue WHERE role='responsable'");
             $stmt->execute();
             $emails = [];
             foreach ($stmt->fetchAll() as $email)
-                $emails[] = $email["emailutilisateur"];
+                $emails[] = $email["emailUtilisateur"];
             return $emails;
         } catch (\Exception) {
             throw new ServerErrorException();
@@ -79,13 +79,13 @@ class StaffRepository extends LdapRepository
         return [
             "idUtilisateur",
             "bio",
-            "emailutilisateur",
-            "nomutilisateur",
-            "numtelutilisateur",
-            "prenomutilisateurldap",
-            "loginldap",
+            "emailUtilisateur",
+            "nomUtilisateur",
+            "numTelUtilisateur",
+            "prenomLdap",
+            "loginLdap",
             "role",
-            "mailuni"
+            "mailUni"
         ];
     }
 

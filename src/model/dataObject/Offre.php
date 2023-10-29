@@ -54,20 +54,20 @@ class Offre extends AbstractDataObject
         $this->duree = $duree;
         $this->thematique = $thematique;
         $this->sujet = $sujet;
-        $this->nbjourtravailhebdo = $nbJourTravailHebdo;
+        $this->nbJourTravailHebdo = $nbJourTravailHebdo;
         $this->nbHeureTravailHebdo = $nbHeureTravailHebdo;
         $this->gratification = $gratification;
-        $this->unitegratification = $unitegratification;
+        $this->uniteGratification = $unitegratification;
         $this->avantageNature = $avantageNature;
         $this->dateDebut = $dateDebut;
         $this->dateFin = $dateFin;
         $this->statut = $statut;
         $this->anneeVisee = $anneeVisee;
         $this->idAnnee = $idAnnee;
-        $this->idutilisateur = $idUtilisateur;
+        $this->idUtilisateur = $idUtilisateur;
         $this->description = $description;
         $this->datecreation = $datecreation;
-        $this->nomutilisateur = $nomutilisateur;
+        $this->nomUtilisateur = $nomutilisateur;
     }
 
     public function getId(): ?int
@@ -133,7 +133,7 @@ class Offre extends AbstractDataObject
      */
     public function getNbjourtravailhebdo(): ?int
     {
-        return $this->nbjourtravailhebdo;
+        return $this->nbJourTravailHebdo;
     }
 
     /**
@@ -141,7 +141,7 @@ class Offre extends AbstractDataObject
      */
     public function setNbjourtravailhebdo(int $nbjourtravailhebdo): void
     {
-        $this->nbjourtravailhebdo = $nbjourtravailhebdo;
+        $this->nbJourTravailHebdo = $nbjourtravailhebdo;
     }
 
     /**
@@ -181,7 +181,7 @@ class Offre extends AbstractDataObject
      */
     public function getUnitegratification(): ?string
     {
-        return $this->unitegratification;
+        return $this->uniteGratification;
     }
 
     /**
@@ -189,7 +189,7 @@ class Offre extends AbstractDataObject
      */
     public function setUnitegratification(string $unitegratification): void
     {
-        $this->unitegratification = $unitegratification;
+        $this->uniteGratification = $unitegratification;
     }
 
     /**
@@ -285,7 +285,7 @@ class Offre extends AbstractDataObject
      */
     public function getIdutilisateur(): int
     {
-        return $this->idutilisateur;
+        return $this->idUtilisateur;
     }
 
     public function getDescription(): string
@@ -308,7 +308,7 @@ class Offre extends AbstractDataObject
 
     public function getNomutilisateur()
     {
-        return $this->nomutilisateur;
+        return $this->nomUtilisateur;
     }
 
     public function getPicture(): string
@@ -317,16 +317,17 @@ class Offre extends AbstractDataObject
         return "https://as2.ftcdn.net/v2/jpg/00/64/67/63/1000_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg";
     }
 
-    protected function getValueColonne(string $nomColonne): string
-    {
-        return $this->$nomColonne;
-    }
-
     /**
      * @throws ServerErrorException
      */
-    public function getUserPostuled(): bool{
+    public function getUserPostuled(): bool
+    {
         return (new OffresRepository())->checkIfUserPostuled($this);
+    }
+
+    protected function getValueColonne(string $nomColonne): string
+    {
+        return $this->$nomColonne;
     }
 
 }

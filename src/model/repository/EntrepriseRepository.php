@@ -9,6 +9,7 @@ use app\src\model\dataObject\Roles;
 use PDOException;
 use app\src\core\db\Database;
 use app\src\model\dataObject\Entreprise;
+
 class EntrepriseRepository extends ProRepository
 {
     protected static string $view = "EntrepriseVue";
@@ -48,7 +49,7 @@ class EntrepriseRepository extends ProRepository
     public static function exist(string $email, string $siret): bool
     {
         try {
-            $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE emailutilisateur=? OR siret=?");
+            $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE emailUtilisateur=? OR siret=?");
             $statement->execute([$email, $siret]);
             $count = $statement->rowCount();
             if ($count == 0) return false;
@@ -69,12 +70,12 @@ class EntrepriseRepository extends ProRepository
     public function getByIdFull($idEntreprise): ?Entreprise
     {
         try {
-            $sql = "SELECT * FROM " .$this->getNomTable()." WHERE ".$this->getNomTable().".idutilisateur = :idutilisateur";
+            $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE " . $this->getNomTable() . ".idUtilisateur = :idUtilisateur";
             $requete = Database::get_conn()->prepare($sql);
-            $requete->execute(['idutilisateur' => $idEntreprise]);
+            $requete->execute(['idUtilisateur' => $idEntreprise]);
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
-            if (!$resultat){
+            if (!$resultat) {
                 return null;
             }
             return $this->construireDepuisTableau($resultat);
@@ -83,21 +84,26 @@ class EntrepriseRepository extends ProRepository
         }
     }
 
+    protected function getNomTable(): string
+    {
+        return self::$view;
+    }
+
     protected function construireDepuisTableau(array $entrepriseData): Entreprise
     {
         return new Entreprise(
-            $entrepriseData['idutilisateur'],
+            $entrepriseData['idUtilisateur'],
             $entrepriseData['bio'] ?? "",
-            $entrepriseData['statutjuridique'] ?? "",
-            $entrepriseData['typestructure'] ?? "",
+            $entrepriseData['statutJuridique'] ?? "",
+            $entrepriseData['typeStructure'] ?? "",
             $entrepriseData['effectif'] ?? "",
-            $entrepriseData['codenaf'] ?? "",
+            $entrepriseData['codeNaf'] ?? "",
             $entrepriseData['fax'] ?? "",
-            $entrepriseData['siteweb'] ?? "",
+            $entrepriseData['siteWeb'] ?? "",
             $entrepriseData['siret'] ?? 0,
-            $entrepriseData['emailutilisateur'] ?? "",
-            $entrepriseData['nomutilisateur'] ?? "",
-            $entrepriseData['numtelutilisateur'] ?? ""
+            $entrepriseData['emailUtilisateur'] ?? "",
+            $entrepriseData['nomUtilisateur'] ?? "",
+            $entrepriseData['numTelUtilisateur'] ?? ""
         );
     }
 
@@ -107,43 +113,36 @@ class EntrepriseRepository extends ProRepository
     public function getAll(): ?array
     {
         try {
-        $sql = "SELECT * FROM ". $this->getNomTable() . " JOIN Utilisateur ON ". $this->getNomTable() . ".idutilisateur = Utilisateur.idutilisateur";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute();
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetchAll();
-        if ($resultat == false) {
-            return null;
-        }
-        $entreprises = [];
-        foreach ($resultat as $entrepriseData) {
-            $entreprises[] = $this->construireDepuisTableau($entrepriseData);
-        }
-        return $entreprises;
+            $sql = "SELECT * FROM " . $this->getNomTable() . " JOIN Utilisateur ON " . $this->getNomTable() . ".idUtilisateur = Utilisateur.idUtilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute();
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetchAll();
+            if ($resultat == false) {
+                return null;
+            }
+            $entreprises = [];
+            foreach ($resultat as $entrepriseData) {
+                $entreprises[] = $this->construireDepuisTableau($entrepriseData);
+            }
+            return $entreprises;
         } catch (PDOException) {
             throw new ServerErrorException();
         }
     }
 
-	protected function getNomTable(): string
-	{
-        return self::$view;
-	}
-
-
-
-	protected function getNomColonnes(): array
-	{
-		return [
-			"idutilisateur",
-			"statutjuridique",
+    protected function getNomColonnes(): array
+    {
+        return [
+            "idUtilisateur",
+            "statutJuridique",
             "bio",
-			"typestructure",
-			"effectif",
-			"codenaf",
-			"fax",
-			"siteweb",
-			"siret",
-		];
-	}
+            "typeStructure",
+            "effectif",
+            "codeNaf",
+            "fax",
+            "siteWeb",
+            "siret",
+        ];
+    }
 }

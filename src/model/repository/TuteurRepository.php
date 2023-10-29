@@ -24,22 +24,7 @@ class TuteurRepository extends ProRepository
 
     public function full_name(): string
     {
-        return $this->attributes["prenomtuteurp"] . " " . $this->attributes["nomutilisateur"];
-    }
-
-    protected function construireDepuisTableau(array $dataObjectFormatTableau): Tuteur
-    {
-        return new Tuteur(
-            $dataObjectFormatTableau["idutilisateur"],
-            $dataObjectFormatTableau["bio"],
-            $dataObjectFormatTableau["emailutilisateur"],
-            $dataObjectFormatTableau["nomutilisateur"],
-            $dataObjectFormatTableau["numtelutilisateur"],
-            $dataObjectFormatTableau["hash"],
-            $dataObjectFormatTableau["prenomtuteurp"],
-            $dataObjectFormatTableau["fonctiontuteurp"],
-            $dataObjectFormatTableau["identreprise"]
-        );
+        return $this->attributes["prenom"] . " " . $this->attributes["nomUtilisateur"];
     }
 
     /**
@@ -48,9 +33,9 @@ class TuteurRepository extends ProRepository
     public function getByIdFull($idutilisateur): ?Tuteur
     {
         try {
-            $sql = "SELECT * FROM " . self::$view . " WHERE idutilisateur = :idutilisateur";
+            $sql = "SELECT * FROM " . self::$view . " WHERE idUtilisateur = :idUtilisateur";
             $requete = Database::get_conn()->prepare($sql);
-            $requete->execute(['idutilisateur' => $idutilisateur]);
+            $requete->execute(['idUtilisateur' => $idutilisateur]);
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
             if (!$resultat) {
@@ -62,18 +47,33 @@ class TuteurRepository extends ProRepository
         }
     }
 
+    protected function construireDepuisTableau(array $dataObjectFormatTableau): Tuteur
+    {
+        return new Tuteur(
+            $dataObjectFormatTableau["idUtilisateur"],
+            $dataObjectFormatTableau["bio"],
+            $dataObjectFormatTableau["emailUtilisateur"],
+            $dataObjectFormatTableau["nomUtilisateur"],
+            $dataObjectFormatTableau["numTelUtilisateur"],
+            $dataObjectFormatTableau["hash"],
+            $dataObjectFormatTableau["prenom"],
+            $dataObjectFormatTableau["fonction"],
+            $dataObjectFormatTableau["idEntreprise"]
+        );
+    }
+
     protected function getNomColonnes(): array
     {
         return [
-            "idutilisateur",
+            "idUtilisateur",
             "bio",
-            "emailutilisateur",
-            "nomutilisateur",
-            "numtelutilisateur",
+            "emailUtilisateur",
+            "nomUtilisateur",
+            "numTelUtilisateur",
             "hash",
-            "prenomtuteurp",
-            "fonctiontuteurp",
-            "identreprise"
+            "prenom",
+            "fonction",
+            "idEntreprise"
         ];
     }
 
