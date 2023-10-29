@@ -6,11 +6,10 @@ namespace app\src\model\repository;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Auth;
 use app\src\model\Form\FormModel;
-use app\src\model\repository\UtilisateurRepository;
 
 class LdapRepository extends UtilisateurRepository
 {
-    protected static string $id_attributes = "loginLdap";
+    protected static string $id_attributes = "loginldap";
 
     /**
      * @throws ServerErrorException
@@ -29,35 +28,36 @@ class LdapRepository extends UtilisateurRepository
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => array("username" => $username, "password" => $password),
+                CURLOPT_POSTFIELDS => array("login" => $username, "password" => $password),
                 CURLOPT_SSL_VERIFYPEER => false,
             ));
 
             $response = curl_exec($curl);
+            curl_close($curl);
             if ($response !== false) {
                 $response = json_decode($response);
-                if ($response->success === "true") {
-                    $user = $response->data->type === "staff" ? StaffRepository::find_by_attribute($response->data->uid) : EtudiantRepository::find_by_attribute($response->data->uid);
+                if ($response->success) {
+                    $user = $response->type === "staff" ? StaffRepository::find_by_attribute($response->uid) : EtudiantRepository::find_by_attribute($response->uid);
                     if (!$user) {
-                        $user = $response->data->type === "staff" ? StaffRepository::save([
-                            $response->data->lastname,
-                            $response->data->name,
-                            $response->data->email,
-                            $response->data->uid
+                        $user = $response->type === "staff" ? StaffRepository::save([
+                            $response->lastname,
+                            $response->name,
+                            $response->email,
+                            $response->uid
                         ]) : EtudiantRepository::save([
-                            $response->data->lastname,
-                            $response->data->name,
-                            $response->data->email,
-                            $response->data->uid,
-                            $response->data->year
+                            $response->lastname,
+                            $response->name,
+                            $response->email,
+                            $response->uid,
+                            $response->year
                         ]);
                     } else {
                         if ($user->archived()) {
                             $form->setError("Ce compte à été archivé");
                             return false;
                         }
-                        if ($response->data->type !== "staff")
-                            $user->update_year($response->data->year);
+                        if ($response->type !== "staff")
+                            $user->update_year($response->year);
                     }
                     Auth::generate_token($user, $remember);
                     return true;
@@ -74,6 +74,6 @@ class LdapRepository extends UtilisateurRepository
 
     public function full_name(): string
     {
-        return $this->attributes['prenomLdap'] . " " . $this->attributes['nomUtilisateur'];
+        return $this->attributes['prenomutilisateurldap'] . " " . $this->attributes['nomutilisateur'];
     }
 }
