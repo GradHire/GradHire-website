@@ -71,6 +71,6 @@ class LdapRepository extends UtilisateurRepository
     public
     function full_name(): string
     {
-        return $this->attributes['prenomLdap'] . " " . $this->attributes['nomUtilisateur'];
+        return $this->attributes['prenom'] . " " . $this->attributes['nom'];
     }
 }

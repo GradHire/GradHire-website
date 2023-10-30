@@ -60,7 +60,7 @@ class Auth
                     return StaffRepository::find_by_id($id);
             }
         } catch (\Exception) {
-            throw new ServerErrorException();
+            //throw new ServerErrorException();
         }
 
         return null;

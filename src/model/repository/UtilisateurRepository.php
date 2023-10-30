@@ -33,7 +33,6 @@ class UtilisateurRepository extends AbstractRepository
     public static function find_by_attribute(string $value): null|static
     {
         $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE " . static::$id_attributes . " = ?");
-        print_r($statement->queryString);
         $statement->execute([$value]);
 
         $user = $statement->fetch();
@@ -47,14 +46,10 @@ class UtilisateurRepository extends AbstractRepository
     public
     static function save(array $values): static
     {
-        try {
-            $statement = Database::get_conn()->prepare("SELECT " . static::$create_function . "(" . ltrim(str_repeat(",?", count($values)), ",") . ") FROM DUAL");
-            $statement->execute($values);
-            return static::find_by_id(intval($statement->fetchColumn()));
-        } catch
-        (\Exception) {
-            throw new ServerErrorException();
-        }
+        $statement = Database::get_conn()->prepare("SELECT " . static::$create_function . "(" . ltrim(str_repeat(",?", count($values)), ",") . ") FROM DUAL");
+        $statement->execute($values);
+        return static::find_by_id(intval($statement->fetchColumn()));
+
     }
 
     /**

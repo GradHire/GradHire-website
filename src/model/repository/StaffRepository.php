@@ -70,7 +70,7 @@ class StaffRepository extends LdapRepository
             return $emails;
         } catch
         (\Exception) {
-            throw new ServerErrorException();
+            //throw new ServerErrorException();
         }
     }
 
