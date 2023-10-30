@@ -48,11 +48,20 @@ use app\src\model\repository\UtilisateurRepository;
                 ?></dd>
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt class="text-sm font-medium leading-6 text-zinc-900">Biographie</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="email">
+            <dt class="text-sm font-medium leading-6 text-zinc-900">Prenom Utilisateur</dt>
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="nom">
                 <?php
-                $bio = $utilisateur->getBio();
-                if ($bio != null) echo $bio;
+                $prenom = $utilisateur->getPrenom();
+                if ($prenom != null) echo $prenom;
+                else echo("Non renseigné");
+                ?></dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-zinc-900">Login LDAP</dt>
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="nom">
+                <?php
+                $loginldap = $utilisateur->getLoginLDAP();
+                if ($loginldap != null) echo $loginldap;
                 else echo("Non renseigné");
                 ?></dd>
         </div>
@@ -75,24 +84,6 @@ use app\src\model\repository\UtilisateurRepository;
                 ?></dd>
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt class="text-sm font-medium leading-6 text-zinc-900">Email Personnel</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
-                <?php
-                $emailPerso = $utilisateur->getMailperso();
-                if ($emailPerso != null) echo $emailPerso;
-                else echo("Non renseigné");
-                ?></dd>
-        </div>
-        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt class="text-sm font-medium leading-6 text-zinc-900">Sexe</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
-                <?php
-                $sexe = $utilisateur->getCodesexeetudiant();
-                if ($sexe != null) echo $sexe;
-                else echo("Non renseigné");
-                ?></dd>
-        </div>
-        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Numéro Etudiant</dt>
             <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
                 <?php
@@ -102,11 +93,29 @@ use app\src\model\repository\UtilisateurRepository;
                 ?></dd>
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt class="text-sm font-medium leading-6 text-zinc-900">Date de naissance</dt>
+            <dt class="text-sm font-medium leading-6 text-zinc-900">Adresse</dt>
             <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
                 <?php
-                $dateN = $utilisateur->getDatenaissance();
-                if ($dateN != null) echo $dateN;
+                $adresse = $utilisateur->getAdresse();
+                if ($adresse != null) echo $adresse;
+                else echo("Non renseigné");
+                ?></dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-zinc-900">Email Perso</dt>
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+                <?php
+                $emailPerso = $utilisateur->getEmailPerso();
+                if ($emailPerso != null) echo $emailPerso;
+                else echo("Non renseigné");
+                ?></dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-zinc-900">Sexe</dt>
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+                <?php
+                $sexe = $utilisateur->getCodeSexe();
+                if ($sexe != null) echo $sexe;
                 else echo("Non renseigné");
                 ?></dd>
         </div>
@@ -120,29 +129,56 @@ use app\src\model\repository\UtilisateurRepository;
                 ?></dd>
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-zinc-900">Nom Ville</dt>
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+                <?php
+                $ville = $utilisateur->getNomVille();
+                if ($ville != null) echo $ville;
+                else echo("Non renseigné");
+                ?></dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-zinc-900">Code Postal</dt>
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+                <?php
+                $codePostal = $utilisateur->getCodePostal();
+                if ($codePostal != null) echo $codePostal;
+                else echo("Non renseigné");
+                ?></dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-zinc-900">Pays</dt>
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+                <?php
+                $pays = $utilisateur->getPays();
+                if ($pays != null) echo $pays;
+                else echo("Non renseigné");
+                ?></dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-zinc-900">Biographie</dt>
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+                <?php
+                $bio = $utilisateur->getBio();
+                if ($bio != null) echo $bio;
+                else echo("Non renseigné");
+                ?></dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-zinc-900">Archiver</dt>
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+                <?php
+                $archiver = $utilisateur->isArchiver();
+                if ($archiver == 1 || $archiver == 0) echo $archiver;
+                else echo("Non renseigné");
+                ?></dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Année</dt>
             <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
                 <?php
                 $annee = $utilisateur->getAnnee();
                 if ($annee != null) echo $annee;
-                else echo("Non renseigné");
-                ?></dd>
-        </div>
-        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt class="text-sm font-medium leading-6 text-zinc-900">Prenom utilisateur LDAP</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
-                <?php
-                $prenomLDAP = $utilisateur->getPrenomutilisateurldap();
-                if ($prenomLDAP != null) echo $prenomLDAP;
-                else echo("Non renseigné");
-                ?></dd>
-        </div>
-        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt class="text-sm font-medium leading-6 text-zinc-900">Login LDAP</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
-                <?php
-                $loginldap = $utilisateur->getLoginLDAP();
-                if ($loginldap != null) echo $loginldap;
                 else echo("Non renseigné");
                 ?></dd>
         </div>

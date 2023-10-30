@@ -207,17 +207,14 @@ class OffresRepository extends AbstractRepository
             $dataObjectFormatTableau['nbJourTravailHebdo'],
             $dataObjectFormatTableau['nbHeureTravailHebdo'],
             $dataObjectFormatTableau['gratification'],
-            $dataObjectFormatTableau['uniteGratification'],
             $dataObjectFormatTableau['avantageNature'],
             $dataObjectFormatTableau['dateDebut'],
             $dataObjectFormatTableau['dateFin'],
             $dataObjectFormatTableau['statut'],
+            $dataObjectFormatTableau['pourvue'],
             $dataObjectFormatTableau['anneeVisee'],
-            $dataObjectFormatTableau['idannee'],
+            $dataObjectFormatTableau['annee'],
             $dataObjectFormatTableau['idUtilisateur'],
-            $dataObjectFormatTableau['description'],
-            $dataObjectFormatTableau['datecreation'],
-            $dataObjectFormatTableau['nomUtilisateur']
         );
     }
 
@@ -299,9 +296,9 @@ class OffresRepository extends AbstractRepository
         if (array_key_exists('alternance', $filter) && array_key_exists('stage', $filter))
             return OffresRepository::getNomTable();
         else if (array_key_exists('alternance', $filter) && $filter['alternance'] != "")
-            return "Offrealternance JOIN Offre ON Offrealternance.idoffre = Offre.idoffre";
+            return "OffreAlternance JOIN Offre ON OffreAlternance.idoffre = Offre.idoffre";
         else if (array_key_exists('stage', $filter) && $filter['stage'] != "")
-            return "Offrestage JOIN Offre ON Offrestage.idoffre = Offre.idoffre";
+            return "OffreStage JOIN Offre ON OffreStage.idoffre = Offre.idoffre";
         else return OffresRepository::getNomTable();
     }
 
@@ -353,7 +350,7 @@ class OffresRepository extends AbstractRepository
     function checkArchived(Offre $offre): bool
     {
         try {
-            $sql = "SELECT archiver FROM Offre JOIN Utilisateur WHERE idoffre = :idoffre";
+            $sql = "SELECT archiver FROM Offre o JOIN Utilisateur u ON u.idUtilisateur = o.idUtilisateur WHERE idoffre = :idoffre";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idoffre' => $offre->getIdoffre()]);
             $resultat = $requete->fetch();
@@ -372,7 +369,7 @@ class OffresRepository extends AbstractRepository
     function checkIfUserPostuled(Offre $offre): bool
     {
         try {
-            $sql = "SELECT * FROM Candidature WHERE idoffre = :idoffre AND idUtilisateur = :idUtilisateur";
+            $sql = "SELECT * FROM Postuler WHERE idoffre = :idoffre AND idUtilisateur = :idUtilisateur";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idoffre' => $offre->getIdoffre(), 'idUtilisateur' => Auth::get_user()->id()]);
             $resultat = $requete->fetch();

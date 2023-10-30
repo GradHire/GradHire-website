@@ -24,6 +24,9 @@ class Auth
         if (!in_array(Application::getUser()->role(), $roles)) throw new ForbiddenException();
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public static function has_role(Roles ...$roles): bool
     {
         return !Application::isGuest() && in_array(Application::getUser()->role(), $roles);
@@ -43,6 +46,7 @@ class Auth
      */
     public static function load_user_by_id(string $id): UtilisateurRepository|null
     {
+        print_r($id);
         try {
             $statement = Database::get_conn()->prepare("SELECT getRole(?) FROM DUAL");
             $statement->execute([$id]);

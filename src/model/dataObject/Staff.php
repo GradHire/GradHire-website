@@ -7,70 +7,131 @@ use app\src\model\dataObject\Utilisateur;
 class Staff extends Utilisateur
 {
 
-    private int $idUtilisateur;
-    private string $prenomUtilisateurLDAP;
-    private string $loginLDAP;
-    private string $role;
-    private ?string $mailuni;
+    private int $idutilisateur;
+    private ?string $role;
+    private string $loginLdap;
+    private string $prenom;
+    private string $email;
+    private string $nom;
+    private ?string $numtelephone;
+    private ?string $emailuni;
+    private ?string $bio;
+    private ?int $archiver;
 
-    public function __construct($idUtilisateur, $bio, $emailUtilisateur, $nomUtilisateur, $numTelUtilisateur, $prenomUtilisateurLDAP, $loginLDAP, $role, $mailuni)
+    public function __construct($idutilisateur, $role, $loginLdap, $prenom, $email, $nom, $numtelephone, $emailuni, $bio, $archiver)
     {
-        parent::__construct($idUtilisateur, $emailUtilisateur, $nomUtilisateur, $numTelUtilisateur, $bio);
-        $this->idUtilisateur = $idUtilisateur;
-        $this->prenomUtilisateurLDAP = $prenomUtilisateurLDAP;
-        $this->loginLDAP = $loginLDAP;
+        parent::__construct($idutilisateur, $email, $nom, $numtelephone, $bio);
+        $this->idutilisateur = $idutilisateur;
         $this->role = $role;
-        $this->mailUni = $mailuni;
+        $this->loginLdap = $loginLdap;
+        $this->prenom = $prenom;
+        $this->email = $email;
+        $this->nom = $nom;
+        $this->numtelephone = $numtelephone;
+        $this->emailuni = $emailuni;
+        $this->bio = $bio;
+        $this->archiver = $archiver;
     }
 
-    public function getIdUtilisateur(): int
+    public function getIdutilisateur(): int
     {
-        return $this->idUtilisateur;
+        return $this->idutilisateur;
     }
 
-    public function setIdUtilisateur(int $idUtilisateur): void
+    public function setIdutilisateur(int $idutilisateur): void
     {
-        $this->idUtilisateur = $idUtilisateur;
+        $this->idutilisateur = $idutilisateur;
     }
 
-    public function getPrenomUtilisateurLDAP(): string
-    {
-        return $this->prenomUtilisateurLDAP;
-    }
-
-    public function setPrenomUtilisateurLDAP(string $prenomUtilisateurLDAP): void
-    {
-        $this->prenomUtilisateurLDAP = $prenomUtilisateurLDAP;
-    }
-
-    public function getLoginLDAP(): string
-    {
-        return $this->loginLDAP;
-    }
-
-    public function setLoginLDAP(string $loginLDAP): void
-    {
-        $this->loginLDAP = $loginLDAP;
-    }
-
-    public function getRole(): string
+    public function getRole(): ?string
     {
         return $this->role;
     }
 
-    public function setRole(string $role): void
+    public function setRole(?string $role): void
     {
         $this->role = $role;
     }
 
-    public function getMailuni(): ?string
+    public function getLoginLdap(): string
     {
-        return $this->mailUni;
+        return $this->loginLdap;
     }
 
-    public function setMailuni(?string $mailuni): void
+    public function setLoginLdap(string $loginLdap): void
     {
-        $this->mailUni = $mailuni;
+        $this->loginLdap = $loginLdap;
     }
+
+    public function getPrenom(): string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(string $prenom): void
+    {
+        $this->prenom = $prenom;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+
+    public function getNom(): string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(string $nom): void
+    {
+        $this->nom = $nom;
+    }
+
+    public function getNumtelephone(): ?string
+    {
+        return $this->numtelephone;
+    }
+
+    public function setNumtelephone(?string $numtelephone): void
+    {
+        $this->numtelephone = $numtelephone;
+    }
+
+    public function getEmailuni(): ?string
+    {
+        return $this->emailuni;
+    }
+
+    public function setEmailuni(?string $emailuni): void
+    {
+        $this->emailuni = $emailuni;
+    }
+
+    public function getBio(): ?string
+    {
+        return $this->bio;
+    }
+
+    public function setBio(?string $bio): void
+    {
+        $this->bio = $bio;
+    }
+
+    public function getArchiver(): ?int
+    {
+        return $this->archiver;
+    }
+
+    public function setArchiver(?int $archiver): void
+    {
+        $this->archiver = $archiver;
+    }
+
 
 }

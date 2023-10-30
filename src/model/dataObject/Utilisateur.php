@@ -4,18 +4,17 @@ namespace app\src\model\dataObject;
 
 class Utilisateur extends AbstractDataObject
 {
-
-    private ?string $numtelutilisateur;
-    private string $nomutilisateur;
-    private string $emailutilisateur;
-    private int $idutilisateur;
+    private ?int $idUtilisateur;
+    private ?string $numTelUtilisateur;
+    private string $nomUtilisateur;
+    private string $emailUtilisateur;
     private ?string $bio;
 
     /**
      * @param string|null $numtelutilisateur
      * @param string $nomutilisateur
      * @param string $emailutilisateur
-     * @param int $idutilisateur
+     * @param ?int $idutilisateur
      */
     public function __construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur, $bio)
     {

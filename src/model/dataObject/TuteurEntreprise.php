@@ -2,7 +2,7 @@
 
 namespace app\src\model\dataObject;
 
-class TuteurPro extends Utilisateur
+class TuteurEntreprise extends Utilisateur
 {
     private int $idutilisateur;
     private ?string $prenomtuteurp;

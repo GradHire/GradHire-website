@@ -18,7 +18,7 @@ use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\StaffRepository;
-use app\src\model\repository\TuteurProRepository;
+use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\repository\TuteurRepository;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\Request;
@@ -38,6 +38,7 @@ class MainController extends Controller
         if (session_status() !== PHP_SESSION_NONE)
             session_destroy();
         $user = Auth::load_user_by_id($req->getRouteParams()["id"]);
+        print_r($user);
         Auth::generate_token($user, "true");
         Application::$app->response->redirect('/');
     }
@@ -68,6 +69,9 @@ class MainController extends Controller
         ]);
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function archiver(Request $req): string
     {
         $user = (new UtilisateurRepository([]))->getUserById($req->getRouteParams()["id"]);
@@ -118,7 +122,7 @@ class MainController extends Controller
                 break;
             case  Roles::Student:
                 $attr = array_merge($attr, [
-                    "email" => FormModel::email("Adresse mail perso")->default($user->attributes()["mailPerso"]),
+                    "email" => FormModel::email("Adresse mail perso")->default($user->attributes()["emailPerso"]),
                     "tel" => FormModel::phone("Téléphone")->numeric()->default($user->attributes()["numTelephone"]),
                     "date" => FormModel::date("Date de naissance")->default($user->attributes()["datenaissance"])->before(new \DateTime()),
                     "studentnum" => FormModel::string("Numéro Etudiant")->default($user->attributes()["numEtudiant"]),
@@ -225,12 +229,17 @@ class MainController extends Controller
      */
     public function ListeTuteurPro(Request $request): string
     {
-        if (Auth::has_role(Roles::Manager, Roles::Staff)) $tuteurs = (new TuteurProRepository([]))->getAll();
-        else if (Auth::has_role(Roles::Enterprise)) $tuteurs = (new TuteurProRepository([]))->getAllTuteursByIdEntreprise(Application::getUser()->id());
+        if (Auth::has_role(Roles::Manager, Roles::Staff)) $tuteurs = (new TuteurEntrepriseRepository([]))->getAll();
+        else if (Auth::has_role(Roles::Enterprise)) $tuteurs = (new TuteurEntrepriseRepository([]))->getAllTuteursByIdEntreprise(Application::getUser()->id());
         else throw new ForbiddenException();
         return $this->render('tuteurPro/listeTuteurPro', ['tuteurs' => $tuteurs]);
     }
 
+    /**
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws ServerErrorException
+     */
     public function postuler(Request $request): string
     {
         if (!Auth::has_role(Roles::Student)) throw new ForbiddenException();
@@ -253,7 +262,7 @@ class MainController extends Controller
                     $form->setError("Impossible de télécharger tous les fichiers");
                     return '';
                 }
-                $stmt = Database::get_conn()->prepare("INSERT INTO `Candidature`(`idoffre`, `idUtilisateur`) VALUES (?,?)");
+                $stmt = Database::get_conn()->prepare("INSERT INTO `Postuler`(`idoffre`, `idUtilisateur`, `dates`) VALUES (?,?" .  date('d-m-Y') ." )");
                 $stmt->execute([$id, Application::getUser()->id()]);
                 Application::$app->response->redirect('/offres');
             }
@@ -264,6 +273,10 @@ class MainController extends Controller
     }
 
 
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
     public function creeroffre(Request $request): string
     {
         if (!Auth::has_role(Roles::Manager, Roles::Enterprise, Roles::Staff)) {
@@ -318,6 +331,11 @@ class MainController extends Controller
     }
 
 
+    /**
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
     public function archiveOffre(Request $request): string
     {
         if (!Auth::has_role(Roles::Staff, Roles::Manager)) {
@@ -341,6 +359,11 @@ class MainController extends Controller
         }
     }
 
+    /**
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws ServerErrorException
+     */
     public function editOffre(Request $request): string
     {
         if (!Auth::has_role(Roles::Staff, Roles::Manager)) {
@@ -356,10 +379,8 @@ class MainController extends Controller
                 "nbJourTravailHebdo" => FormModel::int("Nombre de jours de travail hebdomadaire")->default($offre->getNbjourtravailhebdo()),
                 "nbHeureTravailHebdo" => FormModel::double("Nombre d'heures de travail hebdomadaire")->default($offre->getNbHeureTravailHebdo()),
                 "gratification" => FormModel::double("Gratification")->default($offre->getGratification()),
-                "uniteGratification" => FormModel::string("Unité de la gratification")->default($offre->getUnitegratification()),
                 "avantageNature" => FormModel::string("Avantage en nature")->default($offre->getAvantageNature()),
                 "anneeVisee" => FormModel::string("Année visée")->default($offre->getAnneeVisee()),
-                "description" => FormModel::string("Description")->default($offre->getDescription()),
                 "dateDebut" => FormModel::date("Date de début")->default($offre->getDateDebut())->id("dateDebut"),
                 "dateFin" => FormModel::date("Date de fin")->default($offre->getDateFin())->id("dateFin"),
             ]);
@@ -400,7 +421,7 @@ class MainController extends Controller
         elseif (Auth::has_role(Roles::Enterprise, Roles::Tutor) && !isset($request->getRouteParams()['id'])) {
             $id = Application::getUser()->id();
             if (Auth::has_role(Roles::Tutor)) {
-                $tuteur = (new TuteurProRepository([]))->getById($id);
+                $tuteur = (new TuteurEntrepriseRepository([]))->getById($id);
                 $id = $tuteur->getIdentreprise();
             }
             $offres = (new OffresRepository())->getOffresByIdEntreprise($id);
@@ -489,7 +510,7 @@ class MainController extends Controller
 
         $id = $request->getRouteParams()['id'] ?? null;
         $candidatures = (new CandidatureRepository())->getById($id);
-        if (Auth::has_role(Roles::Tutor)) $entrepriseid = (new TuteurProRepository())->getById($userid)->getIdentreprise();
+        if (Auth::has_role(Roles::Tutor)) $entrepriseid = (new TuteurEntrepriseRepository())->getById($userid)->getIdentreprise();
         else if (Auth::has_role(Roles::Enterprise)) $entrepriseid = $userid;
         if ($candidatures != null && $id != null) {
             $offre = (new OffresRepository())->getById($candidatures->getIdoffre());

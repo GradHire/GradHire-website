@@ -11,20 +11,18 @@ class Offre extends AbstractDataObject
     private ?string $duree;
     private ?string $thematique;
     private ?string $sujet;
-    private ?int $nbjourtravailhebdo;
+    private ?int $nbJourTravailHebdo;
     private ?float $nbHeureTravailHebdo;
     private ?float $gratification;
-    private ?string $unitegratification;
     private ?string $avantageNature;
     private ?string $dateDebut;
     private ?string $dateFin;
     private ?string $statut;
+    private ?string $pourvue;
     private ?string $anneeVisee;
-    private string $idAnnee;
+    private ?string $annee;
     private int $idutilisateur;
-    private ?string $description;
-    private string $datecreation;
-    private ?string $nomutilisateur;
+
 
 //    private ?int $alternance;
     public function __construct
@@ -36,18 +34,14 @@ class Offre extends AbstractDataObject
         $nbJourTravailHebdo,
         $nbHeureTravailHebdo,
         $gratification,
-        $unitegratification,
         $avantageNature,
         $dateDebut,
         $dateFin,
         $statut,
+        $pourvue,
         $anneeVisee,
-        $idAnnee,
-        $idUtilisateur,
-        $description,
-        $datecreation,
-        $nomutilisateur
-//        $alternance
+        $annee,
+        $idUtilisateur
     )
     {
         $this->idoffre = $idOffre;
@@ -57,259 +51,186 @@ class Offre extends AbstractDataObject
         $this->nbJourTravailHebdo = $nbJourTravailHebdo;
         $this->nbHeureTravailHebdo = $nbHeureTravailHebdo;
         $this->gratification = $gratification;
-        $this->uniteGratification = $unitegratification;
         $this->avantageNature = $avantageNature;
         $this->dateDebut = $dateDebut;
         $this->dateFin = $dateFin;
         $this->statut = $statut;
+        $this->pourvue = $pourvue;
         $this->anneeVisee = $anneeVisee;
-        $this->idAnnee = $idAnnee;
-        $this->idUtilisateur = $idUtilisateur;
-        $this->description = $description;
-        $this->datecreation = $datecreation;
-        $this->nomUtilisateur = $nomutilisateur;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->idoffre;
+        $this->annee = $annee;
+        $this->idutilisateur = $idUtilisateur;
     }
 
     public function __toString(): string
     {
-        return "Offre : " . $this->getSujet() . " " . $this->getThematique() . " " . $this->getDuree() . " " . $this->getNbjourtravailhebdo() . " " . $this->getNbHeureTravailHebdo() . " " . $this->getGratification() . " " . $this->getUnitegratification() . " " . $this->getAvantageNature() . " " . $this->getDateDebut() . " " . $this->getDateFin() . " " . $this->getStatut() . " " . $this->getAnneeVisee() . " " . $this->getIdAnnee() . " " . $this->getIdutilisateur() . " " . $this->getDescription();
+        return "Offre : " .
+            $this->idoffre . " " .
+            $this->duree . " " .
+            $this->thematique . " " .
+            $this->sujet . " " .
+            $this->nbJourTravailHebdo . " " .
+            $this->nbHeureTravailHebdo . " " .
+            $this->gratification . " " .
+            $this->avantageNature . " " .
+            $this->dateDebut . " " .
+            $this->dateFin . " " .
+            $this->statut . " " .
+            $this->pourvue . " " .
+            $this->anneeVisee . " " .
+            $this->annee . " " .
+            $this->idutilisateur . " " ;
     }
 
-    /**
-     * @return string
-     */
-    public function getSujet(): string
-    {
-        return $this->sujet;
-    }
-
-    /**
-     * @param string $sujet
-     */
-    public function setSujet(string $sujet): void
-    {
-        $this->sujet = $sujet;
-    }
-
-    /**
-     * @return string
-     */
-    public function getThematique(): ?string
-    {
-        return $this->thematique;
-    }
-
-    /**
-     * @param string $thematique
-     */
-    public function setThematique(string $thematique): void
-    {
-        $this->thematique = $thematique;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDuree(): ?string
-    {
-        return $this->duree;
-    }
-
-    /**
-     * @param string $duree
-     */
-    public function setDuree(string $duree): void
-    {
-        $this->duree = $duree;
-    }
-
-    /**
-     * @return int
-     */
-    public function getNbjourtravailhebdo(): ?int
-    {
-        return $this->nbJourTravailHebdo;
-    }
-
-    /**
-     * @param int $nbjourtravailhebdo
-     */
-    public function setNbjourtravailhebdo(int $nbjourtravailhebdo): void
-    {
-        $this->nbJourTravailHebdo = $nbjourtravailhebdo;
-    }
-
-    /**
-     * @return float
-     */
-    public function getNbHeureTravailHebdo(): ?float
-    {
-        return $this->nbHeureTravailHebdo;
-    }
-
-    /**
-     * @param float $nbHeureTravailHebdo
-     */
-    public function setNbHeureTravailHebdo(float $nbHeureTravailHebdo): void
-    {
-        $this->nbHeureTravailHebdo = $nbHeureTravailHebdo;
-    }
-
-    /**
-     * @return float
-     */
-    public function getGratification(): ?float
-    {
-        return $this->gratification;
-    }
-
-    /**
-     * @param float $gratification
-     */
-    public function setGratification(float $gratification): void
-    {
-        $this->gratification = $gratification;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUnitegratification(): ?string
-    {
-        return $this->uniteGratification;
-    }
-
-    /**
-     * @param string $unitegratification
-     */
-    public function setUnitegratification(string $unitegratification): void
-    {
-        $this->uniteGratification = $unitegratification;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAvantageNature(): ?string
-    {
-        return $this->avantageNature;
-    }
-
-    /**
-     * @param string $avantageNature
-     */
-    public function setAvantageNature(string $avantageNature): void
-    {
-        $this->avantageNature = $avantageNature;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDateDebut(): string
-    {
-        return $this->dateDebut;
-    }
-
-    /**
-     * @param string $dateDebut
-     */
-    public function setDateDebut(string $dateDebut): void
-    {
-        $this->dateDebut = $dateDebut;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDateFin(): ?string
-    {
-        return $this->dateFin;
-    }
-
-    /**
-     * @param string $dateFin
-     */
-    public function setDateFin(string $dateFin): void
-    {
-        $this->dateFin = $dateFin;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatut(): ?string
-    {
-        return $this->statut;
-    }
-
-    /**
-     * @param string $statut
-     */
-    public function setStatut(string $statut): void
-    {
-        $this->statut = $statut;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAnneeVisee(): ?string
-    {
-        return $this->anneeVisee;
-    }
-
-    /**
-     * @param string $anneeVisee
-     */
-    public function setAnneeVisee(string $anneeVisee): void
-    {
-        $this->anneeVisee = $anneeVisee;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIdAnnee(): string
-    {
-        return $this->idAnnee;
-    }
-
-    /**
-     * @return int
-     */
-    public function getIdutilisateur(): int
-    {
-        return $this->idUtilisateur;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    /**
-     * @return int
-     */
     public function getIdoffre(): ?int
     {
         return $this->idoffre;
     }
 
-    public function getDatecreation(): string
+    public function setIdoffre(?int $idoffre): void
     {
-        return $this->datecreation;
+        $this->idoffre = $idoffre;
     }
 
-    public function getNomutilisateur()
+    public function getDuree(): ?string
     {
-        return $this->nomUtilisateur;
+        return $this->duree;
     }
+
+    public function setDuree(?string $duree): void
+    {
+        $this->duree = $duree;
+    }
+
+    public function getThematique(): ?string
+    {
+        return $this->thematique;
+    }
+
+    public function setThematique(?string $thematique): void
+    {
+        $this->thematique = $thematique;
+    }
+
+    public function getSujet(): ?string
+    {
+        return $this->sujet;
+    }
+
+    public function setSujet(?string $sujet): void
+    {
+        $this->sujet = $sujet;
+    }
+
+    public function getNbJourTravailHebdo(): ?int
+    {
+        return $this->nbJourTravailHebdo;
+    }
+
+    public function setNbJourTravailHebdo(?int $nbJourTravailHebdo): void
+    {
+        $this->nbJourTravailHebdo = $nbJourTravailHebdo;
+    }
+
+    public function getNbHeureTravailHebdo(): ?float
+    {
+        return $this->nbHeureTravailHebdo;
+    }
+
+    public function setNbHeureTravailHebdo(?float $nbHeureTravailHebdo): void
+    {
+        $this->nbHeureTravailHebdo = $nbHeureTravailHebdo;
+    }
+
+    public function getGratification(): ?float
+    {
+        return $this->gratification;
+    }
+
+    public function setGratification(?float $gratification): void
+    {
+        $this->gratification = $gratification;
+    }
+
+    public function getAvantageNature(): ?string
+    {
+        return $this->avantageNature;
+    }
+
+    public function setAvantageNature(?string $avantageNature): void
+    {
+        $this->avantageNature = $avantageNature;
+    }
+
+    public function getDateDebut(): ?string
+    {
+        return $this->dateDebut;
+    }
+
+    public function setDateDebut(?string $dateDebut): void
+    {
+        $this->dateDebut = $dateDebut;
+    }
+
+    public function getDateFin(): ?string
+    {
+        return $this->dateFin;
+    }
+
+    public function setDateFin(?string $dateFin): void
+    {
+        $this->dateFin = $dateFin;
+    }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(?string $statut): void
+    {
+        $this->statut = $statut;
+    }
+
+    public function getPourvue(): ?string
+    {
+        return $this->pourvue;
+    }
+
+    public function setPourvue(?string $pourvue): void
+    {
+        $this->pourvue = $pourvue;
+    }
+
+    public function getAnneeVisee(): ?string
+    {
+        return $this->anneeVisee;
+    }
+
+    public function setAnneeVisee(?string $anneeVisee): void
+    {
+        $this->anneeVisee = $anneeVisee;
+    }
+
+    public function getAnnee(): ?string
+    {
+        return $this->annee;
+    }
+
+    public function setAnnee(?string $annee): void
+    {
+        $this->annee = $annee;
+    }
+
+    public function getIdutilisateur(): int
+    {
+        return $this->idutilisateur;
+    }
+
+    public function setIdutilisateur(int $idutilisateur): void
+    {
+        $this->idutilisateur = $idutilisateur;
+    }
+
 
     public function getPicture(): string
     {

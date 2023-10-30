@@ -91,7 +91,7 @@ class UtilisateurRepository extends AbstractRepository
     protected function construireDepuisTableau(array $dataObjectFormatTableau): Utilisateur
     {
         return new Utilisateur(
-            $dataObjectFormatTableau['idUtilisateur'],
+            $dataObjectFormatTableau['idutilisateur'],
             $dataObjectFormatTableau['email'] ?? "",
             $dataObjectFormatTableau['nom'] ?? "",
             $dataObjectFormatTableau['numTelephone'] ?? "",
@@ -207,9 +207,16 @@ class UtilisateurRepository extends AbstractRepository
         return $this->attributes;
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function role(): ?Roles
     {
-        return null;
+        if ((new StaffRepository([]))->getByIdFull($this->id) !== null) return (new StaffRepository([]))->role($this->id);
+        else if ((new EtudiantRepository([]))->getByIdFull($this->id) !== null) return (new EtudiantRepository([]))->role($this->id);
+        else if ((new TuteurRepository([]))->getByIdFull($this->id) !== null) return (new TuteurRepository([]))->role($this->id);
+        else if ((new EntrepriseRepository([]))->getByIdFull($this->id) !== null) return (new EntrepriseRepository([]))->role($this->id);
+        else return null;
     }
 
     public function get_picture(): string

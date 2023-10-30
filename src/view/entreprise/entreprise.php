@@ -23,36 +23,39 @@ $this->title = 'Entreprises';
         </thead>
 
         <tbody class="divide-y divide-zinc-200">
-        <?php foreach ($entreprises as $entreprise) { ?>
-            <tr class="odd:bg-zinc-50">
-                <td class="whitespace-nowrap px-4 py-2 font-medium text-zinc-900">
-                    <?= $entreprise->getNomutilisateur(); ?>
-                </td>
-                <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
-                    <?php
-                    $email = $entreprise->getEmailutilisateur();
-                    if ($email != null) echo $email;
-                    else echo("Non renseigné");
-                    ?>
-                </td>
-                <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
-                    <?php
-                    if ($entreprise->getNumtelutilisateur() == null) echo("Non renseigné");
-                    else echo $entreprise->getNumtelutilisateur();
-                    ?>
-                </td>
-                <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
-                    <?php
-                    if ($entreprise->getSiteweb() == null) echo("Non renseigné");
-                    else echo $entreprise->getSiteweb(); ?>
-                </td>
-                <td class="whitespace-nowrap px-4 py-2">
-                    <a href="/entreprises/<?= $entreprise->getIdutilisateur(); ?>"
-                       class="inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">Voir
-                        plus</a>
-                </td>
-            </tr>
-        <?php } ?>
+        <?php
+        if ($entreprises != null){
+        foreach ($entreprises as $entreprise) { ?>
+        <tr class="odd:bg-zinc-50">
+            <td class="whitespace-nowrap px-4 py-2 font-medium text-zinc-900">
+                <?= $entreprise->getNomutilisateur(); ?>
+            </td>
+            <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
+                <?php
+                $email = $entreprise->getEmailutilisateur();
+                if ($email != null) echo $email;
+                else echo("Non renseigné");
+                ?>
+            </td>
+            <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
+                <?php
+                if ($entreprise->getNumtelutilisateur() == null) echo("Non renseigné");
+                else echo $entreprise->getNumtelutilisateur();
+                ?>
+            </td>
+            <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
+                <?php
+                if ($entreprise->getSiteweb() == null) echo("Non renseigné");
+                else echo $entreprise->getSiteweb(); ?>
+            </td>
+            <td class="whitespace-nowrap px-4 py-2">
+                <a href="/entreprises/<?= $entreprise->getIdutilisateur(); ?>"
+                   class="inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">Voir
+                    plus</a>
+            </td>
+        </tr>
+        <?php }
+        } ?>
         </tbody>
 
     </table>

@@ -16,7 +16,9 @@ class StaffRepository extends LdapRepository
 
     public function role(): Roles
     {
-        return Roles::tryFrom($this->attributes["role"]);
+        if ($this->attributes["role"] === "responsable")
+            return Roles::Manager;
+        return Roles::Staff;
     }
 
     /**
@@ -43,15 +45,16 @@ class StaffRepository extends LdapRepository
     function construireDepuisTableau(array $dataObjectFormatTableau): Staff
     {
         return new Staff(
-            $dataObjectFormatTableau["idUtilisateur"],
-            $dataObjectFormatTableau["bio"],
+            $dataObjectFormatTableau["idutilisateur"],
+            $dataObjectFormatTableau["role"],
+            $dataObjectFormatTableau["loginldap"],
+            $dataObjectFormatTableau["prenom"],
             $dataObjectFormatTableau["email"],
             $dataObjectFormatTableau["nom"],
-            $dataObjectFormatTableau["numTelephone"],
-            $dataObjectFormatTableau["prenomLdap"],
-            $dataObjectFormatTableau["loginLdap"],
-            $dataObjectFormatTableau["role"],
-            $dataObjectFormatTableau["mailUni"]
+            $dataObjectFormatTableau["numtelephone"],
+            $dataObjectFormatTableau["mailuni"],
+            $dataObjectFormatTableau["bio"],
+            $dataObjectFormatTableau["archiver"]
         );
     }
 
@@ -78,15 +81,17 @@ class StaffRepository extends LdapRepository
     function getNomColonnes(): array
     {
         return [
-            "idUtilisateur",
-            "bio",
+            "idutilisateur",
+            "role",
+            "email",
+            "loginldap",
+            "prenom",
             "email",
             "nom",
-            "numTelephone",
-            "prenomLdap",
-            "loginLdap",
-            "role",
-            "mailUni"
+            "numtelephone",
+            "mailuni",
+            "bio",
+            "archiver"
         ];
     }
 

@@ -3,11 +3,11 @@
 namespace app\src\model\repository;
 
 use app\src\core\db\Database;
-use app\src\model\dataObject\TuteurPro;
+use app\src\model\dataObject\TuteurEntreprise;
 
-class TuteurProRepository extends UtilisateurRepository
+class TuteurEntrepriseRepository extends UtilisateurRepository
 {
-    private string $nomtable = "Tuteurprofessionnel";
+    private string $nomtable = "TuteurEntreprise";
 
     public function getAllTuteursByIdEntreprise($idEntreprise): ?array
     {
@@ -36,7 +36,7 @@ class TuteurProRepository extends UtilisateurRepository
         return $this->nomtable;
     }
 
-    public function getById($idTuteur): ?TuteurPro
+    public function getById($idTuteur): ?TuteurEntreprise
     {
         $sql = "SELECT * FROM $this->nomtable JOIN Utilisateur ON $this->nomtable.idUtilisateur = Utilisateur.idUtilisateur WHERE $this->nomtable.idUtilisateur = :idUtilisateur";
         $requete = Database::get_conn()->prepare($sql);
@@ -49,9 +49,9 @@ class TuteurProRepository extends UtilisateurRepository
         return $this->construireTuteurProDepuisTableau($resultat);
     }
 
-    public function construireTuteurProDepuisTableau(array $tuteurData): ?TuteurPro
+    public function construireTuteurProDepuisTableau(array $tuteurData): ?TuteurEntreprise
     {
-        return new TuteurPro(
+        return new TuteurEntreprise(
             $tuteurData['idUtilisateur'],
             $tuteurData['prenom'] ?? "",
             $tuteurData['fonction'] ?? "",

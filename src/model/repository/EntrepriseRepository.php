@@ -99,7 +99,7 @@ class EntrepriseRepository extends ProRepository
     function construireDepuisTableau(array $entrepriseData): Entreprise
     {
         return new Entreprise(
-            $entrepriseData['idUtilisateur'],
+            $entrepriseData['idutilisateur'],
             $entrepriseData['bio'] ?? "",
             $entrepriseData['statutJuridique'] ?? "",
             $entrepriseData['typeStructure'] ?? "",
@@ -153,6 +153,9 @@ class EntrepriseRepository extends ProRepository
             "fax",
             "siteWeb",
             "siret",
+            "email",
+            "nom",
+            "numTelephone"
         ];
     }
 }

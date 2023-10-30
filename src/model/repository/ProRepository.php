@@ -29,7 +29,7 @@ class ProRepository extends UtilisateurRepository
             Auth::generate_token($user, $remember);
             return true;
         } catch (\Exception) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -60,7 +60,7 @@ class ProRepository extends UtilisateurRepository
             return $user;
         } catch
         (\Exception) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 

@@ -108,10 +108,10 @@ class CandidatureRepository extends AbstractRepository
     function getNomColonnes(): array
     {
         return [
-            "idcandidature",
-            "datecandidature",
-            "etatcandidature",
-            "idoffre",
+            "idCandidature",
+            "dateCandidature",
+            "etatCandidature",
+            "idOffre",
             "idUtilisateur"
         ];
     }

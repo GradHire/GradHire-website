@@ -44,6 +44,7 @@ class EtudiantRepository extends LdapRepository
             $requete->execute(['idUtilisateur' => $idutilisateur]);
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
+            print_r($resultat);
             if (!$resultat) {
                 return null;
             }
@@ -58,19 +59,23 @@ class EtudiantRepository extends LdapRepository
     function construireDepuisTableau(array $dataObjectFormatTableau): Etudiant
     {
         return new Etudiant(
-            $dataObjectFormatTableau["idUtilisateur"],
+            $dataObjectFormatTableau["idutilisateur"],
+            $dataObjectFormatTableau["prenom"],
+            $dataObjectFormatTableau["loginldap"],
             $dataObjectFormatTableau["email"],
             $dataObjectFormatTableau["nom"],
-            $dataObjectFormatTableau["numTelephone"],
-            $dataObjectFormatTableau["bio"],
-            $dataObjectFormatTableau["mailPerso"],
-            $dataObjectFormatTableau["codeSexe"],
-            $dataObjectFormatTableau["numEtudiant"],
-            $dataObjectFormatTableau["datenaissance"],
+            $dataObjectFormatTableau["numtelephone"],
+            $dataObjectFormatTableau["numetudiant"],
+            $dataObjectFormatTableau["adresse"],
+            $dataObjectFormatTableau["emailperso"],
+            $dataObjectFormatTableau["codesexe"],
             $dataObjectFormatTableau["idgroupe"],
-            $dataObjectFormatTableau["annee"],
-            $dataObjectFormatTableau["prenomLdap"],
-            $dataObjectFormatTableau["loginLdap"]
+            $dataObjectFormatTableau["nomville"],
+            $dataObjectFormatTableau["codepostal"],
+            $dataObjectFormatTableau["pays"],
+            $dataObjectFormatTableau["bio"],
+            $dataObjectFormatTableau["archiver"],
+            $dataObjectFormatTableau["annee"]
         );
     }
 
@@ -79,18 +84,22 @@ class EtudiantRepository extends LdapRepository
     {
         return [
             "idUtilisateur",
-            "bio",
+            "prenom",
+            "loginLdap",
             "email",
             "nom",
             "numTelephone",
-            "mailPerso",
-            "codeSexe",
             "numEtudiant",
-            "datenaissance",
-            "idgroupe",
-            "annee",
-            "prenomLdap",
-            "loginLdap"
+            "adresse",
+            "emailPerso",
+            "codeSexe",
+            "idGroupe",
+            "nomVille",
+            "codePostal",
+            "pays",
+            "bio",
+            "archiver",
+            "annee"
         ];
     }
 

@@ -4,13 +4,13 @@ namespace app\src\model\dataObject;
 
 class Entreprise extends Utilisateur
 {
-    private int $idutilisateur;
-    private ?string $statutjuridique;
-    private ?string $typestructure;
+    private int $idUtilisateur;
+    private ?string $statutJuridique;
+    private ?string $typeStructure;
     private ?string $effectif;
-    private ?string $codenaf;
+    private ?string $codeNaf;
     private ?string $fax;
-    private ?string $siteweb;
+    private ?string $siteWeb;
     private int $siret;
 
     /**

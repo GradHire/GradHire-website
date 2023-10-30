@@ -1,7 +1,7 @@
 <?php
-/** @var $tuteurs \app\src\model\dataObject\TuteurPro */
+/** @var $tuteurs \app\src\model\dataObject\TuteurEntreprise */
 
-use app\src\model\repository\TuteurProRepository;
+use app\src\model\repository\TuteurEntrepriseRepository;
 
 ?>
 <div class="overflow-x-auto w-full pt-12 pb-24">
@@ -34,7 +34,7 @@ else{?> <h2 class="font-bold text-lg">Liste des Tuteurs Pro de l'entreprise</h2>
 
 
         foreach ($tuteurs as $tuteur) {
-            $tuteur=(new TuteurProRepository([]))->construireTuteurProDepuisTableau($tuteur);?>
+            $tuteur=(new TuteurEntrepriseRepository([]))->construireTuteurProDepuisTableau($tuteur);?>
             <tr class="odd:bg-zinc-50">
                 <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                     <?= $tuteur->getNomutilisateur(); ?>
