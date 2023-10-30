@@ -118,7 +118,7 @@ class MainController extends Controller
                 break;
             case  Roles::Student:
                 $attr = array_merge($attr, [
-                    "email" => FormModel::email("Adresse mail perso")->default($user->attributes()["mailPerso"]),
+                    "email" => FormModel::email("Adresse mail perso")->default($user->attributes()["emailPerso"]),
                     "tel" => FormModel::phone("Téléphone")->numeric()->default($user->attributes()["numTelephone"]),
                     "date" => FormModel::date("Date de naissance")->default($user->attributes()["datenaissance"])->before(new \DateTime()),
                     "studentnum" => FormModel::string("Numéro Etudiant")->default($user->attributes()["numEtudiant"]),

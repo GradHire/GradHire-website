@@ -8,7 +8,7 @@ class Etudiant extends Utilisateur
 {
 
     private int $idUtilisateur;
-    private ?string $mailperso;
+    private ?string $emailPerso;
     private ?string $codesexeetudiant;
     private ?string $numEtudiant;
     private ?string $datenaissance;
@@ -23,7 +23,7 @@ class Etudiant extends Utilisateur
         string  $emailUtilisateur,
         string  $nomutilisateur,
         ?string $numTelUtilisateur,
-        ?string $mailperso,
+        ?string $emailPerso,
         ?string $codesexeetudiant,
         ?string $numEtudiant,
         ?string $datenaissance,
@@ -35,7 +35,7 @@ class Etudiant extends Utilisateur
     {
         parent::__construct($idUtilisateur, $emailUtilisateur, $nomutilisateur, $numTelUtilisateur, $bio);
         $this->idUtilisateur = $idUtilisateur;
-        $this->mailPerso = $mailperso;
+        $this->emailPerso = $emailPerso;
         $this->codeSexe = $codesexeetudiant;
         $this->numEtudiant = $numEtudiant;
         $this->datenaissance = $datenaissance;
@@ -57,12 +57,12 @@ class Etudiant extends Utilisateur
 
     public function getMailperso(): ?string
     {
-        return $this->mailPerso;
+        return $this->emailPerso;
     }
 
-    public function setMailperso(?string $mailperso): void
+    public function setMailperso(?string $emailperso): void
     {
-        $this->mailPerso = $mailperso;
+        $this->emailPerso = $emailperso;
     }
 
     public function getCodesexeetudiant(): ?string
