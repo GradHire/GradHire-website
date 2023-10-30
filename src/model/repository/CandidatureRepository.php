@@ -100,11 +100,12 @@ class CandidatureRepository extends AbstractRepository
             if ($resultat == false) return null;
             return $resultat;
         } catch (PDOException) {
-            throw new ServerErrorException();
+            //throw new ServerErrorException();
         }
     }
 
-    protected function getNomColonnes(): array
+    protected
+    function getNomColonnes(): array
     {
         return [
             "idcandidature",
@@ -115,7 +116,8 @@ class CandidatureRepository extends AbstractRepository
         ];
     }
 
-    protected function getNomTable(): string
+    protected
+    function getNomTable(): string
     {
         return "Candidature";
     }

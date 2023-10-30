@@ -91,13 +91,12 @@ class Application
         try {
             echo $this->router->resolve();
         } catch (\Exception $e) {
-            echo $this->router->renderView('_error', [
-                'exception' => $e,
-            ]);
+            echo $this->router->renderView('_error', ['exception' => $e,]);
         }
     }
 
-    public function triggerEvent($eventName): void
+    public
+    function triggerEvent($eventName): void
     {
         $callbacks = $this->eventListeners[$eventName] ?? [];
         foreach ($callbacks as $callback) {
@@ -105,7 +104,8 @@ class Application
         }
     }
 
-    public function on($eventName, $callback): void
+    public
+    function on($eventName, $callback): void
     {
         $this->eventListeners[$eventName][] = $callback;
     }

@@ -32,14 +32,15 @@ class ProRepository extends UtilisateurRepository
             Auth::generate_token($user, $remember);
             return true;
         } catch (\Exception) {
-            throw new ServerErrorException();
+            //throw new ServerErrorException();
         }
     }
 
     /**
      * @throws ServerErrorException
      */
-    private static function find_account(string $email, string $password): ProRepository|null
+    private
+    static function find_account(string $email, string $password): ProRepository|null
     {
         $user = EntrepriseRepository::check_credentials($email, $password);
         if (!is_null($user)) return $user;
@@ -49,7 +50,8 @@ class ProRepository extends UtilisateurRepository
     /**
      * @throws ServerErrorException
      */
-    private static function check_credentials(string $email, string $password): static|null
+    private
+    static function check_credentials(string $email, string $password): static|null
     {
         try {
             $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE emailUtilisateur=?");
@@ -59,12 +61,14 @@ class ProRepository extends UtilisateurRepository
             $user = new static($user);
             if (!password_verify($password, $user->attributes()["hash"])) return null;
             return $user;
-        } catch (\Exception) {
-            throw new ServerErrorException();
+        } catch
+        (\Exception) {
+            //throw new ServerErrorException();
         }
     }
 
-    public function full_name(): string
+    public
+    function full_name(): string
     {
         return $this->attributes["nomUtilisateur"];
     }

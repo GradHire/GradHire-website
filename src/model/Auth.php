@@ -15,65 +15,68 @@ use app\src\model\dataObject\Roles;
 
 class Auth
 {
-	/**
-	 * @throws ForbiddenException
-	 */
-	public static function check_role(Roles ...$roles): void
-	{
-		if (Application::isGuest()) header("Location: /login?" . Application::getRedirect());
-		if (!in_array(Application::getUser()->role(), $roles)) throw new ForbiddenException();
-	}
+    /**
+     * @throws ForbiddenException
+     */
+    public static function check_role(Roles ...$roles): void
+    {
+        if (Application::isGuest()) header("Location: /login?" . Application::getRedirect());
+        if (!in_array(Application::getUser()->role(), $roles)) throw new ForbiddenException();
+    }
 
-	public static function has_role(Roles ...$roles): bool
-	{
-		return !Application::isGuest() && in_array(Application::getUser()->role(), $roles);
-	}
+    public static function has_role(Roles ...$roles): bool
+    {
+        return !Application::isGuest() && in_array(Application::getUser()->role(), $roles);
+    }
 
-	public static function generate_token(UtilisateurRepository $user, bool $remember): void
-	{
-		if (session_status() == PHP_SESSION_NONE)
-			session_start();
-		Application::setUser($user);
-		$duration = $remember ? 604800 : 3600;
-		setcookie("token", Token::generate(["id" => $user->id()], $duration), time() + $duration, "/");
-	}
+    public static function generate_token(UtilisateurRepository $user, bool $remember): void
+    {
+        if (session_status() == PHP_SESSION_NONE)
+            session_start();
+        Application::setUser($user);
+        $duration = $remember ? 604800 : 3600;
+        setcookie("token", Token::generate(["id" => $user->id()], $duration), time() + $duration, "/");
+    }
 
-	/**
-	 * @throws ServerErrorException
-	 */
-	public static function load_user_by_id(string $id): UtilisateurRepository|null
-	{
-		try {
-			$statement = Database::get_conn()->prepare("SELECT getRole(?) FROM DUAL");
-			$statement->execute([$id]);
-			$role = $statement->fetchColumn();
-			if (!$role)
-				return null;
-			switch ($role) {
-				case Roles::Tutor->value:
-					return TuteurRepository::find_by_id($id);
-				case Roles::Student->value:
-					return EtudiantRepository::find_by_id($id);
-				case Roles::Enterprise->value:
-					return EntrepriseRepository::find_by_id($id);
-				case "staff";
-					return StaffRepository::find_by_id($id);
-			}
-		} catch (\Exception) {
-			throw new ServerErrorException();
-		}
-		return null;
-	}
+    /**
+     * @throws ServerErrorException
+     */
+    public static function load_user_by_id(string $id): UtilisateurRepository|null
+    {
+        try {
+            $statement = Database::get_conn()->prepare("SELECT getRole(?) FROM DUAL");
+            $statement->execute([$id]);
+            $role = $statement->fetchColumn();
+            if (!$role)
+                return null;
+            switch ($role) {
+                case Roles::Tutor->value:
+                    return TuteurRepository::find_by_id($id);
+                case Roles::Student->value:
+                    return EtudiantRepository::find_by_id($id);
+                case Roles::Enterprise->value:
+                    return EntrepriseRepository::find_by_id($id);
+                case "staff";
+                    return StaffRepository::find_by_id($id);
+            }
+        } catch (\Exception) {
+            //throw new ServerErrorException();
+        }
 
-	public static function logout(): void
-	{
-		unset($_COOKIE["token"]);
-		setcookie('token', '', -1);
-		session_destroy();
-	}
+        return null;
+    }
 
-	public static function get_user()
-	{
-		return Application::getUser();
-	}
+    public
+    static function logout(): void
+    {
+        unset($_COOKIE["token"]);
+        setcookie('token', '', -1);
+        session_destroy();
+    }
+
+    public
+    static function get_user()
+    {
+        return Application::getUser();
+    }
 }

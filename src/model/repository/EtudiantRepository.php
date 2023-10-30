@@ -12,7 +12,6 @@ use PDOException;
 
 class EtudiantRepository extends LdapRepository
 {
-
     protected static string $view = "EtudiantVue";
     protected static string $create_function = "creerEtu";
     protected static string $update_function = "updateEtudiant";
@@ -31,14 +30,15 @@ class EtudiantRepository extends LdapRepository
             $statement = Database::get_conn()->prepare("UPDATE `EtudiantVue` SET `annee`=? WHERE idUtilisateur=?");
             $statement->execute([$new_year, $this->id]);
         } catch (\Exception) {
-            throw new ServerErrorException();
+            //throw new ServerErrorException();
         }
     }
 
     /**
      * @throws ServerErrorException
      */
-    public function getByIdFull($idutilisateur): ?Etudiant
+    public
+    function getByIdFull($idutilisateur): ?Etudiant
     {
         try {
             $sql = "SELECT * FROM " . self::$view . " WHERE idUtilisateur = :idUtilisateur";
@@ -50,12 +50,14 @@ class EtudiantRepository extends LdapRepository
                 return null;
             }
             return $this->construireDepuisTableau($resultat);
-        } catch (PDOException) {
-            throw new ServerErrorException();
+        } catch
+        (PDOException) {
+            //throw new ServerErrorException();
         }
     }
 
-    protected function construireDepuisTableau(array $dataObjectFormatTableau): Etudiant
+    protected
+    function construireDepuisTableau(array $dataObjectFormatTableau): Etudiant
     {
         return new Etudiant(
             $dataObjectFormatTableau["idUtilisateur"],
@@ -74,7 +76,8 @@ class EtudiantRepository extends LdapRepository
         );
     }
 
-    protected function getNomColonnes(): array
+    protected
+    function getNomColonnes(): array
     {
         return [
             "idUtilisateur",
@@ -93,7 +96,8 @@ class EtudiantRepository extends LdapRepository
         ];
     }
 
-    protected function getNomTable(): string
+    protected
+    function getNomTable(): string
     {
         return "EtudiantVue";
     }

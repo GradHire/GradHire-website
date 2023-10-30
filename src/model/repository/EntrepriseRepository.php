@@ -39,14 +39,15 @@ class EntrepriseRepository extends ProRepository
             Auth::generate_token($user, false);
             return true;
         } catch (\Exception) {
-            throw new ServerErrorException();
+            //throw new ServerErrorException();
         }
     }
 
     /**
      * @throws ServerErrorException
      */
-    public static function exist(string $email, string $siret): bool
+    public
+    static function exist(string $email, string $siret): bool
     {
         try {
             $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE emailUtilisateur=? OR siret=?");
@@ -54,12 +55,14 @@ class EntrepriseRepository extends ProRepository
             $count = $statement->rowCount();
             if ($count == 0) return false;
             return true;
-        } catch (\Exception) {
-            throw new ServerErrorException();
+        } catch
+        (\Exception) {
+            //throw new ServerErrorException();
         }
     }
 
-    public function role(): Roles
+    public
+    function role(): Roles
     {
         return Roles::Enterprise;
     }
@@ -67,7 +70,8 @@ class EntrepriseRepository extends ProRepository
     /**
      * @throws ServerErrorException
      */
-    public function getByIdFull($idEntreprise): ?Entreprise
+    public
+    function getByIdFull($idEntreprise): ?Entreprise
     {
         try {
             $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE " . $this->getNomTable() . ".idUtilisateur = :idUtilisateur";
@@ -79,17 +83,20 @@ class EntrepriseRepository extends ProRepository
                 return null;
             }
             return $this->construireDepuisTableau($resultat);
-        } catch (PDOException) {
-            throw new ServerErrorException();
+        } catch
+        (PDOException) {
+            //throw new ServerErrorException();
         }
     }
 
-    protected function getNomTable(): string
+    protected
+    function getNomTable(): string
     {
         return self::$view;
     }
 
-    protected function construireDepuisTableau(array $entrepriseData): Entreprise
+    protected
+    function construireDepuisTableau(array $entrepriseData): Entreprise
     {
         return new Entreprise(
             $entrepriseData['idUtilisateur'],
@@ -110,7 +117,8 @@ class EntrepriseRepository extends ProRepository
     /**
      * @throws ServerErrorException
      */
-    public function getAll(): ?array
+    public
+    function getAll(): ?array
     {
         try {
             $sql = "SELECT * FROM " . $this->getNomTable() . " JOIN Utilisateur ON " . $this->getNomTable() . ".idUtilisateur = Utilisateur.idUtilisateur";
@@ -126,12 +134,14 @@ class EntrepriseRepository extends ProRepository
                 $entreprises[] = $this->construireDepuisTableau($entrepriseData);
             }
             return $entreprises;
-        } catch (PDOException) {
-            throw new ServerErrorException();
+        } catch
+        (PDOException) {
+            //throw new ServerErrorException();
         }
     }
 
-    protected function getNomColonnes(): array
+    protected
+    function getNomColonnes(): array
     {
         return [
             "idUtilisateur",

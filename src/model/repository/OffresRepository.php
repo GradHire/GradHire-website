@@ -137,44 +137,49 @@ class OffresRepository extends AbstractRepository
             if ($resultat == false) return null;
             return $resultat;
         } catch (PDOException) {
-            throw new ServerErrorException();
+            //throw new ServerErrorException();
         }
     }
 
     /**
      * @throws ServerErrorException
      */
-    public function deleteById($idOffre): bool
+    public
+    function deleteById($idOffre): bool
     {
         try {
             $sql = "DELETE FROM $this->nomTable WHERE idoffre = :idoffre";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idoffre' => $idOffre]);
             return true;
-        } catch (PDOException) {
-            throw new ServerErrorException();
+        } catch
+        (PDOException) {
+            //throw new ServerErrorException();
         }
     }
 
     /**
      * @throws ServerErrorException
      */
-    public function updateToDraft($idOffre): bool
+    public
+    function updateToDraft($idOffre): bool
     {
         try {
             $sql = "UPDATE $this->nomTable SET statut = 'draft' WHERE idoffre = :idoffre";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idoffre' => $idOffre]);
             return true;
-        } catch (PDOException) {
-            throw new ServerErrorException();
+        } catch
+        (PDOException) {
+            //throw new ServerErrorException();
         }
     }
 
     /**
      * @throws ServerErrorException
      */
-    public function getById($idOffre): ?Offre
+    public
+    function getById($idOffre): ?Offre
     {
         try {
             $sql = "SELECT * FROM $this->nomTable WHERE idoffre = :idoffre";
@@ -184,12 +189,14 @@ class OffresRepository extends AbstractRepository
             $resultat = $requete->fetch();
             if ($resultat == false) return null;
             return $this->construireDepuisTableau($resultat);
-        } catch (PDOException) {
-            throw new ServerErrorException();
+        } catch
+        (PDOException) {
+            //throw new ServerErrorException();
         }
     }
 
-    protected function construireDepuisTableau(array $dataObjectFormatTableau): Offre
+    protected
+    function construireDepuisTableau(array $dataObjectFormatTableau): Offre
     {
         if (!isset($dataObjectFormatTableau['nomUtilisateur'])) $dataObjectFormatTableau['nomUtilisateur'] = null;
         return new Offre(
@@ -217,7 +224,8 @@ class OffresRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public function getByIdWithUser($idOffre): ?Offre
+    public
+    function getByIdWithUser($idOffre): ?Offre
     {
         try {
             $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idUtilisateur = Utilisateur.idUtilisateur WHERE idoffre = :idoffre";
@@ -227,15 +235,17 @@ class OffresRepository extends AbstractRepository
             $resultat = $requete->fetch();
             if ($resultat == false) return null;
             return $this->construireDepuisTableau($resultat);
-        } catch (PDOException) {
-            throw new ServerErrorException();
+        } catch
+        (PDOException) {
+            //throw new ServerErrorException();
         }
     }
 
     /**
      * @throws ServerErrorException
      */
-    public function getOffresByIdEntreprise($idEntreprise): ?array
+    public
+    function getOffresByIdEntreprise($idEntreprise): ?array
     {
         try {
             $sql = "SELECT * FROM Offre WHERE idUtilisateur = :idUtilisateur";
@@ -249,15 +259,17 @@ class OffresRepository extends AbstractRepository
                 $offres[] = $this->construireDepuisTableau($offre_data);
             }
             return $offres;
-        } catch (PDOException) {
-            throw new ServerErrorException();
+        } catch
+        (PDOException) {
+            //throw new ServerErrorException();
         }
     }
 
     /**
      * @throws ServerErrorException
      */
-    public function draftExist($idEntreprise): array
+    public
+    function draftExist($idEntreprise): array
     {
         try {
             $sql = "SELECT * FROM Offre WHERE idUtilisateur = :idUtilisateur AND statut = 'draft'";
@@ -275,12 +287,14 @@ class OffresRepository extends AbstractRepository
                 $offres[] = $this->construireDepuisTableau($offre_data);
             }
             return $offres;
-        } catch (PDOException) {
-            throw new ServerErrorException();
+        } catch
+        (PDOException) {
+            //throw new ServerErrorException();
         }
     }
 
-    public function tableChecker($filter): string
+    public
+    function tableChecker($filter): string
     {
         if (array_key_exists('alternance', $filter) && array_key_exists('stage', $filter))
             return OffresRepository::getNomTable();
@@ -291,7 +305,8 @@ class OffresRepository extends AbstractRepository
         else return OffresRepository::getNomTable();
     }
 
-    protected function getNomTable(): string
+    protected
+    function getNomTable(): string
     {
         return $this->nomTable;
     }
@@ -299,21 +314,24 @@ class OffresRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public function updateToApproved(mixed $id)
+    public
+    function updateToApproved(mixed $id)
     {
         try {
             $sql = "UPDATE $this->nomTable SET statut = 'approved' WHERE idoffre = :idoffre";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idoffre' => $id]);
-        } catch (PDOException) {
-            throw new ServerErrorException();
+        } catch
+        (PDOException) {
+            //throw new ServerErrorException();
         }
     }
 
     /**
      * @throws ServerErrorException
      */
-    public function checkIfCreatorOffreIsArchived(Offre $offre): bool
+    public
+    function checkIfCreatorOffreIsArchived(Offre $offre): bool
     {
         try {
             $sql = "SELECT archiver FROM Offre o JOIN Utilisateur u ON u.idUtilisateur = o.idUtilisateur WHERE idoffre = :idoffre";
@@ -322,15 +340,17 @@ class OffresRepository extends AbstractRepository
             $resultat = $requete->fetch();
             if ($resultat['archiver'] == 1) return true;
             else return false;
-        } catch (PDOException) {
-            throw new ServerErrorException();
+        } catch
+        (PDOException) {
+            //throw new ServerErrorException();
         }
     }
 
     /**
      * @throws ServerErrorException
      */
-    public function checkArchived(Offre $offre): bool
+    public
+    function checkArchived(Offre $offre): bool
     {
         try {
             $sql = "SELECT archiver FROM Offre JOIN Utilisateur WHERE idoffre = :idoffre";
@@ -339,15 +359,17 @@ class OffresRepository extends AbstractRepository
             $resultat = $requete->fetch();
             if ($resultat['archiver'] == 1) return true;
             else return false;
-        } catch (PDOException) {
-            throw new ServerErrorException();
+        } catch
+        (PDOException) {
+            //throw new ServerErrorException();
         }
     }
 
     /**
      * @throws ServerErrorException
      */
-    public function checkIfUserPostuled(Offre $offre): bool
+    public
+    function checkIfUserPostuled(Offre $offre): bool
     {
         try {
             $sql = "SELECT * FROM Candidature WHERE idoffre = :idoffre AND idUtilisateur = :idUtilisateur";
@@ -356,12 +378,14 @@ class OffresRepository extends AbstractRepository
             $resultat = $requete->fetch();
             if ($resultat == false) return false;
             else return true;
-        } catch (PDOException) {
-            throw new ServerErrorException();
+        } catch
+        (PDOException) {
+            //throw new ServerErrorException();
         }
     }
 
-    protected function getNomColonnes(): array
+    protected
+    function getNomColonnes(): array
     {
         return [
             "duree",
@@ -380,7 +404,8 @@ class OffresRepository extends AbstractRepository
         ];
     }
 
-    protected function checkFilterNotEmpty(array $filter): bool
+    protected
+    function checkFilterNotEmpty(array $filter): bool
     {
         foreach ($filter as $key => $value) if ($value != "") return true;
         return false;

@@ -43,11 +43,12 @@ class TuteurRepository extends ProRepository
             }
             return $this->construireDepuisTableau($resultat);
         } catch (PDOException) {
-            throw new ServerErrorException();
+            //throw new ServerErrorException();
         }
     }
 
-    protected function construireDepuisTableau(array $dataObjectFormatTableau): Tuteur
+    protected
+    function construireDepuisTableau(array $dataObjectFormatTableau): Tuteur
     {
         return new Tuteur(
             $dataObjectFormatTableau["idUtilisateur"],
@@ -62,7 +63,8 @@ class TuteurRepository extends ProRepository
         );
     }
 
-    protected function getNomColonnes(): array
+    protected
+    function getNomColonnes(): array
     {
         return [
             "idUtilisateur",
@@ -77,7 +79,8 @@ class TuteurRepository extends ProRepository
         ];
     }
 
-    protected function getNomTable(): string
+    protected
+    function getNomTable(): string
     {
         return "TuteurVue";
     }

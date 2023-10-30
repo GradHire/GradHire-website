@@ -53,53 +53,59 @@ class OffreForm extends Model
                 "idOffreTag" => $id,
                 "alternanceTag" => $distanciel,
             );
-            try {
-                $pdoStatement->execute($values);
-            } catch (PDOException $e) {
-                return false;
-            }
-        } else {
-            $sql = "INSERT INTO Offrestage VALUES (:idOffreTag)";
-            $pdoStatement = Database::get_conn()->prepare($sql);
-            $values = array(
-                "idOffreTag" => $id,
-            );
-            try {
-                $pdoStatement->execute($values);
-            } catch (PDOException $e) {
-                return false;
-            }
+            try { 
+            $pdoStatement->execute($values);
+        }
+    catch
+        (PDOException $e) {
+        return false;
+    }
+        } else
+{
+$sql = "INSERT INTO Offrestage VALUES (:idOffreTag)";
+$pdoStatement = Database::get_conn()->prepare($sql);
+$values = array(
+"idOffreTag" => $id,
+);
+    try { 
+$pdoStatement->execute($values);
+}
+
+catch
+(PDOException $e) {
+    return false;
+}
         }
         return true;
     }
 
     public static function updateOffre(Offre $offre, ?float $distanciel)
-    {
-        $sql = "UPDATE Offre SET duree=:dureeTag, thematique=:thematiqueTag, sujet=:sujetTag, nbJourTravailHebdo=:nbJourTravailHebdoTag, nbHeureTravailHebdo=:nbHeureTravailHebdoTag, gratification=:gratificationTag, uniteGratification=:unitegratificationTag, avantageNature=:avantageNatureTag, dateDebut=:dateDebutTag, dateFin=:dateFinTag, anneeVisee=:anneeViseeTag, idAnnee=:idAnneeTag, idUtilisateur=:idUtilisateurTag, description=:descriptionTag, statut=:statutTag WHERE idOffre=:idOffreTag";
-        $pdoStatement = Database::get_conn()->prepare($sql);
-        $values = array(
-            "idOffreTag" => $offre->getIdOffre(),
-            "dureeTag" => $offre->getDuree(),
-            "thematiqueTag" => $offre->getThematique(),
-            "sujetTag" => $offre->getSujet(),
-            "nbJourTravailHebdoTag" => $offre->getNbjourtravailhebdo(),
-            "nbHeureTravailHebdoTag" => $offre->getNbHeureTravailHebdo(),
-            "gratificationTag" => $offre->getGratification(),
-            "unitegratificationTag" => $offre->getUnitegratification(),
-            "avantageNatureTag" => $offre->getAvantageNature(),
-            "dateDebutTag" => $offre->getDateDebut(),
-            "dateFinTag" => $offre->getDateFin(),
-            "anneeViseeTag" => $offre->getAnneeVisee(),
-            "idAnneeTag" => $offre->getIdAnnee(),
-            "idUtilisateurTag" => $offre->getIdutilisateur(),
-            "descriptionTag" => $offre->getDescription(),
-            "statutTag" => $offre->getStatut(),
-        );
-        try {
-            $pdoStatement->execute($values);
-        } catch (PDOException $e) {
-            return false;
-        }
+{
+    $sql = "UPDATE Offre SET duree=:dureeTag, thematique=:thematiqueTag, sujet=:sujetTag, nbJourTravailHebdo=:nbJourTravailHebdoTag, nbHeureTravailHebdo=:nbHeureTravailHebdoTag, gratification=:gratificationTag, uniteGratification=:unitegratificationTag, avantageNature=:avantageNatureTag, dateDebut=:dateDebutTag, dateFin=:dateFinTag, anneeVisee=:anneeViseeTag, idAnnee=:idAnneeTag, idUtilisateur=:idUtilisateurTag, description=:descriptionTag, statut=:statutTag WHERE idOffre=:idOffreTag";
+    $pdoStatement = Database::get_conn()->prepare($sql);
+    $values = array(
+        "idOffreTag" => $offre->getIdOffre(),
+        "dureeTag" => $offre->getDuree(),
+        "thematiqueTag" => $offre->getThematique(),
+        "sujetTag" => $offre->getSujet(),
+        "nbJourTravailHebdoTag" => $offre->getNbjourtravailhebdo(),
+        "nbHeureTravailHebdoTag" => $offre->getNbHeureTravailHebdo(),
+        "gratificationTag" => $offre->getGratification(),
+        "unitegratificationTag" => $offre->getUnitegratification(),
+        "avantageNatureTag" => $offre->getAvantageNature(),
+        "dateDebutTag" => $offre->getDateDebut(),
+        "dateFinTag" => $offre->getDateFin(),
+        "anneeViseeTag" => $offre->getAnneeVisee(),
+        "idAnneeTag" => $offre->getIdAnnee(),
+        "idUtilisateurTag" => $offre->getIdutilisateur(),
+        "descriptionTag" => $offre->getDescription(),
+        "statutTag" => $offre->getStatut(),
+    );
+    try { 
+    $pdoStatement->execute($values);
+} catch (PDOException $e) {
+    return false;
+}
         if ($distanciel != null) {
             $sql = "UPDATE Offrealternance SET alternance=:alternanceTag WHERE idOffre=:idOffreTag";
             $pdoStatement = Database::get_conn()->prepare($sql);
@@ -107,27 +113,27 @@ class OffreForm extends Model
                 "idOffreTag" => $offre->getIdOffre(),
                 "alternanceTag" => $distanciel,
             );
-            try {
-                $pdoStatement->execute($values);
-            } catch (PDOException $e) {
-                return false;
-            }
+            try { 
+            $pdoStatement->execute($values);
+        } catch (PDOException $e) {
+    return false;
+}
         }
 
     }
 
     public static function deleteOffre(mixed $idOffre)
-    {
-        $sql = "DELETE FROM Offre WHERE idOffre=:idOffreTag";
-        $pdoStatement = Database::get_conn()->prepare($sql);
-        $values = array(
-            "idOffreTag" => $idOffre,
-        );
-        try {
-            $pdoStatement->execute($values);
-        } catch (PDOException $e) {
-            return false;
-        }
+{
+    $sql = "DELETE FROM Offre WHERE idOffre=:idOffreTag";
+    $pdoStatement = Database::get_conn()->prepare($sql);
+    $values = array(
+        "idOffreTag" => $idOffre,
+    );
+    try { 
+    $pdoStatement->execute($values);
+} catch (PDOException $e) {
+    return false;
+}
         return true;
     }
 }

@@ -38,11 +38,12 @@ class StaffRepository extends LdapRepository
             }
             return $this->construireDepuisTableau($resultat);
         } catch (PDOException) {
-            throw new ServerErrorException();
+            //throw new ServerErrorException();
         }
     }
 
-    protected function construireDepuisTableau(array $dataObjectFormatTableau): Staff
+    protected
+    function construireDepuisTableau(array $dataObjectFormatTableau): Staff
     {
         return new Staff(
             $dataObjectFormatTableau["idUtilisateur"],
@@ -60,7 +61,8 @@ class StaffRepository extends LdapRepository
     /**
      * @throws ServerErrorException
      */
-    public function getManagersEmail(): array
+    public
+    function getManagersEmail(): array
     {
         try {
             $stmt = Database::get_conn()->prepare("SELECT emailUtilisateur FROM StaffVue WHERE role='responsable'");
@@ -69,12 +71,14 @@ class StaffRepository extends LdapRepository
             foreach ($stmt->fetchAll() as $email)
                 $emails[] = $email["emailUtilisateur"];
             return $emails;
-        } catch (\Exception) {
-            throw new ServerErrorException();
+        } catch
+        (\Exception) {
+            //throw new ServerErrorException();
         }
     }
 
-    protected function getNomColonnes(): array
+    protected
+    function getNomColonnes(): array
     {
         return [
             "idUtilisateur",
@@ -89,7 +93,8 @@ class StaffRepository extends LdapRepository
         ];
     }
 
-    protected function getNomTable(): string
+    protected
+    function getNomTable(): string
     {
         return "StaffVue";
     }
