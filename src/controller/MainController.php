@@ -9,6 +9,7 @@ use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Offre;
+use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 use app\src\model\OffreForm;
 use app\src\model\repository\CandidatureRepository;
@@ -21,7 +22,6 @@ use app\src\model\repository\TuteurProRepository;
 use app\src\model\repository\TuteurRepository;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\Request;
-use app\src\model\dataObject\Roles;
 
 /**
  * @throws ForbiddenException
@@ -100,16 +100,16 @@ class MainController extends Controller
         switch ($user->role()) {
             case Roles::Enterprise:
                 $attr = array_merge($attr, [
-                    "name" => FormModel::string("Nom entreprise")->required()->default($user->attributes()["nomUtilisateur"]),
-                    "email" => FormModel::email("Adresse mail")->required()->default($user->attributes()["emailUtilisateur"]),
-                    "phone" => FormModel::phone("Téléphone")->default($user->attributes()["numTelUtilisateur"]),
+                    "name" => FormModel::string("Nom entreprise")->required()->default($user->attributes()["nom"]),
+                    "email" => FormModel::email("Adresse mail")->required()->default($user->attributes()["email"]),
+                    "phone" => FormModel::phone("Téléphone")->default($user->attributes()["numTelephone"]),
                 ]);
                 break;
             case Roles::Tutor:
                 $attr = array_merge($attr, [
-                    "name" => FormModel::string("Prénom")->required()->default($user->attributes()["nomUtilisateur"]),
+                    "name" => FormModel::string("Prénom")->required()->default($user->attributes()["nom"]),
                     "surname" => FormModel::string("Nom")->required()->default($user->attributes()["prenom"]),
-                    "email" => FormModel::string("Adresse mail")->required()->default($user->attributes()["emailUtilisateur"]),
+                    "email" => FormModel::string("Adresse mail")->required()->default($user->attributes()["email"]),
                     "fonction" => FormModel::select("Fonction", [
                         "tuteur" => "Tuteur",
                         "responsable" => "Responsable"
@@ -119,7 +119,7 @@ class MainController extends Controller
             case  Roles::Student:
                 $attr = array_merge($attr, [
                     "email" => FormModel::email("Adresse mail perso")->default($user->attributes()["mailPerso"]),
-                    "tel" => FormModel::phone("Téléphone")->numeric()->default($user->attributes()["numTelUtilisateur"]),
+                    "tel" => FormModel::phone("Téléphone")->numeric()->default($user->attributes()["numTelephone"]),
                     "date" => FormModel::date("Date de naissance")->default($user->attributes()["datenaissance"])->before(new \DateTime()),
                     "studentnum" => FormModel::string("Numéro Etudiant")->default($user->attributes()["numEtudiant"]),
                 ]);

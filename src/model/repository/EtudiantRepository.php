@@ -4,8 +4,6 @@ namespace app\src\model\repository;
 
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
-use app\src\model\repository\AbstractRepository;
-use app\src\model\repository\UtilisateurRepository;
 use app\src\model\dataObject\Etudiant;
 use app\src\model\dataObject\Roles;
 use PDOException;
@@ -61,9 +59,9 @@ class EtudiantRepository extends LdapRepository
     {
         return new Etudiant(
             $dataObjectFormatTableau["idUtilisateur"],
-            $dataObjectFormatTableau["emailUtilisateur"],
-            $dataObjectFormatTableau["nomUtilisateur"],
-            $dataObjectFormatTableau["numTelUtilisateur"],
+            $dataObjectFormatTableau["email"],
+            $dataObjectFormatTableau["nom"],
+            $dataObjectFormatTableau["numTelephone"],
             $dataObjectFormatTableau["bio"],
             $dataObjectFormatTableau["mailPerso"],
             $dataObjectFormatTableau["codeSexe"],
@@ -82,9 +80,9 @@ class EtudiantRepository extends LdapRepository
         return [
             "idUtilisateur",
             "bio",
-            "emailUtilisateur",
-            "nomUtilisateur",
-            "numTelUtilisateur",
+            "email",
+            "nom",
+            "numTelephone",
             "mailPerso",
             "codeSexe",
             "numEtudiant",

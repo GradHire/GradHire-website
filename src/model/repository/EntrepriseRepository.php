@@ -2,13 +2,13 @@
 
 namespace app\src\model\repository;
 
+use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Auth;
-use app\src\model\Form\FormModel;
-use app\src\model\dataObject\Roles;
-use PDOException;
-use app\src\core\db\Database;
 use app\src\model\dataObject\Entreprise;
+use app\src\model\dataObject\Roles;
+use app\src\model\Form\FormModel;
+use PDOException;
 
 class EntrepriseRepository extends ProRepository
 {
@@ -108,9 +108,9 @@ class EntrepriseRepository extends ProRepository
             $entrepriseData['fax'] ?? "",
             $entrepriseData['siteWeb'] ?? "",
             $entrepriseData['siret'] ?? 0,
-            $entrepriseData['emailUtilisateur'] ?? "",
-            $entrepriseData['nomUtilisateur'] ?? "",
-            $entrepriseData['numTelUtilisateur'] ?? ""
+            $entrepriseData['email'] ?? "",
+            $entrepriseData['nom'] ?? "",
+            $entrepriseData['numTelephone'] ?? ""
         );
     }
 

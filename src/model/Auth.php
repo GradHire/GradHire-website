@@ -5,12 +5,12 @@ namespace app\src\model;
 use app\src\core\db\Database;
 use app\src\core\exception\ForbiddenException;
 use app\src\core\exception\ServerErrorException;
+use app\src\model\dataObject\Roles;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurRepository;
 use app\src\model\repository\UtilisateurRepository;
-use app\src\model\dataObject\Roles;
 
 
 class Auth
@@ -60,7 +60,7 @@ class Auth
                     return StaffRepository::find_by_id($id);
             }
         } catch (\Exception) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
 
         return null;

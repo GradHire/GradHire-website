@@ -4,8 +4,8 @@
 /** @var $form FormModel */
 
 use app\src\model\Auth;
-use app\src\model\Form\FormModel;
 use app\src\model\dataObject\Roles;
+use app\src\model\Form\FormModel;
 
 $this->title = 'Profile';
 ?>
@@ -69,7 +69,7 @@ $this->title = 'Profile';
                     <?php }
                 } else { ?>
                     <li>
-                        <a href="mailto:<?= $user->attributes()["emailUtilisateur"] ?>" target="_blank"
+                        <a href="mailto:<?= $user->attributes()["email"] ?>" target="_blank"
                            class="text-zinc-700 hover:text-zinc-600 hover:bg-zinc-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">
                             <svg class="h-6 w-6 shrink-0 text-zinc-400 group-hover:text-zinc-600" fill="none"
                                  viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">

@@ -2,8 +2,8 @@
 
 namespace app\src\model\repository;
 
-use app\src\model\dataObject\TuteurPro;
 use app\src\core\db\Database;
+use app\src\model\dataObject\TuteurPro;
 
 class TuteurProRepository extends UtilisateurRepository
 {
@@ -56,9 +56,9 @@ class TuteurProRepository extends UtilisateurRepository
             $tuteurData['prenom'] ?? "",
             $tuteurData['fonction'] ?? "",
             $tuteurData['idEntreprise'],
-            $tuteurData['emailUtilisateur'] ?? "",
-            $tuteurData['nomUtilisateur'] ?? "",
-            $tuteurData['numTelUtilisateur'] ?? "",
+            $tuteurData['email'] ?? "",
+            $tuteurData['nom'] ?? "",
+            $tuteurData['numTelephone'] ?? "",
 
         );
     }

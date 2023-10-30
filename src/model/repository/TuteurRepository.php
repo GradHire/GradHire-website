@@ -4,12 +4,8 @@ namespace app\src\model\repository;
 
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
-use app\src\model\dataObject\Staff;
-use app\src\model\dataObject\Tuteur;
-use app\src\model\repository\UtilisateurRepository;
-use app\src\model\dataObject\Utilisateur;
-use app\src\model\repository\ProRepository;
 use app\src\model\dataObject\Roles;
+use app\src\model\dataObject\Tuteur;
 use PDOException;
 
 class TuteurRepository extends ProRepository
@@ -24,7 +20,7 @@ class TuteurRepository extends ProRepository
 
     public function full_name(): string
     {
-        return $this->attributes["prenom"] . " " . $this->attributes["nomUtilisateur"];
+        return $this->attributes["prenom"] . " " . $this->attributes["nom"];
     }
 
     /**
@@ -53,9 +49,9 @@ class TuteurRepository extends ProRepository
         return new Tuteur(
             $dataObjectFormatTableau["idUtilisateur"],
             $dataObjectFormatTableau["bio"],
-            $dataObjectFormatTableau["emailUtilisateur"],
-            $dataObjectFormatTableau["nomUtilisateur"],
-            $dataObjectFormatTableau["numTelUtilisateur"],
+            $dataObjectFormatTableau["email"],
+            $dataObjectFormatTableau["nom"],
+            $dataObjectFormatTableau["numTelephone"],
             $dataObjectFormatTableau["hash"],
             $dataObjectFormatTableau["prenom"],
             $dataObjectFormatTableau["fonction"],
@@ -69,9 +65,9 @@ class TuteurRepository extends ProRepository
         return [
             "idUtilisateur",
             "bio",
-            "emailUtilisateur",
-            "nomUtilisateur",
-            "numTelUtilisateur",
+            "email",
+            "nom",
+            "numTelephone",
             "hash",
             "prenom",
             "fonction",

@@ -5,9 +5,8 @@ namespace app\src\model\repository;
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
-use app\src\model\dataObject\Utilisateur;
 use app\src\model\dataObject\Roles;
-use mysql_xdevapi\DatabaseObject;
+use app\src\model\dataObject\Utilisateur;
 use PDOException;
 
 class UtilisateurRepository extends AbstractRepository
@@ -34,7 +33,9 @@ class UtilisateurRepository extends AbstractRepository
     public static function find_by_attribute(string $value): null|static
     {
         $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE " . static::$id_attributes . " = ?");
+        print_r($statement->queryString);
         $statement->execute([$value]);
+
         $user = $statement->fetch();
         if (is_null($user) || $user === false) return null;
         return new static($user);
@@ -51,9 +52,8 @@ class UtilisateurRepository extends AbstractRepository
             $statement->execute($values);
             return static::find_by_id(intval($statement->fetchColumn()));
         } catch
-        (\Exception $e) {
-            print_r($e);
-            //throw new ServerErrorException();
+        (\Exception) {
+            throw new ServerErrorException();
         }
     }
 
@@ -97,9 +97,9 @@ class UtilisateurRepository extends AbstractRepository
     {
         return new Utilisateur(
             $dataObjectFormatTableau['idUtilisateur'],
-            $dataObjectFormatTableau['emailUtilisateur'] ?? "",
-            $dataObjectFormatTableau['nomUtilisateur'] ?? "",
-            $dataObjectFormatTableau['numTelUtilisateur'] ?? "",
+            $dataObjectFormatTableau['email'] ?? "",
+            $dataObjectFormatTableau['nom'] ?? "",
+            $dataObjectFormatTableau['numTelephone'] ?? "",
             $dataObjectFormatTableau['bio'] ?? "",
         );
     }
@@ -225,7 +225,7 @@ class UtilisateurRepository extends AbstractRepository
 
     public function full_name(): string
     {
-        return $this->attributes["nomUtilisateur"];
+        return $this->attributes["nom"];
     }
 
     public function archived(): bool
@@ -241,9 +241,9 @@ class UtilisateurRepository extends AbstractRepository
     protected function getNomColonnes(): array
     {
         return [
-            "numTelUtilisateur",
-            "nomUtilisateur",
-            "emailUtilisateur",
+            "numTelephone",
+            "nom",
+            "email",
             "idUtilisateur"
         ];
     }

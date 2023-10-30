@@ -6,13 +6,10 @@ use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Auth;
 use app\src\model\Form\FormModel;
-use app\src\model\repository\UtilisateurRepository;
-use app\src\model\repository\TuteurRepository;
-use app\src\model\repository\EntrepriseRepository;
 
 class ProRepository extends UtilisateurRepository
 {
-    protected static string $id_attributes = "emailUtilisateur";
+    protected static string $id_attributes = "email";
 
     /**
      * @throws ServerErrorException
@@ -70,6 +67,6 @@ class ProRepository extends UtilisateurRepository
     public
     function full_name(): string
     {
-        return $this->attributes["nomUtilisateur"];
+        return $this->attributes["nom"];
     }
 }

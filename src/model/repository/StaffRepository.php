@@ -4,12 +4,9 @@ namespace app\src\model\repository;
 
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
-use app\src\model\dataObject\Staff;
-use app\src\model\repository\UtilisateurRepository;
-use app\src\model\dataObject\Utilisateur;
 use app\src\model\dataObject\Roles;
+use app\src\model\dataObject\Staff;
 use PDOException;
-use app\src\model\repository\LdapRepository;
 
 class StaffRepository extends LdapRepository
 {
@@ -48,9 +45,9 @@ class StaffRepository extends LdapRepository
         return new Staff(
             $dataObjectFormatTableau["idUtilisateur"],
             $dataObjectFormatTableau["bio"],
-            $dataObjectFormatTableau["emailUtilisateur"],
-            $dataObjectFormatTableau["nomUtilisateur"],
-            $dataObjectFormatTableau["numTelUtilisateur"],
+            $dataObjectFormatTableau["email"],
+            $dataObjectFormatTableau["nom"],
+            $dataObjectFormatTableau["numTelephone"],
             $dataObjectFormatTableau["prenomLdap"],
             $dataObjectFormatTableau["loginLdap"],
             $dataObjectFormatTableau["role"],
@@ -65,15 +62,15 @@ class StaffRepository extends LdapRepository
     function getManagersEmail(): array
     {
         try {
-            $stmt = Database::get_conn()->prepare("SELECT emailUtilisateur FROM StaffVue WHERE role='responsable'");
+            $stmt = Database::get_conn()->prepare("SELECT email FROM StaffVue WHERE role='responsable'");
             $stmt->execute();
             $emails = [];
             foreach ($stmt->fetchAll() as $email)
-                $emails[] = $email["emailUtilisateur"];
+                $emails[] = $email["email"];
             return $emails;
         } catch
         (\Exception) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -83,9 +80,9 @@ class StaffRepository extends LdapRepository
         return [
             "idUtilisateur",
             "bio",
-            "emailUtilisateur",
-            "nomUtilisateur",
-            "numTelUtilisateur",
+            "email",
+            "nom",
+            "numTelephone",
             "prenomLdap",
             "loginLdap",
             "role",
