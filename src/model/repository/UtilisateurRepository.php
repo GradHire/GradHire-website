@@ -16,15 +16,15 @@ class UtilisateurRepository extends AbstractRepository
     protected static string $id_attributes = '';
     protected static string $create_function = '';
     protected static string $update_function = '';
-    protected int $id;
-    protected array $attributes;
+    public int $id;
+    public array $attributes;
     private string $nomTable = "Utilisateur";
 
     public function __construct(array $attributes)
     {
         if (count($attributes) == 0) return;
         $this->attributes = $attributes;
-        $this->id = $attributes["idUtilisateur"] ?? 0;
+        $this->setId($attributes["idutilisateur"]);
     }
 
     /**
@@ -57,6 +57,7 @@ class UtilisateurRepository extends AbstractRepository
      */
     public static function find_by_id(string $id): null|static
     {
+
         try {
             $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE idUtilisateur = ?");
             $statement->execute([$id]);
@@ -238,6 +239,11 @@ class UtilisateurRepository extends AbstractRepository
     public function getId()
     {
         return $this->id;
+    }
+
+    public function setId($id): void
+    {
+        $this->id = $id;
     }
 
     protected function getNomColonnes(): array

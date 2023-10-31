@@ -52,9 +52,12 @@ class Application
 
     public static function getUser(): UtilisateurRepository|null
     {
-        if (!is_null(self::$user))
+        if (!is_null(self::$user)) {
             return self::$user;
-        if (self::isGuest()) return null;
+        }
+        if (self::isGuest()) {
+            return null;
+        }
         return unserialize($_SESSION["user"]);
     }
 

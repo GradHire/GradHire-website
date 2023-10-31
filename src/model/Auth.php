@@ -17,6 +17,7 @@ class Auth
 {
     /**
      * @throws ForbiddenException
+     * @throws ServerErrorException
      */
     public static function check_role(Roles ...$roles): void
     {
@@ -46,7 +47,6 @@ class Auth
      */
     public static function load_user_by_id(string $id): UtilisateurRepository|null
     {
-        print_r($id);
         try {
             $statement = Database::get_conn()->prepare("SELECT getRole(?) FROM DUAL");
             $statement->execute([$id]);
@@ -60,11 +60,11 @@ class Auth
                     return EtudiantRepository::find_by_id($id);
                 case Roles::Enterprise->value:
                     return EntrepriseRepository::find_by_id($id);
-                case "staff";
+                case "staff":
                     return StaffRepository::find_by_id($id);
             }
         } catch (\Exception) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
 
         return null;

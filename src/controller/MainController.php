@@ -56,12 +56,15 @@ class MainController extends Controller
     public function profile(Request $req): string
     {
         $id = $req->getRouteParams()["id"] ?? null;
+        print_r($id);
         if (!is_null($id)) {
             $user = Auth::load_user_by_id($id);
             if (is_null($user)) throw new NotFoundException();
         } else {
             $user = Application::getUser();
             if (is_null($user)) throw new ForbiddenException();
+            $user->setId($user->attributes["idutilisateur"]);
+            print_r($user);
         }
         return $this->render('/profile', [
             'user' => $user,
@@ -99,6 +102,7 @@ class MainController extends Controller
             if (!Auth::has_role(Roles::Manager, Roles::Staff) && !(Application::getUser()->role() == Roles::Enterprise && Application::getUser()->id() == $id))
                 throw new ForbiddenException();
         $user = is_null($id) ? Application::getUser() : Auth::load_user_by_id($id);
+        $user->setId($user->attributes["idutilisateur"]);
         if (is_null($user)) throw new NotFoundException();
         $attr = [];
         switch ($user->role()) {
