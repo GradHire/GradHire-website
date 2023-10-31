@@ -39,7 +39,7 @@ class EntrepriseRepository extends ProRepository
             Auth::generate_token($user, false);
             return true;
         } catch (\Exception) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -57,7 +57,7 @@ class EntrepriseRepository extends ProRepository
             return true;
         } catch
         (\Exception) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -85,7 +85,7 @@ class EntrepriseRepository extends ProRepository
             return $this->construireDepuisTableau($resultat);
         } catch
         (PDOException) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -96,21 +96,21 @@ class EntrepriseRepository extends ProRepository
     }
 
     protected
-    function construireDepuisTableau(array $entrepriseData): Entreprise
+    function construireDepuisTableau(array $dataObjectFormatTableau): Entreprise
     {
         return new Entreprise(
-            $entrepriseData['idutilisateur'],
-            $entrepriseData['bio'] ?? "",
-            $entrepriseData['statutJuridique'] ?? "",
-            $entrepriseData['typeStructure'] ?? "",
-            $entrepriseData['effectif'] ?? "",
-            $entrepriseData['codeNaf'] ?? "",
-            $entrepriseData['fax'] ?? "",
-            $entrepriseData['siteWeb'] ?? "",
-            $entrepriseData['siret'] ?? 0,
-            $entrepriseData['email'] ?? "",
-            $entrepriseData['nom'] ?? "",
-            $entrepriseData['numTelephone'] ?? ""
+            $dataObjectFormatTableau['idutilisateur'],
+            $dataObjectFormatTableau['bio'] ?? "",
+            $dataObjectFormatTableau['statutjuridique'] ?? "",
+            $dataObjectFormatTableau['typestructure'] ?? "",
+            $dataObjectFormatTableau['effectif'] ?? "",
+            $dataObjectFormatTableau['codenaf'] ?? "",
+            $dataObjectFormatTableau['fax'] ?? "",
+            $dataObjectFormatTableau['siteweb'] ?? "",
+            $dataObjectFormatTableau['siret'] ?? 0,
+            $dataObjectFormatTableau['email'] ?? "",
+            $dataObjectFormatTableau['nom'] ?? "",
+            $dataObjectFormatTableau['numtelephone'] ?? ""
         );
     }
 
@@ -126,7 +126,7 @@ class EntrepriseRepository extends ProRepository
             $requete->execute();
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetchAll();
-            if ($resultat == false) {
+            if (!$resultat) {
                 return null;
             }
             $entreprises = [];
@@ -136,7 +136,7 @@ class EntrepriseRepository extends ProRepository
             return $entreprises;
         } catch
         (PDOException) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 

@@ -78,7 +78,7 @@ use app\src\model\repository\UtilisateurRepository;
             <dt class="text-sm font-medium leading-6 text-zinc-900">Prenom Tuteur</dt>
             <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
                 <?php
-                $prenom = $utilisateur->getPrenomtuteurp();
+                $prenom = $utilisateur->getPrenom();
                 if ($prenom != null) echo $prenom;
                 else echo("Non renseigné");
                 ?></dd>
@@ -87,7 +87,7 @@ use app\src\model\repository\UtilisateurRepository;
             <dt class="text-sm font-medium leading-6 text-zinc-900">Fonction Tuteur</dt>
             <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
                 <?php
-                $fonction = $utilisateur->getFonctiontuteurp();
+                $fonction = $utilisateur->getFonction();
                 if ($fonction != null) echo $fonction;
                 else echo("Non renseigné");
                 ?></dd>

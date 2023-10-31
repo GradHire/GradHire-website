@@ -230,11 +230,11 @@ class OffresRepository extends AbstractRepository
             $requete->execute(['idoffre' => $idOffre]);
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
-            if ($resultat == false) return null;
+            if (!$resultat) return null;
             return $this->construireDepuisTableau($resultat);
         } catch
         (PDOException) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -258,7 +258,7 @@ class OffresRepository extends AbstractRepository
             return $offres;
         } catch
         (PDOException) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -279,7 +279,7 @@ class OffresRepository extends AbstractRepository
             $datecreation = date("Y-m-d");
             $iduser = Application::getUser()->Id();
             $offres[] = new Offre(null, null, null, "", 7, 5, 4.05, null, null, $datecreation, $datecreation, null, null, $anneeencours, $iduser, "", $datecreation, null);
-            if ($resultat == false) return $offres;
+            if (!$resultat) return $offres;
             foreach ($resultat as $offre_data) {
                 $offres[] = $this->construireDepuisTableau($offre_data);
             }
@@ -320,7 +320,7 @@ class OffresRepository extends AbstractRepository
             $requete->execute(['idoffre' => $id]);
         } catch
         (PDOException) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -339,7 +339,7 @@ class OffresRepository extends AbstractRepository
             else return false;
         } catch
         (PDOException) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -358,7 +358,7 @@ class OffresRepository extends AbstractRepository
             else return false;
         } catch
         (PDOException) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -377,7 +377,7 @@ class OffresRepository extends AbstractRepository
             else return true;
         } catch
         (PDOException) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 

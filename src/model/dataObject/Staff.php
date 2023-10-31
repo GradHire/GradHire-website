@@ -11,11 +11,7 @@ class Staff extends Utilisateur
     private ?string $role;
     private string $loginLdap;
     private string $prenom;
-    private string $email;
-    private string $nom;
-    private ?string $numtelephone;
     private ?string $emailuni;
-    private ?string $bio;
     private ?int $archiver;
 
     public function __construct($idutilisateur, $role, $loginLdap, $prenom, $email, $nom, $numtelephone, $emailuni, $bio, $archiver)
@@ -25,11 +21,7 @@ class Staff extends Utilisateur
         $this->role = $role;
         $this->loginLdap = $loginLdap;
         $this->prenom = $prenom;
-        $this->email = $email;
-        $this->nom = $nom;
-        $this->numtelephone = $numtelephone;
         $this->emailuni = $emailuni;
-        $this->bio = $bio;
         $this->archiver = $archiver;
     }
 
@@ -73,36 +65,6 @@ class Staff extends Utilisateur
         $this->prenom = $prenom;
     }
 
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): void
-    {
-        $this->email = $email;
-    }
-
-    public function getNom(): string
-    {
-        return $this->nom;
-    }
-
-    public function setNom(string $nom): void
-    {
-        $this->nom = $nom;
-    }
-
-    public function getNumtelephone(): ?string
-    {
-        return $this->numtelephone;
-    }
-
-    public function setNumtelephone(?string $numtelephone): void
-    {
-        $this->numtelephone = $numtelephone;
-    }
-
     public function getEmailuni(): ?string
     {
         return $this->emailuni;
@@ -111,16 +73,6 @@ class Staff extends Utilisateur
     public function setEmailuni(?string $emailuni): void
     {
         $this->emailuni = $emailuni;
-    }
-
-    public function getBio(): ?string
-    {
-        return $this->bio;
-    }
-
-    public function setBio(?string $bio): void
-    {
-        $this->bio = $bio;
     }
 
     public function getArchiver(): ?int
@@ -132,6 +84,8 @@ class Staff extends Utilisateur
     {
         $this->archiver = $archiver;
     }
+
+
 
 
 }

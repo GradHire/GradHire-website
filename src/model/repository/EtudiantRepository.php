@@ -28,7 +28,7 @@ class EtudiantRepository extends LdapRepository
             $statement = Database::get_conn()->prepare("UPDATE `EtudiantVue` SET `annee`=? WHERE idUtilisateur=?");
             $statement->execute([$new_year, $this->id]);
         } catch (\Exception) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -51,7 +51,7 @@ class EtudiantRepository extends LdapRepository
             return $this->construireDepuisTableau($resultat);
         } catch
         (PDOException) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -67,6 +67,7 @@ class EtudiantRepository extends LdapRepository
             $dataObjectFormatTableau["numtelephone"],
             $dataObjectFormatTableau["numetudiant"],
             $dataObjectFormatTableau["adresse"],
+            $dataObjectFormatTableau['datenaissance'],
             $dataObjectFormatTableau["emailperso"],
             $dataObjectFormatTableau["codesexe"],
             $dataObjectFormatTableau["idgroupe"],
@@ -91,6 +92,7 @@ class EtudiantRepository extends LdapRepository
             "numTelephone",
             "numEtudiant",
             "adresse",
+            "dateNaissance",
             "emailPerso",
             "codeSexe",
             "idGroupe",

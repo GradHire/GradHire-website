@@ -5,58 +5,60 @@ namespace app\src\model\dataObject;
 class TuteurEntreprise extends Utilisateur
 {
     private int $idutilisateur;
-    private ?string $prenomtuteurp;
-    private ?string $fonctiontuteurp;
+    private ?string $prenom;
+    private ?string $fonction;
     private int $identreprise;
 
     public function __construct(int $idutilisateur, string $prenom, string $fonction, int $identreprise, string $emailutilisateur, string $nomutilisateur, string $numtelutilisateur)
     {
         parent::__construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur, "");
-        $this->idUtilisateur = $idutilisateur;
+        $this->idutilisateur = $idutilisateur;
         $this->prenom = $prenom;
         $this->fonction = $fonction;
-        $this->idEntreprise = $identreprise;
+        $this->identreprise = $identreprise;
     }
 
     public function getIdutilisateur(): int
     {
-        return $this->idUtilisateur;
+        return $this->idutilisateur;
     }
 
     public function setIdutilisateur(int $idutilisateur): void
     {
-        $this->idUtilisateur = $idutilisateur;
+        $this->idutilisateur = $idutilisateur;
     }
 
-    public function getPrenomtuteurp(): ?string
+    public function getPrenom(): ?string
     {
         return $this->prenom;
     }
 
-    public function setPrenomtuteurp(?string $prenomtuteurp): void
+    public function setPrenom(?string $prenom): void
     {
-        $this->prenom = $prenomtuteurp;
+        $this->prenom = $prenom;
     }
 
-    public function getFonctiontuteurp(): ?string
+    public function getFonction(): ?string
     {
         return $this->fonction;
     }
 
-    public function setFonctiontuteurp(?string $fonctiontuteurp): void
+    public function setFonction(?string $fonction): void
     {
-        $this->fonction = $fonctiontuteurp;
+        $this->fonction = $fonction;
     }
 
     public function getIdentreprise(): int
     {
-        return $this->idEntreprise;
+        return $this->identreprise;
     }
 
     public function setIdentreprise(int $identreprise): void
     {
-        $this->idEntreprise = $identreprise;
+        $this->identreprise = $identreprise;
     }
+
+
 
     protected function getValueColonne(string $nomColonne): string
     {

@@ -15,6 +15,9 @@ class CandidatureRepository extends AbstractRepository
      */
     private string $nomTable = "Candidature";
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getById($id): ?Candidature
     {
         $sql = "SELECT * FROM $this->nomTable WHERE idcandidature = :id;";
@@ -22,7 +25,7 @@ class CandidatureRepository extends AbstractRepository
         $requete->execute(['id' => $id]);
         $requete->setFetchMode(\PDO::FETCH_ASSOC);
         $resultat = $requete->fetch();
-        if ($resultat == false) return null;
+        if (!$resultat) return null;
         return $this->construireDepuisTableau($resultat);
     }
 
@@ -97,10 +100,10 @@ class CandidatureRepository extends AbstractRepository
             $requete->execute();
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetchAll();
-            if ($resultat == false) return null;
+            if (!$resultat) return null;
             return $resultat;
         } catch (PDOException) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 

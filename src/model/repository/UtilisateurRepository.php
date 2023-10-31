@@ -64,7 +64,7 @@ class UtilisateurRepository extends AbstractRepository
             if (is_null($user) || $user === false) return null;
             return new static($user);
         } catch (\Exception) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -84,7 +84,7 @@ class UtilisateurRepository extends AbstractRepository
             }
             return $utilisateurs;
         } catch (PDOException) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -110,12 +110,12 @@ class UtilisateurRepository extends AbstractRepository
             $requete->execute(['idUtilisateur' => $idUtilisateur]);
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
-            if ($resultat == false) {
+            if (!$resultat) {
                 return null;
             }
             return $this->construireDepuisTableau($resultat);
         } catch (PDOException) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -134,7 +134,7 @@ class UtilisateurRepository extends AbstractRepository
             $requete->execute($values);
             echo "L'utilisateur a été archivé";
         } catch (PDOException) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -148,12 +148,12 @@ class UtilisateurRepository extends AbstractRepository
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idUtilisateur' => $utilisateur->getIdutilisateur()]);
             $resultat = $requete->fetch();
-            if ($resultat == false) {
+            if (!$resultat) {
                 return null;
             }
             return $resultat['archiver'];
         } catch (PDOException) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -170,7 +170,7 @@ class UtilisateurRepository extends AbstractRepository
                 Application::setUser($this);
             }
         } catch (\Exception) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -195,10 +195,10 @@ class UtilisateurRepository extends AbstractRepository
             $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE idUtilisateur = ?");
             $statement->execute([$this->id]);
             $user = $statement->fetch();
-            if (is_null($user)) //throw new ServerErrorException();
-                $this->attributes = $user;
+            if (is_null($user)) throw new ServerErrorException();
+            $this->attributes = $user;
         } catch (\Exception) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 

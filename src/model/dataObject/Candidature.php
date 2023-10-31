@@ -10,13 +10,13 @@ class Candidature extends AbstractDataObject
     private ?string $datecandidature;
     private ?string $etatcandidature;
     private int $idoffre;
-    private int $idutilisateur;
+    private int $idUtilisateur;
 
     /**
      * @param int|null $idcandidature
-     * @param string $datecandidature
-     * @param string $etatcandidature
-     * @param string $idoffre
+     * @param ?string $datecandidature
+     * @param ?string $etatcandidature
+     * @param int $idoffre
      * @param int $idutilisateur
      */
     public function __construct(?int $idcandidature, ?string $datecandidature, ?string $etatcandidature, int $idoffre, int $idutilisateur)

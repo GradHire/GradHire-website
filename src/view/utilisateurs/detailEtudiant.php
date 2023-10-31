@@ -168,7 +168,7 @@ use app\src\model\repository\UtilisateurRepository;
             <dt class="text-sm font-medium leading-6 text-zinc-900">Archiver</dt>
             <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
                 <?php
-                $archiver = $utilisateur->isArchiver();
+                $archiver = $utilisateur->getArchiver();
                 if ($archiver == 1 || $archiver == 0) echo $archiver;
                 else echo("Non renseigné");
                 ?></dd>

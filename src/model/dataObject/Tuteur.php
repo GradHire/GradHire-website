@@ -8,19 +8,15 @@ class Tuteur extends Utilisateur
 {
 
     private int $idUtilisateur;
-    private ?string $hash;
-    private string $prenomtuteurp;
-    private ?string $fonctiontuteurp;
-    private int $identreprise;
+    private string $prenom;
+    private ?string $fonction;
 
-    public function __construct(int $idUtilisateur, ?string $bio, string $emailUtilisateur, string $nomUtilisateur, ?string $numTelUtilisateur, ?string $hash, string $prenomtuteurp, ?string $fonctiontuteurp, int $identreprise)
+    public function __construct(int $idUtilisateur, ?string $bio, string $emailUtilisateur, string $nomUtilisateur, ?string $numTelUtilisateur, string $prenomtuteurp, ?string $fonctiontuteurp)
     {
         parent::__construct($idUtilisateur, $emailUtilisateur, $nomUtilisateur, $numTelUtilisateur, $bio);
         $this->idUtilisateur = $idUtilisateur;
-        $this->hash = $hash;
         $this->prenom = $prenomtuteurp;
         $this->fonction = $fonctiontuteurp;
-        $this->idEntreprise = $identreprise;
     }
 
     public function getIdUtilisateur(): int
@@ -33,44 +29,33 @@ class Tuteur extends Utilisateur
         $this->idUtilisateur = $idUtilisateur;
     }
 
-    public function getHash(): ?string
-    {
-        return $this->hash;
-    }
-
-    public function setHash(?string $hash): void
-    {
-        $this->hash = $hash;
-    }
-
-    public function getPrenomtuteurp(): string
+    public function getPrenom(): string
     {
         return $this->prenom;
     }
 
-    public function setPrenomtuteurp(string $prenomtuteurp): void
+    public function setPrenom(string $prenom): void
     {
-        $this->prenom = $prenomtuteurp;
+        $this->prenom = $prenom;
     }
 
-    public function getFonctiontuteurp(): ?string
+    public function getFonction(): ?string
     {
         return $this->fonction;
     }
 
-    public function setFonctiontuteurp(?string $fonctiontuteurp): void
+    public function setFonction(?string $fonction): void
     {
-        $this->fonction = $fonctiontuteurp;
+        $this->fonction = $fonction;
     }
 
-    public function getIdentreprise(): int
+    public function getIdEntreprise(): int
     {
         return $this->idEntreprise;
     }
 
-    public function setIdentreprise(int $identreprise): void
+    public function setIdEntreprise(int $idEntreprise): void
     {
-        $this->idEntreprise = $identreprise;
+        $this->idEntreprise = $idEntreprise;
     }
-
 }

@@ -39,7 +39,7 @@ class TuteurRepository extends ProRepository
             }
             return $this->construireDepuisTableau($resultat);
         } catch (PDOException) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -47,15 +47,13 @@ class TuteurRepository extends ProRepository
     function construireDepuisTableau(array $dataObjectFormatTableau): Tuteur
     {
         return new Tuteur(
-            $dataObjectFormatTableau["idUtilisateur"],
-            $dataObjectFormatTableau["bio"],
-            $dataObjectFormatTableau["email"],
-            $dataObjectFormatTableau["nom"],
-            $dataObjectFormatTableau["numTelephone"],
-            $dataObjectFormatTableau["hash"],
+            $dataObjectFormatTableau["idutilisateur"],
             $dataObjectFormatTableau["prenom"],
             $dataObjectFormatTableau["fonction"],
-            $dataObjectFormatTableau["idEntreprise"]
+            $dataObjectFormatTableau["email"],
+            $dataObjectFormatTableau["nom"],
+            $dataObjectFormatTableau["numtelephone"],
+            $dataObjectFormatTableau["bio"]
         );
     }
 
@@ -64,14 +62,12 @@ class TuteurRepository extends ProRepository
     {
         return [
             "idUtilisateur",
-            "bio",
+            "prenom",
+            "fonction",
             "email",
             "nom",
             "numTelephone",
-            "hash",
-            "prenom",
-            "fonction",
-            "idEntreprise"
+            "bio"
         ];
     }
 

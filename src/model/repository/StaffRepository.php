@@ -37,7 +37,7 @@ class StaffRepository extends LdapRepository
             }
             return $this->construireDepuisTableau($resultat);
         } catch (PDOException) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -73,7 +73,7 @@ class StaffRepository extends LdapRepository
             return $emails;
         } catch
         (\Exception) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 

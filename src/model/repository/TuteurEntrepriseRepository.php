@@ -16,7 +16,7 @@ class TuteurEntrepriseRepository extends UtilisateurRepository
         $requete->execute(['idEntreprise' => $idEntreprise]);
         $requete->setFetchMode(\PDO::FETCH_ASSOC);
         $resultat = $requete->fetchAll();
-        if ($resultat == false) return null;
+        if (!$resultat) return null;
         return $resultat;
     }
 
@@ -27,7 +27,7 @@ class TuteurEntrepriseRepository extends UtilisateurRepository
         $requete->execute();
         $requete->setFetchMode(\PDO::FETCH_ASSOC);
         $resultat = $requete->fetchAll();
-        if ($resultat == false) return null;
+        if (!$resultat) return null;
         return $resultat;
     }
 
@@ -43,7 +43,7 @@ class TuteurEntrepriseRepository extends UtilisateurRepository
         $requete->execute(['idUtilisateur' => $idTuteur]);
         $requete->setFetchMode(\PDO::FETCH_ASSOC);
         $resultat = $requete->fetch();
-        if ($resultat == false) {
+        if (!$resultat) {
             return null;
         }
         return $this->construireTuteurProDepuisTableau($resultat);
@@ -52,13 +52,13 @@ class TuteurEntrepriseRepository extends UtilisateurRepository
     public function construireTuteurProDepuisTableau(array $tuteurData): ?TuteurEntreprise
     {
         return new TuteurEntreprise(
-            $tuteurData['idUtilisateur'],
+            $tuteurData['idutilisateur'],
             $tuteurData['prenom'] ?? "",
             $tuteurData['fonction'] ?? "",
-            $tuteurData['idEntreprise'],
+            $tuteurData['identreprise'],
             $tuteurData['email'] ?? "",
             $tuteurData['nom'] ?? "",
-            $tuteurData['numTelephone'] ?? "",
+            $tuteurData['numtelephone'] ?? "",
 
         );
     }
