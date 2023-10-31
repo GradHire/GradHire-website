@@ -137,7 +137,7 @@ class OffresRepository extends AbstractRepository
             if ($resultat == false) return null;
             return $resultat;
         } catch (PDOException) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -154,7 +154,7 @@ class OffresRepository extends AbstractRepository
             return true;
         } catch
         (PDOException) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -171,7 +171,7 @@ class OffresRepository extends AbstractRepository
             return true;
         } catch
         (PDOException) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -191,7 +191,7 @@ class OffresRepository extends AbstractRepository
             return $this->construireDepuisTableau($resultat);
         } catch
         (PDOException) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
@@ -286,7 +286,7 @@ class OffresRepository extends AbstractRepository
             return $offres;
         } catch
         (PDOException) {
-            //throw new ServerErrorException();
+            throw new ServerErrorException();
         }
     }
 
