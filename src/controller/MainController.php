@@ -106,7 +106,7 @@ class MainController extends Controller
                 $attr = array_merge($attr, [
                     "name" => FormModel::string("Nom entreprise")->required()->default($user->attributes()["nom"]),
                     "email" => FormModel::email("Adresse mail")->required()->default($user->attributes()["email"]),
-                    "phone" => FormModel::phone("Téléphone")->default($user->attributes()["numTelephone"]),
+                    "phone" => FormModel::phone("Téléphone")->default($user->attributes()["numtelephone"]),
                 ]);
                 break;
             case Roles::Tutor:
@@ -122,10 +122,10 @@ class MainController extends Controller
                 break;
             case  Roles::Student:
                 $attr = array_merge($attr, [
-                    "email" => FormModel::email("Adresse mail perso")->default($user->attributes()["emailPerso"]),
-                    "tel" => FormModel::phone("Téléphone")->numeric()->default($user->attributes()["numTelephone"]),
+                    "email" => FormModel::email("Adresse mail perso")->default($user->attributes()["email"]),
+                    "tel" => FormModel::phone("Téléphone")->numeric()->default($user->attributes()["numtelephone"]),
                     "date" => FormModel::date("Date de naissance")->default($user->attributes()["datenaissance"])->before(new \DateTime()),
-                    "studentnum" => FormModel::string("Numéro Etudiant")->default($user->attributes()["numEtudiant"]),
+                    "studentnum" => FormModel::string("Numéro Etudiant")->default($user->attributes()["numetudiant"]),
                 ]);
                 break;
             case Roles::Teacher:
@@ -262,7 +262,7 @@ class MainController extends Controller
                     $form->setError("Impossible de télécharger tous les fichiers");
                     return '';
                 }
-                $stmt = Database::get_conn()->prepare("INSERT INTO `Postuler`(`idoffre`, `idUtilisateur`, `dates`) VALUES (?,?" .  date('d-m-Y') ." )");
+                $stmt = Database::get_conn()->prepare("INSERT INTO `Postuler`(`idoffre`, `idUtilisateur`, `dates`) VALUES (?,?" . date('d-m-Y') . " )");
                 $stmt->execute([$id, Application::getUser()->id()]);
                 Application::$app->response->redirect('/offres');
             }
