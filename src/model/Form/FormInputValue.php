@@ -41,24 +41,23 @@ class FormInputValue
         return $this->value;
     }
 
-    public function getDate(): DateTime
+    public function getDate(): DateTime|null
     {
+        if (is_null($this->value))
+            return null;
         if ($this->value instanceof DateTime)
             return $this->value;
 
-        try { 
-        $this->setValue(new DateTime($this->value));
-        return $this->value;
-    } catch (\Exception $e)
-{
-print_r($e);
-die();
-}
-}
+        try {
+            $this->setValue(new DateTime($this->value));
+            return $this->value;
+        } catch (\Exception $e) {
+            die();
+        }
+    }
 
-public
-function getField(string $name): FormAttribute|null
-{
-    return $this->fields[$name] ?? null;
-}
+    public function getField(string $name): FormAttribute|null
+    {
+        return $this->fields[$name] ?? null;
+    }
 }

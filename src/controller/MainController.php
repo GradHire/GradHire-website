@@ -122,8 +122,8 @@ class MainController extends Controller
                 break;
             case  Roles::Student:
                 $attr = array_merge($attr, [
-                    "email" => FormModel::email("Adresse mail perso")->default($user->attributes()["email"]),
-                    "tel" => FormModel::phone("Téléphone")->numeric()->default($user->attributes()["numtelephone"]),
+                    "email" => FormModel::email("Adresse mail perso")->default($user->attributes()["emailperso"]),
+                    "tel" => FormModel::phone("Téléphone")->numeric()->default($user->attributes()["numtelephone"])->nullable(),
                     "date" => FormModel::date("Date de naissance")->default($user->attributes()["datenaissance"])->before(new \DateTime()),
                     "studentnum" => FormModel::string("Numéro Etudiant")->default($user->attributes()["numetudiant"]),
                 ]);
@@ -147,7 +147,6 @@ class MainController extends Controller
         );
         $form = new FormModel($attr);
         $form->useFile();
-
         if ($request->getMethod() === 'post') {
             if ($form->validate($request->getBody())) {
                 $picture = $form->getFile("picture");

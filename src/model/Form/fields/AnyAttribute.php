@@ -7,6 +7,7 @@ use app\src\model\Form\rules\RuleMatch;
 
 abstract class AnyAttribute extends FormAttribute
 {
+    public bool $isNullable = false;
     protected bool $forget = false;
     protected mixed $default = null;
 
@@ -31,6 +32,12 @@ abstract class AnyAttribute extends FormAttribute
     public function asterisk(): static
     {
         $this->asterisk = true;
+        return $this;
+    }
+
+    public function nullable(): static
+    {
+        $this->isNullable = true;
         return $this;
     }
 }

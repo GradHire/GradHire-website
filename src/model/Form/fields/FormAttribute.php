@@ -39,118 +39,114 @@ abstract class FormAttribute
 
     public function validate(string $name, array $fields, array $body): array
     {
-        try { 
-        if ($this instanceof FormFile) {
-            $file = $_FILES[$name] ?? null;
-            if (!is_null($file) && (is_null($file["name"]) || $file["name"] === "")) $file = null;
-            $value = new FormInputValue($file, $fields, $body);
-        } else {
-            $val = $body[$name] ?? null;
-            if (is_null($val) && $this->default != null)
-                $val = $this->default;
-            $value = new FormInputValue($val, $fields, $body);
-            foreach ($this->priority_rules as $rule)
+        try {
+            if ($this instanceof FormFile) {
+                $file = $_FILES[$name] ?? null;
+                if (!is_null($file) && (is_null($file["name"]) || $file["name"] === "")) $file = null;
+                $value = new FormInputValue($file, $fields, $body);
+            } else {
+                $val = $body[$name] ?? null;
+                if (is_null($val) && $this->default != null)
+                    $val = $this->default;
+                if ((is_null($val) || $val === "") && $this->isNullable)
+                    return [null, null];
+                $value = new FormInputValue($val, $fields, $body);
+                foreach ($this->priority_rules as $rule)
+                    $rule->process($value);
+                $this->type_rule->process($value);
+                foreach ($this->modifiers as $modifier)
+                    $modifier->process($value);
+            }
+            foreach ($this->rules as $rule)
                 $rule->process($value);
-            $this->type_rule->process($value);
-            foreach ($this->modifiers as $modifier)
-                $modifier->process($value);
+            return [null, $value->toString()];
+        } catch (FormValidationException $e) {
+            return [$e, null];
         }
-        foreach ($this->rules as $rule)
-            $rule->process($value);
-        return [null, $value->toString()];
-    } catch (FormValidationException $e)
-{
-return [$e, null];
-}
-}
+    }
 
-public
-function required(): static
-{
-    $this->addPriorityRule(new RuleRequired());
-    $this->setParam("required");
-    return $this;
-}
+    public function required(): static
+    {
+        $this->addPriorityRule(new RuleRequired());
+        $this->setParam("required");
+        return $this;
+    }
 
-protected
-function addPriorityRule(FormAttributeRule $rule): void
-{
-    $this->priority_rules[] = $rule;
-}
+    protected function addPriorityRule(FormAttributeRule $rule): void
+    {
+        $this->priority_rules[] = $rule;
+    }
 
-protected
-function setParam(string $name, $value = null): void
-{
-    if (is_null($value))
-        $this->params[] = $name;
-    else
-        $this->params[$name] = $value;
-}
-
-public
-function id(string $id): static
-{
-    $this->setParam("id", $id);
-    return $this;
-}
-
-public
-function params(array $attributes): static
-{
-    foreach ($attributes as $key => $value)
+    protected function setParam(string $name, $value = null): void
+    {
         if (is_null($value))
-            $this->setParam($key);
+            $this->params[] = $name;
         else
-            $this->setParam($key, $value);
-    return $this;
-}
+            $this->params[$name] = $value;
+    }
 
-abstract function field(string $name, string $value): string;
+    public function id(string $id): static
+    {
+        $this->setParam("id", $id);
+        return $this;
+    }
 
-	public function getJS(): string
-{
-    return '';
-}
+    public function params(array $attributes): static
+    {
+        foreach ($attributes as $key => $value)
+            if (is_null($value))
+                $this->setParam($key);
+            else
+                $this->setParam($key, $value);
+        return $this;
+    }
 
-	public function checkValue($value): bool
-{
-    try { 
-    $this->type_rule->process(new FormInputValue($value, [], []));
-    return true;
-} catch (FormValidationException $e) {
-    return false;
-}
-	}
+    abstract function field(string $name, string $value): string;
 
-	protected function getValue(mixed $value): mixed
-{
-    $val = !$this->forget ? $value : null;
-    if (!is_null($this->default) && (is_null($val) || $val === '')) $val = $this->default;
-    if (is_null($val)) $val = "";
-    return $val;
-}
+    public function getJS(): string
+    {
+        return '';
+    }
 
-	protected function addRule(FormAttributeRule $rule): void
-{
-    $this->rules[] = $rule;
-}
+    public function checkValue($value): bool
+    {
+        try {
+            $this->type_rule->process(new FormInputValue($value, [], []));
+            return true;
+        } catch (FormValidationException $e) {
+            return false;
+        }
+    }
 
-	protected function getParams(): string
-{
-    $result = '';
-    foreach ($this->params as $key => $value)
-        $result .= $key === 0 ? " $value" : " $key=\"$value\"";
+    protected function getValue(mixed $value): mixed
+    {
+        $val = !$this->forget ? $value : null;
+        if (!is_null($this->default) && (is_null($val) || $val === '')) $val = $this->default;
+        if (is_null($val)) $val = "";
+        return $val;
+    }
 
-    return $result;
-}
+    protected function addRule(FormAttributeRule $rule): void
+    {
+        $this->rules[] = $rule;
+    }
 
-	protected function addModifier(FormAttributeRule $rule): void
-{
-    $this->modifiers[] = $rule;
-}
+    protected function getParams(): string
+    {
+        $result = '';
+        foreach ($this->params as $key => $value)
+            $result .= $key === 0 ? " $value" : " $key=\"$value\"";
 
-	protected function setType(FormAttributeRule $rule): void
-{
-    $this->type_rule = $rule;
-}
+        return $result;
+    }
+
+    protected function addModifier(FormAttributeRule $rule): void
+    {
+        $this->modifiers[] = $rule;
+    }
+
+    protected function setType(FormAttributeRule $rule): void
+    {
+        $this->type_rule = $rule;
+    }
 }
