@@ -1,10 +1,11 @@
 <?php
 
 namespace app\src\controller;
+
 use app\src\core\middlewares\BaseMiddleware;
 use app\src\model\Application;
 
-abstract class Controller
+abstract class AbstractController
 {
     public string $layout = 'main';
     public string $action = '';

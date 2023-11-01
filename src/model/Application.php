@@ -2,9 +2,8 @@
 
 namespace app\src\model;
 
-use app\src\controller\Controller;
+use app\src\controller\AbstractController;
 use app\src\core\exception\ServerErrorException;
-use app\src\model\repository\AbstractRepository;
 use app\src\model\repository\UtilisateurRepository;
 
 class Application
@@ -18,7 +17,7 @@ class Application
     public Router $router;
     public Request $request;
     public Response $response;
-    public ?Controller $controller = null;
+    public ?AbstractController $controller = null;
     public View $view;
     protected array $eventListeners = [];
 

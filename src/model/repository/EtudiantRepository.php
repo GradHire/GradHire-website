@@ -44,7 +44,6 @@ class EtudiantRepository extends LdapRepository
             $requete->execute(['idUtilisateur' => $idutilisateur]);
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
-            print_r($resultat);
             if (!$resultat) {
                 return null;
             }

@@ -6,13 +6,13 @@ use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\Form\FormModel;
+use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\LdapRepository;
 use app\src\model\repository\ProRepository;
 use app\src\model\Request;
 use app\src\model\Response;
-use app\src\model\repository\EntrepriseRepository;
 
-class AuthController extends Controller
+class AuthController extends AbstractController
 {
     /**
      * @throws ServerErrorException
