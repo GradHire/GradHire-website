@@ -7,6 +7,7 @@ use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
+use app\src\model\Form\FormModel;
 use app\src\model\repository\CandidatureRepository;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
@@ -54,10 +55,19 @@ class DashboardController extends AbstractController
      */
     public function ListeTuteurPro(Request $request): string
     {
+        $form = new FormModel([
+            'email' => FormModel::email("Email tuteur")->required()->asterisk()->forget()
+        ]);
         if (Auth::has_role(Roles::Manager, Roles::Staff)) $tuteurs = (new TuteurEntrepriseRepository([]))->getAll();
         else if (Auth::has_role(Roles::Enterprise)) $tuteurs = (new TuteurEntrepriseRepository([]))->getAllTuteursByIdEntreprise(Application::getUser()->id());
         else throw new ForbiddenException();
-        return $this->render('tuteurPro/listeTuteurPro', ['tuteurs' => $tuteurs]);
+        if ($request->getMethod() === 'post') {
+            if ($form->validate($request->getBody())) {
+                TuteurEntrepriseRepository::generateAccountToken(Application::getUser(), $form->getParsedBody()["email"], $form);
+            }
+        }
+        $waiting = EntrepriseRepository::getTuteurWaitingList(Application::getUser()->id());
+        return $this->render('tuteurPro/listeTuteurPro', ['tuteurs' => $tuteurs, 'form' => $form, 'waiting' => $waiting]);
     }
 
     /**

@@ -28,6 +28,9 @@ $app->router->get('/', 'home');
 $app->router->get('/register', [AuthController::class, 'register']);
 $app->router->post('/register', [AuthController::class, 'register']);
 
+$app->router->get('/registerTutor/{token}', [AuthController::class, 'createTutor']);
+$app->router->post('/registerTutor/{token}', [AuthController::class, 'createTutor']);
+
 $app->router->get('/login', [AuthController::class, 'login']);
 $app->router->post('/login', [AuthController::class, 'login']);
 
@@ -88,5 +91,6 @@ $app->router->get('/utilisateurs/{id}', [DashboardController::class, 'utilisateu
 $app->router->post('/utilisateurs/{id}', [DashboardController::class, 'utilisateurs']);
 
 $app->router->get('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPro']);
+$app->router->post('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPro']);
 
 $app->run();

@@ -13,6 +13,7 @@ class TuteurRepository extends ProRepository
     protected static string $view = "TuteurVue";
     protected static string $update_function = "updateTuteur";
 
+
     public function role(): Roles
     {
         return Roles::Tutor;
@@ -76,5 +77,4 @@ class TuteurRepository extends ProRepository
     {
         return "TuteurVue";
     }
-
 }

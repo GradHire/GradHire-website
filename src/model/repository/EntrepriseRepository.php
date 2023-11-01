@@ -29,13 +29,11 @@ class EntrepriseRepository extends ProRepository
             }
             $user = self::save([$body["name"], $body["siret"], $body["email"], password_hash($body["password"], PASSWORD_DEFAULT), $body["phone"]]);
             $emails = (new StaffRepository([]))->getManagersEmail();
-            MailRepository::send_mail($emails, "Nouvelle entreprise", <<<HTML
- <div>
- <p>L'entreprise {$body["name"]} viens de créer un compte</p>
- <a href="http://localhost:8080/entreprises/{$user->id()}">Voir le profile</a>
- </div>
- HTML
-            );
+            MailRepository::send_mail($emails, "Nouvelle entreprise",
+                '<div>
+ <p>L\'entreprise ' . $body["name"] . ' viens de créer un compte</p>
+ <a href="' . HOST . '/entreprises/' . $user->id() . '">Voir le profile</a>
+ </div>');
             Auth::generate_token($user, false);
             return true;
         } catch (\Exception) {
@@ -55,6 +53,25 @@ class EntrepriseRepository extends ProRepository
             $count = $statement->rowCount();
             if ($count == 0) return false;
             return true;
+        } catch (\Exception) {
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getTuteurWaitingList(string $id): array
+    {
+        try {
+            $statement = Database::get_conn()->prepare("SELECT email FROM CreationCompteTuteur WHERE idUtilisateur = ?");
+            $statement->execute([$id]);
+            $statement->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $statement->fetchAll();
+            if (!$resultat) {
+                return [];
+            }
+            return $resultat;
         } catch (\Exception) {
             throw new ServerErrorException();
         }

@@ -7,6 +7,9 @@ enum Roles: string
     case Teacher = 'enseignant';
     case Staff = "secretariat";
     case Manager = "responsable";
+    case ChefDepartment = "chefdepartement";
+    case ManagerStage = "responsablestage";
+    case ManagerAlternance = "responsablealternance";
     case Enterprise = "entreprise";
     case Tutor = "tuteur";
 }

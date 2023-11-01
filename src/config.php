@@ -1,5 +1,6 @@
 <?php
 
+const HOST = 'http://localhost:8080';
 const DB_HOSTNAME = 'srv1046.hstgr.io';
 const DB_DB = 'u542990794_gradhire';
 const DB_PORT = '3306';

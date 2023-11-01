@@ -41,7 +41,7 @@ class OffreForm extends Model
             MailRepository::send_mail($emails, "Nouvelle offre", '
  <div>
  <p>L\'entreprise ' . Application::getUser()->attributes()["nom"] . ' viens de créer une nouvelle offre</p>
- <a href="http://localhost:8080/offres/' . $id . '">Voir l\'offre</a>
+ <a href="' . HOST . '/offres/' . $id . '">Voir l\'offre</a>
  </div>');
         }
 

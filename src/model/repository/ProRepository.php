@@ -41,7 +41,7 @@ class ProRepository extends UtilisateurRepository
     {
         $user = EntrepriseRepository::check_credentials($email, $password);
         if (!is_null($user)) return $user;
-        return TuteurRepository::check_credentials($email, $password);
+        return TuteurEntrepriseRepository::check_credentials($email, $password);
     }
 
     /**
@@ -51,7 +51,7 @@ class ProRepository extends UtilisateurRepository
     static function check_credentials(string $email, string $password): static|null
     {
         try {
-            $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE emailUtilisateur=?");
+            $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE email=?");
             $statement->execute([$email]);
             $user = $statement->fetch();
             if (is_null($user) || $user === false) return null;

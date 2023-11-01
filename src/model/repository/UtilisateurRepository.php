@@ -48,7 +48,6 @@ class UtilisateurRepository extends AbstractRepository
     {
         try {
             $statement = Database::get_conn()->prepare("SELECT " . static::$create_function . "(" . ltrim(str_repeat(",?", count($values)), ",") . ") FROM DUAL");
-            print_r($statement->queryString);
             $statement->execute($values);
             return static::find_by_id(intval($statement->fetchColumn()));
         } catch (\Exception) {
@@ -232,7 +231,7 @@ class UtilisateurRepository extends AbstractRepository
 
     public function full_name(): string
     {
-        return $this->attributes["nom"];
+        return ($this->attributes["prenom"] ?? "") . " " . $this->attributes["nom"];
     }
 
     public function archived(): bool
