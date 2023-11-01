@@ -50,13 +50,12 @@ class EntrepriseRepository extends ProRepository
     static function exist(string $email, string $siret): bool
     {
         try {
-            $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE emailUtilisateur=? OR siret=?");
+            $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE email=? OR siret=?");
             $statement->execute([$email, $siret]);
             $count = $statement->rowCount();
             if ($count == 0) return false;
             return true;
-        } catch
-        (\Exception) {
+        } catch (\Exception) {
             throw new ServerErrorException();
         }
     }
