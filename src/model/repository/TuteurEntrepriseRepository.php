@@ -34,7 +34,7 @@ class TuteurEntrepriseRepository extends ProRepository
             $statement->execute([$entreprise->getId(), $email, $token]);
             MailRepository::send_mail([$email], "Création de compte tuteur", '
 <div>
-<p>Vous avez été ajouté en tant que tuteur de l\'entreprise {$entreprise->attributes["nom"]}</p>
+<p>Vous avez été ajouté en tant que tuteur de l\'entreprise ' . $entreprise->attributes["nom"] . '</p>
 <a href="' . HOST . '/registerTutor/' . $token . '">Créer mon compte</a>
 </div>');
             $form->setSuccess("Un email à été envoyé à l'adresse mail indiquée.");
