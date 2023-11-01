@@ -5,7 +5,7 @@
  */
 
 use app\src\model\Auth;
-use app\src\model\Users\Roles;
+use app\src\model\dataObject\Roles;
 
 $id_offre = $offre->getIdoffre();
 

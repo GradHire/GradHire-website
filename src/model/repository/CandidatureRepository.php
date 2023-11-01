@@ -14,6 +14,10 @@ class CandidatureRepository extends AbstractRepository
      * @throws ServerErrorException
      */
     private string $nomTable = "Candidature";
+
+    /**
+     * @throws ServerErrorException
+     */
     public function getById($id): ?Candidature
     {
         $sql = "SELECT * FROM $this->nomTable WHERE idcandidature = :id;";
@@ -21,55 +25,9 @@ class CandidatureRepository extends AbstractRepository
         $requete->execute(['id' => $id]);
         $requete->setFetchMode(\PDO::FETCH_ASSOC);
         $resultat = $requete->fetch();
-        if ($resultat == false) return null;
+        if (!$resultat) return null;
         return $this->construireDepuisTableau($resultat);
     }
-    public function getByIdEntreprise($identreprise,string $etat): ?array
-    {
-        $sql = "SELECT idcandidature,datec,etatcandidature,$this->nomTable.idoffre,$this->nomTable.idutilisateur FROM $this->nomTable JOIN Offre ON Offre.idoffre=$this->nomTable.idoffre WHERE Offre.idutilisateur= :id AND etatcandidature=:etat";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['id' => $identreprise,'etat'=>$etat]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat=[];
-        foreach($requete as $item){
-            $resultat[]=$this->construireDepuisTableau($item);
-        }
-        return $resultat;
-
-    }
-    public function getByIdEtudiant($idEtudiant,string $etat): ?array
-    {
-        $sql = "SELECT idcandidature,datec,etatcandidature,$this->nomTable.idoffre,$this->nomTable.idutilisateur FROM $this->nomTable  WHERE idutilisateur= :id AND etatcandidature=:etat";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['id' => $idEtudiant,'etat'=>$etat]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat=[];
-        foreach($requete as $item){
-            $resultat[]=$this->construireDepuisTableau($item);
-        }
-        return $resultat;
-
-    }
-
-    public function getByStatement(string $etat)
-    {
-        $sql = "SELECT idcandidature,datec,etatcandidature,$this->nomTable.idoffre,$this->nomTable.idutilisateur FROM $this->nomTable JOIN Offre ON Offre.idoffre=$this->nomTable.idoffre WHERE etatcandidature=:etat";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['etat'=>$etat]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat=[];
-        foreach($requete as $item){
-            $resultat[]=$this->construireDepuisTableau($item);
-        }
-        return $resultat;
-    }
-    public function setEtatCandidature(int $idCandidature,string $etat){
-        $sql="UPDATE $this->nomTable SET etatcandidature=:etat WHERE idcandidature=:id;";
-        $requete= Database::get_conn()->prepare($sql);
-        $requete->execute(['id'=>$idCandidature, 'etat'=>$etat]);
-
-    }
-
 
     protected function construireDepuisTableau(array $dataObjectFormatTableau): Candidature
     {
@@ -78,21 +36,57 @@ class CandidatureRepository extends AbstractRepository
             $dataObjectFormatTableau['datec'],
             $dataObjectFormatTableau['etatcandidature'],
             $dataObjectFormatTableau['idoffre'],
-            $dataObjectFormatTableau['idutilisateur']
+            $dataObjectFormatTableau['idUtilisateur']
         );
     }
 
-
-
-    protected function getNomColonnes(): array
+    public function getByIdEntreprise($identreprise, string $etat): ?array
     {
-        return [
-            "idcandidature",
-            "datecandidature",
-            "etatcandidature",
-            "idoffre",
-            "idutilisateur"
-        ];
+        $sql = "SELECT idcandidature,datec,etatcandidature,$this->nomTable.idoffre,$this->nomTable.idUtilisateur FROM $this->nomTable JOIN Offre ON Offre.idoffre=$this->nomTable.idoffre WHERE Offre.idUtilisateur= :id AND etatcandidature=:etat";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['id' => $identreprise, 'etat' => $etat]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = [];
+        foreach ($requete as $item) {
+            $resultat[] = $this->construireDepuisTableau($item);
+        }
+        return $resultat;
+
+    }
+
+    public function getByIdEtudiant($idEtudiant, string $etat): ?array
+    {
+        $sql = "SELECT idcandidature,datec,etatcandidature,$this->nomTable.idoffre,$this->nomTable.idUtilisateur FROM $this->nomTable  WHERE idUtilisateur= :id AND etatcandidature=:etat";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['id' => $idEtudiant, 'etat' => $etat]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = [];
+        foreach ($requete as $item) {
+            $resultat[] = $this->construireDepuisTableau($item);
+        }
+        return $resultat;
+
+    }
+
+    public function getByStatement(string $etat)
+    {
+        $sql = "SELECT idcandidature,datec,etatcandidature,$this->nomTable.idoffre,$this->nomTable.idUtilisateur FROM $this->nomTable JOIN Offre ON Offre.idoffre=$this->nomTable.idoffre WHERE etatcandidature=:etat";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['etat' => $etat]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = [];
+        foreach ($requete as $item) {
+            $resultat[] = $this->construireDepuisTableau($item);
+        }
+        return $resultat;
+    }
+
+    public function setEtatCandidature(int $idCandidature, string $etat)
+    {
+        $sql = "UPDATE $this->nomTable SET etatcandidature=:etat WHERE idcandidature=:id;";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['id' => $idCandidature, 'etat' => $etat]);
+
     }
 
     /**
@@ -106,14 +100,27 @@ class CandidatureRepository extends AbstractRepository
             $requete->execute();
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetchAll();
-            if ($resultat == false) return null;
+            if (!$resultat) return null;
             return $resultat;
         } catch (PDOException) {
             throw new ServerErrorException();
         }
     }
 
-    protected function getNomTable(): string
+    protected
+    function getNomColonnes(): array
+    {
+        return [
+            "idCandidature",
+            "dateCandidature",
+            "etatCandidature",
+            "idOffre",
+            "idUtilisateur"
+        ];
+    }
+
+    protected
+    function getNomTable(): string
     {
         return "Candidature";
     }

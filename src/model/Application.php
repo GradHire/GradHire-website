@@ -2,9 +2,9 @@
 
 namespace app\src\model;
 
-use app\src\controller\Controller;
+use app\src\controller\AbstractController;
 use app\src\core\exception\ServerErrorException;
-use app\src\model\Users\User;
+use app\src\model\repository\UtilisateurRepository;
 
 class Application
 {
@@ -12,12 +12,12 @@ class Application
     const EVENT_AFTER_REQUEST = 'afterRequest';
     public static Application $app;
     public static string $ROOT_DIR;
-    private static ?User $user = null;
+    private static ?UtilisateurRepository $user = null;
     public string $layout = 'main';
     public Router $router;
     public Request $request;
     public Response $response;
-    public ?Controller $controller = null;
+    public ?AbstractController $controller = null;
     public View $view;
     protected array $eventListeners = [];
 
@@ -49,15 +49,18 @@ class Application
         header("Location: /");
     }
 
-    public static function getUser(): User|null
+    public static function getUser(): UtilisateurRepository|null
     {
-        if (!is_null(self::$user))
+        if (!is_null(self::$user)) {
             return self::$user;
-        if (self::isGuest()) return null;
+        }
+        if (self::isGuest()) {
+            return null;
+        }
         return unserialize($_SESSION["user"]);
     }
 
-    public static function setUser(User|null $user): void
+    public static function setUser(UtilisateurRepository|null $user): void
     {
         if (is_null($user) || $user->archived()) {
             Auth::logout();
@@ -91,13 +94,12 @@ class Application
         try {
             echo $this->router->resolve();
         } catch (\Exception $e) {
-            echo $this->router->renderView('_error', [
-                'exception' => $e,
-            ]);
+            echo $this->router->renderView('_error', ['exception' => $e,]);
         }
     }
 
-    public function triggerEvent($eventName): void
+    public
+    function triggerEvent($eventName): void
     {
         $callbacks = $this->eventListeners[$eventName] ?? [];
         foreach ($callbacks as $callback) {
@@ -105,7 +107,8 @@ class Application
         }
     }
 
-    public function on($eventName, $callback): void
+    public
+    function on($eventName, $callback): void
     {
         $this->eventListeners[$eventName][] = $callback;
     }

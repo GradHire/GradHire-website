@@ -6,17 +6,17 @@ use app\src\model\repository\CandidatureRepository;
 
 class Candidature extends AbstractDataObject
 {
-private ?int $idcandidature;
-private ?string $datecandidature;
-private ?string $etatcandidature;
-private int $idoffre;
-private int $idutilisateur;
+    private ?int $idcandidature;
+    private ?string $datecandidature;
+    private ?string $etatcandidature;
+    private int $idoffre;
+    private int $idUtilisateur;
 
     /**
      * @param int|null $idcandidature
-     * @param string $datecandidature
-     * @param string $etatcandidature
-     * @param string $idoffre
+     * @param ?string $datecandidature
+     * @param ?string $etatcandidature
+     * @param int $idoffre
      * @param int $idutilisateur
      */
     public function __construct(?int $idcandidature, ?string $datecandidature, ?string $etatcandidature, int $idoffre, int $idutilisateur)
@@ -25,12 +25,7 @@ private int $idutilisateur;
         $this->datecandidature = $datecandidature;
         $this->etatcandidature = $etatcandidature;
         $this->idoffre = $idoffre;
-        $this->idutilisateur = $idutilisateur;
-    }
-
-    protected function getValueColonne(string $nomColonne): string
-    {
-        return $this->$nomColonne;
+        $this->idUtilisateur = $idutilisateur;
     }
 
     public function getIdcandidature(): ?int
@@ -61,7 +56,7 @@ private int $idutilisateur;
     public function setEtatcandidature(string $etatcandidature): void
     {
         $this->etatcandidature = $etatcandidature;
-        (new CandidatureRepository())->setEtatCandidature($this->idcandidature,$etatcandidature);
+        (new CandidatureRepository())->setEtatCandidature($this->idcandidature, $etatcandidature);
     }
 
     public function getIdoffre(): int
@@ -76,14 +71,18 @@ private int $idutilisateur;
 
     public function getIdutilisateur(): int
     {
-        return $this->idutilisateur;
+        return $this->idUtilisateur;
     }
 
     public function setIdutilisateur(int $idutilisateur): void
     {
-        $this->idutilisateur = $idutilisateur;
+        $this->idUtilisateur = $idutilisateur;
     }
 
+    protected function getValueColonne(string $nomColonne): string
+    {
+        return $this->$nomColonne;
+    }
 
 
 }

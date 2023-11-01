@@ -3,7 +3,7 @@
 /** @var $offre \app\src\model\dataObject\Offre */
 
 use app\src\model\Auth;
-use app\src\model\Users\Roles;
+use app\src\model\dataObject\Roles;
 
 ?>
 
@@ -13,7 +13,7 @@ use app\src\model\Users\Roles;
             <h3 class="text-lg font-semibold leading-7 text-zinc-900"><?= $offre->getSujet() ?></h3>
             <p class="mt-1 max-w-2xl text-sm leading-6 text-zinc-500">
                 <?php
-                try {
+                try { 
                     $date = new DateTime($offre->getDatecreation());
                     echo "Publiée le " . $date->format('d/m/Y') . " à " . $date->format('H:i:s');
                 } catch (Exception $e) {
@@ -43,7 +43,8 @@ use app\src\model\Users\Roles;
                 <?php if ($offre->getStatut() != "draft"): ?>
                     <form class="m-0 p-0" method="post" action="/offres/<?= $offre->getIdOffre() ?>/archive">
                         <input type="hidden" name="archive" value="1">
-                        <button type="submit" class="cursor-pointer inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative">
+                        <button type="submit"
+                                class="cursor-pointer inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
          class="w-5 h-5">
   <path stroke-linecap="round" stroke-linejoin="round"
@@ -102,7 +103,7 @@ use app\src\model\Users\Roles;
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-zinc-900">Dates</dt>
                 <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?php
-                    try {
+                    try { 
                         $dateDebut = new DateTime($offre->getDatedebut());
                         if ($offre->getDatefin() != null) $dateFin = new DateTime($offre->getDatefin());
                         else $dateFin = null;

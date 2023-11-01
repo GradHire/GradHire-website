@@ -83,7 +83,7 @@ abstract class AbstractRepository
         return $dataObjects;
     }
 
-    protected abstract function getNomColonnes(): array;
-
     protected abstract function getNomTable(): string;
+
+    protected abstract function getNomColonnes(): array;
 }

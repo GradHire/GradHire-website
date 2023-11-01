@@ -4,29 +4,21 @@ namespace app\src\model\repository;
 
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
+use app\src\model\dataObject\Roles;
 use app\src\model\dataObject\Staff;
-use app\src\model\repository\UtilisateurRepository;
-use app\src\model\dataObject\Utilisateur;
 use PDOException;
 
-class StaffRepository extends UtilisateurRepository
+class StaffRepository extends LdapRepository
 {
+    protected static string $view = "StaffVue";
+    protected static string $create_function = "creerStaff";
+    protected static string $update_function = "updateStaff";
 
-    private static string $view = "StaffVue";
-
-    protected function construireDepuisTableau(array $dataObjectFormatTableau): Staff
+    public function role(): Roles
     {
-        return new Staff(
-            $dataObjectFormatTableau["idutilisateur"],
-            $dataObjectFormatTableau["bio"],
-            $dataObjectFormatTableau["emailutilisateur"],
-            $dataObjectFormatTableau["nomutilisateur"],
-            $dataObjectFormatTableau["numtelutilisateur"],
-            $dataObjectFormatTableau["prenomutilisateurldap"],
-            $dataObjectFormatTableau["loginldap"],
-            $dataObjectFormatTableau["role"],
-            $dataObjectFormatTableau["mailuni"]
-        );
+        if ($this->attributes["role"] === "responsable")
+            return Roles::Manager;
+        return Roles::Staff;
     }
 
     /**
@@ -35,12 +27,12 @@ class StaffRepository extends UtilisateurRepository
     public function getByIdFull($idutilisateur): ?Staff
     {
         try {
-            $sql = "SELECT * FROM " . self::$view . " WHERE idutilisateur = :idutilisateur";
+            $sql = "SELECT * FROM " . self::$view . " WHERE idUtilisateur = :idUtilisateur";
             $requete = Database::get_conn()->prepare($sql);
-            $requete->execute(['idutilisateur' => $idutilisateur]);
+            $requete->execute(['idUtilisateur' => $idutilisateur]);
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
-            if ($resultat == false) {
+            if (!$resultat) {
                 return null;
             }
             return $this->construireDepuisTableau($resultat);
@@ -49,39 +41,62 @@ class StaffRepository extends UtilisateurRepository
         }
     }
 
+    protected
+    function construireDepuisTableau(array $dataObjectFormatTableau): Staff
+    {
+        return new Staff(
+            $dataObjectFormatTableau["idutilisateur"],
+            $dataObjectFormatTableau["role"],
+            $dataObjectFormatTableau["loginldap"],
+            $dataObjectFormatTableau["prenom"],
+            $dataObjectFormatTableau["email"],
+            $dataObjectFormatTableau["nom"],
+            $dataObjectFormatTableau["numtelephone"],
+            $dataObjectFormatTableau["mail"],
+            $dataObjectFormatTableau["bio"],
+            $dataObjectFormatTableau["archiver"]
+        );
+    }
+
     /**
      * @throws ServerErrorException
      */
-    public function getManagersEmail(): array
+    public
+    function getManagersEmail(): array
     {
         try {
-            $stmt = Database::get_conn()->prepare("SELECT emailutilisateur FROM StaffVue WHERE role='responsable'");
+            $stmt = Database::get_conn()->prepare("SELECT email FROM StaffVue WHERE role='responsable'");
             $stmt->execute();
             $emails = [];
             foreach ($stmt->fetchAll() as $email)
-                $emails[] = $email["emailutilisateur"];
+                $emails[] = $email["email"];
             return $emails;
-        } catch (\Exception) {
+        } catch
+        (\Exception) {
             throw new ServerErrorException();
         }
     }
 
-    protected function getNomColonnes(): array
+    protected
+    function getNomColonnes(): array
     {
         return [
-            "idUtilisateur",
-            "bio",
-            "emailutilisateur",
-            "nomutilisateur",
-            "numtelutilisateur",
-            "prenomutilisateurldap",
-            "loginldap",
+            "idutilisateur",
             "role",
-            "mailuni"
+            "email",
+            "loginldap",
+            "prenom",
+            "email",
+            "nom",
+            "numtelephone",
+            "mailuni",
+            "bio",
+            "archiver"
         ];
     }
 
-    protected function getNomTable(): string
+    protected
+    function getNomTable(): string
     {
         return "StaffVue";
     }
