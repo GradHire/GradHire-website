@@ -201,38 +201,51 @@ class OffreController extends AbstractController
         }
 
         $action = $_POST['action'];
-        $type = $_POST['radios'];
-        $theme = $_POST['theme'] ?? null;
-        $nbjour = $_POST['nbjour'] ?? null;
-        $nbheure = $_POST['nbheure'];
-        $distanciel = $type == "alternance" ? $_POST['distanciel'] : null;
-        $salaire = $_POST['salaire'];
-        $unitesalaire = "heures";
-        $avantage = $_POST['avantage'];
-        $description = $_POST['description'];
-        $dated = $_POST['dated'] ?? date("Y-m-d H:i:s");
-        $datef = $_POST['datef'] ?? date("Y-m-d H:i:s");
-        $duree = $_POST['duree'] ?? null;
-        $idUtilisateur = Application::getUser()->role() === Roles::Enterprise ? Application::getUser()->id() : $_POST['entreprise'];
         $idOffre = $_POST['id_offre'];
         if ($idOffre === "") {
             $idOffre = null;
         }
-        $idAnnee = date("Y");
-        $datecreation = date("Y-m-d H:i:s");
-
         if ($action == 'Supprimer Brouillon') {
             OffreForm::deleteOffre($idOffre);
             return $this->render('/offres/create');
         }
 
-        $titre = $_POST['titre'];
-        $statut = $action == 'Envoyer' ? "pending" : "draft";
+        $typeOffre = $_POST['typeOffre'];
+        $distanciel = $typeOffre == "alternance" ? $_POST['distanciel'] : null;
+        $typeDate = $_POST['typeDate'] ?? null;
+        $temps = $_POST['duree'];
 
+        if ($typeDate == null){
+            $duree = $temps;
+        } else {
+            $duree = $temps . " " . $typeDate;
+        }
+        $theme = $_POST['theme'] ?? null;
+        $sujet = $_POST['sujet'];
+        $nbJourTravailHebdo = $_POST['nbjourtravailhebdo'] ?? null;
+        $nbJourHeureHebdo = $_POST['nbheureparjour'];
+        $gratification = $_POST['gratification'];
+        $avantageNature = $_POST['avantage'];
+        $dateDebut = $_POST['datedebut'] ?? date("Y-m-d H:i:s");
+        $dateFin = $_POST['datefin'] ?? date("Y-m-d H:i:s");
+        $statut = $action == 'Envoyer' ? "en attente" : "brouillon";
+        $pourvue = 0;
+        $getDateDebut = explode("-", $dateDebut)[0];
+        $getDateFin = explode("-", $dateFin)[0];
+        if ($getDateDebut == $getDateFin) {
+            $annee = $getDateDebut;
+        } else {
+            $annee = $getDateDebut . "/" . $getDateFin;
+        }
         $anneeVisee = $duree == 1 ? "2" : "3";
+        $idUtilisateur = Application::getUser()->role() === Roles::Enterprise ? Application::getUser()->id() : $_POST['identreprise'];
+        $datecreation = date("Y-m-d H:i:s");
+        $description = $_POST['description'];
 
-        $offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage,
-            $dated, $datef, $statut, $anneeVisee, $idAnnee, $idUtilisateur, $datecreation, $description);
+
+
+        $offre = new Offre($idOffre, $duree, $theme, $sujet, $nbJourTravailHebdo, $nbJourHeureHebdo, $gratification, $avantageNature,
+            $dateDebut, $dateFin, $statut,$pourvue, $anneeVisee, $annee, $idUtilisateur, $datecreation, $description);
 
         if ($idOffre === null) {
             OffreForm::creerOffre($offre, $distanciel);

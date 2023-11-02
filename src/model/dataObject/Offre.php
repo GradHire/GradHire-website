@@ -277,4 +277,11 @@ class Offre extends AbstractDataObject
         return $this->$nomColonne;
     }
 
+    public function getTypeDate(): string
+    {
+        if (str_contains($this->duree, "heure(s)")) return "heure(s)";
+        else if (str_contains($this->duree, "mois")) return "mois";
+        else return "an(s)";
+    }
+
 }

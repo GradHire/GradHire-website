@@ -116,8 +116,8 @@ class EntrepriseRepository extends ProRepository
     {
         return new Entreprise(
             $dataObjectFormatTableau['idutilisateur'],
-            $dataObjectFormatTableau['bio'] ?? "",
             $dataObjectFormatTableau['statutjuridique'] ?? "",
+            $dataObjectFormatTableau['bio'] ?? "",
             $dataObjectFormatTableau['typestructure'] ?? "",
             $dataObjectFormatTableau['effectif'] ?? "",
             $dataObjectFormatTableau['codenaf'] ?? "",
@@ -137,10 +137,9 @@ class EntrepriseRepository extends ProRepository
     function getAll(): ?array
     {
         try {
-            $sql = "SELECT * FROM " . $this->getNomTable() . " JOIN Utilisateur ON " . $this->getNomTable() . ".idUtilisateur = Utilisateur.idUtilisateur";
+            $sql = "SELECT * FROM " . $this->getNomTable() . " e JOIN Utilisateur u ON e.idUtilisateur = u.idUtilisateur";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute();
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetchAll();
             if (!$resultat) {
                 return null;

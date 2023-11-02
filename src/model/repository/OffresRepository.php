@@ -198,7 +198,6 @@ class OffresRepository extends AbstractRepository
     protected
     function construireDepuisTableau(array $dataObjectFormatTableau): Offre
     {
-        if (!isset($dataObjectFormatTableau['nom'])) $dataObjectFormatTableau['nom'] = null;
         return new Offre(
             $dataObjectFormatTableau['idoffre'],
             $dataObjectFormatTableau['duree'],
@@ -277,10 +276,6 @@ class OffresRepository extends AbstractRepository
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetchAll();
             $offres = [];
-            $anneeencours = date("Y");
-            $datecreation = date("Y-m-d");
-            $iduser = Application::getUser()->Id();
-            $offres[] = new Offre(null, null, null, "", 7, 5, 4.05, null, null, $datecreation, $datecreation, null, null, $anneeencours, $iduser);
             if (!$resultat) return $offres;
             foreach ($resultat as $offre_data) {
                 $offres[] = $this->construireDepuisTableau($offre_data);
@@ -387,19 +382,23 @@ class OffresRepository extends AbstractRepository
     function getNomColonnes(): array
     {
         return [
+            "idoffre",
             "duree",
             "thematique",
             "sujet",
             "nbJourTravailHebdo",
             "nbheureTravailhebdo",
             "gratification",
-            "uniteGratification",
             "avantageNature",
             "dateDebut",
             "dateFin",
             "statut",
+            "pourvue",
             "anneeVisee",
-            "datecreation"
+            "annee",
+            "idUtilisateur",
+            "dateCreation",
+            "description"
         ];
     }
 
