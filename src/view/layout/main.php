@@ -71,6 +71,8 @@ use app\src\model\dataObject\Roles;
                         <?php if (Auth::has_role(Roles::Student)): ?>
                             <a href="/candidatures"
                                class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
+                            <a href="/importer"
+                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Import</a>
                         <?php endif; ?>
                         <?php if (Auth::has_role(Roles::Tutor)): ?>
                             <a href="/candidatures"
