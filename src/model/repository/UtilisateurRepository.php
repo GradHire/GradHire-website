@@ -136,7 +136,6 @@ class UtilisateurRepository extends AbstractRepository
                 'bool' => $bool ? 1 : 0
             ];
             $requete->execute($values);
-            echo "L'utilisateur a été archivé";
         } catch (PDOException) {
             throw new ServerErrorException();
         }

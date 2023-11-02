@@ -63,10 +63,4 @@ class ProRepository extends UtilisateurRepository
             throw new ServerErrorException();
         }
     }
-
-    public
-    function full_name(): string
-    {
-        return $this->attributes["nom"];
-    }
 }

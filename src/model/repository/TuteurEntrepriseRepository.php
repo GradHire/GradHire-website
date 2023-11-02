@@ -80,15 +80,23 @@ class TuteurEntrepriseRepository extends ProRepository
         }
     }
 
-    public function getAllTuteursByIdEntreprise($idEntreprise): ?array
+    /**
+     * @throws ServerErrorException
+     */
+    public function getAllTuteursByIdEntreprise($idEntreprise, bool $getAll = false): ?array
     {
-        $sql = "SELECT * FROM $this->nomtable JOIN Utilisateur u ON u.idUtilisateur=$this->nomtable.idUtilisateur WHERE idEntreprise = :idEntreprise";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['idEntreprise' => $idEntreprise]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetchAll();
-        if (!$resultat) return null;
-        return $resultat;
+        $sql = "SELECT * FROM $this->nomtable JOIN Utilisateur u ON u.idUtilisateur=$this->nomtable.idUtilisateur WHERE idEntreprise = :idEntreprise" . ($getAll ? "" : " AND u.archiver = 0");
+        try {
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idEntreprise' => $idEntreprise]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetchAll();
+            if (!$resultat) return null;
+            return $resultat;
+        } catch (\Exception) {
+            throw new ServerErrorException();
+        }
+
     }
 
     public function getAll(): ?array

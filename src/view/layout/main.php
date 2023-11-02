@@ -109,7 +109,7 @@ use app\src\model\dataObject\Roles;
                     <div class="flex flex-1 lg:items-center justify-end space-x-6">
                         <a class="flex flex-row gap-4 items-center justify-center text-sm font-medium text-zinc-700 hover:text-zinc-800"
                            href="/profile">
-                            <span class="<?php if (!Application::isGuest()): ?>max-lg:hidden<?php endif; ?>">
+                            <span class="max-lg:hidden">
                                 <?= Application::getUser()->full_name() ?>
                             </span>
                             <div class="rounded-full overflow-hidden h-7 w-7">
@@ -118,9 +118,10 @@ use app\src\model\dataObject\Roles;
                             </div>
                         </a>
 
-                        <span class="h-6 w-px bg-zinc-200 <?php if (!Application::isGuest()): ?>max-lg:hidden<?php endif; ?>"
+                        <span class="h-6 w-px bg-zinc-200 max-lg:hidden"
                               aria-hidden="true"></span>
-                        <a href="/logout" class="text-sm font-medium text-zinc-700 hover:text-zinc-800 <?php if (!Application::isGuest()): ?>max-lg:hidden<?php endif; ?>">Se
+                        <a href="/logout"
+                           class="text-sm font-medium text-zinc-700 hover:text-zinc-800 <?php if (!Application::isGuest()): ?>max-lg:hidden<?php endif; ?>">Se
                             déconnecter</a>
 
                     </div>

@@ -184,6 +184,15 @@ $this->title = 'Profile';
                                     } ?></div>
                             </dd>
                         </div>
+                        <div class="pt-6 sm:flex">
+                            <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                                <div class="text-zinc-900">
+                                    <a href="/utilisateurs/<?= $user->id() ?>/archiver"
+                                       class="inline-block rounded-md border border-transparent px-5 py-2 text-center font-medium text-white hover:bg-red-800 bg-red-600 text-sm">Archiver
+                                        mon compte</a>
+                                </div>
+                            </dd>
+                        </div>
                     </dl>
                 </div>
             <?php } ?>

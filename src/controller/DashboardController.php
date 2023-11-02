@@ -120,18 +120,31 @@ class DashboardController extends AbstractController
 
     /**
      * @throws ServerErrorException
+     * @throws ForbiddenException
      */
     public function archiver(Request $req): string
     {
-        $user = (new UtilisateurRepository([]))->getUserById($req->getRouteParams()["id"]);
-        if ((new UtilisateurRepository([]))->isArchived($user)) {
-            (new UtilisateurRepository([]))->setUserToArchived($user, false);
-            (new MailRepository())->send_mail([$user->getEmailutilisateur()], "Désarchivage de votre compte", "Votre compte a été désarchivé");
-        } else {
-            (new UtilisateurRepository([]))->setUserToArchived($user, true);
-            (new MailRepository())->send_mail([$user->getEmailutilisateur()], "Archivage de votre compte", "Votre compte a été archivé");
+        if (Application::isGuest()) throw new ForbiddenException();
+        $id = $req->getRouteParams()["id"];
+        if (Auth::has_role(Roles::Enterprise) && (string)Application::getUser()->id() !== $id) {
+            $exist = (new TuteurEntrepriseRepository([]))->getById($id);
+            if (!$exist || $exist->getIdentreprise() !== Application::getUser()->id()) throw new ForbiddenException();
         }
-        Application::$app->response->redirect('/utilisateurs/' . $req->getRouteParams()["id"]);
-        return '';
+        if ((string)Application::getUser()->id() === $id ||
+            Auth::has_role(Roles::Manager, Roles::Staff, Roles::ManagerStage, Roles::ManagerAlternance, Roles::Enterprise)
+        ) {
+            $user = (new UtilisateurRepository([]))->getUserById($req->getRouteParams()["id"]);
+            if (!(new UtilisateurRepository([]))->isArchived($user)) {
+                (new UtilisateurRepository([]))->setUserToArchived($user, true);
+                (new MailRepository())->send_mail([$user->getEmailutilisateur()], "Archivage de votre compte", "Votre compte a été archivé");
+            } else if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::ManagerStage, Roles::ManagerAlternance)) {
+                (new UtilisateurRepository([]))->setUserToArchived($user, false);
+                (new MailRepository())->send_mail([$user->getEmailutilisateur()], "Désarchivage de votre compte", "Votre compte a été désarchivé");
+            }
+            if ((string)Application::getUser()->id() === $id)
+                Auth::logout();
+            Application::redirectFromParam('/');
+            return '';
+        } else throw new ForbiddenException();
     }
 }
