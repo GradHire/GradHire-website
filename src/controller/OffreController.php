@@ -34,6 +34,8 @@ class OffreController extends AbstractController
             if (Auth::has_role(Roles::Tutor)) {
                 $tuteur = (new TuteurEntrepriseRepository([]))->getById($id);
                 $id = $tuteur->getIdentreprise();
+            } else {
+                throw new ForbiddenException();
             }
             $offres = (new OffresRepository())->getOffresByIdEntreprise($id);
             return $this->render('entreprise/offres', ['offres' => $offres]);
