@@ -35,6 +35,7 @@ class ImportController extends AbstractController
                     $i++;
                     continue;
                 }
+                if ($num != 82) break;
                 $importer->importerligne($data);
             }
         }
