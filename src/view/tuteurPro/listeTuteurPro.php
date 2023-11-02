@@ -95,8 +95,14 @@ else {
                     <?= $tuteur->getFonction(); ?>
                 </td>
                 <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
-                    <a href="utilisateurs/<?= $tuteur->getIdutilisateur() ?>/archiver?<?= Application::getRedirect() ?>"
-                       class="text-red-500 hover:text-red-700">Supprimer</a>
+                    <?php if (Auth::has_role(Roles::Manager, Roles::Staff)) { ?>
+                        <a href="utilisateurs/<?= $tuteur->getIdutilisateur() ?>"
+                           class="inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">Voir
+                            plus</a>
+                    <?php } else { ?>
+                        <a href="utilisateurs/<?= $tuteur->getIdutilisateur() ?>/archiver?<?= Application::getRedirect() ?>"
+                           class="text-red-500 hover:text-red-700">Supprimer</a>
+                    <?php } ?>
                 </td>
             </tr>
         <?php } ?>
