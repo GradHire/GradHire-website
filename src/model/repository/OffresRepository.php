@@ -280,7 +280,7 @@ class OffresRepository extends AbstractRepository
             $anneeencours = date("Y");
             $datecreation = date("Y-m-d");
             $iduser = Application::getUser()->Id();
-            $offres[] = new Offre(null, null, null, "", 7, 5, 4.05, null, null, $datecreation, $datecreation, null, null, $anneeencours, $iduser);
+            $offres[] = new Offre(null, null, null, null, 7, 5, 4.05, null, null, null, "draft", 0, null, $anneeencours, $iduser, $datecreation, "");
             if (!$resultat) return $offres;
             foreach ($resultat as $offre_data) {
                 $offres[] = $this->construireDepuisTableau($offre_data);

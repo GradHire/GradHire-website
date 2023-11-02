@@ -12,25 +12,23 @@ class OffreForm extends Model
 {
     public static function creerOffre(Offre $offre, ?float $distanciel)
     {
-        $sql = "INSERT INTO Offre VALUES (null ,:dureeTag, :thematiqueTag, :sujetTag, :nbJourTravailHebdoTag, :nbHeureTravailHebdoTag, :gratificationTag, :unitegratificationTag, :avantageNatureTag, :dateDebutTag, :dateFinTag, :anneeViseeTag, :idAnneeTag, :idUtilisateurTag, :descriptionTag,:dateCreationTag,:statutTag)";
+        $sql = "INSERT INTO `Offre`(`duree`, `thematique`, `sujet`, `nbJourTravailHebdo`, `nbHeureTravailHebdo`, `gratification`, `avantagesNature`, `dateDebut`, `dateFin`, `statut`, `pourvue`, `anneeVisee`, `idUtilisateur`, `description`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         $pdoStatement = Database::get_conn()->prepare($sql);
         $values = array(
-            "dureeTag" => $offre->getDuree(),
-            "thematiqueTag" => $offre->getThematique(),
-            "sujetTag" => $offre->getSujet(),
-            "nbJourTravailHebdoTag" => $offre->getNbjourtravailhebdo(),
-            "nbHeureTravailHebdoTag" => $offre->getNbHeureTravailHebdo(),
-            "gratificationTag" => $offre->getGratification(),
-            "unitegratificationTag" => $offre->getUnitegratification(),
-            "avantageNatureTag" => $offre->getAvantageNature(),
-            "dateDebutTag" => $offre->getDateDebut(),
-            "dateFinTag" => $offre->getDateFin(),
-            "anneeViseeTag" => $offre->getAnneeVisee(),
-            "idAnneeTag" => $offre->getIdAnnee(),
-            "idUtilisateurTag" => $offre->getIdutilisateur(),
-            "descriptionTag" => $offre->getDescription(),
-            "statutTag" => $offre->getStatut(),
-            "dateCreationTag" => $offre->getDateCreation(),
+            $offre->getDuree(),
+            $offre->getThematique(),
+            $offre->getSujet(),
+            $offre->getNbjourtravailhebdo(),
+            $offre->getNbHeureTravailHebdo(),
+            $offre->getGratification(),
+            $offre->getAvantageNature(),
+            $offre->getDateDebut(),
+            $offre->getDateFin(),
+            $offre->getStatut(),
+            $offre->getPourvue(),
+            $offre->getAnneeVisee(),
+            $offre->getIdutilisateur(),
+            $offre->getDescription()
         );
 
         $pdoStatement->execute($values);
