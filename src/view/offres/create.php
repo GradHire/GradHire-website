@@ -73,13 +73,13 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
 
             <div class="flex mt-4">
                 <label class="flex items-center">
-                    <input type="checkbox" class="form-radio" name="typeOffre" value="stage"  id="stageCheckbox" required
-                           onchange="showFormType()" checked>
+                    <input type="checkbox" class="form-radio" name="typeOffre" value="stage"  id="stageCheckbox"
+                           onchange="showFormType()" >
                     <span class="ml-2">Stage</span>
                 </label>
                 <label class="flex items-center ml-6">
                     <input type="checkbox" class="form-radio" name="typeOffre" value="alternance" id="alternanceCheckbox"
-                           required onchange="showFormType()">
+                            onchange="showFormType()">
                     <span class="ml-2">Alternance</span>
                 </label>
             </div>
@@ -153,7 +153,7 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
                        value='<?php if ($offred != null) echo $offrechoisi->getIdoffre() ?>'>
             </div>
             <div class="flex flex-row gap-4">
-                <div class="w-full" id="dureeSelect">
+                <div class="w-full" id="dureeSelectDiv">
                     <label for="duree">Durée</label>
                     <select name="duree"
                             id="dureeSelect"
@@ -171,7 +171,7 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
                         </option>
                     </select>
                 </div>
-                <div class="w-full" id="dureeNumber" style="display: none;">
+                <div class="w-full" id="dureeNumberDiv" style="display: none;">
                     <label for="duree">Durée</label>
                     <input type="number" id="dureeNumber" name="duree" class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
                 </div>
@@ -182,13 +182,13 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
                         w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:text-zinc-400 dark:text-white
                         dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light">
                         <option disabled value="">Selectionne un type de date</option>
-                        <option value="1" <?php if ($offred != null) echo $offrechoisi->getTypeDate() == "heure(s)" ? 'selected' : ''; ?>>
+                        <option value="heure(s)" <?php if ($offred != null) echo $offrechoisi->getTypeDate() == "heure(s)" ? 'selected' : ''; ?>>
                             heure(s)
                         </option>
-                        <option value="1.5" <?php if ($offred != null) echo $offrechoisi->getTypeDate() == "mois" ? 'selected' : ''; ?>>
+                        <option value="mois" <?php if ($offred != null) echo $offrechoisi->getTypeDate() == "mois" ? 'selected' : ''; ?>>
                             mois
                         </option>
-                        <option value="2" <?php if ($offred != null) echo $offrechoisi->getTypeDate() == "an(s)" ? 'selected' : ''; ?>>
+                        <option value="an(s)" <?php if ($offred != null) echo $offrechoisi->getTypeDate() == "an(s)" ? 'selected' : ''; ?>>
                             an(s)
                         </option>
                     </select>
@@ -227,26 +227,29 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
 
     function showFormType() {
         var checkboxAlternance = document.getElementById("alternanceCheckbox");
-        var checkboxStage = document.getElementById("stageCheckbox");
         var distancielDiv = document.getElementById('distancielDiv');
-        const dureeSelect = document.getElementById('dureeSelect');
+        const dureeSelectDiv = document.getElementById('dureeSelectDiv');
+        const dureeNumberDiv = document.getElementById('dureeNumberDiv');
         const dureeNumber = document.getElementById('dureeNumber');
+        const dureeSelect = document.getElementById('dureeSelect');
         const typeDateDiv = document.getElementById('typeDateDiv');
+        const typeDate = document.getElementById('typeDate');
 
         distancielDiv.style.display = checkboxAlternance.checked ? 'block' : 'none';
         typeDateDiv.style.display = checkboxAlternance.checked ? 'block' : 'none';
-        dureeNumber.style.display = checkboxAlternance.checked ? 'block' : 'none';
-        dureeSelect.style.display = checkboxAlternance.checked ? 'none' : 'block';
+        dureeSelectDiv.style.display = checkboxAlternance.checked ? 'none' : 'block';
+        dureeNumberDiv.style.display = checkboxAlternance.checked ? 'block' : 'none';
 
         if (checkboxAlternance.checked){
             distancielDiv.enable();
             dureeSelect.disable();
             dureeNumber.enable();
-
+            typeDate.enable();
         } else {
+            typeDate.disable();
             distancielDiv.disable();
-            dureeSelect.enable();
             dureeNumber.disable();
+            dureeSelect.enable();
         }
     }
 

@@ -12,7 +12,7 @@ class OffreForm extends Model
 {
     public static function creerOffre(Offre $offre, ?float $distanciel)
     {
-        $sql = "INSERT INTO Offre VALUES (null ,:dureeTag, :thematiqueTag, :sujetTag, :nbJourTravailHebdoTag, :nbHeureTravailHebdoTag, :gratificationTag, :unitegratificationTag, :avantageNatureTag, :dateDebutTag, :dateFinTag, :anneeViseeTag, :idAnneeTag, :idUtilisateurTag, :descriptionTag,:dateCreationTag,:statutTag)";
+        $sql = "INSERT INTO Offre VALUES (null ,:dureeTag, :thematiqueTag, :sujetTag, :nbJourTravailHebdoTag, :nbHeureTravailHebdoTag, :gratificationTag, :avantageNatureTag, :dateDebutTag, :dateFinTag, :statutTag, :pourvueTag, :anneeViseeTag, :idAnneeTag, :idUtilisateurTag, :dateCreationTag, :descriptionTag)";
         $pdoStatement = Database::get_conn()->prepare($sql);
         $values = array(
             "dureeTag" => $offre->getDuree(),
@@ -21,16 +21,16 @@ class OffreForm extends Model
             "nbJourTravailHebdoTag" => $offre->getNbjourtravailhebdo(),
             "nbHeureTravailHebdoTag" => $offre->getNbHeureTravailHebdo(),
             "gratificationTag" => $offre->getGratification(),
-            "unitegratificationTag" => $offre->getUnitegratification(),
             "avantageNatureTag" => $offre->getAvantageNature(),
             "dateDebutTag" => $offre->getDateDebut(),
             "dateFinTag" => $offre->getDateFin(),
-            "anneeViseeTag" => $offre->getAnneeVisee(),
-            "idAnneeTag" => $offre->getIdAnnee(),
-            "idUtilisateurTag" => $offre->getIdutilisateur(),
-            "descriptionTag" => $offre->getDescription(),
             "statutTag" => $offre->getStatut(),
+            "pourvueTag" => $offre->getPourvue(),
+            "anneeViseeTag" => $offre->getAnneeVisee(),
+            "idAnneeTag" => $offre->getAnnee(),
+            "idUtilisateurTag" => $offre->getIdutilisateur(),
             "dateCreationTag" => $offre->getDateCreation(),
+            "descriptionTag" => $offre->getDescription()
         );
 
         $pdoStatement->execute($values);
