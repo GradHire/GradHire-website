@@ -150,6 +150,7 @@ class OffreController extends AbstractController
                 "anneeVisee" => FormModel::string("Année visée")->default($offre->getAnneeVisee()),
                 "dateDebut" => FormModel::date("Date de début")->default($offre->getDateDebut())->id("dateDebut"),
                 "dateFin" => FormModel::date("Date de fin")->default($offre->getDateFin())->id("dateFin"),
+                "description" => FormModel::string("Description")->default($offre->getDescription()),
             ]);
             $form = new FormModel($attr);
             (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmailutilisateur()], "Modification de votre offre", "Votre offre a été modifiée");
@@ -231,7 +232,7 @@ class OffreController extends AbstractController
         $anneeVisee = $duree == 1 ? "2" : "3";
 
         $offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage,
-            $dated, $datef, $statut, $anneeVisee, $idAnnee, $idUtilisateur, $description, $datecreation, null);
+            $dated, $datef, $statut, $anneeVisee, $idAnnee, $idUtilisateur, $datecreation, $description);
 
         if ($idOffre === null) {
             OffreForm::creerOffre($offre, $distanciel);

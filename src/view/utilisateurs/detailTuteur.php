@@ -9,7 +9,7 @@ use app\src\model\repository\UtilisateurRepository;
 <div class="w-full pt-12 pb-24">
     <div class="w-full flex md:flex-row flex-col justify-between items-start">
         <div class="px-4 sm:px-0">
-            <h3 class="text-lg font-semibold leading-7 text-zinc-900"><?= $utilisateur->getNomutilisateur() ?></h3>
+            <h3 class="text-lg font-semibold leading-7 text-zinc-900">Tuteur en entreprise</h3>
         </div>
         <div class="flex flex-row gap-4">
             <?php
@@ -20,13 +20,13 @@ use app\src\model\repository\UtilisateurRepository;
                 </svg>
             </a>");
             if ((new UtilisateurRepository([]))->isArchived($utilisateur)) {
-                echo("<a href=\"/utilisateurs/" . $utilisateur->getIdutilisateur() . "/archiver\" class=\"inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative\">
+                echo("<a href=\"/utilisateurs/" . $utilisateur->getIdutilisateur() . "/archiver?" . Application::getRedirect() . "\" class=\"inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative\">
                     <svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"currentColor\" class=\"w-5 h-5\">
                     <path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z\"/>
                     </svg>
                 </a>");
             } else {
-                echo("<a href=\"/utilisateurs/" . $utilisateur->getIdutilisateur() . "/archiver\"
+                echo("<a href=\"/utilisateurs/" . $utilisateur->getIdutilisateur() . "/archiver?" . Application::getRedirect() . "\"
                         class=\"inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative\">
                     <svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"currentColor\" class=\"w-5 h-5\">
                     <path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z\"/>
@@ -39,7 +39,16 @@ use app\src\model\repository\UtilisateurRepository;
     </div>
     <dl class="divide-y divide-zinc-100">
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt class="text-sm font-medium leading-6 text-zinc-900">Nom d'utilisateur</dt>
+            <dt class="text-sm font-medium leading-6 text-zinc-900">Prenom</dt>
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+                <?php
+                $prenom = $utilisateur->getPrenom();
+                if ($prenom != null) echo $prenom;
+                else echo("Non renseigné");
+                ?></dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-zinc-900">Nom</dt>
             <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="nom">
                 <?php
                 $nom = $utilisateur->getNomutilisateur();
@@ -71,15 +80,6 @@ use app\src\model\repository\UtilisateurRepository;
                 <?php
                 $bio = $utilisateur->getBio();
                 if ($bio != null) echo $bio;
-                else echo("Non renseigné");
-                ?></dd>
-        </div>
-        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt class="text-sm font-medium leading-6 text-zinc-900">Prenom Tuteur</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
-                <?php
-                $prenom = $utilisateur->getPrenom();
-                if ($prenom != null) echo $prenom;
                 else echo("Non renseigné");
                 ?></dd>
         </div>

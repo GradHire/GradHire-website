@@ -3,8 +3,8 @@
 namespace app\src\model\repository;
 
 use app\src\core\db\Database;
-use app\src\model\Application;
 use app\src\core\exception\ServerErrorException;
+use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Offre;
 use PDOException;
@@ -198,23 +198,25 @@ class OffresRepository extends AbstractRepository
     protected
     function construireDepuisTableau(array $dataObjectFormatTableau): Offre
     {
-        if (!isset($dataObjectFormatTableau['nomUtilisateur'])) $dataObjectFormatTableau['nomUtilisateur'] = null;
+        if (!isset($dataObjectFormatTableau['nom'])) $dataObjectFormatTableau['nom'] = null;
         return new Offre(
             $dataObjectFormatTableau['idoffre'],
             $dataObjectFormatTableau['duree'],
             $dataObjectFormatTableau['thematique'],
             $dataObjectFormatTableau['sujet'],
-            $dataObjectFormatTableau['nbJourTravailHebdo'],
-            $dataObjectFormatTableau['nbHeureTravailHebdo'],
+            $dataObjectFormatTableau['nbjourtravailhebdo'],
+            $dataObjectFormatTableau['nbheuretravailhebdo'],
             $dataObjectFormatTableau['gratification'],
-            $dataObjectFormatTableau['avantageNature'],
-            $dataObjectFormatTableau['dateDebut'],
-            $dataObjectFormatTableau['dateFin'],
+            $dataObjectFormatTableau['avantagesnature'],
+            $dataObjectFormatTableau['datedebut'],
+            $dataObjectFormatTableau['datefin'],
             $dataObjectFormatTableau['statut'],
             $dataObjectFormatTableau['pourvue'],
-            $dataObjectFormatTableau['anneeVisee'],
+            $dataObjectFormatTableau['anneevisee'],
             $dataObjectFormatTableau['annee'],
-            $dataObjectFormatTableau['idUtilisateur'],
+            $dataObjectFormatTableau['idutilisateur'],
+            $dataObjectFormatTableau['datecreation'],
+            $dataObjectFormatTableau['description']
         );
     }
 
@@ -278,7 +280,7 @@ class OffresRepository extends AbstractRepository
             $anneeencours = date("Y");
             $datecreation = date("Y-m-d");
             $iduser = Application::getUser()->Id();
-            $offres[] = new Offre(null, null, null, "", 7, 5, 4.05, null, null, $datecreation, $datecreation, null, null, $anneeencours, $iduser, "", $datecreation, null);
+            $offres[] = new Offre(null, null, null, "", 7, 5, 4.05, null, null, $datecreation, $datecreation, null, null, $anneeencours, $iduser);
             if (!$resultat) return $offres;
             foreach ($resultat as $offre_data) {
                 $offres[] = $this->construireDepuisTableau($offre_data);

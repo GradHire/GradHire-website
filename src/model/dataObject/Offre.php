@@ -17,11 +17,13 @@ class Offre extends AbstractDataObject
     private ?string $avantageNature;
     private ?string $dateDebut;
     private ?string $dateFin;
+    private ?string $dateCreation;
     private ?string $statut;
     private ?string $pourvue;
     private ?string $anneeVisee;
     private ?string $annee;
     private int $idutilisateur;
+    private ?string $description;
 
 
 //    private ?int $alternance;
@@ -41,7 +43,9 @@ class Offre extends AbstractDataObject
         $pourvue,
         $anneeVisee,
         $annee,
-        $idUtilisateur
+        $idUtilisateur,
+        $dateCreation,
+        $description
     )
     {
         $this->idoffre = $idOffre;
@@ -59,6 +63,8 @@ class Offre extends AbstractDataObject
         $this->anneeVisee = $anneeVisee;
         $this->annee = $annee;
         $this->idutilisateur = $idUtilisateur;
+        $this->dateCreation = $dateCreation;
+        $this->description = $description;
     }
 
     public function __toString(): string
@@ -78,7 +84,7 @@ class Offre extends AbstractDataObject
             $this->pourvue . " " .
             $this->anneeVisee . " " .
             $this->annee . " " .
-            $this->idutilisateur . " " ;
+            $this->idutilisateur . " ";
     }
 
     public function getIdoffre(): ?int
@@ -119,6 +125,16 @@ class Offre extends AbstractDataObject
     public function setSujet(?string $sujet): void
     {
         $this->sujet = $sujet;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
     }
 
     public function getNbJourTravailHebdo(): ?int
@@ -219,6 +235,16 @@ class Offre extends AbstractDataObject
     public function setAnnee(?string $annee): void
     {
         $this->annee = $annee;
+    }
+
+    public function getDateCreation(): ?string
+    {
+        return $this->dateCreation;
+    }
+
+    public function setDateCreation(?string $dateCreation): void
+    {
+        $this->dateCreation = $dateCreation;
     }
 
     public function getIdutilisateur(): int

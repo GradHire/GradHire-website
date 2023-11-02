@@ -7,8 +7,11 @@
 
 
 use app\src\model\Application;
+use app\src\model\Auth;
+use app\src\model\dataObject\Roles;
 use app\src\model\dataObject\TuteurEntreprise;
 use app\src\model\Form\FormModel;
+use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 
 $this->title = "Tuteurs";
@@ -16,24 +19,32 @@ $this->title = "Tuteurs";
     <div class="overflow-x-auto w-full pt-12 pb-24">
 <?php
 
-$form->start();
-echo '<div class="flex items-end gap-2">';
-$form->field('email');
-$form->submit("Ajouter");
-echo '</div>';
-$form->getError();
-$form->getSuccess();
-$form->end();
+if (Auth::has_role(Roles::Enterprise)) {
+    $form->start();
+    echo '<div class="flex items-end gap-2">';
+    $form->field('email');
+    $form->submit("Ajouter");
+    echo '</div>';
+    $form->getError();
+    $form->getSuccess();
+    $form->end();
+}
+
 
 ?>
-    <h2 class="font-bold text-lg">Liste des tuteurs de l'entreprise</h2>
+    <h2 class="font-bold text-lg">Liste des tuteurs</h2>
 <?php
-if (empty($tuteurs)) echo "<p>Aucun tuteur n'a été ajouté.</p>";
+if (empty($tuteurs)) echo "<p>Aucun tuteur</p>";
 else {
     ?>
     <table class="min-w-full divide-y-2 divide-zinc-200 bg-white text-sm">
         <thead class="ltr:text-left rtl:text-right">
         <tr>
+            <?php if (Auth::has_role(Roles::Manager, Roles::Staff)) { ?>
+                <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900">
+                    Entreprise
+                </th>
+            <?php } ?>
             <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900">
                 Prénom
             </th>
@@ -63,6 +74,11 @@ else {
             $tuteur = (new TuteurEntrepriseRepository([]))->construireTuteurProDepuisTableau($tuteur);
             ?>
             <tr class="odd:bg-zinc-50">
+                <?php if (Auth::has_role(Roles::Manager, Roles::Staff)) { ?>
+                    <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
+                        <?= (new EntrepriseRepository([]))->getByIdFull($tuteur->getIdentreprise())->getNomutilisateur() ?>
+                    </td>
+                <?php } ?>
                 <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                     <?= $tuteur->getPrenom(); ?>
                 </td>

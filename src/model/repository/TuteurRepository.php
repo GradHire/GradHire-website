@@ -44,12 +44,13 @@ class TuteurRepository extends ProRepository
     {
         return new Tuteur(
             $dataObjectFormatTableau["idutilisateur"],
-            $dataObjectFormatTableau["prenom"],
-            $dataObjectFormatTableau["fonction"],
+            $dataObjectFormatTableau["bio"],
             $dataObjectFormatTableau["email"],
             $dataObjectFormatTableau["nom"],
             $dataObjectFormatTableau["numtelephone"],
-            $dataObjectFormatTableau["bio"]
+            $dataObjectFormatTableau["prenom"],
+            $dataObjectFormatTableau["fonction"],
+            $dataObjectFormatTableau["identreprise"]
         );
     }
 

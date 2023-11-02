@@ -4,6 +4,10 @@
  * @var $currentFilterURL string
  */
 
+/** @var $modal Modal */
+
+use app\src\core\components\Modal;
+use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 
@@ -22,7 +26,7 @@ $id_offre = $offre->getIdoffre();
                     </svg>
                 </a>
             </div>
-            <button onclick="showModal(<?= $id_offre ?>)"
+            <p <?= $modal ? $modal->Show("/offres/" . $id_offre . "/archive?" . Application::getRedirect()) : "" ?>
                     class="formAdminSupprimer  flex items-center justify-center w-7 h-7 border-[1px] border-zinc-100 duration-150 bg-zinc-50 hover:invert  rounded-full">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                      stroke="currentColor"
@@ -30,7 +34,7 @@ $id_offre = $offre->getIdoffre();
                     <path stroke-linecap="round" stroke-linejoin="round"
                           d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
                 </svg>
-            </button>
+            </p>
         </div>
     <?php } ?>
     <div class=" rounded-[10px] relative cursor-pointer group bg-white p-4 shadow-sm hover:shadow min-w-[200px] shrink duration-150 border-2 border-zinc-200 hover:border-zinc-300">

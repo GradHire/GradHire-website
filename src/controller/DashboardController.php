@@ -3,6 +3,7 @@
 namespace app\src\controller;
 
 use app\src\core\exception\ForbiddenException;
+use app\src\core\exception\NotFoundException;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
@@ -121,6 +122,7 @@ class DashboardController extends AbstractController
     /**
      * @throws ServerErrorException
      * @throws ForbiddenException
+     * @throws NotFoundException
      */
     public function archiver(Request $req): string
     {
@@ -134,6 +136,7 @@ class DashboardController extends AbstractController
             Auth::has_role(Roles::Manager, Roles::Staff, Roles::ManagerStage, Roles::ManagerAlternance, Roles::Enterprise)
         ) {
             $user = (new UtilisateurRepository([]))->getUserById($req->getRouteParams()["id"]);
+            if ($user == null) throw new NotFoundException();
             if (!(new UtilisateurRepository([]))->isArchived($user)) {
                 (new UtilisateurRepository([]))->setUserToArchived($user, true);
                 (new MailRepository())->send_mail([$user->getEmailutilisateur()], "Archivage de votre compte", "Votre compte a été archivé");

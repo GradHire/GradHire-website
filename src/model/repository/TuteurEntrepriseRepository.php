@@ -99,9 +99,9 @@ class TuteurEntrepriseRepository extends ProRepository
 
     }
 
-    public function getAll(): ?array
+    public function getAll(bool $getArchived = false): ?array
     {
-        $sql = "SELECT * FROM $this->nomtable JOIN Utilisateur u ON u.idUtilisateur=$this->nomtable.idUtilisateur";
+        $sql = "SELECT * FROM $this->nomtable JOIN Utilisateur u ON u.idUtilisateur=$this->nomtable.idUtilisateur WHERE u.archiver = 0";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute();
         $requete->setFetchMode(\PDO::FETCH_ASSOC);

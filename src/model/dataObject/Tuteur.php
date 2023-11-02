@@ -2,21 +2,21 @@
 
 namespace app\src\model\dataObject;
 
-use app\src\model\dataObject\Utilisateur;
-
 class Tuteur extends Utilisateur
 {
 
     private int $idUtilisateur;
     private string $prenom;
     private ?string $fonction;
+    private int $idEntreprise;
 
-    public function __construct(int $idUtilisateur, ?string $bio, string $emailUtilisateur, string $nomUtilisateur, ?string $numTelUtilisateur, string $prenomtuteurp, ?string $fonctiontuteurp)
+    public function __construct(int $idUtilisateur, ?string $bio, string $emailUtilisateur, string $nomUtilisateur, ?string $numTelUtilisateur, string $prenomtuteurp, ?string $fonctiontuteurp, int $idEntreprise)
     {
         parent::__construct($idUtilisateur, $emailUtilisateur, $nomUtilisateur, $numTelUtilisateur, $bio);
         $this->idUtilisateur = $idUtilisateur;
         $this->prenom = $prenomtuteurp;
         $this->fonction = $fonctiontuteurp;
+        $this->idEntreprise = $idEntreprise;
     }
 
     public function getIdUtilisateur(): int
