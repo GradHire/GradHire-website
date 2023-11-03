@@ -82,6 +82,8 @@ $app->router->get('/user_test/{id}', [TestController::class, 'user_test']);
 
 $app->router->get('/candidatures', [DashboardController::class, 'candidatures']);
 $app->router->get('/candidatures/{idOffre}/{idUtilisateur}', [DashboardController::class, 'candidatures']);
+$app->router->post('/candidatures/contacter/{id}', [DashboardController::class, 'envoyerMailEntreprise']);
+$app->router->post('/candidatures/contacter', [DashboardController::class, 'contacterEntrepriseEtudiant']);
 $app->router->post('/candidatures', [DashboardController::class, 'candidatures']);
 
 $app->router->get('/utilisateurs/{id}/archiver', [DashboardController::class, 'archiver']);

@@ -3,6 +3,7 @@
 /** @var $candidatures \app\src\model\dataObject\Postuler */
 
 use app\src\model\Auth;
+use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\repository\OffresRepository;
@@ -11,6 +12,8 @@ use app\src\model\dataObject\Roles;
 $etudiant = (new EtudiantRepository([]))->getByIdFull($candidatures->getIdutilisateur());
 $nometudiant = (new UtilisateurRepository([]))->getUserById($candidatures->getIdutilisateur())->getNomutilisateur();
 $offre = (new OffresRepository())->getById($candidatures->getIdoffre());
+print_r($offre);
+
 ?>
 
 <div class="mt-6 border-zinc-100 pt-12 pb-24">
@@ -95,6 +98,21 @@ if($candidatures->getStatut() == "en attente" && Auth::has_role(Roles::Enterpris
 
     <?php
 
+    echo "</form>
+    </div>";
+}
+
+if (Auth::has_role(Roles::Student, Roles::Manager) && $candidatures->getStatut() == "valider"){
+    echo "<div class='flex flex-col mb-3'>
+    <form action='/candidatures/contacter' method='POST'>
+    <input type='hidden' name='identreprise' value='".$offre->getIdutilisateur()."'>
+    <input type='hidden' name='idoffre' value='".$offre->getIdoffre()."'>
+    <input type='hidden' name='idetudiant' value='".$candidatures->getIdUtilisateur()."'>
+    ";
+    ?>
+    <input type="submit" name="action" value="Contacter l'entreprise"
+           class="w-full text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"/>
+    <?php
     echo "</form>
     </div>";
 }

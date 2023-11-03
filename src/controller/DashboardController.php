@@ -8,6 +8,7 @@ use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
+use app\src\model\Form\fields\FormFile;
 use app\src\model\Form\FormModel;
 use app\src\model\repository\PostulerRepository;
 use app\src\model\repository\EntrepriseRepository;
@@ -77,6 +78,29 @@ class DashboardController extends AbstractController
      */
 
 
+    public function contacterEntrepriseEtudiant(Request $request): string
+    {
+        return $this->render('candidature/contacter', [
+            'idoffre' => $_POST['idoffre'],
+            'identreprise' => $_POST['identreprise'],
+            'idetudiant' => $_POST['idetudiant'],
+        ]);
+    }
+
+    public function envoyerMailEntreprise(Request $request): string
+    {
+        if ($_POST['message'] != null) {
+            $sujet = $_POST['sujet'];
+            $message = $_POST['message'];
+            $emailentreprise = $_POST['emailEntreprise'];
+            $emailEtudiant = $_POST['emailEtudiant'];
+            $mail = new MailRepository();
+            $mail->send_mail([$emailentreprise], $sujet, $message . "\n\n From : " . $emailEtudiant);
+        }
+        Application::redirectFromParam('/candidatures');
+        return '';
+    }
+
     public function candidatures(Request $request): string
     {
 
@@ -95,7 +119,7 @@ class DashboardController extends AbstractController
         }
         if ($request->getMethod() === 'post') {
             $id = explode('_', $_POST['idcandidature']);
-            $idOffre =  $id[0] ?? null;
+            $idOffre = $id[0] ?? null;
             $idUtilisateur = $id[1] ?? null;
             $candidature = (new PostulerRepository())->getById($idOffre, $idUtilisateur);
             if ($request->getBody()['action'] === 'Accepter') {
