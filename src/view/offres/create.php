@@ -73,12 +73,12 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
 
             <div class="flex mt-4">
                 <label class="flex items-center">
-                    <input type="checkbox" class="form-radio" name="typeOffre" value="stage"  id="stageCheckbox"
+                    <input type="checkbox" class="form-radio" name="typeStage" value="stage"  id="stageCheckbox"
                            onchange="showFormType()" >
                     <span class="ml-2">Stage</span>
                 </label>
                 <label class="flex items-center ml-6">
-                    <input type="checkbox" class="form-radio" name="typeOffre" value="alternance" id="alternanceCheckbox"
+                    <input type="checkbox" class="form-radio" name="typeAlternance" value="alternance" id="alternanceCheckbox"
                             onchange="showFormType()">
                     <span class="ml-2">Alternance</span>
                 </label>

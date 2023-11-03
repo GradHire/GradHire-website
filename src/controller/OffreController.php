@@ -210,8 +210,9 @@ class OffreController extends AbstractController
             return $this->render('/offres/create');
         }
 
-        $typeOffre = $_POST['typeOffre'] ?? null;
-        $distanciel = $typeOffre == "alternance" ? $_POST['distanciel'] : null;
+        $typeStage = $_POST['typeStage'] ?? null;
+        $typeAlternance = $_POST['typeAlternance'] ?? null;
+        $distanciel = $_POST['distanciel'] ?? null;
         if (!empty($_POST['dureeStage']) && !empty($_POST['dureeAlternance'])) {
             $duree = "stage : " . $_POST['dureeStage'] . " heure(s), alternance : " . $_POST['dureeAlternance'] . " an(s)";
         } else if (!empty($_POST["dureeStage"]) && empty($_POST["dureeAlternance"])){
@@ -250,9 +251,9 @@ class OffreController extends AbstractController
             $dateDebut, $dateFin, $statut,$pourvue, $anneeVisee, $annee, $idUtilisateur, $datecreation, $description);
 
         if ($idOffre === null) {
-            OffreForm::creerOffre($offre, $distanciel);
+            OffreForm::creerOffre($offre, $typeStage, $typeAlternance, $distanciel);
         } else {
-            OffreForm::updateOffre($offre, $distanciel);
+            OffreForm::updateOffre($offre, $typeStage, $typeAlternance, $distanciel);
         }
 
         return $this->render('/offres/create');

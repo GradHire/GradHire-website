@@ -10,7 +10,7 @@ use PDOException;
 
 class OffreForm extends Model
 {
-    public static function creerOffre(Offre $offre, ?float $distanciel)
+    public static function creerOffre(Offre $offre, ?string $typeStage, ?string $typeAlternance, ?float $distanciel)
     {
         $sql = "INSERT INTO Offre VALUES (null ,:dureeTag, :thematiqueTag, :sujetTag, :nbJourTravailHebdoTag, :nbHeureTravailHebdoTag, :gratificationTag, :avantageNatureTag, :dateDebutTag, :dateFinTag, :statutTag, :pourvueTag, :anneeViseeTag, :idAnneeTag, :idUtilisateurTag, :dateCreationTag, :descriptionTag)";
         $pdoStatement = Database::get_conn()->prepare($sql);
@@ -36,7 +36,7 @@ class OffreForm extends Model
         $pdoStatement->execute($values);
         $id = Database::get_conn()->lastInsertId();
 
-        if ($offre->getStatut() == "pending") {
+        if ($offre->getStatut() == "en attente") {
             $emails = (new StaffRepository([]))->getManagersEmail();
             MailRepository::send_mail($emails, "Nouvelle offre", '
  <div>
@@ -45,31 +45,35 @@ class OffreForm extends Model
  </div>');
         }
 
-        if ($distanciel != null) {
-            $sql = "INSERT INTO Offrealternance VALUES (:idOffreTag, :alternanceTag)";
-            $pdoStatement = Database::get_conn()->prepare($sql);
-            $values = array(
-                "idOffreTag" => $id,
-                "alternanceTag" => $distanciel,
-            );
-            try {
-                $pdoStatement->execute($values);
-            } catch
-            (PDOException $e) {
-                return false;
-            }
-        } else {
-            $sql = "INSERT INTO Offrestage VALUES (:idOffreTag)";
+        if ($typeStage != null && $typeAlternance == null){
+            $sql = "INSERT INTO OffreStage VALUES (:idOffreTag)";
             $pdoStatement = Database::get_conn()->prepare($sql);
             $values = array(
                 "idOffreTag" => $id,
             );
-            try {
-                $pdoStatement->execute($values);
-            } catch
-            (PDOException $e) {
-                return false;
-            }
+            $pdoStatement->execute($values);
+        } elseif ($typeAlternance != null && $typeStage == null){
+            $sql = "INSERT INTO OffreAlternance VALUES (:idOffreTag, :distancielTag)";
+            $pdoStatement = Database::get_conn()->prepare($sql);
+            $values = array(
+                "idOffreTag" => $id,
+                "distancielTag" => $distanciel,
+            );
+            $pdoStatement->execute($values);
+        } elseif ($typeAlternance != null && $typeStage != null){
+            $sql = "INSERT INTO OffreStage VALUES (:idOffreTag)";
+            $pdoStatement = Database::get_conn()->prepare($sql);
+            $values = array(
+                "idOffreTag" => $id,
+            );
+            $pdoStatement->execute($values);
+            $sql = "INSERT INTO OffreAlternance VALUES (:idOffreTag, :distancielTag)";
+            $pdoStatement = Database::get_conn()->prepare($sql);
+            $values = array(
+                "idOffreTag" => $id,
+                "distancielTag" => $distanciel,
+            );
+            $pdoStatement->execute($values);
         }
         return true;
     }
@@ -102,7 +106,7 @@ class OffreForm extends Model
             return false;
         }
         if ($distanciel != null) {
-            $sql = "UPDATE Offrealternance SET alternance=:alternanceTag WHERE idOffre=:idOffreTag";
+            $sql = "UPDATE OffreAlternance SET jourDistanciel=:alternanceTag WHERE idOffre=:idOffreTag";
             $pdoStatement = Database::get_conn()->prepare($sql);
             $values = array(
                 "idOffreTag" => $offre->getIdOffre(),
