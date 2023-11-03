@@ -10,6 +10,8 @@ class ConventionRepository extends AbstractRepository
 {
     protected static string $table = "Convention";
 
+
+
     /**
      * @throws ServerErrorException
      */
