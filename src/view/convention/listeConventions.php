@@ -30,11 +30,13 @@ $this->title = 'Conventions';
         <tbody class="divide-y divide-zinc-200">
         <?php
         if ($conventions != null) {
+            $count = 0;
             foreach ($conventions as $convention) { ?>
                 <?php
                 if (Auth::get_user()->role() == Roles::Enterprise && (new OffresRepository())->getById($convention->getIdOffre())->getIdutilisateur() != Auth::get_user()->id) continue;
                 elseif (Auth::get_user()->role() == Roles::Student && $convention->getIdUtilisateur() != Auth::get_user()->id) continue;
                 else {
+                    $count++;
                     ?>
                     <tr class="odd:bg-zinc-50">
                         <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
@@ -62,10 +64,12 @@ $this->title = 'Conventions';
                         </td>
                     </tr>
                 <?php }
-
-
-
             }
+            if ($count == 0) { ?>
+                <tr>
+                    <td colspan="4" class="text-center py-4">Aucune convention trouvée</td>
+                </tr>
+        <?php }
         } ?>
         </tbody>
 

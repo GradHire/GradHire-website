@@ -105,7 +105,6 @@ class DashboardController extends AbstractController
     {
 
         $userid = Application::getUser()->id();
-        print_r($request->getRouteParams());
         $idOffre = $request->getRouteParams()['idOffre'] ?? null;
         $idUtilisateur = $request->getRouteParams()['idUtilisateur'] ?? null;
         $candidatures = (new PostulerRepository())->getById($idOffre, $idUtilisateur);

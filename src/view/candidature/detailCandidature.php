@@ -12,7 +12,6 @@ use app\src\model\dataObject\Roles;
 $etudiant = (new EtudiantRepository([]))->getByIdFull($candidatures->getIdutilisateur());
 $nometudiant = (new UtilisateurRepository([]))->getUserById($candidatures->getIdutilisateur())->getNomutilisateur();
 $offre = (new OffresRepository())->getById($candidatures->getIdoffre());
-print_r($offre);
 
 ?>
 
