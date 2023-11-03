@@ -101,6 +101,7 @@ $app->router->get('/simulateur', [PstageController::class, 'simulateur']);
 $app->router->post('/simulateur', [PstageController::class, 'simulateur']);
 
 $app->router->get('/simulateurOffre', [PstageController::class, 'simulateurOffre']);
+$app->router->post('/simulateurOffre', [PstageController::class, 'simulateurOffre']);
 
 
 $app->run();

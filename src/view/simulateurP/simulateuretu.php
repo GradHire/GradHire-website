@@ -12,20 +12,20 @@ use app\src\model\Form\FormModel;
     <?php $form->start(); ?>
     <div class="w-full gap-4 flex flex-col" id="step1">
         <?php
-        $form->print_fields(["numEtudiant", "nom", "prenom", "adresse"]);
+        $form->print_fields(["numEtudiant", "nom", "prenom"]);
         ?>
         <button type="button" onclick="nextStep('step1', 'step2')">Suivant</button>
     </div>
     <div class="w-full gap-4 flex flex-col hidden" id="step2">
         <?php
-        $form->print_fields(["codePostal", "ville", "telephone", "emailPerso"]);
+        $form->print_fields(["adresse", "codePostal", "ville", "telephone", "emailPerso", "emailUniv"]);
         ?>
         <button type="button" onclick="prevStep('step2', 'step1')">Précédent</button>
         <button type="button" onclick="nextStep('step2', 'step3')">Suivant</button>
     </div>
     <div class="w-full gap-4 flex flex-col hidden" id="step3">
         <?php
-        $form->print_fields(["emailUniv", "CPAM", "anneeUni", "nbHeure"]);
+        $form->print_fields(["CPAM", "anneeUni", "nbHeure"]);
         ?>
         <button type="button" onclick="prevStep('step3', 'step2')">Précédent</button>
         <?php

@@ -68,7 +68,7 @@ class PstageController extends AbstractController
 
         if ($request->getMethod() === 'post') {
             if ($form->validate($request->getBody())) {
-                print_r($form->getParsedBody());
+                return $this->render('simulateurP/previewetu', ['form' => $form]);
             }
         }
         return $this->render('simulateurP/simulateuretu', ['form' => $form]);
@@ -77,7 +77,23 @@ class PstageController extends AbstractController
 
     public function simulateurOffre(Request $request): string
     {
-        return $this->render('simulateurP/simulateurOffre');
+        $form = new FormModel([
+            "typeRecherche" => FormModel::select("Type de recherche", ["nomEnt" => "Nom de l'entreprise", "numsiret" => "Numéro Siret", "numTel" => "Tèl/Fax", "adresse" => "adresse"])->required()->default("nomEnt"),
+            "nomEnt" => FormModel::string("Nom de l'entreprise")->default("")->required(),
+            "pays" => FormModel::select("Pays", ["France" => "France", "Allemagne" => "Allemagne", "Angleterre" => "Angleterre", "Espagne" => "Espagne", "Italie" => "Italie", "Portugal" => "Portugal", "Suisse" => "Suisse", "Autre" => "Autre"])->required(),
+            "department" => FormModel::string("Département")->default("")->length(2)->required(),
+            "siret" => FormModel::string("Numéro Siret")->default("")->length(14),
+            "siren" => FormModel::string("Numéro Siren")->default("")->length(9),
+            "tel" => FormModel::phone("Téléphone")->default(""),
+            "fax" => FormModel::phone("Fax")->default(""),
+            "adresse" => FormModel::string("Adresse")->default(""),
+            "codePostal" => FormModel::string("Code postal")->default("")->length(5)
+        ]);
+        if ($request->getMethod() === 'post') {
+            return $this->render('simulateurP/previewoffre', ['form' => $form]);
+        }
+        return $this->render('simulateurP/simulateurOffre', ['form' => $form]);
+
     }
 
 }

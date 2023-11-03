@@ -27,3 +27,26 @@ function validateStep(stepId) {
     }
     return invalidFields.length === 0;
 }
+
+document.querySelector('[name="typeRecherche"]').addEventListener('change', function () {
+    const selectedValue = this.value;
+
+    ["nomEnt", "numsiret", "numTel", "adresse"].forEach(id => {
+        const element = document.getElementById(id);
+        const inputs = element.getElementsByTagName('input');
+
+        if (selectedValue === id) {
+            element.classList.remove("hidden");
+            for (let i = 0; i < inputs.length; i++) {
+                if (!inputs[i].classList.contains('hidden')) {
+                    inputs[i].setAttribute('required', '');
+                }
+            }
+        } else {
+            element.classList.add("hidden");
+            for (let i = 0; i < inputs.length; i++) {
+                inputs[i].removeAttribute('required');
+            }
+        }
+    });
+});
