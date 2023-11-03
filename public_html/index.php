@@ -2,7 +2,7 @@
 
 use app\src\controller\AuthController;
 use app\src\controller\DashboardController;
-use app\src\controller\ImportController;
+use app\src\controller\PstageController;
 use app\src\controller\OffreController;
 use app\src\controller\OpenController;
 use app\src\controller\TestController;
@@ -94,8 +94,11 @@ $app->router->post('/utilisateurs/{id}', [DashboardController::class, 'utilisate
 $app->router->get('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPro']);
 $app->router->post('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPro']);
 
-$app->router->get('/importer', [ImportController::class, 'importercsv']);
-$app->router->post('/importer', [ImportController::class, 'importercsv']);
+$app->router->get('/importer', [PstageController::class, 'importercsv']);
+$app->router->post('/importer', [PstageController::class, 'importercsv']);
+
+$app->router->get('/simulateur', [PstageController::class, 'simulateur']);
+$app->router->post('/simulateur', [PstageController::class, 'simulateur']);
 
 
 $app->run();
