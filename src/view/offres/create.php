@@ -153,13 +153,14 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
                        value='<?php if ($offred != null) echo $offrechoisi->getIdoffre() ?>'>
             </div>
             <div class="flex flex-row gap-4">
-                <div class="w-full" id="dureeSelectDiv">
-                    <label for="duree">Durée</label>
-                    <select name="duree"
-                            id="dureeSelect"
+                <div class="w-full" id="dureeSelectDiv" style="display: none;">
+                    <label for="dureeAlternance">Durée Alternance</label>
+                    <select name="dureeAlternance"
+                            id="dureeAlternance"
                             required
                             class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:text-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light">
                         <option disabled value="">Selectionne une durée</option>
+                        <option hidden value=""></option>
                         <option value="1" <?php if ($offred != null) echo $offrechoisi->getDuree() == 1 ? 'selected' : ''; ?>>
                             1 an
                         </option>
@@ -172,26 +173,8 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
                     </select>
                 </div>
                 <div class="w-full" id="dureeNumberDiv" style="display: none;">
-                    <label for="duree">Durée</label>
-                    <input type="number" id="dureeNumber" name="duree" class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
-                </div>
-                <div class="w-full" id="typeDateDiv">
-                    <label for="typeDate">Type de date</label>
-                    <select name=" typeDate" id="typeDate" required class="shadow-sm bg-zinc-50 border
-                        border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block
-                        w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:text-zinc-400 dark:text-white
-                        dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light">
-                        <option disabled value="">Selectionne un type de date</option>
-                        <option value="heure(s)" <?php if ($offred != null) echo $offrechoisi->getTypeDate() == "heure(s)" ? 'selected' : ''; ?>>
-                            heure(s)
-                        </option>
-                        <option value="mois" <?php if ($offred != null) echo $offrechoisi->getTypeDate() == "mois" ? 'selected' : ''; ?>>
-                            mois
-                        </option>
-                        <option value="an(s)" <?php if ($offred != null) echo $offrechoisi->getTypeDate() == "an(s)" ? 'selected' : ''; ?>>
-                            an(s)
-                        </option>
-                    </select>
+                    <label for="dureeStage">Durée Stage</label>
+                    <input type="number" id="dureeStage" name="dureeStage" class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
                 </div>
             </div>
             <label for="description">Description</label>
@@ -227,29 +210,34 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
 
     function showFormType() {
         var checkboxAlternance = document.getElementById("alternanceCheckbox");
+        var checkboxStage = document.getElementById("stageCheckbox");
         var distancielDiv = document.getElementById('distancielDiv');
         const dureeSelectDiv = document.getElementById('dureeSelectDiv');
         const dureeNumberDiv = document.getElementById('dureeNumberDiv');
-        const dureeNumber = document.getElementById('dureeNumber');
-        const dureeSelect = document.getElementById('dureeSelect');
-        const typeDateDiv = document.getElementById('typeDateDiv');
-        const typeDate = document.getElementById('typeDate');
+        const dureeNumber = document.getElementById('dureeStage');
+        const dureeSelect = document.getElementById('dureeAlternance');
 
         distancielDiv.style.display = checkboxAlternance.checked ? 'block' : 'none';
-        typeDateDiv.style.display = checkboxAlternance.checked ? 'block' : 'none';
-        dureeSelectDiv.style.display = checkboxAlternance.checked ? 'none' : 'block';
-        dureeNumberDiv.style.display = checkboxAlternance.checked ? 'block' : 'none';
+        dureeSelectDiv.style.display = checkboxAlternance.checked ? 'block' : 'none';
+        dureeNumberDiv.style.display = checkboxStage.checked ? 'block' : 'none';
 
-        if (checkboxAlternance.checked){
+
+        if (checkboxAlternance.checked && checkboxStage.checked){
             distancielDiv.enable();
+            dureeSelect.enable();
+            dureeNumber.enable();
+        } else if (checkboxAlternance.checked && !checkboxStage.checked){
+            distancielDiv.enable();
+            dureeSelect.enable();
+            dureeNumber.disable();
+        } else if (checkboxStage.checked && !checkboxAlternance.checked){
+            distancielDiv.disable();
             dureeSelect.disable();
             dureeNumber.enable();
-            typeDate.enable();
         } else {
-            typeDate.disable();
             distancielDiv.disable();
+            dureeSelect.disable();
             dureeNumber.disable();
-            dureeSelect.enable();
         }
     }
 

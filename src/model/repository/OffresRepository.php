@@ -162,10 +162,10 @@ class OffresRepository extends AbstractRepository
      * @throws ServerErrorException
      */
     public
-    function updateToDraft($idOffre): bool
+    function updateToArchiver($idOffre): bool
     {
         try {
-            $sql = "UPDATE $this->nomTable SET statut = 'draft' WHERE idoffre = :idoffre";
+            $sql = "UPDATE $this->nomTable SET statut = 'archiver' WHERE idoffre = :idoffre";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idoffre' => $idOffre]);
             return true;
@@ -270,7 +270,7 @@ class OffresRepository extends AbstractRepository
     function draftExist($idEntreprise): array
     {
         try {
-            $sql = "SELECT * FROM Offre WHERE idUtilisateur = :idUtilisateur AND statut = 'draft'";
+            $sql = "SELECT * FROM Offre WHERE idUtilisateur = :idUtilisateur AND statut = 'brouillon'";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idUtilisateur' => $idEntreprise]);
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
@@ -312,7 +312,7 @@ class OffresRepository extends AbstractRepository
     function updateToApproved(mixed $id)
     {
         try {
-            $sql = "UPDATE $this->nomTable SET statut = 'approved' WHERE idoffre = :idoffre";
+            $sql = "UPDATE $this->nomTable SET statut = 'valider' WHERE idoffre = :idoffre";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idoffre' => $id]);
         } catch

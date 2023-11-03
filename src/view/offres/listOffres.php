@@ -67,7 +67,7 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                         <?php
                         if ($offres != null) {
                             foreach ($offres as $offre) {
-                                if ($offre->getStatut() === "approved") {
+                                if ($offre->getStatut() === "valider") {
                                     if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher)) {
                                         require __DIR__ . '/offre.php';
                                     } else if (!Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Teacher, Roles::Tutor) && !(new OffresRepository())->checkArchived($offre)) {
@@ -97,7 +97,24 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                     <?php
                     if ($offres != null) {
                         foreach ($offres as $offre) {
-                            if ($offre->getStatut() === "pending" && Auth::has_role(Roles::Manager, Roles::Staff)) {
+                            if ($offre->getStatut() === "en attente" && Auth::has_role(Roles::Manager, Roles::Staff)) {
+                                require __DIR__ . '/offre.php';
+                            }
+                        }
+                    }
+                    echo "</div>"; ?>
+                </div>
+                <?php if (Auth::has_role(Roles::Manager, Roles::Staff)) {
+                    echo '<div class="w-full bg-zinc-200 h-[1px] rounded-full"></div>';
+                    echo '<div class="flex flex-col gap-1 w-full">';
+                    echo '<h2 class="font-bold text-lg">Offres Archiver</h2>';
+                }
+                ?>
+                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
+                    <?php
+                    if ($offres != null) {
+                        foreach ($offres as $offre) {
+                            if ($offre->getStatut() === "archiver" && Auth::has_role(Roles::Manager, Roles::Staff)) {
                                 require __DIR__ . '/offre.php';
                             }
                         }

@@ -173,12 +173,12 @@ class OffreController extends AbstractController
             if ($offre == null && $id != null) throw new NotFoundException();
 
             if ($request->getMethod() === 'post') {
-                (new OffresRepository())->updateToDraft($id);
+                (new OffresRepository())->updateToArchiver($id);
                 (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmailutilisateur()], "Archivage de votre offre", "Votre offre a été archivée");
                 $offre = (new OffresRepository())->getByIdWithUser($id);
                 return $this->render('offres/detailOffre', ['offre' => $offre]);
             } elseif ($request->getMethod() === 'get') {
-                (new OffresRepository())->updateToDraft($id);
+                (new OffresRepository())->updateToArchiver($id);
                 (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmailutilisateur()], "Archivage de votre offre", "Votre offre a été archivée");
                 Application::redirectFromParam("/offres");
             }
@@ -210,16 +210,18 @@ class OffreController extends AbstractController
             return $this->render('/offres/create');
         }
 
-        $typeOffre = $_POST['typeOffre'];
+        $typeOffre = $_POST['typeOffre'] ?? null;
         $distanciel = $typeOffre == "alternance" ? $_POST['distanciel'] : null;
-        $typeDate = $_POST['typeDate'] ?? null;
-        $temps = $_POST['duree'];
-
-        if ($typeDate == null){
-            $duree = $temps;
+        if (!empty($_POST['dureeStage']) && !empty($_POST['dureeAlternance'])) {
+            $duree = "stage : " . $_POST['dureeStage'] . " heure(s), alternance : " . $_POST['dureeAlternance'] . " an(s)";
+        } else if (!empty($_POST["dureeStage"]) && empty($_POST["dureeAlternance"])){
+            $duree = $_POST['dureeStage'] . " heure(s)";
+        } else if (empty($_POST["dureeStage"]) && !empty($_POST["dureeAlternance"])){
+            $duree = $_POST['dureeAlternance'] . " an(s)";
         } else {
-            $duree = $temps . " " . $typeDate;
+            $duree = null;
         }
+
         $theme = $_POST['theme'] ?? null;
         $sujet = $_POST['sujet'];
         $nbJourTravailHebdo = $_POST['nbjourtravailhebdo'] ?? null;

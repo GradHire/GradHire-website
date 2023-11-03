@@ -126,4 +126,6 @@ class Entreprise extends Utilisateur
     {
         return $this->$nomColonne;
     }
+
+
 }

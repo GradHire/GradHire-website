@@ -3,6 +3,7 @@
 namespace app\src\model\dataObject;
 
 use app\src\core\exception\ServerErrorException;
+use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\OffresRepository;
 
 class Offre extends AbstractDataObject
@@ -277,11 +278,9 @@ class Offre extends AbstractDataObject
         return $this->$nomColonne;
     }
 
-    public function getTypeDate(): string
+    public function getNomEntreprise(): string
     {
-        if (str_contains($this->duree, "heure(s)")) return "heure(s)";
-        else if (str_contains($this->duree, "mois")) return "mois";
-        else return "an(s)";
+        return (new EntrepriseRepository([]))->getByIdFull($this->idutilisateur)->getNomutilisateur();
     }
 
 }
