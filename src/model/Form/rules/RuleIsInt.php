@@ -9,12 +9,12 @@ use app\src\model\Form\FormValidationException;
 class RuleIsInt extends FormAttributeRule
 {
 
-	/**
-	 * @inheritDoc
-	 */
-	public function process(FormInputValue $value): void
-	{
-		if (!is_int($value->getValue()))
-			throw new FormValidationException("Ce champs n'est pas une int");
-	}
+    /**
+     * @inheritDoc
+     */
+    public function process(FormInputValue $value): void
+    {
+        if (!filter_var($value->getValue(), FILTER_VALIDATE_INT))
+            throw new FormValidationException("Ce champs n'est pas une int");
+    }
 }

@@ -3,7 +3,6 @@
 namespace app\src\controller;
 
 use app\src\model\Application;
-use app\src\model\dataObject\Etudiant;
 use app\src\model\Form\FormModel;
 use app\src\model\ImportPstage;
 use app\src\model\repository\EtudiantRepository;
@@ -52,29 +51,27 @@ class PstageController extends AbstractController
         $id = Application::getUser()->getId();
         $etudiant = (new EtudiantRepository([]))->getByIdFull($id);
 
-        $formData = $_SESSION['form_data'] ?? [];
-
         $form = new FormModel([
             "numEtudiant" => FormModel::string("Numéro étudiant")->required()->min(8)->max(8)->default($formData['numEtudiant'] ?? $etudiant->getNumEtudiant()),
             "nom" => FormModel::string("Nom")->required()->default($formData['nom'] ?? $etudiant->getNomutilisateur()),
             "prenom" => FormModel::string("Prénom")->required()->default($formData['prenom'] ?? $etudiant->getPrenom()),
             "adresse" => FormModel::string("Adresse")->required()->default($formData['adresse'] ?? $etudiant->getAdresse()),
-            "codePostal" => FormModel::string("Code postal")->required()->min(5)->max(5)->default($formData['codePostal'] ?? $etudiant->getCodePostal()),
+            "codePostal" => FormModel::string("Code postal")->required()->length(5)->default($formData['codePostal'] ?? $etudiant->getCodePostal()),
             "ville" => FormModel::string("Ville")->required()->default($formData['ville'] ?? $etudiant->getNomVille()),
             "telephone" => FormModel::phone("Téléphone")->default($formData['telephone'] ?? $etudiant->getNumtelutilisateur()),
-            "emailPerso" => FormModel::email("Email")->required()->default($formData['emailPerso'] ?? $etudiant->getEmailPerso()),
+            "emailPerso" => FormModel::email("Email perso")->required()->default($formData['emailPerso'] ?? $etudiant->getEmailPerso()),
             "emailUniv" => FormModel::email("Email universitaire")->required()->default($formData['emailUniv'] ?? $etudiant->getEmailutilisateur()),
-            "CPAM" => FormModel::string("CPAM et Adresse postal")->required()->default($formData['CPAM'] ?? null),
+            "CPAM" => FormModel::string("CPAM et Adresse postal")->required()->default($formData['CPAM'] ?? ""),
             "anneeUni" => FormModel::select("Année universitaire", ["2023-2024" => "2023-2024", "2024-2025" => "2024-2025", "2025-2026" => "2025-2026"])->required()->default($formData['anneeUni'] ?? null),
-            "nbHeure" => FormModel::int("Nombre d'heure")->required()->default($formData['nbHeure'] ?? null)
+            "nbHeure" => FormModel::int("Nombre d'heure")->required()->default($formData['nbHeure'] ?? 1)->min(1)
         ]);
 
-        if ($request->getMethod() === 'get') {
-            return $this->render('simulateurP/simulateuretu', ['form' => $form]);
-        } else {
-            $_SESSION['form_data'] = $_POST;
-            Application::$app->response->redirect("/simulateurOffre");
+        if ($request->getMethod() === 'post') {
+            if ($form->validate($request->getBody())) {
+                print_r($form->getParsedBody());
+            }
         }
+        return $this->render('simulateurP/simulateuretu', ['form' => $form]);
     }
 
 
