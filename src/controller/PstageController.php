@@ -72,7 +72,7 @@ class PstageController extends AbstractController
         if ($request->getMethod() === 'get') {
             return $this->render('simulateurP/simulateuretu', ['form' => $form]);
         } else {
-            $_SESSION['form_data'] = $_POST;  // Stocke les données du formulaire dans la session
+            $_SESSION['form_data'] = $_POST;
             Application::$app->response->redirect("/simulateurOffre");
         }
     }

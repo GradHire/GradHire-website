@@ -26,11 +26,14 @@ class ImportPstage
         if (!$this->recordExists('Utilisateur', 'email', $row[79])) $this->insertTuteur($row, $identreprise);
         else $this->updateTuteur($row, $identreprise);
 
-        if (!$this->recordExists('Signataire', 'mailSignataire', $row[34])) $this->insertSignataire($row);
+        if (!$this->recordExists('Signataire', 'mailSignataire', $row[34])) $this->insertSignataire($row, $identreprise);
         else $this->updateSignataire($row);
 
         $idsignataire = $this->find('Signataire', 'mailSignataire', $row[34], 'idSignataire');
         if (!$this->recordExists('Utilisateur', 'email', $row[31])) $this->insertReferent($row);
+
+        if (!$this->exist('ServiceAccueil', 'nomService', $row[70], 'idEntreprise', $identreprise)) $this->insertServiceAccueil($row, $identreprise);
+        else $this->updateServiceAccueil($row, $identreprise);
 
         $idOffre = $this->insertOffreStage($row, $identreprise);
 
@@ -89,9 +92,9 @@ class ImportPstage
         $this->execute("Call updateTuteurImp('$row[77]','$row[78]','$row[79]','$row[80]','$row[81]');");
     }
 
-    private function insertSignataire($row)
+    private function insertSignataire($row, $identreprise)
     {
-        $this->execute("Select creerSignataire('$row[32]','$row[33]','$row[34]','$row[35]') FROM DUAL ;");
+        $this->execute("Select creerSignataire('$row[32]','$row[33]','$row[34]','$row[35]',$identreprise) FROM DUAL ;");
     }
 
     private function updateSignataire($row)
@@ -102,6 +105,23 @@ class ImportPstage
     private function insertReferent($row)
     {
         $this->execute("Select creerStaff('$row[29]','$row[30]','$row[31]','$row[31]') FROM DUAL ;");
+    }
+
+    private function exist(string $string, string $string1, mixed $int, string $string2, mixed $identreprise)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM $string WHERE $string1 = '$int' AND $string2 = '$identreprise'");
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
+    private function insertServiceAccueil($row, mixed $identreprise)
+    {
+        $this->execute("Call creerServiceAccueil('$row[70]','$row[71]','$row[72]','$row[73]','$row[74]','$row[75]','$row[76]','$identreprise') ;");
+    }
+
+    private function updateServiceAccueil($row, mixed $identreprise)
+    {
+        $this->execute("Call updateServiceAccueil('$row[70]','$row[71]','$row[72]','$row[73]','$row[74]','$row[75]','$row[76]','$identreprise') ;");
     }
 
     private function insertOffreStage($row, $idEntreprise): int
