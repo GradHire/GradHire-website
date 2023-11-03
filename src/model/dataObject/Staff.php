@@ -11,19 +11,18 @@ class Staff extends Utilisateur
     private ?string $role;
     private string $loginLdap;
     private string $prenom;
-    private ?string $emailuni;
     private ?int $archiver;
 
-    public function __construct($idutilisateur, $role, $loginLdap, $prenom, $email, $nom, $numtelephone, $emailuni, $bio, $archiver)
+    public function __construct($idutilisateur, $role, $loginLdap, $prenom, $email, $nom, $numtelephone, $bio, $archiver)
     {
         parent::__construct($idutilisateur, $email, $nom, $numtelephone, $bio);
         $this->idutilisateur = $idutilisateur;
         $this->role = $role;
         $this->loginLdap = $loginLdap;
         $this->prenom = $prenom;
-        $this->emailuni = $emailuni;
         $this->archiver = $archiver;
     }
+
 
     public function getIdutilisateur(): int
     {
@@ -65,15 +64,6 @@ class Staff extends Utilisateur
         $this->prenom = $prenom;
     }
 
-    public function getEmailuni(): ?string
-    {
-        return $this->emailuni;
-    }
-
-    public function setEmailuni(?string $emailuni): void
-    {
-        $this->emailuni = $emailuni;
-    }
 
     public function getArchiver(): ?int
     {
