@@ -12,7 +12,6 @@ use PDOException;
 
 class OffresRepository extends AbstractRepository
 {
-
     private string $nomTable = "Offre";
 
     protected static function checkOnlyStageOrAlternance($filter): bool

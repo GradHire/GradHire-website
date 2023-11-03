@@ -90,8 +90,6 @@ class OffreController extends AbstractController
         if (isset($_GET['duree'])) $filter['duree'] = $_GET['duree'];
         if (isset($_GET['alternance'])) $filter['alternance'] = $_GET['alternance'];
         if (isset($_GET['stage'])) $filter['stage'] = $_GET['stage'];
-        $_GET['gratificationMin'] = 4.05;
-        $_GET['gratificationMax'] = 15;
         if (isset($_GET['gratificationMin'])) {
             if ($_GET['gratificationMin'] == "") $filter['gratificationMin'] = null;
             else if ($_GET['gratificationMin'] < 4.05) $filter['gratificationMin'] = 4.05;
