@@ -1,6 +1,7 @@
 <?php
 
 use app\src\controller\AuthController;
+use app\src\controller\ConventionsController;
 use app\src\controller\DashboardController;
 use app\src\controller\OffreController;
 use app\src\controller\OpenController;
@@ -94,5 +95,18 @@ $app->router->post('/utilisateurs/{id}', [DashboardController::class, 'utilisate
 
 $app->router->get('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPro']);
 $app->router->post('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPro']);
+
+// ConventionController
+
+$app->router->get('/conventions', [ConventionsController::class, 'afficherListeConventions']);
+$app->router->get('/conventions/{id:\d+}', [ConventionsController::class, 'detailConvention']);
+$app->router->get('/conventions/{id:\d+}/edit', [ConventionsController::class, 'editConvention']);
+$app->router->get('/conventions/{id:\d+}/validatePedagogiquement', [ConventionsController::class, 'validateConventionPedagogiquement']);
+$app->router->get('/conventions/{id:\d+}/unvalidatePedagogiquement', [ConventionsController::class, 'unvalidateConventionPedagogiquement']);
+$app->router->get('/conventions/{id:\d+}/validate', [ConventionsController::class, 'validateConvention']);
+$app->router->get('/conventions/{id:\d+}/unvalidate', [ConventionsController::class, 'unvalidateConvention']);
+
+$app->router->post('/conventions/{id:\d+}/edit', [ConventionsController::class, 'editConvention']);
+
 
 $app->run();

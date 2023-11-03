@@ -93,6 +93,8 @@ use app\src\model\dataObject\Roles;
                                class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
                             <a href="/ListeTuteurPro"
                                class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Tuteurs</a>
+                            <a href="/conventions"
+                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Conventions</a>
                         <?php endif; ?>
                     <?php endif; ?>
                 </div>
