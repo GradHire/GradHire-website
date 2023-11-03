@@ -3,11 +3,20 @@
 
 /** @var $form FormModel */
 
+use app\src\core\components\Modal;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 
 $this->title = 'Profile';
+
+$modal = new Modal("Voulez vous vraiment archiver votre compte ?", "Oui, archiver", '
+ <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                 stroke="currentColor"
+                 class="text-zinc-400 dark:text-zinc-500 w-11 h-11 mb-3.5 mx-auto">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
+            </svg>');
 ?>
 
 
@@ -187,9 +196,10 @@ $this->title = 'Profile';
                         <div class="pt-6 sm:flex">
                             <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
                                 <div class="text-zinc-900">
-                                    <a href="/utilisateurs/<?= $user->id() ?>/archiver"
-                                       class="inline-block rounded-md border border-transparent px-5 py-2 text-center font-medium text-white hover:bg-red-800 bg-red-600 text-sm">Archiver
-                                        mon compte</a>
+                                    <p <?= $modal->Show("/utilisateurs/" . $user->id() . "/archiver") ?>
+                                            class="inline-block rounded-md border border-transparent px-5 py-2 text-center font-medium text-white hover:bg-red-800 bg-red-600 text-sm">
+                                        Archiver
+                                        mon compte</p>
                                 </div>
                             </dd>
                         </div>
