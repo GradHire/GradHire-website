@@ -9,7 +9,7 @@ use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
-use app\src\model\repository\CandidatureRepository;
+use app\src\model\repository\PostulerRepository;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\MailRepository;
@@ -81,38 +81,41 @@ class DashboardController extends AbstractController
     {
 
         $userid = Application::getUser()->id();
-
-        $id = $request->getRouteParams()['id'] ?? null;
-        $candidatures = (new CandidatureRepository())->getById($id);
-        if (Auth::has_role(Roles::Tutor)) $entrepriseid = (new TuteurEntrepriseRepository())->getById($userid)->getIdentreprise();
+        print_r($request->getRouteParams());
+        $idOffre = $request->getRouteParams()['idOffre'] ?? null;
+        $idUtilisateur = $request->getRouteParams()['idUtilisateur'] ?? null;
+        $candidatures = (new PostulerRepository())->getById($idOffre, $idUtilisateur);
+        if (Auth::has_role(Roles::Tutor)) $entrepriseid = (new TuteurEntrepriseRepository([]))->getById($userid)->getIdentreprise();
         else if (Auth::has_role(Roles::Enterprise)) $entrepriseid = $userid;
-        if ($candidatures != null && $id != null) {
+        if ($candidatures != null && $idOffre != null && $idUtilisateur != null) {
             $offre = (new OffresRepository())->getById($candidatures->getIdoffre());
             if (Auth::has_role(Roles::Staff, Roles::Manager, Roles::Teacher) || $candidatures->getIdutilisateur() == $userid || $offre->getIdutilisateur() == $entrepriseid) {
                 return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
             } else throw new ForbiddenException();
         }
         if ($request->getMethod() === 'post') {
-            $id = $request->getBody()['idcandidature'] ?? null;
-            $candidature = (new CandidatureRepository())->getById($id);
+            $id = explode('_', $_POST['idcandidature']);
+            $idOffre =  $id[0] ?? null;
+            $idUtilisateur = $id[1] ?? null;
+            $candidature = (new PostulerRepository())->getById($idOffre, $idUtilisateur);
             if ($request->getBody()['action'] === 'Accepter') {
-                $candidature->setEtatcandidature("accepted");
+                $candidature->setStatutPostuler("valider");
             } else {
-                $candidature->setEtatcandidature("declined");
+                $candidature->setStatutPostuler("refuser");
             }
         }
         if (Auth::has_role(Roles::Enterprise, Roles::Tutor)) {
-            $array = ['candidaturesAttente' => (new CandidatureRepository())->getByIdEntreprise($entrepriseid, 'on hold'),
-                'candidaturesAutres' => array_merge((new CandidatureRepository())->getByIdEntreprise($entrepriseid, 'accepted'), (new CandidatureRepository())->getByIdEntreprise($entrepriseid, 'declined'))
+            $array = ['candidaturesAttente' => (new PostulerRepository())->getByIdEntreprise($entrepriseid, 'en attente'),
+                'candidaturesAutres' => array_merge((new PostulerRepository())->getByIdEntreprise($entrepriseid, 'valider'), (new PostulerRepository())->getByIdEntreprise($entrepriseid, 'refuser'))
             ];
         } else if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher)) {
 
-            $array = ['candidaturesAttente' => (new CandidatureRepository())->getByStatement('on hold'),
-                'candidaturesAutres' => array_merge((new CandidatureRepository())->getByStatement('accepted'), (new CandidatureRepository())->getByStatement('declined'))
+            $array = ['candidaturesAttente' => (new PostulerRepository())->getByStatement('en attente'),
+                'candidaturesAutres' => array_merge((new PostulerRepository())->getByStatement('valider'), (new PostulerRepository())->getByStatement('refuser'))
             ];
         } else if (Auth::has_role(Roles::Student)) {
-            $array = ['candidaturesAttente' => (new CandidatureRepository())->getByIdEtudiant($userid, 'on hold'),
-                'candidaturesAutres' => array_merge((new CandidatureRepository())->getByIdEtudiant($userid, 'accepted'), (new CandidatureRepository())->getByIdEtudiant($userid, 'declined'))
+            $array = ['candidaturesAttente' => (new PostulerRepository())->getByIdEtudiant($userid, 'en attente'),
+                'candidaturesAutres' => array_merge((new PostulerRepository())->getByIdEtudiant($userid, 'valider'), (new PostulerRepository())->getByIdEtudiant($userid, 'refuser'))
             ];
         } else throw new ForbiddenException();
         return $this->render(

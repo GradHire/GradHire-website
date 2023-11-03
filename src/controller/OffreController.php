@@ -286,8 +286,13 @@ class OffreController extends AbstractController
                     $form->setError("Impossible de télécharger tous les fichiers");
                     return '';
                 }
-                $stmt = Database::get_conn()->prepare("INSERT INTO `Postuler`(`idoffre`, `idUtilisateur`, `dates`) VALUES (?,?" . date('d-m-Y') . " )");
-                $stmt->execute([$id, Application::getUser()->id()]);
+                $stmt = Database::get_conn()->prepare("INSERT INTO `Postuler`(`idoffre`, `idUtilisateur`, `dates`) VALUES (?,?,?)");
+                $values = [
+                    $id,
+                    Application::getUser()->id(),
+                    date("Y-m-d H:i:s")
+                ];
+                $stmt->execute($values);
                 Application::$app->response->redirect('/offres');
             }
         }

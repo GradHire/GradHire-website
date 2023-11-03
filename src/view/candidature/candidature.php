@@ -1,5 +1,5 @@
 <?php
-/** @var $candidatures \app\src\model\dataObject\Candidature */
+/** @var $candidatures \app\src\model\dataObject\Postuler */
 
 /** @var $titre string */
 
@@ -35,10 +35,9 @@ use app\src\model\repository\UtilisateurRepository;
                 <tbody class="divide-y divide-zinc-200">
                 <?php
                 foreach ($candidatures as $candidature) {
-
-                    $offre = (new OffresRepository())->getById($candidature->getIdoffre());
+                    $offre = (new OffresRepository())->getById($candidature->getIdOffre());
                     $entreprise = (new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur());
-                    $etudiant = (new UtilisateurRepository([]))->getUserById($candidature->getIdutilisateur());
+                    $etudiant = (new UtilisateurRepository([]))->getUserById($candidature->getIdUtilisateur());
                     ?>
                     <tr class="odd:bg-zinc-50">
                         <td class="whitespace-nowrap px-4 py-2 font-medium text-zinc-900">
@@ -54,21 +53,21 @@ use app\src\model\repository\UtilisateurRepository;
                         </td>
                         <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                             <?php
-                            echo $candidature->getDatecandidature();
+                            echo $candidature->getDates();
                             ?>
                         </td>
                         <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                             <?php
-                            if ($candidature->getEtatcandidature() == 'on hold') {
+                            if ($candidature->getStatut() == 'en attente') {
                                 echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-yellow-100 text-yellow-800\">En attente</span>";
-                            } elseif ($candidature->getEtatcandidature() == 'declined') {
+                            } elseif ($candidature->getStatut() == 'refuser') {
                                 echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-red-100 text-red-800\">Refusé</span>";
                             } else echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-green-100 text-green-800\">Accepté</span>";
 
                             ?>
                         </td>
                         <td class="whitespace-nowrap px-4 py-2">
-                            <a href="/candidatures/<?php echo $candidature->getIdcandidature() ?>"
+                            <a href="/candidatures/<?php echo $candidature->getIdOffre() ?>/<?php echo $candidature->getIdUtilisateur() ?>"
                                class="inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">Voir
                                 plus</a>
                         </td>
