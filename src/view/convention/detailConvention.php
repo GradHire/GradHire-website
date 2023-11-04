@@ -4,8 +4,15 @@
 
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
+use app\src\model\repository\ConventionRepository;
 use app\src\model\repository\EntrepriseRepository;
+use app\src\model\repository\OffresRepository;
 
+if (Auth::has_role(Roles::Student, Roles::Enterprise) && !(new ConventionRepository())->checkIfConventionsValideePedagogiquement($convention->getNumConvention())) {
+    throw new Exception("Vous n'avez pas le droit d'accéder à cette convention car elle n'a pas été validée pédagogiquement.");
+} else if (Auth::has_role(Roles::Enterprise) && Auth::get_user()->id() != (new OffresRepository())->getById($convention->getIdOffre())->getIdutilisateur()) {
+    throw new Exception("Vous n'avez pas le droit d'accéder à cette convention car elle n'appartient pas à votre entreprise.");
+}
 ?>
 
 <div class="w-full pt-12 pb-24">
@@ -23,7 +30,9 @@ use app\src\model\repository\EntrepriseRepository;
                 }
                 ?></p>
         </div>
-        <?php if (Auth::has_role(Roles::Staff, Roles::Manager) || Auth::get_user()->getId() == $convention->getIdUtilisateur()) { ?>
+        <?php
+        if (Auth::has_role(Roles::Staff, Roles::Manager) || Auth::get_user()->getId() == (new OffresRepository())->getById($convention->getIdOffre())->getIdutilisateur()) {
+            ?>
             <span class="inline-flex cursor-pointer  -space-x-px overflow-hidden rounded-md border bg-white shadow-sm">
   <a href="/conventions/<?= $convention->getNumConvention() ?>/edit"
      class="cursor-pointer inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative">
@@ -34,48 +43,51 @@ use app\src\model\repository\EntrepriseRepository;
 </svg>
   </a>
                         <?php
-                        if (Auth::has_role(Roles::Student, Roles::Enterprise)){
-                        if ($convention->getConventionValide() != "1"): ?>
-                        <a href="/conventions/<?= $convention->getNumConvention() ?>/validate"
-                           class="inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                     stroke-width="1.5"
-                                     stroke="currentColor"
-                                     class="w-5 h-5">
+                        if (Auth::has_role(Roles::Enterprise)) {
+                            if ($convention->getConventionValide() != "1"): ?>
+                            <a href="/conventions/<?= $convention->getNumConvention() ?>/validate"
+                               class="inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                         stroke-width="1.5"
+                                         stroke="currentColor"
+                                         class="w-5 h-5">
   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
 </svg>
-                            </a><?php endif; ?>
+                                </a><?php endif; ?>
                 <?php if ($convention->getConventionValide() != "0"): ?>
-                <a href="/conventions/<?= $convention->getNumConvention() ?>/unvalidate"
-                   class="cursor-pointer inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                             stroke="currentColor"
-                             class="w-5 h-5">
+                            <a href="/conventions/<?= $convention->getNumConvention() ?>/unvalidate"
+                               class="cursor-pointer inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                         stroke-width="1.5"
+                                         stroke="currentColor"
+                                         class="w-5 h-5">
   <path stroke-linecap="round" stroke-linejoin="round"
         d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
 </svg>
-                    </a><?php endif;} ?>
+                                </a><?php endif;
+                        } ?>
                 <?php
-                if (Auth::has_role(Roles::Staff, Roles::Manager)){
+                if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                     if ($convention->getConvetionValideePedagogiquement() != "1"): ?>
-                <a href="/conventions/<?= $convention->getNumConvention() ?>/validatePedagogiquement"
-                   class="inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                             stroke="currentColor"
-                             class="w-5 h-5">
+                    <a href="/conventions/<?= $convention->getNumConvention() ?>/validatePedagogiquement"
+                       class="inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                 stroke="currentColor"
+                                 class="w-5 h-5">
   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
 </svg>
-                    </a><?php endif; ?>
+                        </a><?php endif; ?>
                 <?php if ($convention->getConvetionValideePedagogiquement() != "0"): ?>
-                <a href="/conventions/<?= $convention->getNumConvention() ?>/unvalidatePedagogiquement"
-                   class="cursor-pointer inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                             stroke="currentColor"
-                             class="w-5 h-5">
+                    <a href="/conventions/<?= $convention->getNumConvention() ?>/unvalidatePedagogiquement"
+                       class="cursor-pointer inline-block px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:relative">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                 stroke="currentColor"
+                                 class="w-5 h-5">
   <path stroke-linecap="round" stroke-linejoin="round"
         d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
 </svg>
-                    </a><?php endif;}?>
+                        </a><?php endif;
+                } ?>
 </span>
         <?php } ?>
     </div>
@@ -142,7 +154,7 @@ Non valide
                     ?></dd>
             </div>
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-zinc-900">Entreprise</dt>
+                <dt class="text-sm font-medium leading-6 text-zinc-900">Etudiant</dt>
                 <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><a
                             href="/entreprises/<?= $convention->getIdUtilisateur() ?>"><?= (new EntrepriseRepository([]))->getUserById($convention->getIdUtilisateur())->getNomutilisateur() ?></a>
             </div>

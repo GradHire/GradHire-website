@@ -155,6 +155,8 @@ class EntrepriseRepository extends ProRepository
         }
     }
 
+
+
     protected
     function getNomColonnes(): array
     {

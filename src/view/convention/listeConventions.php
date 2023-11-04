@@ -5,8 +5,10 @@ use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\repository\ConventionRepository;
 use app\src\model\repository\EntrepriseRepository;
+use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\PostulerRepository;
+use app\src\model\repository\UtilisateurRepository;
 
 $this->title = 'Conventions';
 
@@ -19,10 +21,16 @@ $this->title = 'Conventions';
                 Origine Convention
             </th>
             <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900">
-                IdUtilisateur
+                Etudiant
             </th>
             <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900">
                 IdOffre
+            </th>
+            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900">
+                Validité Entreprise
+            </th>
+            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900">
+                Validité Pédagogique
             </th>
         </tr>
         </thead>
@@ -32,9 +40,10 @@ $this->title = 'Conventions';
         if ($conventions != null) {
             $count = 0;
             foreach ($conventions as $convention) { ?>
-                <?php
+        <?php
                 if (Auth::get_user()->role() == Roles::Enterprise && (new OffresRepository())->getById($convention->getIdOffre())->getIdutilisateur() != Auth::get_user()->id) continue;
-                elseif (Auth::get_user()->role() == Roles::Student && $convention->getIdUtilisateur() != Auth::get_user()->id) continue;
+                elseif (Auth::get_user()->role() == Roles::Enterprise && !(new ConventionRepository())->checkIfConventionsValideePedagogiquement($convention->getNumConvention())) continue;
+                elseif (Auth::get_user()->role() == Roles::Student && $convention->getIdUtilisateur() != Auth::get_user()->id && !(new ConventionRepository())->checkIfConventionsValideePedagogiquement($convention->getNumConvention())) continue;
                 else {
                     $count++;
                     ?>
@@ -49,13 +58,43 @@ $this->title = 'Conventions';
                         <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                             <?php
                             if ($convention->getIdUtilisateur() == null) echo("Non renseigné");
-                            else echo $convention->getIdUtilisateur();
+                            else echo (new EtudiantRepository([]))->getByIdFull($convention->getIdUtilisateur())->getPrenom() . " " . (new EtudiantRepository([]))->getByIdFull($convention->getIdUtilisateur())->getNomutilisateur();
                             ?>
                         </td>
                         <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                             <?php
                             if ($convention->getIdOffre() == null) echo("Non renseigné");
-                            else echo $convention->getIdOffre(); ?>
+                            else echo (new OffresRepository())->getById($convention->getIdOffre())->getSujet()?>
+                        </td>
+                        <td class="mt-6 border-t border-zinc-100">
+                                        <div>
+                                            <?php
+                                            if ($convention->getConventionValide() == "0") {
+                                                echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-zinc-100 text-zinc-800\">
+Non valide
+    </span>";
+                                            } else if ($convention->getConventionValide() == "1") {
+                                                echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-green-100 text-green-800\">
+    Validée
+    </span>";
+                                            }
+                                            ?>
+                                        </div>
+                        </td>
+                        <td>
+                                        <div>
+                                            <?php
+                                            if ($convention->getConvetionValideePedagogiquement() == "0") {
+                                                echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-zinc-100 text-zinc-800\">
+    Non valide
+    </span>";
+                                            } else if ($convention->getConvetionValideePedagogiquement() == "1") {
+                                                echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-green-100 text-green-800\">
+    Validée
+    </span>";
+                                            }
+                                            ?>
+                                        </div>
                         </td>
                         <td class="whitespace-nowrap px-4 py-2">
                             <a href="/conventions/<?= $convention->getNumConvention(); ?>"
