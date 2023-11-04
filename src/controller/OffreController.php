@@ -17,6 +17,8 @@ use app\src\model\repository\OffresRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\Request;
+use Mosquitto\Client;
+use const http\Client\Curl\AUTH_ANY;
 
 class OffreController extends AbstractController
 {
@@ -213,9 +215,9 @@ class OffreController extends AbstractController
         $distanciel = $_POST['distanciel'] ?? null;
         if (!empty($_POST['dureeStage']) && !empty($_POST['dureeAlternance'])) {
             $duree = "stage : " . $_POST['dureeStage'] . " heure(s), alternance : " . $_POST['dureeAlternance'] . " an(s)";
-        } else if (!empty($_POST["dureeStage"]) && empty($_POST["dureeAlternance"])){
+        } else if (!empty($_POST["dureeStage"]) && empty($_POST["dureeAlternance"])) {
             $duree = $_POST['dureeStage'] . " heure(s)";
-        } else if (empty($_POST["dureeStage"]) && !empty($_POST["dureeAlternance"])){
+        } else if (empty($_POST["dureeStage"]) && !empty($_POST["dureeAlternance"])) {
             $duree = $_POST['dureeAlternance'] . " an(s)";
         } else {
             $duree = null;
@@ -244,9 +246,8 @@ class OffreController extends AbstractController
         $description = $_POST['description'];
 
 
-
         $offre = new Offre($idOffre, $duree, $theme, $sujet, $nbJourTravailHebdo, $nbJourHeureHebdo, $gratification, $avantageNature,
-            $dateDebut, $dateFin, $statut,$pourvue, $anneeVisee, $annee, $idUtilisateur, $datecreation, $description);
+            $dateDebut, $dateFin, $statut, $pourvue, $anneeVisee, $annee, $idUtilisateur, $datecreation, $description);
 
         if ($idOffre === null) {
             OffreForm::creerOffre($offre, $typeStage, $typeAlternance, $distanciel);
@@ -297,5 +298,17 @@ class OffreController extends AbstractController
         return $this->render('candidature/postuler', [
             'form' => $form
         ]);
+    }
+
+    public function mapsOffres(): string
+    {
+        $offres = (new OffresRepository())->getAll();
+        $adresseList = [];
+        foreach ($offres as $offre) {
+            if (!in_array($offre->getAdresse(), $adresseList)) {
+                $adresseList[] = $offre->getAdresse();
+            }
+        }
+        return $this->render('offres/mapOffre', ['adresseList' => $adresseList]);
     }
 }

@@ -75,6 +75,8 @@ $app->router->get('/offres/{id:\d+}/edit', [OffreController::class, 'editOffre']
 $app->router->get('/offres/{id:\d+}/validate', [OffreController::class, 'validateOffre']);
 $app->router->get('/offres/{id:\d+}/archive', [OffreController::class, 'archiveOffre']);
 
+$app->router->get('/offres/maps', [OffreController::class, 'mapsOffres']);
+
 // TestController
 
 $app->router->get('/user_test/{id}', [TestController::class, 'user_test']);
@@ -101,10 +103,7 @@ $app->router->post('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurP
 $app->router->get('/conventions', [ConventionsController::class, 'afficherListeConventions']);
 $app->router->get('/conventions/{id:\d+}', [ConventionsController::class, 'detailConvention']);
 $app->router->get('/conventions/{id:\d+}/edit', [ConventionsController::class, 'editConvention']);
-$app->router->get('/conventions/{id:\d+}/validatePedagogiquement', [ConventionsController::class, 'validateConventionPedagogiquement']);
-$app->router->get('/conventions/{id:\d+}/unvalidatePedagogiquement', [ConventionsController::class, 'unvalidateConventionPedagogiquement']);
-$app->router->get('/conventions/{id:\d+}/validate', [ConventionsController::class, 'validateConvention']);
-$app->router->get('/conventions/{id:\d+}/unvalidate', [ConventionsController::class, 'unvalidateConvention']);
+
 
 $app->router->post('/conventions/{id:\d+}/edit', [ConventionsController::class, 'editConvention']);
 

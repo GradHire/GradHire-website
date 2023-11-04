@@ -64,7 +64,7 @@ class ConventionRepository extends AbstractRepository
             $mail->send_Mail(
                 [$entreprise->getEmailutilisateur()],
                 "Convention validée pédagogiquement",
-                "La convention n°".$id . " de l'offre ". $offre->getSujet() . " a été validée pédagogiquement par le Staff "
+                "La convention n°" . $id . " de l'offre " . $offre->getSujet() . " a été validée pédagogiquement par le Staff "
             );
         } catch (\Exception $e) {
             throw new ServerErrorException("Erreur lors de la validation pédagogique de la convention", 500, $e);
@@ -99,7 +99,7 @@ class ConventionRepository extends AbstractRepository
             $statement->execute();
             $data = $statement->fetch();
             if (!$data) return false;
-            return (bool) $data["conventionvalideepedagogiquement"];
+            return (bool)$data["conventionvalideepedagogiquement"];
         } catch (\Exception $e) {
             throw new ServerErrorException("Erreur lors de la récupération de la convention", 500, $e);
         }
@@ -120,7 +120,7 @@ class ConventionRepository extends AbstractRepository
             $mail->send_Mail(
                 [$entreprise->getEmailutilisateur()],
                 "Convention non validée pédagogiquement",
-                "La convention n°".$id . " de l'offre ". $offre->getSujet() . " n'a pas été validée pédagogiquement par le Staff "
+                "La convention n°" . $id . " de l'offre " . $offre->getSujet() . " n'a pas été validée pédagogiquement par le Staff "
             );
         } catch (\Exception $e) {
             throw new ServerErrorException("Erreur lors de l'archivage pédagogique de la convention", 500, $e);
@@ -132,51 +132,47 @@ class ConventionRepository extends AbstractRepository
      */
     public function unvalidate(mixed $id)
     {
-        if ($this->checkIfConventionsValideePedagogiquement($id)) {
-            try {
-                $statement = Database::get_conn()->prepare("UPDATE " . static::$table . " SET conventionvalidee = 0 WHERE numconvention = :id");
-                $statement->bindParam(":id", $id);
-                $statement->execute();
-                $mail = new MailRepository();
-                $offre = (new OffresRepository())->getById($this->getById($id)->getIdOffre());
-                $entreprise = (new EntrepriseRepository([]))->getByIdFull($offre->getIdUtilisateur());
-                $etudiant = (new EtudiantRepository([]))->getByIdFull($this->getById($id)->getIdUtilisateur());
-                $mail->send_Mail(
-                    [$etudiant->getEmailutilisateur()],
-                    "Convention non validée par l'enreprise " . $entreprise->getNomutilisateur(),
-                    "La convention n°".$id . " de l'offre ". $offre->getSujet() . " n'a pas été validée par l'entreprise " . $entreprise->getNomutilisateur()
-                );
-            } catch (\Exception $e) {
-                throw new ServerErrorException("Erreur lors de l'archivage de la convention", 500, $e);
-            }
+        try {
+            $statement = Database::get_conn()->prepare("UPDATE " . static::$table . " SET conventionvalidee = 0 WHERE numconvention = :id");
+            $statement->bindParam(":id", $id);
+            $statement->execute();
+            $mail = new MailRepository();
+            $offre = (new OffresRepository())->getById($this->getById($id)->getIdOffre());
+            $entreprise = (new EntrepriseRepository([]))->getByIdFull($offre->getIdUtilisateur());
+            $etudiant = (new EtudiantRepository([]))->getByIdFull($this->getById($id)->getIdUtilisateur());
+            $mail->send_Mail(
+                [$etudiant->getEmailutilisateur()],
+                "Convention non validée par l'enreprise " . $entreprise->getNomutilisateur(),
+                "La convention n°" . $id . " de l'offre " . $offre->getSujet() . " n'a pas été validée par l'entreprise " . $entreprise->getNomutilisateur()
+            );
+        } catch (\Exception $e) {
+            throw new ServerErrorException("Erreur lors de l'archivage de la convention", 500, $e);
         }
     }
+
 
     /**
      * @throws ServerErrorException
      */
     public function valider(mixed $id)
     {
-        if ($this->checkIfConventionsValideePedagogiquement($id)) {
-            try {
-                $statement = Database::get_conn()->prepare("UPDATE " . static::$table . " SET conventionvalidee = 1 WHERE numconvention = :id");
-                $statement->bindParam(":id", $id);
-                $statement->execute();
-                $mail = new MailRepository();
-                $offre = (new OffresRepository())->getById($this->getById($id)->getIdOffre());
-                $entreprise = (new EntrepriseRepository([]))->getByIdFull($offre->getIdUtilisateur());
-                $etudiant = (new EtudiantRepository([]))->getByIdFull($this->getById($id)->getIdUtilisateur());
-                $mail->send_Mail(
-                    [$etudiant->getEmailutilisateur()],
-                    "Convention validée par l'enreprise " . $entreprise->getNomutilisateur(),
-                    "La convention n°".$id . " de l'offre ". $offre->getSujet() . " a été validée par l'entreprise " . $entreprise->getNomutilisateur()
-                );
-            } catch (\Exception $e) {
-                throw new ServerErrorException("Erreur lors de la validation de la convention", 500, $e);
-            }
+        try {
+            $statement = Database::get_conn()->prepare("UPDATE " . static::$table . " SET conventionvalidee = 1 WHERE numconvention = :id");
+            $statement->bindParam(":id", $id);
+            $statement->execute();
+            $mail = new MailRepository();
+            $offre = (new OffresRepository())->getById($this->getById($id)->getIdOffre());
+            $entreprise = (new EntrepriseRepository([]))->getByIdFull($offre->getIdUtilisateur());
+            $etudiant = (new EtudiantRepository([]))->getByIdFull($this->getById($id)->getIdUtilisateur());
+            $mail->send_Mail(
+                [$etudiant->getEmailutilisateur()],
+                "Convention validée par l'enreprise " . $entreprise->getNomutilisateur(),
+                "La convention n°" . $id . " de l'offre " . $offre->getSujet() . " a été validée par l'entreprise " . $entreprise->getNomutilisateur()
+            );
+        } catch (\Exception $e) {
+            throw new ServerErrorException("Erreur lors de la validation de la convention", 500, $e);
         }
     }
-
 
     protected function getNomTable(): string
     {

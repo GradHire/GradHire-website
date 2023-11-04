@@ -42,8 +42,7 @@ $this->title = 'Conventions';
             foreach ($conventions as $convention) { ?>
         <?php
                 if (Auth::get_user()->role() == Roles::Enterprise && (new OffresRepository())->getById($convention->getIdOffre())->getIdutilisateur() != Auth::get_user()->id) continue;
-                elseif (Auth::get_user()->role() == Roles::Enterprise && !(new ConventionRepository())->checkIfConventionsValideePedagogiquement($convention->getNumConvention())) continue;
-                elseif (Auth::get_user()->role() == Roles::Student && $convention->getIdUtilisateur() != Auth::get_user()->id && !(new ConventionRepository())->checkIfConventionsValideePedagogiquement($convention->getNumConvention())) continue;
+                elseif (Auth::get_user()->role() == Roles::Student && $convention->getIdUtilisateur() != Auth::get_user()->id) continue;
                 else {
                     $count++;
                     ?>

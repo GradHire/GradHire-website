@@ -4,6 +4,7 @@
 
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
+use app\src\model\repository\OffresRepository;
 
 ?>
 
@@ -130,12 +131,20 @@ use app\src\model\dataObject\Roles;
                 <dt class="text-sm font-medium leading-6 text-zinc-900">Description</dt>
                 <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?= $offre->getDescription() ?></dd>
             </div>
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-zinc-900">Adresse</dt>
+                <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?= $offre->getAdresse() ?></dd>
+            </div>
         </dl>
     </div>
+    <?php if ($offre->getAdresse() != null){
+        ?>
+        <iframe class="w-full h-[500px]" src="https://maps.google.com/maps?q=<?= $offre->getAdresse() ?>&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
+    <?php } ?>
     <?php if (Auth::has_role(Roles::Student) && !$offre->getUserPostuled()) { ?>
         <a href="<?php echo $offre->getIdOffre(); ?>/postuler"
            class="mt-6 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-zinc-600 hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 sm:w-auto">
             Postuler
         </a>
-    <?php } ?>
+     <?php } ?>
 </div>

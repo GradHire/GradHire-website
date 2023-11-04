@@ -31,6 +31,20 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                 <path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M12 4.5v15m7.5-7.5h-15\" />
             </svg>
         </a>";
+            }
+            if (Auth::has_role(Roles::Staff, Roles::Manager,Roles::Student)) {
+            ?>
+                <a href="/offres/maps" class="border-2 border-zinc-200 rounded-lg bg-zinc-50 p-3 px-4 flex justify-center items-center cursor-pointer">
+                    <svg class="w-5 h-5 text-zinc-500 dark:text-zinc-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path fill="#202020"
+                              d="M17.333 10.667a3.333 3.333 0 0 0-3.333 3.333c0 3 3.333 6.667 3.333 6.667s3.333-3.667 3.333-6.667a3.333 3.333 0 0 0-3.333-3.333zm0 4a0.667 0.667 0 1 1 0.667-0.667 0.667 0.667 0 0 1-0.667 0.667z"
+                              data-name="layer2"></path>
+                        <path d="M5.333 3.567L1 1v14.033l4.333 2.7V3.567zm6-3.2L4.667 2.567v14.033l6-3.3V0.367M12.667 14a4.667 4.667 0 0 1 4.667-4.667l0.667 0.067V7.967L12.667 0.367"
+                              fill="#202020" data-name="layer1"></path>
+
+                    </svg>
+                </a>
+            <?php
             } ?>
             <div class="w-full">
                 <label for="default-search"

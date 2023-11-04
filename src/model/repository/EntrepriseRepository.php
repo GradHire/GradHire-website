@@ -126,7 +126,8 @@ class EntrepriseRepository extends ProRepository
             $dataObjectFormatTableau['siret'] ?? 0,
             $dataObjectFormatTableau['email'] ?? "",
             $dataObjectFormatTableau['nom'] ?? "",
-            $dataObjectFormatTableau['numtelephone'] ?? ""
+            $dataObjectFormatTableau['numtelephone'] ?? "",
+            $dataObjectFormatTableau['adresse'] ?? ""
         );
     }
 
@@ -172,7 +173,8 @@ class EntrepriseRepository extends ProRepository
             "siret",
             "email",
             "nom",
-            "numTelephone"
+            "numTelephone",
+            "adresse"
         ];
     }
 }

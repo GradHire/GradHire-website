@@ -26,6 +26,7 @@ class Offre extends AbstractDataObject
     private int $idutilisateur;
     private ?string $description;
 
+    private ?string $adresse;
 
 //    private ?int $alternance;
     public function __construct
@@ -66,6 +67,18 @@ class Offre extends AbstractDataObject
         $this->idutilisateur = $idUtilisateur;
         $this->dateCreation = $dateCreation;
         $this->description = $description;
+
+        $this->adresse = (new EntrepriseRepository([]))->getByIdFull($this->idutilisateur)->getAdresse();
+    }
+
+    public function getAdresse(): ?string
+    {
+        return $this->adresse;
+    }
+
+    public function setAdresse(?string $adresse): void
+    {
+        $this->adresse = $adresse;
     }
 
     public function __toString(): string

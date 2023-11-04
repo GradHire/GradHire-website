@@ -12,6 +12,7 @@ use PDOException;
 
 class OffresRepository extends AbstractRepository
 {
+    private static int $count;
     private string $nomTable = "Offre";
 
     protected static function checkOnlyStageOrAlternance($filter): bool
@@ -133,8 +134,12 @@ class OffresRepository extends AbstractRepository
             $requete->execute();
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetchAll();
-            if ($resultat == false) return null;
-            return $resultat;
+            if (!$resultat) return null;
+            $offres = [];
+            foreach ($resultat as $offre_data) {
+                $offres[] = $this->construireDepuisTableau($offre_data);
+            }
+            return $offres;
         } catch (PDOException) {
             throw new ServerErrorException();
         }
@@ -401,10 +406,12 @@ class OffresRepository extends AbstractRepository
         ];
     }
 
+
     protected
     function checkFilterNotEmpty(array $filter): bool
     {
         foreach ($filter as $key => $value) if ($value != "") return true;
         return false;
     }
+
 }
