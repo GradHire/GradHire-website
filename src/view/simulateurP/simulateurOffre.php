@@ -1,6 +1,6 @@
 <?php
 
-/** @var $form FormModel */
+/** @var $form2 FormModel */
 
 use app\src\model\Form\FormModel;
 
@@ -9,38 +9,39 @@ use app\src\model\Form\FormModel;
 <div class="w-full max-w-md gap-4 flex flex-col pt-12 pb-24">
 
     <h1 class="text-3xl font-bold text-center">Recherchez l'établissement où le stage sera effectué :</h1>
-    <?php $form->start(); ?>
+    <?php $form2->start(); ?>
     <div class="w-full gap-4 flex flex-col">
         <?php
-        $form->print_fields(["typeRecherche"]);
+        $form2->print_fields(["typeRecherche"]);
         ?>
     </div>
     <div class="w-full gap-4 flex flex-col" id="nomEnt">
         <?php
-        $form->print_fields(["nomEnt", "pays", "department"]);
-        $form->submit("Rechercher");
+        $form2->print_fields(["nomEnt", "pays", "department"]);
         ?>
     </div>
     <div class="w-full gap-4 flex flex-col hidden" id="numTel">
         <?php
-        $form->print_fields(["tel", "fax"]);
-        $form->submit("Rechercher");
+        $form2->print_fields(["tel", "fax"]);
         ?>
     </div>
     <div class="w-full gap-4 flex flex-col hidden" id="adresse">
         <?php
-        $form->print_fields(["adresse", "codePostal", "pays"]);
-        $form->submit("Rechercher");
+        $form2->print_fields(["adresse", "codePostal", "pays"]);
         ?>
     </div>
     <div class="w-full gap-4 flex flex-col hidden" id="numsiret">
         <?php
-        $form->print_fields(["siret", "siren"]);
-        $form->submit("Rechercher");
+        $form2->print_fields(["siret", "siren"]);
         ?>
+
+    </div>
+    <div class="w-full gap-4 flex flex-col mt-4">
+
         <?php
-        $form->getError();
-        $form->end();
+        $form2->submit("Rechercher");
+        $form2->getError();
+        $form2->end();
         ?>
     </div>
     <script src="resources/js/stepsForm.js"></script>

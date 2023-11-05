@@ -156,6 +156,77 @@ class EntrepriseRepository extends ProRepository
         }
     }
 
+    public function getByName(mixed $nomEnt, mixed $pays, mixed $department)
+    {
+        $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE nom = :nomEnt AND pays = :pays AND codePostal LIKE :department";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['nomEnt' => $nomEnt, 'pays' => $pays, 'department' => $department . '%']);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetchAll();
+        if (!$resultat) {
+            return null;
+        }
+        $entreprises = [];
+        foreach ($resultat as $entrepriseData) {
+            $entreprises[] = $this->construireDepuisTableau($entrepriseData);
+        }
+        return $entreprises;
+    }
+
+
+    public function getBySiret(mixed $siret, mixed $siren)
+    {
+        $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE siret = :siret AND siret LIKE  :siren";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['siret' => $siret, 'siren' => $siren . '%']);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetchAll();
+        if (!$resultat) {
+            return null;
+        }
+        $entreprises = [];
+        foreach ($resultat as $entrepriseData) {
+            $entreprises[] = $this->construireDepuisTableau($entrepriseData);
+        }
+        return $entreprises;
+    }
+
+
+    public function getByTel(mixed $tel, mixed $fax)
+    {
+        $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE numTelephone = :tel AND fax = :fax";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['tel' => $tel, 'fax' => $fax]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetchAll();
+        if (!$resultat) {
+            return null;
+        }
+        $entreprises = [];
+        foreach ($resultat as $entrepriseData) {
+            $entreprises[] = $this->construireDepuisTableau($entrepriseData);
+        }
+        return $entreprises;
+    }
+
+    public function getByAdresse(mixed $adresse, mixed $codePostal, mixed $pays)
+    {
+        $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE adresse = :adresse AND codePostal = :codePostal AND pays = :pays";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['adresse' => $adresse, 'codePostal' => $codePostal, 'pays' => $pays]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetchAll();
+        if (!$resultat) {
+            return null;
+        }
+        $entreprises = [];
+        foreach ($resultat as $entrepriseData) {
+            $entreprises[] = $this->construireDepuisTableau($entrepriseData);
+        }
+        return $entreprises;
+    }
+
+
     protected
     function getNomColonnes(): array
     {

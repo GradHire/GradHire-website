@@ -18,11 +18,17 @@ use app\src\model\Form\FormModel;
             echo "<p>" . $key . " : " . $value . "</p>";
         }
         ?>
+        <button type="button" id="modifyButton">Modifier</button>
         <button type="button" id="confirmButton">Confirmez</button>
 
     </div>
     <script>
         document.getElementById('confirmButton').addEventListener('click', function () {
             window.location.href = 'simulateurOffre';
+        });
+    </script>
+    <script>
+        document.getElementById('modifyButton').addEventListener('click', function () {
+            window.location.href = 'simulateur';
         });
     </script>

@@ -5,6 +5,7 @@ namespace app\src\controller;
 use app\src\model\Application;
 use app\src\model\Form\FormModel;
 use app\src\model\ImportPstage;
+use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\Request;
 
@@ -15,7 +16,7 @@ class PstageController extends AbstractController
     {
 
         $form = new FormModel([
-            "file" => FormModel::file("File")->required(),
+            "file" => FormModel::file("File")->required()->accept(["csv"])
         ]);
         $form->useFile();
 
@@ -50,6 +51,7 @@ class PstageController extends AbstractController
     {
         $id = Application::getUser()->getId();
         $etudiant = (new EtudiantRepository([]))->getByIdFull($id);
+        $formData = $_SESSION['simulateurEtu'] ?? [];
 
         $form = new FormModel([
             "numEtudiant" => FormModel::string("Numéro étudiant")->required()->min(8)->max(8)->default($formData['numEtudiant'] ?? $etudiant->getNumEtudiant()),
@@ -68,6 +70,7 @@ class PstageController extends AbstractController
 
         if ($request->getMethod() === 'post') {
             if ($form->validate($request->getBody())) {
+                $_SESSION['simulateurEtu'] = $form->getParsedBody();
                 return $this->render('simulateurP/previewetu', ['form' => $form]);
             }
         }
@@ -77,7 +80,7 @@ class PstageController extends AbstractController
 
     public function simulateurOffre(Request $request): string
     {
-        $form = new FormModel([
+        $form2 = new FormModel([
             "typeRecherche" => FormModel::select("Type de recherche", ["nomEnt" => "Nom de l'entreprise", "numsiret" => "Numéro Siret", "numTel" => "Tèl/Fax", "adresse" => "adresse"])->required()->default("nomEnt"),
             "nomEnt" => FormModel::string("Nom de l'entreprise")->default("")->required(),
             "pays" => FormModel::select("Pays", ["France" => "France", "Allemagne" => "Allemagne", "Angleterre" => "Angleterre", "Espagne" => "Espagne", "Italie" => "Italie", "Portugal" => "Portugal", "Suisse" => "Suisse", "Autre" => "Autre"])->required(),
@@ -90,9 +93,23 @@ class PstageController extends AbstractController
             "codePostal" => FormModel::string("Code postal")->default("")->length(5)
         ]);
         if ($request->getMethod() === 'post') {
-            return $this->render('simulateurP/previewoffre', ['form' => $form]);
+            $listEntreprise = [];
+            $formData = $request->getBody();
+            $typeRecherche = $formData['typeRecherche'];
+            $ent = new EntrepriseRepository([]);
+            if ($typeRecherche == "nomEnt") {
+                $listEntreprise = $ent->getByName($formData['nomEnt'], $formData['pays'], $formData['department']);
+            } else if ($typeRecherche == "numsiret") {
+                $listEntreprise = $ent->getBySiret($formData['siret'], $formData['siren']);
+            } else if ($typeRecherche == "numTel") {
+                $listEntreprise = $ent->getByTel($formData['tel'], $formData['fax']);
+            } else if ($typeRecherche == "adresse") {
+                $listEntreprise = $ent->getByAdresse($formData['adresse'], $formData['codePostal'], $formData['pays']);
+            }
+            return $this->render('simulateurP/listEntreprise', ['form' => $form2, 'listEntreprise' => $listEntreprise]);
         }
-        return $this->render('simulateurP/simulateurOffre', ['form' => $form]);
+
+        return $this->render('simulateurP/simulateurOffre', ['form2' => $form2]);
 
     }
 
