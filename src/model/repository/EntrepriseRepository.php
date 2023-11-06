@@ -226,6 +226,52 @@ class EntrepriseRepository extends ProRepository
         return $entreprises;
     }
 
+    public function getCodePostal(int $idUtilisateur): ?string
+    {
+        $sql = "SELECT codePostal FROM " . $this->getNomTable() . " WHERE idUtilisateur = :idUtilisateur";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idUtilisateur' => $idUtilisateur]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetch();
+        if (!$resultat) {
+            return null;
+        }
+        return $resultat['codepostal'];
+    }
+
+    public function getVille(int $idUtilisateur): ?string
+    {
+        $sql = "SELECT nomVille FROM " . $this->getNomTable() . "  WHERE idUtilisateur = :idUtilisateur";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idUtilisateur' => $idUtilisateur]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetch();
+        if (!$resultat) {
+            return null;
+        }
+        return $resultat['nomville'];
+    }
+
+    public function getPays(int $idUtilisateur): ?string
+    {
+        $sql = "SELECT pays FROM " . $this->getNomTable() . " WHERE idUtilisateur = :idUtilisateur";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idUtilisateur' => $idUtilisateur]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetch();
+        if (!$resultat) {
+            return null;
+        }
+        return $resultat['pays'];
+    }
+
+    public function create(mixed $nomEnt, mixed $email, mixed $tel, string $string, mixed $type, mixed $effectif, mixed $codeNaf, mixed $fax, mixed $web, mixed $voie, mixed $cedex, mixed $residence, mixed $codePostal, mixed $pays, mixed $ville, mixed $siret)
+    {
+        $sql = "SELECT creerEntImp(:nomEnt, :email, :tel, :string, :type, :effectif, :codeNaf, :fax, :web, :voie, :cedex, :residence, :codePostal, :pays, :ville, :siret) FROM DUAL";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['nomEnt' => $nomEnt, 'email' => $email, 'tel' => $tel, 'string' => $string, 'type' => $type, 'effectif' => $effectif, 'codeNaf' => $codeNaf, 'fax' => $fax, 'web' => $web, 'voie' => $voie, 'cedex' => $cedex, 'residence' => $residence, 'codePostal' => $codePostal, 'pays' => $pays, 'ville' => $ville, 'siret' => $siret]);
+    }
+
 
     protected
     function getNomColonnes(): array

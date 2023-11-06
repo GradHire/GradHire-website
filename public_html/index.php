@@ -108,6 +108,11 @@ $app->router->post('/simulateur', [PstageController::class, 'simulateur']);
 $app->router->get('/simulateurOffre', [PstageController::class, 'simulateurOffre']);
 $app->router->post('/simulateurOffre', [PstageController::class, 'simulateurOffre']);
 
+$app->router->get('/previewOffre', [PstageController::class, 'previewOffre']);
+
+$app->router->get('/creerEntreprise', [PstageController::class, 'creerEntreprise']);
+$app->router->post('/creerEntreprise', [PstageController::class, 'creerEntreprise']);
+
 
 // ConventionController
 
@@ -117,6 +122,5 @@ $app->router->get('/conventions/{id:\d+}/edit', [ConventionsController::class, '
 
 
 $app->router->post('/conventions/{id:\d+}/edit', [ConventionsController::class, 'editConvention']);
-
 
 $app->run();

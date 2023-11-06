@@ -43,5 +43,10 @@ use app\src\model\Form\FormModel;
         $form2->getError();
         $form2->end();
         ?>
+        <div class="flex">
+            <p> L'entreprise n'existe pas encore </p>
+            <a href="/creerEntreprise"
+               class="ml-3 inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">Créer-la</a>
+        </div>
     </div>
     <script src="resources/js/stepsForm.js"></script>

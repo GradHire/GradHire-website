@@ -2,6 +2,9 @@
 
 namespace app\src\model\dataObject;
 
+use app\src\model\repository\ConventionRepository;
+use app\src\model\repository\EntrepriseRepository;
+
 class Entreprise extends Utilisateur
 {
     private int $idUtilisateur;
@@ -134,6 +137,21 @@ class Entreprise extends Utilisateur
     public function setSiret(int $siret): void
     {
         $this->siret = $siret;
+    }
+
+    public function getCodePostal(): ?string
+    {
+        return (new EntrepriseRepository([]))->getCodePostal($this->idUtilisateur);
+    }
+
+    public function getVille(): ?string
+    {
+        return (new EntrepriseRepository([]))->getVille($this->idUtilisateur);
+    }
+
+    public function getPays(): ?string
+    {
+        return (new EntrepriseRepository([]))->getPays($this->idUtilisateur);
     }
 
     protected function getValueColonne(string $nomColonne): string

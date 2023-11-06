@@ -80,18 +80,7 @@ class PstageController extends AbstractController
 
     public function simulateurOffre(Request $request): string
     {
-        $form2 = new FormModel([
-            "typeRecherche" => FormModel::select("Type de recherche", ["nomEnt" => "Nom de l'entreprise", "numsiret" => "Numéro Siret", "numTel" => "Tèl/Fax", "adresse" => "adresse"])->required()->default("nomEnt"),
-            "nomEnt" => FormModel::string("Nom de l'entreprise")->default("")->required(),
-            "pays" => FormModel::select("Pays", ["France" => "France", "Allemagne" => "Allemagne", "Angleterre" => "Angleterre", "Espagne" => "Espagne", "Italie" => "Italie", "Portugal" => "Portugal", "Suisse" => "Suisse", "Autre" => "Autre"])->required(),
-            "department" => FormModel::string("Département")->default("")->length(2)->required(),
-            "siret" => FormModel::string("Numéro Siret")->default("")->length(14),
-            "siren" => FormModel::string("Numéro Siren")->default("")->length(9),
-            "tel" => FormModel::phone("Téléphone")->default(""),
-            "fax" => FormModel::phone("Fax")->default(""),
-            "adresse" => FormModel::string("Adresse")->default(""),
-            "codePostal" => FormModel::string("Code postal")->default("")->length(5)
-        ]);
+        $form2 = $this->getModel();
         if ($request->getMethod() === 'post') {
             $listEntreprise = [];
             $formData = $request->getBody();
@@ -113,4 +102,62 @@ class PstageController extends AbstractController
 
     }
 
+    /**
+     * @return FormModel
+     */
+    public function getModel(): FormModel
+    {
+        $form2 = new FormModel([
+            "typeRecherche" => FormModel::select("Type de recherche", ["nomEnt" => "Nom de l'entreprise", "numsiret" => "Numéro Siret", "numTel" => "Tèl/Fax", "adresse" => "adresse"])->required()->default("nomEnt"),
+            "nomEnt" => FormModel::string("Nom de l'entreprise")->default("")->required(),
+            "pays" => FormModel::select("Pays", ["France" => "France", "Allemagne" => "Allemagne", "Angleterre" => "Angleterre", "Espagne" => "Espagne", "Italie" => "Italie", "Portugal" => "Portugal", "Suisse" => "Suisse", "Autre" => "Autre"])->required(),
+            "department" => FormModel::string("Département")->default("")->length(2)->required(),
+            "siret" => FormModel::string("Numéro Siret")->default("")->length(14),
+            "siren" => FormModel::string("Numéro Siren")->default("")->length(9),
+            "tel" => FormModel::phone("Téléphone")->default(""),
+            "fax" => FormModel::phone("Fax")->default(""),
+            "adresse" => FormModel::string("Adresse")->default(""),
+            "codePostal" => FormModel::string("Code postal")->default("")->length(5)
+        ]);
+        return $form2;
+    }
+
+    public function previewOffre(Request $request): string
+    {
+        $id = $_GET['idEntreprise'];
+        return $this->render('simulateurP/previewOffre', ['id' => $id]);
+    }
+
+    public function creerEntreprise(Request $request): string
+    {
+        $form = new FormModel([
+            "nomEnt" => FormModel::string("Nom de l'entreprise *")->required(),
+            "effectif" => FormModel::select("Effectif *", ["0" => "0", "1 à 9" => "1 à 9", "10 à 49" => "10 à 49", "50 à 199" => "50 à 199", "200 à 999" => "200 à 999", "1000 et +" => "1000 et +"])->required()->default("0"),
+            "siret" => FormModel::string("Numéro Siret *")->required()->length(14),
+            "type" => FormModel::select("Type d'entreprise *", ["Administration" => "Administration", "Associations" => "Associations", "Entreprise d'insertion" => "Entreprise d'insertion", "Entreprise privée" => "Entreprise privée", "Entreprise public/SEM" => "Entreprise public/SEM", "Mutuelle/Coopérative/CE" => "Mutuelle/Coopérative/CE", "NON CONNU" => "NON CONNU", "Société civile" => "Société civile", "Société étrangère" => "Société étrangère", "Sté Cdite Actions" => "Sté Cdite Actions", "Association" => "Association", "Entreprise public / SEM" => "Entreprise public / SEM", "Mutuelle Coopérative" => "Mutuelle Coopérative", "ONG" => "ONG", "EPIC" => "EPIC", "Syndicat mixte" => "Syndicat mixte"])->required(),
+            "codeNaf" => FormModel::string("Code NAF *")->required()->length(5),
+            "activite" => FormModel::string("Activité Principale")->default(""),
+            "voie" => FormModel::string("Adresse Voie*")->required(),
+            "residence" => FormModel::string("Bâtiment / Résidence / Z.I.")->default(""),
+            "cedex" => FormModel::string("Cedex")->default(""),
+            "codePostal" => FormModel::string("Code postal *")->required()->length(5),
+            "ville" => FormModel::string("Ville *")->required(),
+            "pays" => FormModel::select("Pays *", ["France" => "France", "Allemagne" => "Allemagne", "Angleterre" => "Angleterre", "Espagne" => "Espagne", "Italie" => "Italie", "Portugal" => "Portugal", "Suisse" => "Suisse", "Autre" => "Autre"])->required(),
+            "email" => FormModel::email("Email")->default(""),
+            "web" => FormModel::string("Site web")->default(""),
+            "tel" => FormModel::phone("Téléphone *")->required(),
+            "fax" => FormModel::string("Fax")->default("")
+        ]);
+        if ($request->getMethod() === 'post') {
+            $form->setError("Impossible de créer l'entreprise");
+            if ($form->validate($request->getBody())) {
+                $formData = $form->getParsedBody();
+                $ent = new EntrepriseRepository([]);
+                $ent->create($formData['nomEnt'], $formData['email'], $formData['tel'], "", $formData['type'], $formData['effectif'], $formData['codeNaf'], $formData['fax'], $formData['web'], $formData['voie'], $formData['cedex'], $formData['residence'], $formData['codePostal'], $formData['pays'], $formData['ville'], $formData['siret']);
+                $form2 = $this->getModel();
+                return $this->render('simulateurP/simulateurOffre', ['form2' => $form2]);
+            }
+        }
+        return $this->render('simulateurP/creerEntreprise', ['form' => $form]);
+    }
 }
