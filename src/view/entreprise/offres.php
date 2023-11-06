@@ -36,7 +36,7 @@ use app\src\model\dataObject\Roles;
                     if ($offres != null)
                         foreach ($offres as $offre) {
                             if(Auth::has_role(Roles::Tutor)){
-                                if($offre->getStatut() != "approved"){
+                                if($offre->getStatut() != "valider"){
                                     continue;
                                 }
                             }
@@ -63,27 +63,32 @@ use app\src\model\dataObject\Roles;
                                     <?php
                                     $status = $offre->getStatut();
 
-                                    if ($status == "pending") {
+                                    if ($status == "en attente") {
                                         echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-yellow-100 text-yellow-800\">
     En attente
 </span>";
-                                    } else if ($status == "approved") {
+                                    } else if ($status == "valider") {
                                         echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-green-100 text-green-800\">
     Validée
     </span>";
-                                    } else if ($status == "blocked") {
+                                    } else if ($status == "refuser") {
                                         echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-red-100 text-red-800\">
     Refusée
     </span>";
-                                    } else if ($status == "draft") {
+                                    } else if ($status == "archiver") {
                                         echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-zinc-100 text-zinc-800\">
     Archivée
+    </span>";
+                                    }
+                                    else if ($status == "brouillon") {
+                                        echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-blue-300 text-zinc-800\">
+    Brouillon
     </span>";
                                     }
                                     ?>
                                 </td>
                                 <td class="whitespace-nowrap px-4 py-2">
-                                    <a href="/offres/<?= $offre->getId() ?>"
+                                    <a href="/offres/<?= $offre->getIdOffre() ?>"
                                        class="inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">Voir
                                         plus</a>
                                 </td>

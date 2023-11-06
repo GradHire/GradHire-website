@@ -52,7 +52,6 @@ class StaffRepository extends LdapRepository
             $dataObjectFormatTableau["email"],
             $dataObjectFormatTableau["nom"],
             $dataObjectFormatTableau["numtelephone"],
-            $dataObjectFormatTableau["mail"],
             $dataObjectFormatTableau["bio"],
             $dataObjectFormatTableau["archiver"]
         );

@@ -59,23 +59,23 @@ class EtudiantRepository extends LdapRepository
     {
         return new Etudiant(
             $dataObjectFormatTableau["idutilisateur"],
-            $dataObjectFormatTableau["prenom"],
-            $dataObjectFormatTableau["loginldap"],
             $dataObjectFormatTableau["email"],
             $dataObjectFormatTableau["nom"],
             $dataObjectFormatTableau["numtelephone"],
-            $dataObjectFormatTableau["numetudiant"],
-            $dataObjectFormatTableau["adresse"],
-            $dataObjectFormatTableau['datenaissance'],
-            $dataObjectFormatTableau["emailperso"],
-            $dataObjectFormatTableau["codesexe"],
-            $dataObjectFormatTableau["idgroupe"],
+            $dataObjectFormatTableau["bio"],
+            $dataObjectFormatTableau["archiver"],
             $dataObjectFormatTableau["nomville"],
             $dataObjectFormatTableau["codepostal"],
             $dataObjectFormatTableau["pays"],
-            $dataObjectFormatTableau["bio"],
-            $dataObjectFormatTableau["archiver"],
-            $dataObjectFormatTableau["annee"]
+            $dataObjectFormatTableau["adresse"],
+            $dataObjectFormatTableau["emailperso"],
+            $dataObjectFormatTableau["numetudiant"],
+            $dataObjectFormatTableau["codesexe"],
+            $dataObjectFormatTableau["idgroupe"],
+            $dataObjectFormatTableau["annee"],
+            $dataObjectFormatTableau["datenaissance"],
+            $dataObjectFormatTableau["loginldap"],
+            $dataObjectFormatTableau["prenom"]
         );
     }
 
@@ -84,23 +84,23 @@ class EtudiantRepository extends LdapRepository
     {
         return [
             "idUtilisateur",
-            "prenom",
-            "loginLdap",
             "email",
             "nom",
             "numTelephone",
-            "numEtudiant",
-            "adresse",
-            "dateNaissance",
-            "emailPerso",
-            "codeSexe",
-            "idGroupe",
+            "bio",
+            "archiver",
             "nomVille",
             "codePostal",
             "pays",
-            "bio",
-            "archiver",
-            "annee"
+            "adresse",
+            "emailPerso",
+            "numEtudiant",
+            "codeSexe",
+            "idGroupe",
+            "annee",
+            "dateNaissance",
+            "loginLdap",
+            "prenom"
         ];
     }
 

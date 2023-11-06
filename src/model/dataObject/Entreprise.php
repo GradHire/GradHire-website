@@ -12,6 +12,7 @@ class Entreprise extends Utilisateur
     private ?string $fax;
     private ?string $siteWeb;
     private int $siret;
+    private ?string $adresse;
 
     /**
      * Entreprise constructor.
@@ -27,9 +28,10 @@ class Entreprise extends Utilisateur
      * @param string $emailutilisateur
      * @param string $nomutilisateur
      * @param string $numtelutilisateur
+     * @param string|null $adresse
      */
 
-    public function __construct(int $idutilisateur, ?string $statutjuridique, ?string $bio, ?string $typestructure, ?string $effectif, ?string $codenaf, ?string $fax, ?string $siteweb, int $siret, string $emailutilisateur, string $nomutilisateur, string $numtelutilisateur)
+    public function __construct(int $idutilisateur, ?string $statutjuridique, ?string $bio, ?string $typestructure, ?string $effectif, ?string $codenaf, ?string $fax, ?string $siteweb, int $siret, string $emailutilisateur, string $nomutilisateur, string $numtelutilisateur, ?string $adresse)
     {
         parent::__construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur, $bio);
         $this->idUtilisateur = $idutilisateur;
@@ -40,7 +42,19 @@ class Entreprise extends Utilisateur
         $this->fax = $fax;
         $this->siteWeb = $siteweb;
         $this->siret = $siret;
+        $this->adresse = $adresse;
     }
+
+    public function getAdresse(): ?string
+    {
+        return $this->adresse;
+    }
+
+    public function setAdresse(?string $adresse): void
+    {
+        $this->adresse = $adresse;
+    }
+
 
     public function getIdutilisateur(): int
     {
@@ -126,4 +140,6 @@ class Entreprise extends Utilisateur
     {
         return $this->$nomColonne;
     }
+
+
 }

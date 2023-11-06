@@ -58,7 +58,6 @@ abstract class AbstractRepository
 
             $sql .= (new OffresRepository())->prepareSQLFilter($values);
             $sql = (new OffresRepository())->removeEndifAlone($sql);
-
             $pdoStatement = Database::get_conn()->prepare($sql);
             $values = (new OffresRepository())->constructSQLValues($values, $arraySearch, $filter);
             $pdoStatement->execute($values);

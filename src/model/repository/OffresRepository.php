@@ -12,7 +12,7 @@ use PDOException;
 
 class OffresRepository extends AbstractRepository
 {
-
+    private static int $count;
     private string $nomTable = "Offre";
 
     protected static function checkOnlyStageOrAlternance($filter): bool
@@ -134,8 +134,12 @@ class OffresRepository extends AbstractRepository
             $requete->execute();
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetchAll();
-            if ($resultat == false) return null;
-            return $resultat;
+            if (!$resultat) return null;
+            $offres = [];
+            foreach ($resultat as $offre_data) {
+                $offres[] = $this->construireDepuisTableau($offre_data);
+            }
+            return $offres;
         } catch (PDOException) {
             throw new ServerErrorException();
         }
@@ -162,10 +166,10 @@ class OffresRepository extends AbstractRepository
      * @throws ServerErrorException
      */
     public
-    function updateToDraft($idOffre): bool
+    function updateToArchiver($idOffre): bool
     {
         try {
-            $sql = "UPDATE $this->nomTable SET statut = 'draft' WHERE idoffre = :idoffre";
+            $sql = "UPDATE $this->nomTable SET statut = 'archiver' WHERE idoffre = :idoffre";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idoffre' => $idOffre]);
             return true;
@@ -198,7 +202,6 @@ class OffresRepository extends AbstractRepository
     protected
     function construireDepuisTableau(array $dataObjectFormatTableau): Offre
     {
-        if (!isset($dataObjectFormatTableau['nom'])) $dataObjectFormatTableau['nom'] = null;
         return new Offre(
             $dataObjectFormatTableau['idoffre'],
             $dataObjectFormatTableau['duree'],
@@ -271,16 +274,12 @@ class OffresRepository extends AbstractRepository
     function draftExist($idEntreprise): array
     {
         try {
-            $sql = "SELECT * FROM Offre WHERE idUtilisateur = :idUtilisateur AND statut = 'draft'";
+            $sql = "SELECT * FROM Offre WHERE idUtilisateur = :idUtilisateur AND statut = 'brouillon'";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idUtilisateur' => $idEntreprise]);
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetchAll();
             $offres = [];
-            $anneeencours = date("Y");
-            $datecreation = date("Y-m-d");
-            $iduser = Application::getUser()->Id();
-            $offres[] = new Offre(null, null, null, "", 7, 5, 4.05, null, null, $datecreation, $datecreation, null, null, $anneeencours, $iduser);
             if (!$resultat) return $offres;
             foreach ($resultat as $offre_data) {
                 $offres[] = $this->construireDepuisTableau($offre_data);
@@ -317,7 +316,7 @@ class OffresRepository extends AbstractRepository
     function updateToApproved(mixed $id)
     {
         try {
-            $sql = "UPDATE $this->nomTable SET statut = 'approved' WHERE idoffre = :idoffre";
+            $sql = "UPDATE $this->nomTable SET statut = 'valider' WHERE idoffre = :idoffre";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idoffre' => $id]);
         } catch
@@ -387,21 +386,26 @@ class OffresRepository extends AbstractRepository
     function getNomColonnes(): array
     {
         return [
+            "idoffre",
             "duree",
             "thematique",
             "sujet",
             "nbJourTravailHebdo",
             "nbheureTravailhebdo",
             "gratification",
-            "uniteGratification",
             "avantageNature",
             "dateDebut",
             "dateFin",
             "statut",
+            "pourvue",
             "anneeVisee",
-            "datecreation"
+            "annee",
+            "idUtilisateur",
+            "dateCreation",
+            "description"
         ];
     }
+
 
     protected
     function checkFilterNotEmpty(array $filter): bool
@@ -409,4 +413,5 @@ class OffresRepository extends AbstractRepository
         foreach ($filter as $key => $value) if ($value != "") return true;
         return false;
     }
+
 }

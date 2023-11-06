@@ -1,6 +1,7 @@
 <?php
 
 use app\src\controller\AuthController;
+use app\src\controller\ConventionsController;
 use app\src\controller\DashboardController;
 use app\src\controller\PstageController;
 use app\src\controller\OffreController;
@@ -75,6 +76,8 @@ $app->router->get('/offres/{id:\d+}/edit', [OffreController::class, 'editOffre']
 $app->router->get('/offres/{id:\d+}/validate', [OffreController::class, 'validateOffre']);
 $app->router->get('/offres/{id:\d+}/archive', [OffreController::class, 'archiveOffre']);
 
+$app->router->get('/offres/maps', [OffreController::class, 'mapsOffres']);
+
 // TestController
 
 $app->router->get('/user_test/{id}', [TestController::class, 'user_test']);
@@ -82,7 +85,9 @@ $app->router->get('/user_test/{id}', [TestController::class, 'user_test']);
 // DashboardController
 
 $app->router->get('/candidatures', [DashboardController::class, 'candidatures']);
-$app->router->get('/candidatures/{id:\d+}', [DashboardController::class, 'candidatures']);
+$app->router->get('/candidatures/{idOffre}/{idUtilisateur}', [DashboardController::class, 'candidatures']);
+$app->router->post('/candidatures/contacter/{id}', [DashboardController::class, 'envoyerMailEntreprise']);
+$app->router->post('/candidatures/contacter', [DashboardController::class, 'contacterEntrepriseEtudiant']);
 $app->router->post('/candidatures', [DashboardController::class, 'candidatures']);
 
 $app->router->get('/utilisateurs/{id}/archiver', [DashboardController::class, 'archiver']);
@@ -102,6 +107,16 @@ $app->router->post('/simulateur', [PstageController::class, 'simulateur']);
 
 $app->router->get('/simulateurOffre', [PstageController::class, 'simulateurOffre']);
 $app->router->post('/simulateurOffre', [PstageController::class, 'simulateurOffre']);
+
+
+// ConventionController
+
+$app->router->get('/conventions', [ConventionsController::class, 'afficherListeConventions']);
+$app->router->get('/conventions/{id:\d+}', [ConventionsController::class, 'detailConvention']);
+$app->router->get('/conventions/{id:\d+}/edit', [ConventionsController::class, 'editConvention']);
+
+
+$app->router->post('/conventions/{id:\d+}/edit', [ConventionsController::class, 'editConvention']);
 
 
 $app->run();

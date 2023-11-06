@@ -20,28 +20,28 @@ class Etudiant extends Utilisateur
     private ?int $codePostal;
     private ?string $pays;
     private ?bool $archiver;
-    private int $annee;
+    private ?int $annee;
 
 
     public function __construct(
         int     $idUtilisateur,
-        string $prenom,
-        string  $loginLDAP,
         string  $email,
         string  $nom,
         ?string $numTelephone,
-        ?string $numEtudiant,
-        ?string $adresse,
-        ?string $dateNaissance,
-        ?string $emailPerso,
-        ?string $codeSexe,
-        ?int     $idgroupe,
+        ?string $bio,
+        ?bool    $archiver,
         ?string  $nomVille,
         ?int     $codePostal,
         ?string $pays,
-        ?string $bio,
-        ?bool    $archiver,
-        int     $annee
+        ?string $adresse,
+        ?string $emailPerso,
+        ?string $numEtudiant,
+        ?string $codeSexe,
+        ?int     $idgroupe,
+        ?int     $annee,
+        ?string $dateNaissance,
+        ?string  $loginLDAP,
+        string $prenom,
     )
     {
         parent::__construct($idUtilisateur, $email, $nom, $numTelephone, $bio);
@@ -81,7 +81,7 @@ class Etudiant extends Utilisateur
         $this->prenom = $prenom;
     }
 
-    public function getLoginLDAP(): string
+    public function getLoginLDAP(): ?string
     {
         return $this->loginLDAP;
     }
@@ -191,7 +191,7 @@ class Etudiant extends Utilisateur
         $this->archiver = $archiver;
     }
 
-    public function getAnnee(): int
+    public function getAnnee(): ?int
     {
         return $this->annee;
     }

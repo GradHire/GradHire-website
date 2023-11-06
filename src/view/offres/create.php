@@ -10,37 +10,40 @@ use app\src\model\repository\EntrepriseRepository;
 Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
 <div class="w-full max-w-md flex flex-col pt-12 pb-24">
     <?php
-    $offred= (new OffresRepository)->draftExist( Application::getUser()->id() );
-    $offrechoisi=$offred[0];
-    if(Application::getUser()->role()===Roles::Enterprise){
-        ?>
-        <form method="get" id="offreForm" class="w-full flex flex-col">
-            <div class="w-full gap-4 flex flex-col">
-                <div class="flex mt-4">
-                    <label for="entreprise">Choisis ton brouillon</label>
-                    <select name="entreprise" id="entreprise" onchange="refreshPageWithNewOffer()"
-                            class=" bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm
+    $offred = (new OffresRepository)->draftExist(Application::getUser()->id());
+    //si offred est vide
+    if ($offred != null) {
+        $offrechoisi = $offred[0];
+        if (Application::getUser()->role() === Roles::Enterprise) {
+            ?>
+            <form method="get" id="offreForm" class="w-full flex flex-col">
+                <div class="w-full gap-4 flex flex-col">
+                    <div class="flex mt-4">
+                        <label for="entreprise">Choisis ton brouillon</label>
+                        <select name="entreprise" id="entreprise" onchange="refreshPageWithNewOffer()"
+                                class=" bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm
                            rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5
                            dark:bg-zinc-700 dark:border-zinc-600
                            dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light">
-                        <option disabled selected value="">Selectionne un brouillon</option>
-                        <?php
-                        $x = 0;
-                        foreach ($offred as $offre) {
-                            if($x===0) echo "<option value='" . $offre->getIdoffre() . "'>" . "Page création offre" ."</option>";
-                            else echo "<option value='" . $offre->getIdoffre() . "'>" . "Brouillon " . $x . " - " . $offre->getSujet() . "</option>";
-                            $x++;
-                        }
-                        ?>
-                    </select>
+                            <option disabled selected value="">Selectionne un brouillon</option>
+                            <?php
+                            $x = 0;
+                            foreach ($offred as $offre) {
+                                if ($x === 0) echo "<option value='" . $offre->getIdoffre() . "'>" . "Page création offre" . "</option>";
+                                else echo "<option value='" . $offre->getIdoffre() . "'>" . "Brouillon " . $x . " - " . $offre->getSujet() . "</option>";
+                                $x++;
+                            }
+                            ?>
+                        </select>
+                    </div>
                 </div>
-            </div>
-        </form>
-        <?php
-        if(isset($_GET["entreprise"])){
-            $offrechoisi = (new OffresRepository)->getById($_GET["entreprise"]);
-            if($offrechoisi===null){
-                $offrechoisi=$offred[0];
+            </form>
+            <?php
+            if (isset($_GET["entreprise"])) {
+                $offrechoisi = (new OffresRepository)->getById($_GET["entreprise"]);
+                if ($offrechoisi === null) {
+                    $offrechoisi = $offred[0];
+                }
             }
         }
     }
@@ -49,16 +52,15 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
         <div class="w-full gap-4 flex flex-col">
 
             <?php
-            if(Application::getUser()->role()===Roles::Manager){
+            if (Application::getUser()->role() === Roles::Manager) {
                 ?>
                 <div>
-                    <label for="entreprise">Entreprise</label>
-                    <select name="entreprise" id="entreprise" required
+                    <label for="identreprise">Entreprise</label>
+                    <select name="identreprise" id="entreprise" required
                             class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:text-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light">
                         <option disabled selected value="">Selectionne une entreprise</option>
                         <?php
-                        $entrepriseRepo = new EntrepriseRepository();
-                        $entreprises = $entrepriseRepo->getAll();
+                        $entreprises = (new EntrepriseRepository([]))->getAll();
                         foreach ($entreprises as $entreprise) {
                             echo "<option value='" . $entreprise->getIdutilisateur() . "'>" . $entreprise->getNomutilisateur() . "</option>";
                         }
@@ -71,24 +73,26 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
 
             <div class="flex mt-4">
                 <label class="flex items-center">
-                    <input type="radio" class="form-radio" name="radios" value="stage" required
-                           onchange="showDistanciel()" checked>
+                    <input type="checkbox" class="form-radio" name="typeStage" value="stage"  id="stageCheckbox"
+                           onchange="showFormType()" >
                     <span class="ml-2">Stage</span>
                 </label>
                 <label class="flex items-center ml-6">
-                    <input type="radio" class="form-radio" name="radios" value="alternance" id="alternanceRadio"
-                           required onchange="showDistanciel()">
+                    <input type="checkbox" class="form-radio" name="typeAlternance" value="alternance" id="alternanceCheckbox"
+                            onchange="showFormType()">
                     <span class="ml-2">Alternance</span>
                 </label>
             </div>
             <div>
-                <label for="titre">Titre du poste</label>
-                <input type="text" placeholder="Développeur web" name="titre" id="titre" required value="<?php echo $offrechoisi->getSujet(); ?>" maxlength="50"
+                <label for="sujet">Titre du poste</label>
+                <input type="text" placeholder="Développeur ninja SQL" name="sujet" id="titre" required
+                       value="<?php if ($offred != null) echo $offrechoisi->getSujet(); ?>" maxlength="50"
                        class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
             </div>
             <div>
                 <label for="theme">Thématique</label>
-                <select name="theme" id="theme" required value="<?php echo $offrechoisi->getThematique(); ?>"
+                <select name="theme" id="theme" required
+                        value="<?php if ($offred != null) echo $offrechoisi->getThematique(); ?>"
                         class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:text-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light">
                     <option disabled selected value="">Selectionne une thématique</option>
                     <option value="gestion">Gestion</option>
@@ -101,13 +105,15 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
             </div>
             <div class="flex flex-row gap-4">
                 <div class="w-full">
-                    <label for="nbjour">Nombre jours semaine</label>
-                    <input type="number" placeholder="5" min="1" max="7" name="nbjour" id="nbjour" value="<?php echo $offrechoisi->getNbjourtravailhebdo();?>" required
+                    <label for="nbjourtravailhebdo">Nombre de jours de Travail</label>
+                    <input type="number" placeholder="5" min="1" max="7" name="nbjourtravailhebdo" id="nbjour"
+                           value="<?php if ($offred != null) echo $offrechoisi->getNbjourtravailhebdo(); ?>" required
                            class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
                 </div>
                 <div class="w-full">
-                    <label for="nbheure">Nombre d'heure par jour</label>
-                    <input type="number" placeholder="7" min="1" max="12" name="nbheure" id="nbheure" value="<?php echo $offrechoisi->getNbHeureTravailHebdo();?>" required
+                    <label for="nbheureparjour">Nombre d'heure par jour</label>
+                    <input type="number" placeholder="7" min="1" max="12" name="nbheureparjour" id="nbheure"
+                           value="<?php if ($offred != null) echo $offrechoisi->getNbHeureTravailHebdo(); ?>" required
                            class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
                 </div>
                 <div class="w-full" id="distancielDiv" style="display: none;">
@@ -118,43 +124,59 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
             </div>
 
             <div>
-                <label for="salaire">Tarif Horraire</label>
-                <input type="number" name="salaire" id="salaire" min="4.05" step="0.01" value="<?php echo $offrechoisi->getGratification();?>" required
+                <label for="gratification">Tarif Horraire</label>
+                <input type="number" name="gratification" id="salaire" min="4.05" step="0.01"
+                       value="<?php if ($offred != null) echo $offrechoisi->getGratification(); ?>" required
                        class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
             </div>
 
             <div>
                 <label for="avantage">Avantage</label>
-                <input type="text" placeholder="Avantage" name="avantage" id="avantage" required value="<?php echo $offrechoisi->getAvantageNature(); ?>"
+                <input type="text" placeholder="Avantage" name="avantage" id="avantage" required
+                       value="<?php if ($offred != null) echo $offrechoisi->getAvantageNature(); ?>"
                        class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
             </div>
             <div class="flex flex-row gap-4">
                 <div class="w-full">
-                    <label for="dated">Date de début</label>
-                    <input type="date" placeholder="2021-01-01" name="dated" id="dated" required value="<?php echo $offrechoisi->getDateDebut(); ?>"
+                    <label for="datedebut">Date de début</label>
+                    <input type="date" placeholder="2021-01-01" name="datedebut" id="dated" required
+                           value="<?php if ($offred != null) echo $offrechoisi->getDateDebut(); ?>"
                            class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
                 </div>
                 <div class="w-full">
-                    <label for="datef">Date de fin</label>
-                    <input type="date" placeholder="2021-01-01" name="datef" id="datef" min=required value="<?php echo $offrechoisi->getDateFin(); ?>"
+                    <label for="datefin">Date de fin</label>
+                    <input type="date" placeholder="2021-01-01" name="datefin" id="datef" min=required
+                           value="<?php if ($offred != null) echo $offrechoisi->getDateFin(); ?>"
                            class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
                 </div>
-                <input type='hidden' name='id_offre' value='<?php echo $offrechoisi->getIdoffre() ?>'>
-                <div class="w-full">
-                    <label for="theme">Durée</label>
-                    <select name="duree"
-                            id="duree"
+                <input type='hidden' name='id_offre'
+                       value='<?php if ($offred != null) echo $offrechoisi->getIdoffre() ?>'>
+            </div>
+            <div class="flex flex-row gap-4">
+                <div class="w-full" id="dureeSelectDiv" style="display: none;">
+                    <label for="dureeAlternance">Durée Alternance</label>
+                    <select name="dureeAlternance"
+                            id="dureeAlternance"
                             required
                             class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:text-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light">
                         <option disabled value="">Selectionne une durée</option>
-                        <option value="1" <?= $offrechoisi->getDuree() == 1 ? 'selected' : ''; ?>>1 an</option>
-                        <option value="1.5" <?= $offrechoisi->getDuree() == 1.5 ? 'selected' : ''; ?>>1 an et 6 mois</option>
-                        <option value="2" <?= $offrechoisi->getDuree() == 2 ? 'selected' : ''; ?>>2 ans</option>
+                        <option hidden value=""></option>
+                        <option value="1" <?php if ($offred != null) echo $offrechoisi->getDuree() == 1 ? 'selected' : ''; ?>>
+                            1 an
+                        </option>
+                        <option value="1.5" <?php if ($offred != null) echo $offrechoisi->getDuree() == 1.5 ? 'selected' : ''; ?>>
+                            1 an et 6 mois
+                        </option>
+                        <option value="2" <?php if ($offred != null) echo $offrechoisi->getDuree() == 2 ? 'selected' : ''; ?>>
+                            2 ans
+                        </option>
                     </select>
                 </div>
-
+                <div class="w-full" id="dureeNumberDiv" style="display: none;">
+                    <label for="dureeStage">Durée Stage</label>
+                    <input type="number" id="dureeStage" name="dureeStage" class="shadow-sm bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light "/>
+                </div>
             </div>
-
             <label for="description">Description</label>
             <textarea name="description"
                       id="description"
@@ -162,32 +184,61 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
                       rows="10"
                       required
                       class="shadow-sm max-h-[100px] bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light ">
-<?= $offrechoisi->getDescription() ?>
+<?php if ($offred != null) echo $offrechoisi->getDescription() ?>
 </textarea>
             <div class="flex flex-row gap-4 w-full">
                 <input type="submit" name="action" value="Envoyer"
                        class="w-full text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800"/>
 
-                <?php if(Application::getUser()->role()===Roles::Enterprise){ ?>
+                <?php if (Application::getUser()->role() === Roles::Enterprise) { ?>
                     <input type='hidden' name='sauvegarder_action' value='sauvegarder'>
                     <input onclick="saveForm()" type="submit" name="action" value="sauvegarder"
                            class=" max-w-[150px] text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800"/>
                 <?php } ?>
             </div>
-            <?php if(Application::getUser()->role()===Roles::Enterprise && $offrechoisi->getIdoffre()!=""){ ?>
-            <input type='hidden' name='supprimer_action' value='supprimer'>
-            <input onclick="saveForm()" type="submit" name="action" value="Supprimer Brouillon"
-                   class="w-full text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800"/>
-            <?php } ?>
+            <?php if ($offred != null) {
+                if (Application::getUser()->role() === Roles::Enterprise && $offrechoisi->getIdoffre() != "") { ?>
+                    <input type='hidden' name='supprimer_action' value='supprimer'>
+                    <input onclick="saveForm()" type="submit" name="action" value="Supprimer Brouillon"
+                           class="w-full text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800"/>
+                <?php }
+            } ?>
         </div>
     </form>
 </div>
 <script>
 
-    function showDistanciel() {
-        var radios = document.getElementById("alternanceRadio");
+    function showFormType() {
+        var checkboxAlternance = document.getElementById("alternanceCheckbox");
+        var checkboxStage = document.getElementById("stageCheckbox");
         var distancielDiv = document.getElementById('distancielDiv');
-        distancielDiv.style.display = radios.checked ? 'block' : 'none'
+        const dureeSelectDiv = document.getElementById('dureeSelectDiv');
+        const dureeNumberDiv = document.getElementById('dureeNumberDiv');
+        const dureeNumber = document.getElementById('dureeStage');
+        const dureeSelect = document.getElementById('dureeAlternance');
+
+        distancielDiv.style.display = checkboxAlternance.checked ? 'block' : 'none';
+        dureeSelectDiv.style.display = checkboxAlternance.checked ? 'block' : 'none';
+        dureeNumberDiv.style.display = checkboxStage.checked ? 'block' : 'none';
+
+
+        if (checkboxAlternance.checked && checkboxStage.checked){
+            distancielDiv.enable();
+            dureeSelect.enable();
+            dureeNumber.enable();
+        } else if (checkboxAlternance.checked && !checkboxStage.checked){
+            distancielDiv.enable();
+            dureeSelect.enable();
+            dureeNumber.disable();
+        } else if (checkboxStage.checked && !checkboxAlternance.checked){
+            distancielDiv.disable();
+            dureeSelect.disable();
+            dureeNumber.enable();
+        } else {
+            distancielDiv.disable();
+            dureeSelect.disable();
+            dureeNumber.disable();
+        }
     }
 
     window.addEventListener('DOMContentLoaded', (event) => { // This is added to ensure the script runs after the DOM is ready.
@@ -197,7 +248,7 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
         var nbjour = document.getElementById('nbjour');
         var distanciel = document.getElementById('distanciel');
 
-        datedElem.addEventListener('change', function() {
+        datedElem.addEventListener('change', function () {
             if (datefElem.value && (this.value > datefElem.value)) {
                 datefElem.setCustomValidity("Date de début ne peut pas être postérieure à la date de fin!");
             } else {
@@ -205,7 +256,7 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
             }
         });
 
-        datefElem.addEventListener('change', function() {
+        datefElem.addEventListener('change', function () {
             if (datedElem.value && (this.value < datedElem.value)) {
                 this.setCustomValidity("Date de fin ne peut pas être antérieure à la date de début!");
             } else {
@@ -213,14 +264,14 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
             }
         });
 
-        nbjour.addEventListener('change', function() {
+        nbjour.addEventListener('change', function () {
             if (distanciel.value && (this.value < distanciel.value)) {
                 this.setCustomValidity("Insérer une valeur valide");
             } else {
                 this.setCustomValidity("");
             }
         });
-        distanciel.addEventListener('change', function() {
+        distanciel.addEventListener('change', function () {
             if (nbjour.value && (this.value > nbjour.value)) {
                 this.setCustomValidity("Insérer une valeur valide");
             } else {
@@ -229,11 +280,12 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
         });
 
     });
+
     function saveForm() {
         var elements = document.querySelectorAll('[required]');
         for (var i = 0; i < elements.length; i++) {
             elements[i].removeAttribute('required');
-            if(elements[i].id==="nbheure" || elements[i].id==="dated" || elements[i].id==="salaire" || elements[i].id==="datef") elements[i].setAttribute('required', 'required');
+            if (elements[i].id === "nbheure" || elements[i].id === "dated" || elements[i].id === "salaire" || elements[i].id === "datef") elements[i].setAttribute('required', 'required');
         }
     }
 
@@ -245,12 +297,13 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
 
         document.getElementById('offreForm').submit();
     }
-    window.onload = function() {
+
+    window.onload = function () {
         var selectElement = document.getElementById('entreprise');
 
         var storedValue = localStorage.getItem('selectedValue');
 
-        if(storedValue) {
+        if (storedValue) {
             selectElement.value = storedValue;
         }
     }

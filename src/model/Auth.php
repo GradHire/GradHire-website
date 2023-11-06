@@ -45,7 +45,7 @@ class Auth
     /**
      * @throws ServerErrorException
      */
-    public static function load_user_by_id(string $id): UtilisateurRepository|null
+    public static function load_user_by_id(string $id): ?UtilisateurRepository
     {
         try {
             $statement = Database::get_conn()->prepare("SELECT getRole(?) FROM DUAL");
