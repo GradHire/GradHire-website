@@ -127,7 +127,10 @@ class EntrepriseRepository extends ProRepository
             $dataObjectFormatTableau['email'] ?? "",
             $dataObjectFormatTableau['nom'] ?? "",
             $dataObjectFormatTableau['numtelephone'] ?? "",
-            $dataObjectFormatTableau['adresse'] ?? ""
+            $dataObjectFormatTableau['adresse'] ?? "",
+            $dataObjectFormatTableau['codepostal'] ?? "",
+            $dataObjectFormatTableau['ville'] ?? "",
+            $dataObjectFormatTableau['pays'] ?? ""
         );
     }
 
@@ -289,7 +292,10 @@ class EntrepriseRepository extends ProRepository
             "email",
             "nom",
             "numTelephone",
-            "adresse"
+            "adresse",
+            "codePostal",
+            "ville",
+            "pays"
         ];
     }
 }

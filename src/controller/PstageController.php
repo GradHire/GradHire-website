@@ -3,10 +3,12 @@
 namespace app\src\controller;
 
 use app\src\model\Application;
+use app\src\model\dataObject\ServiceAccueil;
 use app\src\model\Form\FormModel;
 use app\src\model\ImportPstage;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
+use app\src\model\repository\ServiceAccueilRepository;
 use app\src\model\Request;
 
 
@@ -125,6 +127,7 @@ class PstageController extends AbstractController
     public function previewOffre(Request $request): string
     {
         $id = $_GET['idEntreprise'];
+        $_SESSION["idEntreprise"] = $id;
         return $this->render('simulateurP/previewOffre', ['id' => $id]);
     }
 
@@ -160,4 +163,31 @@ class PstageController extends AbstractController
         }
         return $this->render('simulateurP/creerEntreprise', ['form' => $form]);
     }
+
+    public function simulateurServiceAccueil(Request $request)
+    {
+        $serviceaccueil = (new ServiceAccueilRepository())->getFullByEntreprise($_SESSION["idEntreprise"]);
+        $serviceaccueil["Non renseigné"] = "Non renseigné";
+        $form = new FormModel([
+            "accueil" => FormModel::select("Accueil", $serviceaccueil)->required()->default("Non renseigné"),
+        ]);
+        return $this->render('simulateurP/simulateurServiceAccueil', ['form' => $form]);
+    }
+
+    public function creerService(Request $request)
+    {
+        $form = new FormModel([
+            "nomService" => FormModel::string("Nom du service")->required(),
+            "memeAdresse" => FormModel::radio("Adresse identique à l'entreprise", ["Oui" => "Oui", "Non" => "Non"])->required()->default("Oui")->id("memeAdresse"),
+            "voie" => FormModel::string("Adresse Voie")->id("voie"),
+            "residence" => FormModel::string("Bâtiment / Résidence / Z.I.")->default(""),
+            "tel" => FormModel::phone("Téléphone"),
+            "cp" => FormModel::string("Code postal")->length(5)->id("cp"),
+            "ville" => FormModel::string("Ville")->id("ville"),
+            "pays" => FormModel::select("Pays", ["France" => "France", "Allemagne" => "Allemagne", "Angleterre" => "Angleterre", "Espagne" => "Espagne", "Italie" => "Italie", "Portugal" => "Portugal", "Suisse" => "Suisse", "Autre" => "Autre"])->id("pays")
+        ]);
+        return $this->render('simulateurP/creerService', ['form' => $form]);
+    }
+
+
 }

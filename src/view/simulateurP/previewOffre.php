@@ -45,7 +45,7 @@ use app\src\model\repository\EntrepriseRepository;
 
     <script>
         document.getElementById('confirmButton').addEventListener('click', function () {
-            window.location.href = '';
+            window.location.href = 'simulateurServiceAccueil';
         });
     </script>
     <script>

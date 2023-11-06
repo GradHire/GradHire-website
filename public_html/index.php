@@ -113,6 +113,12 @@ $app->router->get('/previewOffre', [PstageController::class, 'previewOffre']);
 $app->router->get('/creerEntreprise', [PstageController::class, 'creerEntreprise']);
 $app->router->post('/creerEntreprise', [PstageController::class, 'creerEntreprise']);
 
+$app->router->get('/simulateurServiceAccueil', [PstageController::class, 'simulateurServiceAccueil']);
+$app->router->post('/simulateurServiceAccueil', [PstageController::class, 'simulateurServiceAccueil']);
+
+$app->router->get('/creerService', [PstageController::class, 'creerService']);
+$app->router->post('/creerService', [PstageController::class, 'creerService']);
+
 
 // ConventionController
 

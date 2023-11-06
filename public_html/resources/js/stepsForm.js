@@ -28,6 +28,22 @@ function validateStep(stepId) {
     return invalidFields.length === 0;
 }
 
+const memeAdresseOui = document.getElementById("Oui-memeAdresse");
+const memeAdresseNon = document.getElementById("Non-memeAdresse");
+memeAdresseOui.addEventListener('change', function () {
+    const selectedValue = this.value;
+    if (selectedValue === "Oui") {
+        document.getElementById("adr").classList.add("hidden");
+    }
+});
+memeAdresseNon.addEventListener('change', function () {
+    const selectedValue = this.value;
+    if (selectedValue === "Non") {
+        document.getElementById("adr").classList.remove("hidden");
+        document.getElementById()
+    }
+});
+
 document.querySelector('[name="typeRecherche"]').addEventListener('change', function () {
     const selectedValue = this.value;
 
