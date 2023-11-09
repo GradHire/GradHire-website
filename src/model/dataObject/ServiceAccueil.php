@@ -2,6 +2,8 @@
 
 namespace app\src\model\dataObject;
 
+use app\src\model\repository\ServiceAccueilRepository;
+
 class ServiceAccueil extends AbstractDataObject
 {
     private int $idService;
@@ -32,6 +34,24 @@ class ServiceAccueil extends AbstractDataObject
         $this->adresseResidence = $adresseresidence;
         $this->idVille = $idville;
         $this->idEntreprise = $identreprise;
+    }
+
+    public function getCommune(): ?string
+    {
+        $servaccueil = new ServiceAccueilRepository();
+        return $servaccueil->getCommune($this->idEntreprise, $this->nomService);
+    }
+
+    public function getCodePostal(): ?string
+    {
+        $servaccueil = new ServiceAccueilRepository();
+        return $servaccueil->getCodePostal($this->idEntreprise, $this->nomService);
+    }
+
+    public function getPays(): ?string
+    {
+        $servaccueil = new ServiceAccueilRepository();
+        return $servaccueil->getPays($this->idEntreprise, $this->nomService);
     }
 
     protected function getValueColonne(string $nomColonne): string

@@ -18,8 +18,12 @@ use app\src\model\Form\FormModel;
             echo "<p>" . $key . " : " . $value . "</p>";
         }
         ?>
-        <button type="button" id="modifyButton">Modifier</button>
-        <button type="button" id="confirmButton">Confirmez</button>
+        <button type="button" id="modifyButton" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
+            Modifier
+        </button>
+        <button type="button" id="confirmButton" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700">
+            Confirmez
+        </button>
 
     </div>
     <script>

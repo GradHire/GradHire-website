@@ -27,17 +27,107 @@ class ServiceAccueilRepository extends AbstractRepository
         return $serviceAccueil;
     }
 
+    public function create(mixed $nomService, mixed $idEntreprise, mixed $voie, mixed $residence, mixed $cp, mixed $ville, mixed $pays)
+    {
+        $sql = "CALL creerServiceAccueil(:nomService,:residence, :voie,:cedex, :cp, :ville, :pays,:idEntreprise)";
+        $stmt = Database::get_conn()->prepare($sql);
+        $stmt->bindValue(":nomService", $nomService);
+        $stmt->bindValue(":idEntreprise", $idEntreprise);
+        $stmt->bindValue(":voie", $voie);
+        $stmt->bindValue(":residence", $residence);
+        $stmt->bindValue(":cp", $cp);
+        $stmt->bindValue(":ville", $ville);
+        $stmt->bindValue(":pays", $pays);
+        $stmt->bindValue(":cedex", "");
+        $stmt->execute();
+    }
+
+    public function getFullByEntrepriseNom(int $identreprise, string $nomService): ?ServiceAccueil
+    {
+        $sql = "SELECT * FROM ServiceAccueil WHERE idEntreprise = :idEntreprise AND nomService = :nomService";
+        $stmt = Database::get_conn()->prepare($sql);
+        $stmt->bindValue(":idEntreprise", $identreprise);
+        $stmt->bindValue(":nomService", $nomService);
+        $stmt->execute();
+        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+        $result = $stmt->fetch();
+        if (!$result) {
+            return null;
+        }
+        return $this->construireDepuisTableau($result);
+    }
+
     protected function construireDepuisTableau(array $dataObjectFormatTableau): ServiceAccueil
     {
         return new ServiceAccueil(
-            $dataObjectFormatTableau['idService'],
-            $dataObjectFormatTableau['nomService'],
+            $dataObjectFormatTableau['idservice'],
+            $dataObjectFormatTableau['nomservice'],
             $dataObjectFormatTableau['adresse'],
-            $dataObjectFormatTableau['adresseCedex'],
-            $dataObjectFormatTableau['adresseResidence'],
-            $dataObjectFormatTableau['idVille'],
-            $dataObjectFormatTableau['idEntreprise']
+            $dataObjectFormatTableau['adressecedex'],
+            $dataObjectFormatTableau['adresseresidence'],
+            $dataObjectFormatTableau['idville'],
+            $dataObjectFormatTableau['identreprise']
         );
+    }
+
+    public function getCodePostal(int $idEntreprise, string $nomService): ?string
+    {
+        $idVille = $this->idVille($idEntreprise, $nomService);
+        $sql = "SELECT codePostal FROM Ville WHERE idVille = :idVille";
+        $stmt = Database::get_conn()->prepare($sql);
+        $stmt->bindValue(":idVille", $idVille);
+        $stmt->execute();
+        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+        $result = $stmt->fetch();
+        if (!$result) {
+            return null;
+        }
+        return $result['codepostal'];
+    }
+
+    public function idVille(int $idEntreprise, string $nomService): ?string
+    {
+        $sql = "SELECT idVille FROM ServiceAccueil WHERE idEntreprise = :idEntreprise AND nomService = :nomService";
+        $stmt = Database::get_conn()->prepare($sql);
+        $stmt->bindValue(":idEntreprise", $idEntreprise);
+        $stmt->bindValue(":nomService", $nomService);
+        $stmt->execute();
+        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+        $result = $stmt->fetch();
+        if (!$result) {
+            return null;
+        }
+        return $result['idville'];
+    }
+
+    public function getCommune(int $idEntreprise, string $nomService): ?string
+    {
+        $idVille = $this->idVille($idEntreprise, $nomService);
+        $sql = "SELECT nomVille FROM Ville WHERE idVille = :idVille";
+        $stmt = Database::get_conn()->prepare($sql);
+        $stmt->bindValue(":idVille", $idVille);
+        $stmt->execute();
+        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+        $result = $stmt->fetch();
+        if (!$result) {
+            return null;
+        }
+        return $result['nomville'];
+    }
+
+    public function getPays(int $idEntreprise, string $nomService): ?string
+    {
+        $idVille = $this->idVille($idEntreprise, $nomService);
+        $sql = "SELECT pays FROM Ville WHERE idVille = :idVille";
+        $stmt = Database::get_conn()->prepare($sql);
+        $stmt->bindValue(":idVille", $idVille);
+        $stmt->execute();
+        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+        $result = $stmt->fetch();
+        if (!$result) {
+            return null;
+        }
+        return $result['pays'];
     }
 
     protected function getNomTable(): string

@@ -119,6 +119,9 @@ $app->router->post('/simulateurServiceAccueil', [PstageController::class, 'simul
 $app->router->get('/creerService', [PstageController::class, 'creerService']);
 $app->router->post('/creerService', [PstageController::class, 'creerService']);
 
+$app->router->get('/previewServiceAccueil', [PstageController::class, 'previewServiceAccueil']);
+
+$app->router->get('/simulateurTuteur', [PstageController::class, 'simulateurTuteur']);
 
 // ConventionController
 

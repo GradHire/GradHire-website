@@ -169,25 +169,61 @@ class PstageController extends AbstractController
         $serviceaccueil = (new ServiceAccueilRepository())->getFullByEntreprise($_SESSION["idEntreprise"]);
         $serviceaccueil["Non renseigné"] = "Non renseigné";
         $form = new FormModel([
-            "accueil" => FormModel::select("Accueil", $serviceaccueil)->required()->default("Non renseigné"),
+            "accueil" => FormModel::select("Accueil", $serviceaccueil)->required()->default("Non renseigné")->id("accueil"),
         ]);
+        if ($request->getMethod() === 'post') {
+            if ($form->validate($request->getBody())) {
+                $formData = $form->getParsedBody();
+                $_SESSION['accueil'] = $formData['accueil'];
+                Application::$app->response->redirect("/previewServiceAccueil");
+                return $this->render('simulateurP/previewServiceAccueil');
+            }
+        }
         return $this->render('simulateurP/simulateurServiceAccueil', ['form' => $form]);
     }
 
     public function creerService(Request $request)
     {
+        $entreprise = new EntrepriseRepository([]);
+        $entreprise = $entreprise->getByIdFull($_SESSION["idEntreprise"]);
+        $cp = $entreprise->getCodePostal();
+        $ville = $entreprise->getVille();
+        $adresse = $entreprise->getAdresse();
+        $pays = $entreprise->getPays();
         $form = new FormModel([
             "nomService" => FormModel::string("Nom du service")->required(),
             "memeAdresse" => FormModel::radio("Adresse identique à l'entreprise", ["Oui" => "Oui", "Non" => "Non"])->required()->default("Oui")->id("memeAdresse"),
-            "voie" => FormModel::string("Adresse Voie")->id("voie"),
+            "voie" => FormModel::string("Adresse Voie")->id("voie")->default($adresse),
             "residence" => FormModel::string("Bâtiment / Résidence / Z.I.")->default(""),
-            "tel" => FormModel::phone("Téléphone"),
-            "cp" => FormModel::string("Code postal")->length(5)->id("cp"),
-            "ville" => FormModel::string("Ville")->id("ville"),
-            "pays" => FormModel::select("Pays", ["France" => "France", "Allemagne" => "Allemagne", "Angleterre" => "Angleterre", "Espagne" => "Espagne", "Italie" => "Italie", "Portugal" => "Portugal", "Suisse" => "Suisse", "Autre" => "Autre"])->id("pays")
+            "cp" => FormModel::string("Code postal")->length(5)->id("cp")->default($cp),
+            "ville" => FormModel::string("Ville")->id("ville")->default($ville),
+            "pays" => FormModel::select("Pays", ["France" => "France", "Allemagne" => "Allemagne", "Angleterre" => "Angleterre", "Espagne" => "Espagne", "Italie" => "Italie", "Portugal" => "Portugal", "Suisse" => "Suisse", "Autre" => "Autre"])->id("pays")->default($pays)
         ]);
+        if ($request->getMethod() === 'post') {
+            if ($form->validate($request->getBody())) {
+                $formData = $form->getParsedBody();
+                $service = new ServiceAccueilRepository();
+                $service->create($formData['nomService'], $_SESSION["idEntreprise"], $formData['voie'], $formData['residence'], $formData['cp'], $formData['ville'], $formData['pays']);
+                $serviceaccueil = (new ServiceAccueilRepository())->getFullByEntreprise($_SESSION["idEntreprise"]);
+                $serviceaccueil["Non renseigné"] = "Non renseigné";
+                $form = new FormModel([
+                    "accueil" => FormModel::select("Accueil", $serviceaccueil)->required()->default("Non renseigné"),
+                ]);
+                Application::$app->response->redirect("/simulateurServiceAccueil");
+                return $this->render('simulateurP/simulateurServiceAccueil', ['form' => $form]);
+            }
+        }
         return $this->render('simulateurP/creerService', ['form' => $form]);
     }
 
+    public function previewServiceAccueil(Request $request)
+    {
+        return $this->render('simulateurP/previewServiceAccueil');
+    }
+
+    public function simulateurTuteur(Request $request)
+    {
+        return $this->render('simulateurP/simulateurTuteur');
+    }
 
 }

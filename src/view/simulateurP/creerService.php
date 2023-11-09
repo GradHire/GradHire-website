@@ -16,7 +16,7 @@ use app\src\model\Form\FormModel;
         ?>
         <div class="w-full gap-4 flex flex-col hidden" id="adr">
             <?php
-            $form->print_fields(["voie", "residence", "tel", "cp", "ville", "pays"]);
+            $form->print_fields(["voie", "residence", "cp", "ville", "pays"]);
             ?>
         </div>
 

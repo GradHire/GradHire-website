@@ -129,7 +129,7 @@ class EntrepriseRepository extends ProRepository
             $dataObjectFormatTableau['numtelephone'] ?? "",
             $dataObjectFormatTableau['adresse'] ?? "",
             $dataObjectFormatTableau['codepostal'] ?? "",
-            $dataObjectFormatTableau['ville'] ?? "",
+            $dataObjectFormatTableau['nomville'] ?? "",
             $dataObjectFormatTableau['pays'] ?? ""
         );
     }
@@ -272,7 +272,7 @@ class EntrepriseRepository extends ProRepository
     {
         $sql = "SELECT creerEntImp(:nomEnt, :email, :tel, :string, :type, :effectif, :codeNaf, :fax, :web, :voie, :cedex, :residence, :codePostal, :pays, :ville, :siret) FROM DUAL";
         $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['nomEnt' => $nomEnt, 'email' => $email, 'tel' => $tel, 'string' => $string, 'type' => $type, 'effectif' => $effectif, 'codeNaf' => $codeNaf, 'fax' => $fax, 'web' => $web, 'voie' => $voie, 'cedex' => $cedex, 'residence' => $residence, 'codePostal' => $codePostal, 'pays' => $pays, 'ville' => $ville, 'siret' => $siret]);
+        $requete->execute(['nomEnt' => $nomEnt, 'email' => $email, 'tel' => $tel, 'string' => $string, 'type' => $type, 'effectif' => $effectif, 'codeNaf' => $codeNaf, 'fax' => $fax, 'web' => $web, 'voie' => $voie, 'cedex' => $cedex, 'residence' => $residence, 'codePostal' => $codePostal, 'pays' => $pays, 'nomville' => $ville, 'siret' => $siret]);
     }
 
 
@@ -294,7 +294,7 @@ class EntrepriseRepository extends ProRepository
             "numTelephone",
             "adresse",
             "codePostal",
-            "ville",
+            "nomville",
             "pays"
         ];
     }
