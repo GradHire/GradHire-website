@@ -76,6 +76,23 @@ class StaffRepository extends LdapRepository
         }
     }
 
+    public function getByNomPreFull(mixed $nom, mixed $prenom)
+    {
+        $sql = "SELECT * FROM " . self::$view . " WHERE nom = :nom AND prenom=:prenom";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['nom' => $nom]);
+        $requete->execute(['prenom' => $prenom]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetch();
+        if (!$resultat) {
+            return null;
+        }
+        foreach ($resultat as $key => $prof) {
+            $resultat[$key] = $this->construireDepuisTableau($prof);
+        }
+        return $resultat;
+    }
+
     protected
     function getNomColonnes(): array
     {

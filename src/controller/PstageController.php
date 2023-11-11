@@ -9,6 +9,8 @@ use app\src\model\ImportPstage;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\ServiceAccueilRepository;
+use app\src\model\repository\StaffRepository;
+use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\Request;
 
 
@@ -56,18 +58,18 @@ class PstageController extends AbstractController
         $formData = $_SESSION['simulateurEtu'] ?? [];
 
         $form = new FormModel([
-            "numEtudiant" => FormModel::string("Numéro étudiant")->required()->min(8)->max(8)->default($formData['numEtudiant'] ?? $etudiant->getNumEtudiant()),
-            "nom" => FormModel::string("Nom")->required()->default($formData['nom'] ?? $etudiant->getNomutilisateur()),
-            "prenom" => FormModel::string("Prénom")->required()->default($formData['prenom'] ?? $etudiant->getPrenom()),
-            "adresse" => FormModel::string("Adresse")->required()->default($formData['adresse'] ?? $etudiant->getAdresse()),
-            "codePostal" => FormModel::string("Code postal")->required()->length(5)->default($formData['codePostal'] ?? $etudiant->getCodePostal()),
-            "ville" => FormModel::string("Ville")->required()->default($formData['ville'] ?? $etudiant->getNomVille()),
-            "telephone" => FormModel::phone("Téléphone")->default($formData['telephone'] ?? $etudiant->getNumtelutilisateur()),
-            "emailPerso" => FormModel::email("Email perso")->required()->default($formData['emailPerso'] ?? $etudiant->getEmailPerso()),
-            "emailUniv" => FormModel::email("Email universitaire")->required()->default($formData['emailUniv'] ?? $etudiant->getEmailutilisateur()),
-            "CPAM" => FormModel::string("CPAM et Adresse postal")->required()->default($formData['CPAM'] ?? ""),
-            "anneeUni" => FormModel::select("Année universitaire", ["2023-2024" => "2023-2024", "2024-2025" => "2024-2025", "2025-2026" => "2025-2026"])->required()->default($formData['anneeUni'] ?? null),
-            "nbHeure" => FormModel::int("Nombre d'heure")->required()->default($formData['nbHeure'] ?? 1)->min(1)
+            "numEtudiant" => FormModel::string("Numéro étudiant *")->required()->min(8)->max(8)->default($formData['numEtudiant'] ?? $etudiant->getNumEtudiant()),
+            "nom" => FormModel::string("Nom *")->required()->default($formData['nom'] ?? $etudiant->getNomutilisateur()),
+            "prenom" => FormModel::string("Prénom *")->required()->default($formData['prenom'] ?? $etudiant->getPrenom()),
+            "adresse" => FormModel::string("Adresse *")->required()->default($formData['adresse'] ?? $etudiant->getAdresse()),
+            "codePostal" => FormModel::string("Code postal *")->required()->length(5)->default($formData['codePostal'] ?? $etudiant->getCodePostal()),
+            "ville" => FormModel::string("Ville *")->required()->default($formData['ville'] ?? $etudiant->getNomVille()),
+            "telephone" => FormModel::phone("Téléphone *")->default($formData['telephone'] ?? $etudiant->getNumtelutilisateur()),
+            "emailPerso" => FormModel::email("Email perso *")->required()->default($formData['emailPerso'] ?? $etudiant->getEmailPerso()),
+            "emailUniv" => FormModel::email("Email universitaire *")->required()->default($formData['emailUniv'] ?? $etudiant->getEmailutilisateur()),
+            "CPAM" => FormModel::string("CPAM et Adresse postal *")->required()->default($formData['CPAM'] ?? ""),
+            "anneeUni" => FormModel::select("Année universitaire *", ["2023-2024" => "2023-2024", "2024-2025" => "2024-2025", "2025-2026" => "2025-2026"])->required()->default($formData['anneeUni'] ?? null),
+            "nbHeure" => FormModel::int("Nombre d'heure *")->required()->default($formData['nbHeure'] ?? 1)->min(1)
         ]);
 
         if ($request->getMethod() === 'post') {
@@ -223,7 +225,96 @@ class PstageController extends AbstractController
 
     public function simulateurTuteur(Request $request)
     {
-        return $this->render('simulateurP/simulateurTuteur');
+        $tut = new TuteurEntrepriseRepository([]);
+        $tut = $tut->getFullByEntreprise($_SESSION["idEntreprise"]);
+        return $this->render('simulateurP/simulateurTuteur', ['listTuteur' => $tut]);
     }
 
+    public function creerTuteur(Request $request)
+    {
+        $form = new FormModel([
+            "nom" => FormModel::string("Nom")->required(),
+            "prenom" => FormModel::string("Prénom")->required(),
+            "fonction" => FormModel::string("Fonction")->required(),
+            "tel" => FormModel::phone("Téléphone"),
+            "email" => FormModel::email("Email")->required(),
+        ]);
+        if ($request->getMethod() == 'post') {
+            if ($form->validate($request->getBody())) {
+                $formData = $form->getParsedBody();
+                $tut = new TuteurEntrepriseRepository([]);
+                $tut->create($formData['nom'], $formData['prenom'], $formData['fonction'], $formData['tel'], $formData['email'], $_SESSION["idEntreprise"]);
+                $tut = new TuteurEntrepriseRepository([]);
+                $tut = $tut->getFullByEntreprise($_SESSION["idEntreprise"]);
+                Application::$app->response->redirect("/simulateurTuteur");
+                return $this->render('simulateurP/simulateurTuteur', ['listTuteur' => $tut]);
+            }
+        }
+        return $this->render('simulateurP/creerTuteur', ['form' => $form]);
+    }
+
+    public function simulateurCandidature(Request $request)
+    {
+        if (isset($_GET['idTuteur'])) {
+            $_SESSION['idTuteur'] = $_GET['idTuteur'];
+        }
+        $form = new FormModel([
+            "typeStage" => FormModel::select("Type de stage", ["StageO" => "Stage Obligatoire", "StageC" => "Stage Conseillé"])->required()->default("StageO"),
+            "Thématique" => FormModel::select("Thématique", ["Gestion" => "Gestion", "Reseaux" => "Reseaux", "Securite" => "Securite", "BD" => "Base de Donnée", "DevWeb" => "Dévelopement web", "DevApp", "Dévelopement d'application"])->required()->default(""),
+            "Sujet" => FormModel::string("Sujet")->required(),
+            "fonction" => FormModel::string("Fonctions et taches")->required(),
+            "competence" => FormModel::string("Compétences à acquérir")->required(),
+            "dateDebut" => FormModel::date("Date de début")->required(),
+            "dateFin" => FormModel::date("Date de fin")->required(),
+            "interruption" => FormModel::radio("Interruption", ["Oui" => "Oui", "Non" => "Non"])->required()->default("Non")->id("interruption"),
+            "dateDebutInterruption" => FormModel::date("Date de début de l'interruption"),
+            "dateFinInterruption" => FormModel::date("Date de fin de l'interruption"),
+            "duree" => FormModel::int("Durée effective du stage en heure")->required()->default(1)->min(1),
+            "nbJour" => FormModel::int("Nombre de jours par semaine")->required()->default(5)->min(1)->max(5),
+            "nbHeure" => FormModel::double("Nombre d'heure par semaine (en heure)")->required()->default(35)->min(1),
+            "nbjourConge" => FormModel::int("Nombre de jour de congé")->required()->default(0)->min(0),
+            "commentairetravail" => FormModel::string("Commentaire sur le travail")->required(),
+            "gratification" => FormModel::radio("Gratification", ["Oui" => "Oui", "Non" => "Non"])->required()->default("Non")->id("gratification"),
+            "montant" => FormModel::double("Montant")->default(0)->min(0),
+            "heureoumois" => FormModel::radio("", ["Heure" => "Heure", "Mois" => "Mois"])->default("Heure"),
+            "modalite" => FormModel::string("Modalité de versement"),
+            "commenttrouve" => FormModel::string("Comment avez-vous trouvé ce stage ?")->required(),
+            "confconvention" => FormModel::radio("Confidentialité du sujet du stage", ["Oui" => "Oui", "Non" => "Non"])->required()->default("Non"),
+            "modalsuivi" => FormModel::string("Modalité de suivi du stage"),
+            "avantage" => FormModel::string("Avantages nature")
+        ]);
+        if ($request->getMethod() == 'post') {
+            $_SESSION['simulateurCandidature'] = $form->getParsedBody();
+            Application::$app->response->redirect("/previewCandidature");
+            return $this->render('simulateurP/previewCandidature');
+        }
+        return $this->render('simulateurP/simulateurCandidature', ['form' => $form]);
+    }
+
+    public function previewCandidature(Request $request)
+    {
+        return $this->render('simulateurP/previewCandidature');
+    }
+
+    public function simulateurProfReferent(Request $request)
+    {
+        $form = new FormModel([
+            "nom" => FormModel::string("Nom du professeur référent")->required(),
+            "prenom" => FormModel::string("Prénom du professeur référent")->required()
+        ]);
+        if ($request->getMethod() === "post") {
+            $formData = $form->getParsedBody();
+            $listProf = new StaffRepository([]);
+            $listProf = $listProf->getByNomPreFull($formData["nom"], $formData["prenom"]);
+            return $this->render('simulateurP/listProfRef', ["listProf" => $listProf]);
+        }
+        return $this->render('simulateurP/simulateurProfReferent', ["form" => $form]);
+
+    }
+
+    public function simulateurSignataire(Request $request)
+    {
+        $id = $_GET['idProfRef'];
+        $_SESSION['idProfRef'] = $id;
+    }
 }

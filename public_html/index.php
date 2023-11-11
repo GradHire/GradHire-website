@@ -123,6 +123,20 @@ $app->router->get('/previewServiceAccueil', [PstageController::class, 'previewSe
 
 $app->router->get('/simulateurTuteur', [PstageController::class, 'simulateurTuteur']);
 
+$app->router->get('/creerTuteur', [PstageController::class, 'creerTuteur']);
+$app->router->post('/creerTuteur', [PstageController::class, 'creerTuteur']);
+
+$app->router->get('/simulateurCandidature', [PstageController::class, 'simulateurCandidature']);
+$app->router->post('/simulateurCandidature', [PstageController::class, 'simulateurCandidature']);
+
+$app->router->get('/previewCandidature', [PstageController::class, 'previewCandidature']);
+
+$app->router->get('/simulateurProfReferent', [PstageController::class, 'simulateurProfReferent']);
+$app->router->post('/simulateurProfReferent', [PstageController::class, 'simulateurProfReferent']);
+
+$app->router->get('/simulateurSignataire', [PstageController::class, 'simulateurSignataire']);
+$app->router->post('/simulateurSignataire', [PstageController::class, 'simulateurSignataire']);
+
 // ConventionController
 
 $app->router->get('/conventions', [ConventionsController::class, 'afficherListeConventions']);
