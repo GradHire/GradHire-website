@@ -15,7 +15,7 @@ use app\src\model\Form\FormModel;
         $form->print_all_fields();
         ?>
     </div>
-    <div class="w-full gap-4 flex flex-col mt-2 mb-2 hidden" id="step2">
+    <div class="w-full gap-4 flex flex-col mt-2 mb-2">
         <?php
         $form->submit("Rechercher");
         ?>

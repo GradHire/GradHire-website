@@ -2,7 +2,6 @@
 
 
 $array = $_SESSION['simulateurCandidature'];
-print_r($_SESSION['simulateurCandidature'])
 ?>
 
 <div class="w-full max-w-md gap-4 flex flex-col pt-12 pb-24">
@@ -54,7 +53,6 @@ print_r($_SESSION['simulateurCandidature'])
                 echo "<p class='mb-2'>" . $array["fonction"] . "</p>";
                 echo "<p class='mb-2'>" . $array["competence"] . "</p>";
                 echo "<p class='mb-2'>" . $array["dateDebut"] . "</p>";
-                echo "<p class='mb-2'>" . $array["typeStage"] . "</p>";
                 echo "<p class='mb-2'>" . $array["dateFin"] . "</p>";
                 echo "<p class='mb-2'>" . $array["interruption"] . "</p>";
                 if ($array["interruption"] === "Oui") {
@@ -63,16 +61,23 @@ print_r($_SESSION['simulateurCandidature'])
                 }
                 echo "<p class='mb-2'>" . $array["duree"] . "</p>";
                 echo "<p class='mb-2'>" . $array["nbJour"] . "</p>";
+                echo "<br>";
                 echo "<p class='mb-2'>" . $array["nbHeure"] . "</p>";
+                echo "<br>";
                 echo "<p class='mb-2'>" . $array["nbjourConge"] . "</p>";
+                echo "<br>";
                 echo "<p class='mb-2'>" . $array["commentairetravail"] . "</p>";
                 echo "<p class='mb-2'>" . $array["gratification"] . "</p>";
+                echo "<br>";
+
                 if ($array["gratification"] === "Oui") {
                     echo "<p class='mb-2'>" . $array["montant"] . " par " . $array["heureoumois"] . "</p>";
                     echo "<p class='mb-2'>" . $array["modalite"] . "</p>";
                 }
                 echo "<p class='mb-2'>" . $array["commenttrouve"] . "</p>";
+                echo "<br>";
                 echo "<p class='mb-2'>" . $array["confconvention"] . "</p>";
+                echo "<br>";
                 echo "<p class='mb-2'>" . $array["modalsuivi"] . "</p>";
                 echo "<p class='mb-2'>" . $array["avantage"] . "</p>";
 

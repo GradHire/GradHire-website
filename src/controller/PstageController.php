@@ -258,38 +258,44 @@ class PstageController extends AbstractController
         if (isset($_GET['idTuteur'])) {
             $_SESSION['idTuteur'] = $_GET['idTuteur'];
         }
+        $formData = $_SESSION['simulateurCandidature'] ?? [];
+
         $form = new FormModel([
-            "typeStage" => FormModel::select("Type de stage", ["StageO" => "Stage Obligatoire", "StageC" => "Stage Conseillé"])->required()->default("StageO"),
-            "Thématique" => FormModel::select("Thématique", ["Gestion" => "Gestion", "Reseaux" => "Reseaux", "Securite" => "Securite", "BD" => "Base de Donnée", "DevWeb" => "Dévelopement web", "DevApp", "Dévelopement d'application"])->required()->default(""),
-            "Sujet" => FormModel::string("Sujet")->required(),
-            "fonction" => FormModel::string("Fonctions et taches")->required(),
-            "competence" => FormModel::string("Compétences à acquérir")->required(),
-            "dateDebut" => FormModel::date("Date de début")->required(),
-            "dateFin" => FormModel::date("Date de fin")->required(),
-            "interruption" => FormModel::radio("Interruption", ["Oui" => "Oui", "Non" => "Non"])->required()->default("Non")->id("interruption"),
-            "dateDebutInterruption" => FormModel::date("Date de début de l'interruption"),
-            "dateFinInterruption" => FormModel::date("Date de fin de l'interruption"),
-            "duree" => FormModel::int("Durée effective du stage en heure")->required()->default(1)->min(1),
-            "nbJour" => FormModel::int("Nombre de jours par semaine")->required()->default(5)->min(1)->max(5),
-            "nbHeure" => FormModel::double("Nombre d'heure par semaine (en heure)")->required()->default(35)->min(1),
-            "nbjourConge" => FormModel::int("Nombre de jour de congé")->required()->default(0)->min(0),
-            "commentairetravail" => FormModel::string("Commentaire sur le travail")->required(),
-            "gratification" => FormModel::radio("Gratification", ["Oui" => "Oui", "Non" => "Non"])->required()->default("Non")->id("gratification"),
-            "montant" => FormModel::double("Montant")->default(0)->min(0),
-            "heureoumois" => FormModel::radio("", ["Heure" => "Heure", "Mois" => "Mois"])->default("Heure"),
-            "modalite" => FormModel::string("Modalité de versement"),
-            "commenttrouve" => FormModel::string("Comment avez-vous trouvé ce stage ?")->required(),
-            "confconvention" => FormModel::radio("Confidentialité du sujet du stage", ["Oui" => "Oui", "Non" => "Non"])->required()->default("Non"),
-            "modalsuivi" => FormModel::string("Modalité de suivi du stage"),
-            "avantage" => FormModel::string("Avantages nature")
+            "typeStage" => FormModel::select("Type de stage", ["StageO" => "Stage Obligatoire", "StageC" => "Stage Conseillé"])->required()->default($formData["typeStage"] ?? "StageO"),
+            "Thématique" => FormModel::select("Thématique", ["Gestion" => "Gestion", "Reseaux" => "Reseaux", "Securite" => "Securite", "BD" => "Base de Donnée", "DevWeb" => "Dévelopement web", "DevApp" => "Dévelopement d'application"])->required()->default($formData["Thématique"] ?? ""),
+            "Sujet" => FormModel::string("Sujet")->required()->default($formData["Sujet"] ?? ""),
+            "fonction" => FormModel::string("Fonctions et taches")->required()->default($formData["fonction"] ?? ""),
+            "competence" => FormModel::string("Compétences à acquérir")->required()->default($formData["competence"] ?? ""),
+            "dateDebut" => FormModel::date("Date de début")->required()->default($formData["dateDebut"] ?? ""),
+            "dateFin" => FormModel::date("Date de fin")->required()->default($formData["dateFin"] ?? ""),
+            "interruption" => FormModel::radio("Interruption", ["Oui" => "Oui", "Non" => "Non"])->required()->default($formData["interruption"] ?? "Non")->id("interruption"),
+            "dateDebutInterruption" => FormModel::date("Date de début de l'interruption")->default($formData["dateDebutInterruption"] ?? ""),
+            "dateFinInterruption" => FormModel::date("Date de fin de l'interruption")->default($formData["dateFinInterruption"] ?? ""),
+            "duree" => FormModel::int("Durée effective du stage en heure")->required()->default($formData["duree"] ?? 1)->min(1),
+            "nbJour" => FormModel::int("Nombre de jours par semaine")->required()->default($formData["nbJour"] ?? 5)->min(1)->max(5),
+            "nbHeure" => FormModel::double("Nombre d'heure par semaine (en heure)")->required()->default($formData["nbHeure"] ?? 1.00)->min(1.00),
+            "nbjourConge" => FormModel::string("Nombre de jour de congé")->default($formData["nbjourConge"] ?? ""),
+            "commentairetravail" => FormModel::string("Commentaire sur le travail")->required()->default($formData["commentairetravail"] ?? ""),
+            "gratification" => FormModel::radio("Gratification", ["Oui" => "Oui", "Non" => "Non"])->required()->default($formData["gratification"] ?? "Non")->id("gratification"),
+            "montant" => FormModel::double("Montant")->default($formData["montant"] ?? 4.05),
+            "heureoumois" => FormModel::radio("", ["Heure" => "Heure", "Mois" => "Mois"])->default($formData["heureoumois"] ?? "Heure"),
+            "modalite" => FormModel::string("Modalité de versement")->default($formData["modalite"] ?? ""),
+            "commenttrouve" => FormModel::string("Comment avez-vous trouvé ce stage ?")->required()->default($formData["commenttrouve"] ?? ""),
+            "confconvention" => FormModel::radio("Confidentialité du sujet du stage", ["Oui" => "Oui", "Non" => "Non"])->required()->default($formData["confconvention"] ?? "Non"),
+            "modalsuivi" => FormModel::string("Modalité de suivi du stage")->default($formData["modalsuivi"] ?? ""),
+            "avantage" => FormModel::string("Avantages nature")->default($formData["avantage"] ?? "")
         ]);
         if ($request->getMethod() == 'post') {
-            $_SESSION['simulateurCandidature'] = $form->getParsedBody();
-            Application::$app->response->redirect("/previewCandidature");
-            return $this->render('simulateurP/previewCandidature');
+            $form->setError("Impossible de créer la candidature");
+            if ($form->validate($request->getBody())) {
+                $_SESSION['simulateurCandidature'] = $form->getParsedBody();
+                Application::$app->response->redirect("/previewCandidature");
+                return $this->render('simulateurP/previewCandidature');
+            }
         }
         return $this->render('simulateurP/simulateurCandidature', ['form' => $form]);
     }
+
 
     public function previewCandidature(Request $request)
     {
@@ -303,10 +309,13 @@ class PstageController extends AbstractController
             "prenom" => FormModel::string("Prénom du professeur référent")->required()
         ]);
         if ($request->getMethod() === "post") {
-            $formData = $form->getParsedBody();
-            $listProf = new StaffRepository([]);
-            $listProf = $listProf->getByNomPreFull($formData["nom"], $formData["prenom"]);
-            return $this->render('simulateurP/listProfRef', ["listProf" => $listProf]);
+            $form->setError("Impossible de trouver le professeur référent");
+            if ($form->validate($request->getBody())) {
+                $formData = $form->getParsedBody();
+                $listProf = new StaffRepository([]);
+                $listProf = $listProf->getByNomPreFull($formData["nom"], $formData["prenom"]);
+                return $this->render('simulateurP/listProf', ["listProf" => $listProf]);
+            }
         }
         return $this->render('simulateurP/simulateurProfReferent', ["form" => $form]);
 
