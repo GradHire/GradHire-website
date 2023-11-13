@@ -116,7 +116,7 @@ $signataire = $_SESSION['signataire'];
             ?>
 
         </div>
-        <a href="validersimulation"
+        <a href="validersimulation" id="validerSimulation"
            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Valider simulation</a>
 
         <a href="simulateur"
@@ -125,4 +125,12 @@ $signataire = $_SESSION['signataire'];
 
 
 </div>
+<script>
+    document.getElementById("validerSimulation").addEventListener("click", function (e) {
+        e.preventDefault();
 
+        alert("Votre simulation a été transférée au responsable.");
+
+        window.location.href = "validersimulation";
+    });
+</script>

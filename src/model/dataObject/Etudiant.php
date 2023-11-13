@@ -6,7 +6,7 @@ use app\src\model\dataObject\Utilisateur;
 
 class Etudiant extends Utilisateur
 {
-
+    private static int $convId = 0;
     private int $idUtilisateur;
     private string $prenom;
     private string $loginLDAP;
@@ -22,26 +22,25 @@ class Etudiant extends Utilisateur
     private ?bool $archiver;
     private ?int $annee;
 
-
     public function __construct(
         int     $idUtilisateur,
         string  $email,
         string  $nom,
         ?string $numTelephone,
         ?string $bio,
-        ?bool    $archiver,
-        ?string  $nomVille,
-        ?int     $codePostal,
+        ?bool   $archiver,
+        ?string $nomVille,
+        ?int    $codePostal,
         ?string $pays,
         ?string $adresse,
         ?string $emailPerso,
         ?string $numEtudiant,
         ?string $codeSexe,
-        ?int     $idgroupe,
-        ?int     $annee,
+        ?int    $idgroupe,
+        ?int    $annee,
         ?string $dateNaissance,
-        ?string  $loginLDAP,
-        string $prenom,
+        ?string $loginLDAP,
+        string  $prenom,
     )
     {
         parent::__construct($idUtilisateur, $email, $nom, $numTelephone, $bio);
@@ -59,6 +58,16 @@ class Etudiant extends Utilisateur
         $this->pays = $pays;
         $this->archiver = $archiver;
         $this->annee = $annee;
+    }
+
+    public static function getConvId(): int
+    {
+        return self::$convId;
+    }
+
+    public static function setConvId(int $convId): void
+    {
+        self::$convId = $convId;
     }
 
     public function getIdUtilisateur(): int
@@ -200,7 +209,6 @@ class Etudiant extends Utilisateur
     {
         $this->annee = $annee;
     }
-
 
 
     protected function getValueColonne(string $nomColonne): string

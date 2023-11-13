@@ -2,7 +2,9 @@
 
 
 use app\src\core\FPDF\FPDF;
+use app\src\model\Auth;
 use app\src\model\repository\EntrepriseRepository;
+use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\ServiceAccueilRepository;
 use app\src\model\repository\TuteurRepository;
 
@@ -14,8 +16,11 @@ $entreprise = (new EntrepriseRepository([]))->getByIdFull($_SESSION['idEntrepris
 $idtuteur = $_SESSION['idTuteur'];
 $tuteur = (new TuteurRepository([]))->getByIdFull($idtuteur);
 $signataire = $_SESSION['signataire'];
-$filename = 'convention_stage_' . $etudiant["numEtudiant"] . '.pdf';
 
+$filename = 'convention_stage_' . $etudiant["numEtudiant"] . '.pdf';
+while (file_exists('uploads/Pstage/' . $filename)) {
+    $filename = 'convention_stage_' . $etudiant["numEtudiant"] . '_' . rand(0, 1000) . '.pdf';
+}
 ob_start();
 
 $numeroConvention = "XXXXX";
@@ -187,7 +192,10 @@ $pdf->SetXY($x, $y + $espacementCellule * 31);
 $pdf->Cell(0, 0, "$mailEtudiant", 0, 1, 'L');
 $pdf->SetXY($x, $y + $espacementCellule * 32);
 $pdf->Cell(0, 0, "$affiliationSecuriteSociale", 0, 1, 'L');
-$pdf->Output($filename, 'D');
+$pdf->Output($filename, 'D', true);
 
 ob_end_flush();
+$savePath = 'uploads/Pstage/';
+$pdf->Output($savePath . $filename, 'F', true);
+
 ?>
