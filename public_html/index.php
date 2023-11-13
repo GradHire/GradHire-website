@@ -137,6 +137,14 @@ $app->router->post('/simulateurProfReferent', [PstageController::class, 'simulat
 $app->router->get('/simulateurSignataire', [PstageController::class, 'simulateurSignataire']);
 $app->router->post('/simulateurSignataire', [PstageController::class, 'simulateurSignataire']);
 
+$app->router->get('/creerSignataire', [PstageController::class, 'creerSignataire']);
+$app->router->post('/creerSignataire', [PstageController::class, 'creerSignataire']);
+
+$app->router->get('/previewSignataire', [PstageController::class, 'previewSignataire']);
+
+$app->router->get('/visuRecapConv', [PstageController::class, 'visuRecapConv']);
+
+$app->router->get('/validersimulation', [PstageController::class, 'validersimulation']);
 // ConventionController
 
 $app->router->get('/conventions', [ConventionsController::class, 'afficherListeConventions']);

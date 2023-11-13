@@ -9,6 +9,7 @@ use app\src\model\ImportPstage;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\ServiceAccueilRepository;
+use app\src\model\repository\SignataireRepository;
 use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\Request;
@@ -314,6 +315,8 @@ class PstageController extends AbstractController
                 $formData = $form->getParsedBody();
                 $listProf = new StaffRepository([]);
                 $listProf = $listProf->getByNomPreFull($formData["nom"], $formData["prenom"]);
+                $_SESSION["nomProf"] = $formData["nom"];
+                $_SESSION["prenomProf"] = $formData["prenom"];
                 return $this->render('simulateurP/listProf', ["listProf" => $listProf]);
             }
         }
@@ -323,7 +326,61 @@ class PstageController extends AbstractController
 
     public function simulateurSignataire(Request $request)
     {
-        $id = $_GET['idProfRef'];
+        $id = $_GET['idProfRef'] ?? null;
         $_SESSION['idProfRef'] = $id;
+        $signataire = (new SignataireRepository())->getFullByEntreprise($_SESSION["idEntreprise"]);
+        $signataire["Non renseigné"] = "Non renseigné";
+        $form = new FormModel([
+            "signataire" => FormModel::select("Signataire", $signataire)->required()->default("Non renseigné")->id("signataire"),
+        ]);
+        if ($request->getMethod() === 'post') {
+            if ($form->validate($request->getBody())) {
+                $formData = $form->getParsedBody();
+                $_SESSION['signataire'] = $formData['signataire'];
+                Application::$app->response->redirect("/previewSignataire");
+                return $this->render('simulateurP/previewSignataire');
+            }
+        }
+        return $this->render('simulateurP/simulateurSignataire', ["form" => $form]);
+    }
+
+    public function creerSignataire(Request $request)
+    {
+        $form = new FormModel([
+            "nom" => FormModel::string("Nom du signataire")->required(),
+            "prenom" => FormModel::string("Prénom du signataire")->required(),
+            "fonction" => FormModel::string("Fonction du signataire")->required(),
+            "mail" => FormModel::string("Mail du signataire")->required(),
+        ]);
+        if ($request->getMethod() === 'post') {
+            $form->setError("Impossible de créer le signataire");
+            if ($form->validate($request->getBody())) {
+                $formData = $form->getParsedBody();
+                (new SignataireRepository())->create($formData['nom'], $formData['prenom'], $formData['fonction'], $formData['mail'], $_SESSION["idEntreprise"]);
+                $signataire = (new SignataireRepository())->getFullByEntreprise($_SESSION["idEntreprise"]);
+                $signataire["Non renseigné"] = "Non renseigné";
+                $form = new FormModel([
+                    "signataire" => FormModel::select("Signataire", $signataire)->required()->default("Non renseigné")->id("signataire"),
+                ]);
+                Application::$app->response->redirect("/simulateurSignataire");
+                return $this->render('simulateurP/simulateurSignataire', ["form", $form]);
+            }
+        }
+        return $this->render('simulateurP/creerSignataire', ["form" => $form]);
+    }
+
+    public function previewSignataire(Request $request)
+    {
+        return $this->render('simulateurP/previewSignataire');
+    }
+
+    public function visuRecapConv(Request $request)
+    {
+        return $this->render('simulateurP/visuRecapConv');
+    }
+
+    public function validersimulation(Request $request)
+    {
+        return $this->render('simulateurP/validersimulation');
     }
 }

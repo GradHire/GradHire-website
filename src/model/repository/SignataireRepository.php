@@ -2,6 +2,7 @@
 
 namespace app\src\model\repository;
 
+use app\src\core\db\Database;
 use app\src\model\dataObject\AbstractDataObject;
 use app\src\model\dataObject\Signataire;
 
@@ -17,25 +18,40 @@ class SignataireRepository extends AbstractRepository
         $result = $stmt->fetchAll();
         $signataires = [];
         foreach ($result as $row) {
-            $signataires[$row['idSignataire']] = $this->construireDepuisTableau($row);
+            $signataires[$row["nomsignataire"]] = $row["nomsignataire"];
         }
         return $signataires;
+    }
+
+    public function getFullByEntrepriseNom(string $nomsignataire, int $idEntreprise): ?AbstractDataObject
+    {
+        $sql = "SELECT * FROM Signataire WHERE idEntreprise = :idEntreprise AND nomSignataire= :nomsignataire";
+        $stmt = Database::get_conn()->prepare($sql);
+        $stmt->bindValue(":idEntreprise", $idEntreprise);
+        $stmt->bindValue(":nomsignataire", $nomsignataire);
+        $stmt->execute();
+        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll();
+        if (!$result) {
+            return null;
+        }
+        return $this->construireDepuisTableau($result[0]);
     }
 
     protected function construireDepuisTableau(array $dataObjectFormatTableau): AbstractDataObject
     {
         return new Signataire(
-            $dataObjectFormatTableau['idSignataire'],
-            $dataObjectFormatTableau['nomSignataire'],
-            $dataObjectFormatTableau['prenomSignataire'],
-            $dataObjectFormatTableau['fonctionSignataire'],
-            $dataObjectFormatTableau['mailSignataire'],
-            $dataObjectFormatTableau['idEntreprise']);
+            $dataObjectFormatTableau['idsignataire'],
+            $dataObjectFormatTableau['nomsignataire'],
+            $dataObjectFormatTableau['prenomsignataire'],
+            $dataObjectFormatTableau['fonctionsignataire'],
+            $dataObjectFormatTableau['mailsignataire'],
+            $dataObjectFormatTableau['identreprise']);
     }
 
     public function create(mixed $nomSignataire, mixed $prenomSignataire, mixed $fonctionSignataire, mixed $mailSignataire, mixed $idEntreprise)
     {
-        $sql = "CALL creerSignataire(:nomSignataire, :prenomSignataire, :mailSignataire, :fonctionSignataire, :idEntreprise)";
+        $sql = "SELECT creerSignataire(:nomSignataire, :prenomSignataire, :mailSignataire, :fonctionSignataire, :idEntreprise) FROM DUAL";
         $stmt = Database::get_conn()->prepare($sql);
         $stmt->bindValue(":nomSignataire", $nomSignataire);
         $stmt->bindValue(":prenomSignataire", $prenomSignataire);
