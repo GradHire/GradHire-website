@@ -54,7 +54,7 @@ class PstageController extends AbstractController
 
     public function explicationSimu(Request $request): string
     {
-        return $this->render('simulateurP/explicationSimu');
+        return $this->render('simulateurP/General', ['vueChemin' => "explicationSimu.php"]);
     }
 
     public function simulateur(Request $request): string
@@ -81,10 +81,10 @@ class PstageController extends AbstractController
         if ($request->getMethod() === 'post') {
             if ($form->validate($request->getBody())) {
                 $_SESSION['simulateurEtu'] = $form->getParsedBody();
-                return $this->render('simulateurP/previewetu', ['form' => $form]);
+                return $this->render('simulateurP/General', ['vueChemin' => "previewetu.php", 'form' => $form]);
             }
         }
-        return $this->render('simulateurP/simulateuretu', ['form' => $form]);
+        return $this->render('simulateurP/General', ['vueChemin' => "simulateuretu.php", 'form' => $form]);
     }
 
 
@@ -105,10 +105,10 @@ class PstageController extends AbstractController
             } else if ($typeRecherche == "adresse") {
                 $listEntreprise = $ent->getByAdresse($formData['adresse'], $formData['codePostal'], $formData['pays']);
             }
-            return $this->render('simulateurP/listEntreprise', ['form' => $form2, 'listEntreprise' => $listEntreprise]);
+            return $this->render('simulateurP/General', ['form' => $form2, 'listEntreprise' => $listEntreprise, 'vueChemin' => "listEntreprise.php"]);
         }
 
-        return $this->render('simulateurP/simulateurOffre', ['form2' => $form2]);
+        return $this->render('simulateurP/General', ['form2' => $form2, 'vueChemin' => "simulateurOffre.php"]);
 
     }
 
@@ -136,7 +136,7 @@ class PstageController extends AbstractController
     {
         $id = $_GET['idEntreprise'];
         $_SESSION["idEntreprise"] = $id;
-        return $this->render('simulateurP/previewOffre', ['id' => $id]);
+        return $this->render('simulateurP/General', ['id' => $id, 'vueChemin' => "previewOffre.php"]);
     }
 
     public function creerEntreprise(Request $request): string
@@ -166,10 +166,10 @@ class PstageController extends AbstractController
                 $ent = new EntrepriseRepository([]);
                 $ent->create($formData['nomEnt'], $formData['email'], $formData['tel'], "", $formData['type'], $formData['effectif'], $formData['codeNaf'], $formData['fax'], $formData['web'], $formData['voie'], $formData['cedex'], $formData['residence'], $formData['codePostal'], $formData['pays'], $formData['ville'], $formData['siret']);
                 $form2 = $this->getModel();
-                return $this->render('simulateurP/simulateurOffre', ['form2' => $form2]);
+                return $this->render('simulateurP/General', ['form2' => $form2, 'vueChemin' => "simulateurOffre.php"]);
             }
         }
-        return $this->render('simulateurP/creerEntreprise', ['form' => $form]);
+        return $this->render('simulateurP/General', ['form' => $form, 'vueChemin' => "creerEntreprise.php"]);
     }
 
     public function simulateurServiceAccueil(Request $request)
@@ -184,10 +184,10 @@ class PstageController extends AbstractController
                 $formData = $form->getParsedBody();
                 $_SESSION['accueil'] = $formData['accueil'];
                 Application::$app->response->redirect("/previewServiceAccueil");
-                return $this->render('simulateurP/previewServiceAccueil');
+                return $this->render('simulateurP/General', ['vueChemin' => 'previewServiceAccueil.php']);
             }
         }
-        return $this->render('simulateurP/simulateurServiceAccueil', ['form' => $form]);
+        return $this->render('simulateurP/General', ['form' => $form, 'vueChemin' => 'simulateurServiceAccueil.php']);
     }
 
     public function creerService(Request $request)
@@ -218,22 +218,22 @@ class PstageController extends AbstractController
                     "accueil" => FormModel::select("Accueil", $serviceaccueil)->required()->default("Non renseigné"),
                 ]);
                 Application::$app->response->redirect("/simulateurServiceAccueil");
-                return $this->render('simulateurP/simulateurServiceAccueil', ['form' => $form]);
+                return $this->render('simulateurP/General', ['form' => $form, 'vueChemin' => 'simulateurServiceAccueil.php']);
             }
         }
-        return $this->render('simulateurP/creerService', ['form' => $form]);
+        return $this->render('simulateurP/General', ['form' => $form, 'vueChemin' => 'creerService.php']);
     }
 
     public function previewServiceAccueil(Request $request)
     {
-        return $this->render('simulateurP/previewServiceAccueil');
+        return $this->render('simulateurP/General', ['vueChemin' => 'previewServiceAccueil.php']);
     }
 
     public function simulateurTuteur(Request $request)
     {
         $tut = new TuteurEntrepriseRepository([]);
         $tut = $tut->getFullByEntreprise($_SESSION["idEntreprise"]);
-        return $this->render('simulateurP/simulateurTuteur', ['listTuteur' => $tut]);
+        return $this->render('simulateurP/General', ['listTuteur' => $tut, 'vueChemin' => 'simulateurTuteur.php']);
     }
 
     public function creerTuteur(Request $request)
@@ -253,10 +253,10 @@ class PstageController extends AbstractController
                 $tut = new TuteurEntrepriseRepository([]);
                 $tut = $tut->getFullByEntreprise($_SESSION["idEntreprise"]);
                 Application::$app->response->redirect("/simulateurTuteur");
-                return $this->render('simulateurP/simulateurTuteur', ['listTuteur' => $tut]);
+                return $this->render('simulateurP/General', ['listTuteur' => $tut, 'vueChemin' => 'simulateurTuteur.php']);
             }
         }
-        return $this->render('simulateurP/creerTuteur', ['form' => $form]);
+        return $this->render('simulateurP/General', ['form' => $form, 'vueChemin' => 'creerTuteur.php']);
     }
 
     public function simulateurCandidature(Request $request)
@@ -296,16 +296,16 @@ class PstageController extends AbstractController
             if ($form->validate($request->getBody())) {
                 $_SESSION['simulateurCandidature'] = $form->getParsedBody();
                 Application::$app->response->redirect("/previewCandidature");
-                return $this->render('simulateurP/previewCandidature');
+                return $this->render('simulateurP/General', ['vueChemin' => 'previewCandidature.php']);
             }
         }
-        return $this->render('simulateurP/simulateurCandidature', ['form' => $form]);
+        return $this->render('simulateurP/General', ['form' => $form, 'vueChemin' => 'simulateurCandidature.php']);
     }
 
 
     public function previewCandidature(Request $request)
     {
-        return $this->render('simulateurP/previewCandidature');
+        return $this->render('simulateurP/General', ['vueChemin' => 'previewCandidature.php']);
     }
 
     public function simulateurProfReferent(Request $request)
@@ -322,10 +322,10 @@ class PstageController extends AbstractController
                 $listProf = $listProf->getByNomPreFull($formData["nom"], $formData["prenom"]);
                 $_SESSION["nomProf"] = $formData["nom"];
                 $_SESSION["prenomProf"] = $formData["prenom"];
-                return $this->render('simulateurP/listProf', ["listProf" => $listProf]);
+                return $this->render('simulateurP/General', ["listProf" => $listProf, "vueChemin" => "listProf.php"]);
             }
         }
-        return $this->render('simulateurP/simulateurProfReferent', ["form" => $form]);
+        return $this->render('simulateurP/General', ["form" => $form, "vueChemin" => "simulateurProfReferent.php"]);
 
     }
 
@@ -343,10 +343,10 @@ class PstageController extends AbstractController
                 $formData = $form->getParsedBody();
                 $_SESSION['signataire'] = $formData['signataire'];
                 Application::$app->response->redirect("/previewSignataire");
-                return $this->render('simulateurP/previewSignataire');
+                return $this->render('simulateurP/General', ['vueChemin' => 'previewSignataire.php']);
             }
         }
-        return $this->render('simulateurP/simulateurSignataire', ["form" => $form]);
+        return $this->render('simulateurP/General', ["form" => $form, "vueChemin" => "simulateurSignataire.php"]);
     }
 
     public function creerSignataire(Request $request)
@@ -368,20 +368,20 @@ class PstageController extends AbstractController
                     "signataire" => FormModel::select("Signataire", $signataire)->required()->default("Non renseigné")->id("signataire"),
                 ]);
                 Application::$app->response->redirect("/simulateurSignataire");
-                return $this->render('simulateurP/simulateurSignataire', ["form", $form]);
+                return $this->render('simulateurP/General', ["form", $form, "vueChemin" => "simulateurSignataire.php"]);
             }
         }
-        return $this->render('simulateurP/creerSignataire', ["form" => $form]);
+        return $this->render('simulateurP/General', ["form" => $form, "vueChemin" => "creerSignataire.php"]);
     }
 
     public function previewSignataire(Request $request)
     {
-        return $this->render('simulateurP/previewSignataire');
+        return $this->render('simulateurP/General', ['vueChemin' => 'previewSignataire.php']);
     }
 
     public function visuRecapConv(Request $request)
     {
-        return $this->render('simulateurP/visuRecapConv');
+        return $this->render('simulateurP/General', ['vueChemin' => 'visuRecapConv.php']);
     }
 
     public function validersimulation(Request $request)
