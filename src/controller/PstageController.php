@@ -52,6 +52,11 @@ class PstageController extends AbstractController
         ]);
     }
 
+    public function explicationSimu(Request $request): string
+    {
+        return $this->render('simulateurP/explicationSimu');
+    }
+
     public function simulateur(Request $request): string
     {
         $id = Application::getUser()->getId();
