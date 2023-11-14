@@ -148,6 +148,8 @@ $app->router->get('/previewSignataire', [PstageController::class, 'previewSignat
 $app->router->get('/visuRecapConv', [PstageController::class, 'visuRecapConv']);
 
 $app->router->get('/validersimulation', [PstageController::class, 'validersimulation']);
+
+$app->router->get('/gererSimulPstage', [PstageController::class, 'gererSimulPstage']);
 // ConventionController
 
 $app->router->get('/conventions', [ConventionsController::class, 'afficherListeConventions']);

@@ -32,16 +32,12 @@ class EtudiantRepository extends LdapRepository
         }
     }
 
-    /**
-     * @throws ServerErrorException
-     */
-    public
-    function getByIdFull($idutilisateur): ?Etudiant
+    public function getByNumEtudiantFull($numEtudiant): ?Etudiant
     {
         try {
-            $sql = "SELECT * FROM " . self::$view . " WHERE idUtilisateur = :idUtilisateur";
+            $sql = "SELECT * FROM " . self::$view . " WHERE numEtudiant = :numEtudiant";
             $requete = Database::get_conn()->prepare($sql);
-            $requete->execute(['idUtilisateur' => $idutilisateur]);
+            $requete->execute(['numEtudiant' => $numEtudiant]);
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
             if (!$resultat) {
@@ -77,6 +73,28 @@ class EtudiantRepository extends LdapRepository
             $dataObjectFormatTableau["loginldap"],
             $dataObjectFormatTableau["prenom"]
         );
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public
+    function getByIdFull($idutilisateur): ?Etudiant
+    {
+        try {
+            $sql = "SELECT * FROM " . self::$view . " WHERE idUtilisateur = :idUtilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idUtilisateur' => $idutilisateur]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetch();
+            if (!$resultat) {
+                return null;
+            }
+            return $this->construireDepuisTableau($resultat);
+        } catch
+        (PDOException) {
+            throw new ServerErrorException();
+        }
     }
 
     protected

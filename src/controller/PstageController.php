@@ -426,4 +426,11 @@ class PstageController extends AbstractController
             return $this->render('simulateurP/validersimulation');
         } else throw new ForbiddenException();
     }
+
+    public function gererSimulPstage(Request $request)
+    {
+        if (Auth::has_role(Roles::Staff, Roles::Manager)) {
+            return $this->render('pstageConv/gererSimulPstage');
+        } else throw new ForbiddenException();
+    }
 }
