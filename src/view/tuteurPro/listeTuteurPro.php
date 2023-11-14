@@ -74,7 +74,6 @@ else {
 
 
         foreach ($tuteurs as $tuteur) {
-            $tuteur = (new TuteurEntrepriseRepository([]))->construireTuteurProDepuisTableau($tuteur);
             ?>
             <tr class="odd:bg-zinc-50">
                 <?php if (Auth::has_role(Roles::Manager, Roles::Staff)) { ?>
