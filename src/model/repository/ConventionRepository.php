@@ -40,7 +40,6 @@ class ConventionRepository extends AbstractRepository
             $statement->bindParam(":idUser", $idUser);
             $statement->execute();
             $data = $statement->fetch();
-            print_r($data);
             if (!$data) return null;
             return $this->construireDepuisTableau($data);
         } catch (\Exception $e) {
@@ -194,9 +193,6 @@ class ConventionRepository extends AbstractRepository
      * @throws ServerErrorException
      */
     public function suivreConvention(int $idutilisateur, int $idOffre, int $idetudiant): void {
-        print_r($idutilisateur);
-        print_r($idOffre);
-        print_r($idetudiant);
         try {
             $statement = Database::get_conn()->prepare("INSERT INTO Supervise (idUtilisateur, idOffre, idEtudiant) VALUES (?,?,?);");
             $statement->bindParam(1, $idutilisateur);
@@ -205,6 +201,22 @@ class ConventionRepository extends AbstractRepository
             $statement->execute();
         } catch (\Exception $e) {
             throw new ServerErrorException("Erreur lors du suivi de la convention", 500, $e);
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function seDeProposer(int $idUtilisateur, mixed $idOffre, $idEtudiant)
+    {
+        try {
+            $statement = Database::get_conn()->prepare("DELETE FROM Supervise WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant");
+            $statement->bindParam(":idUtilisateur", $idUtilisateur);
+            $statement->bindParam(":idOffre", $idOffre);
+            $statement->bindParam(":idEtudiant", $idEtudiant);
+            $statement->execute();
+        } catch (\Exception $e) {
+            throw new ServerErrorException("Erreur lors du se de proposer de la convention", 500, $e);
         }
     }
 

@@ -137,10 +137,6 @@ use app\src\model\repository\OffresRepository;
             </div>
         </dl>
     </div>
-    <?php if ($offre->getAdresse() != null){
-        ?>
-        <iframe class="w-full h-[500px]" src="https://maps.google.com/maps?q=<?= $offre->getAdresse() ?>&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
-    <?php } ?>
     <?php if (Auth::has_role(Roles::Student) && !$offre->getUserPostuled()) { ?>
         <a href="<?php echo $offre->getIdOffre(); ?>/postuler"
            class="mt-6 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-zinc-600 hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 sm:w-auto">

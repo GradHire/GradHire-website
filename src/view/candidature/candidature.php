@@ -78,6 +78,14 @@ use app\src\model\repository\UtilisateurRepository;
                                 plus</a>
                         </td>
                         <?php
+                        if (Auth::has_role(Roles::Manager, Roles::Staff,Roles::ManagerStage,Roles::ManagerAlternance) && $candidature->getStatut() == 'valider' && $candidature->getSiTuteurPostuler()){
+                            ?>
+                            <td class="whitespace-nowrap px-4 py-2">
+                                <a href="/postuler/listeTuteur/<?php echo $candidature->getIdOffre() ?>/<?php echo $candidature->getIdUtilisateur() ?>"
+                                   class="flex w-full justify-center rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">Voir Liste Tuteur</a>
+                            </td>
+                            <?php
+                        }
                         if (Auth::has_role(Roles::Teacher) && $candidature->getStatut() == 'valider' && !$candidature->getIfSuivi(Auth::get_user()->id()) && (new StaffRepository([]))->getCountPostulationTuteur(Auth::get_user()->id())<10){
                             ?>
                             <td class="whitespace-nowrap px-4 py-2">
@@ -86,11 +94,12 @@ use app\src\model\repository\UtilisateurRepository;
                                     proposer comme tuteur</a>
                             </td>
                             <?php
-                        } else if (Auth::has_role(Roles::Teacher) && $candidature->getStatut() == 'valider' && (new StaffRepository([]))->getCountPostulationTuteur(Auth::get_user()->id())<10 && $candidature->getIfSuivi(Auth::get_user()->id())){
+                        }
+                        else if (Auth::has_role(Roles::Teacher) && $candidature->getStatut() == 'valider' && (new StaffRepository([]))->getCountPostulationTuteur(Auth::get_user()->id())<10 && $candidature->getIfSuivi(Auth::get_user()->id())){
                             ?>
                             <td class="whitespace-nowrap px-4 py-2">
-                                <a href="/postuler/seProposer/<?php echo $candidature->getIdOffre() ?>"
-                                   class="flex w-full rounded bg-red-600 opacity-40 px-4 py-2 text-xs font-medium text-white hover:bg-red-700 justify-center"> X </a>
+                                <a href="/postuler/seDeproposer/<?php echo $candidature->getIdOffre() ?>"
+                                   class="flex w-full rounded bg-red-600 opacity-70 px-4 py-2 text-xs font-medium text-white hover:bg-red-700 justify-center"> X </a>
                             </td>
                             </tr>
                         <?php }

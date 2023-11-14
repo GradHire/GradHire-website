@@ -132,6 +132,30 @@ class PostulerRepository extends AbstractRepository
         return $resultat;
     }
 
+    public function getSiTuteurPostuler(?int $getIdUtilisateur, ?int $getIdOffre)
+    {
+        $sql = "SELECT * FROM Supervise WHERE idEtudiant=:idUtilisateur AND idOffre=:idOffre";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idUtilisateur' => $getIdUtilisateur, 'idOffre' => $getIdOffre]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetch();
+        if (!$resultat) return false;
+        return true;
+    }
+
+    public function getTuteurByIdOffre(mixed $idOffre): ?array
+    {
+        $sql = "SELECT * FROM Supervise WHERE idOffre=:idOffre";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idOffre' => $idOffre]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetchAll();
+        if (!$resultat) return null;
+        return $resultat;
+    }
+
+
+
     protected
     function getNomColonnes(): array
     {
