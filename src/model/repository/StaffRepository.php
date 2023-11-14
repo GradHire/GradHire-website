@@ -18,7 +18,17 @@ class StaffRepository extends LdapRepository
     {
         if ($this->attributes["role"] === "responsable")
             return Roles::Manager;
-        return Roles::Staff;
+        else if ($this->attributes["role"] === "chefdepartement")
+            return Roles::ChefDepartment;
+        else if ($this->attributes["role"] === "responsablestage")
+            return Roles::ManagerStage;
+        else if ($this->attributes["role"] === "responsablealternance")
+            return Roles::ManagerAlternance;
+        else if ($this->attributes["role"] === "tuteur")
+            return Roles::Tutor;
+        else if ($this->attributes["role"] === "enseignant")
+            return Roles::Teacher;
+       else return Roles::Staff;
     }
 
     /**
@@ -72,6 +82,27 @@ class StaffRepository extends LdapRepository
             return $emails;
         } catch
         (\Exception) {
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function getCountPostulationTuteur(int $idUtilisateur): int
+    {
+        try {
+            $stmt = Database::get_conn()->prepare("SELECT COUNT(*) as 'nbPosutlation' FROM SuivreConvention WHERE idUtilisateur = :idUtilisateur");
+            $stmt->execute(['idUtilisateur' => $idUtilisateur]);
+            $stmt->execute();
+            $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $stmt->fetch();
+            if (!$resultat) {
+                return 0;
+            } else {
+                return $resultat["nbposutlation"];
+            }
+        } catch (\Exception) {
             throw new ServerErrorException();
         }
     }

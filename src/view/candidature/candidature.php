@@ -3,6 +3,8 @@
 
 /** @var $titre string */
 
+use app\src\model\Auth;
+use app\src\model\dataObject\Roles;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\UtilisateurRepository;
 
@@ -38,8 +40,9 @@ use app\src\model\repository\UtilisateurRepository;
                     $offre = (new OffresRepository())->getById($candidature->getIdOffre());
                     $entreprise = (new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur());
                     $etudiant = (new UtilisateurRepository([]))->getUserById($candidature->getIdUtilisateur());
-                    ?>
-                    <tr class="odd:bg-zinc-50">
+                    if (Auth::has_role(Roles::Teacher, Roles::Student) && $candidature->getStatut() == 'valider' || Auth::has_role(Roles::Staff, Roles::Manager)) {
+                        ?>
+                        <tr class="odd:bg-zinc-50">
                         <td class="whitespace-nowrap px-4 py-2 font-medium text-zinc-900">
                             <?= $entreprise->getNomutilisateur(); ?>
                         </td>
@@ -71,8 +74,25 @@ use app\src\model\repository\UtilisateurRepository;
                                class="inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">Voir
                                 plus</a>
                         </td>
-                    </tr>
-                <?php } ?>
+                        <?php
+                        if (Auth::has_role(Roles::Teacher) && $candidature->getStatut() == 'valider' && !$candidature->getIfPostuler(Auth::get_user()->id())) {
+                            ?>
+                            <td class="whitespace-nowrap px-4 py-2">
+                                <a href="/postuler/seProposer/<?php echo $candidature->getIdOffre() ?>"
+                                   class="inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">Se
+                                    proposer comme tuteur</a>
+                            </td>
+                            <?php
+                        } else if (Auth::has_role(Roles::Teacher)) {
+                            ?>
+                            <td class="whitespace-nowrap px-4 py-2">
+                                <a href="/postuler/seProposer/<?php echo $candidature->getIdOffre() ?>"
+                                   class="inline-block rounded bg-red-600 opacity-40 px-4 py-2 text-xs font-medium text-white hover:bg-red-700"> X </a>
+                            </td>
+                            </tr>
+                        <?php }
+                    }
+                } ?>
                 </tbody>
 
             </table>

@@ -106,6 +106,24 @@ class PostulerRepository extends AbstractRepository
         }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
+    public function getIfPostuler(int $idConvention, int $idUtilisateur): bool
+    {
+        try {
+            $statement = Database::get_conn()->prepare("SELECT * FROM SuivreConvention WHERE idutilisateur = :idutilisateur AND idconvention = :idconvention");
+            $statement->bindParam(":idutilisateur", $idUtilisateur);
+            $statement->bindParam(":idconvention", $idConvention);
+            $statement->execute();
+            $data = $statement->fetch();
+            if (!$data) return false;
+            return true;
+        } catch (\Exception $e) {
+            throw new ServerErrorException("Erreur lors de la récupération de la convention", 500, $e);
+        }
+    }
+
     protected
     function getNomColonnes(): array
     {

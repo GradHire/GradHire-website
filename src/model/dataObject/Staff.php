@@ -6,7 +6,6 @@ use app\src\model\dataObject\Utilisateur;
 
 class Staff extends Utilisateur
 {
-
     private int $idutilisateur;
     private ?string $role;
     private string $loginLdap;

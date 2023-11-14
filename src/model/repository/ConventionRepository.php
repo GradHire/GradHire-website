@@ -32,6 +32,21 @@ class ConventionRepository extends AbstractRepository
         }
     }
 
+    public function getByIdOffreAndIdUser(int $idOffre, int $idUser): ?Convention
+    {
+        try {
+            $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$table . " WHERE idoffre = :idOffre AND idutilisateur = :idUser");
+            $statement->bindParam(":idOffre", $idOffre);
+            $statement->bindParam(":idUser", $idUser);
+            $statement->execute();
+            $data = $statement->fetch();
+            if (!$data) return null;
+            return $this->construireDepuisTableau($data);
+        } catch (\Exception $e) {
+            throw new ServerErrorException("Erreur lors de la récupération de la convention", 500, $e);
+        }
+    }
+
     /**
      * @throws ServerErrorException
      */
@@ -169,6 +184,22 @@ class ConventionRepository extends AbstractRepository
                 "Convention validée par l'enreprise " . $entreprise->getNomutilisateur(),
                 "La convention n°" . $id . " de l'offre " . $offre->getSujet() . " a été validée par l'entreprise " . $entreprise->getNomutilisateur()
             );
+        } catch (\Exception $e) {
+            throw new ServerErrorException("Erreur lors de la validation de la convention", 500, $e);
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function suivreConvention(int $idutilisateur, int $idOffre): void {
+        try {
+            $convention = $this->getByIdOffreAndIdUser($idOffre, $idutilisateur);
+            $statement = Database::get_conn()->prepare("INSERT INTO SuivreConvention (idutilisateur,idconvention) VALUES (:idutilisateur,:idconvention)");
+            $statement->bindParam(":idutilisateur", $idutilisateur);
+            $numconvention = $convention->getNumconvention();
+            $statement->bindParam(":idconvention", $numconvention);
+            $statement->execute();
         } catch (\Exception $e) {
             throw new ServerErrorException("Erreur lors de la validation de la convention", 500, $e);
         }

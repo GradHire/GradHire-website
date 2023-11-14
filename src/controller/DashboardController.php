@@ -10,6 +10,7 @@ use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\fields\FormFile;
 use app\src\model\Form\FormModel;
+use app\src\model\repository\ConventionRepository;
 use app\src\model\repository\PostulerRepository;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;

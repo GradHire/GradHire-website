@@ -2,6 +2,7 @@
 
 namespace app\src\model\dataObject;
 
+use app\src\model\repository\ConventionRepository;
 use app\src\model\repository\PostulerRepository;
 
 class Postuler extends AbstractDataObject
@@ -91,6 +92,12 @@ class Postuler extends AbstractDataObject
     protected function getValueColonne(string $nomColonne): string
     {
         return $this->$nomColonne;
+    }
+
+    public function getIfPostuler(int $idUtilisateur): bool
+    {
+        if ((new ConventionRepository())->getByIdOffreAndIdUser($this->getIdOffre(), $this->getIdUtilisateur()) != null) return (new PostulerRepository())->getIfPostuler($this->getIdOffre(), $idUtilisateur);
+        else return false;
     }
 
 

@@ -5,6 +5,7 @@ use app\src\controller\ConventionsController;
 use app\src\controller\DashboardController;
 use app\src\controller\OffreController;
 use app\src\controller\OpenController;
+use app\src\controller\PostulerController;
 use app\src\controller\TestController;
 use app\src\controller\UserController;
 use app\src\core\lib\Psr4AutoloaderClass;
@@ -106,6 +107,12 @@ $app->router->get('/conventions/{id:\d+}/edit', [ConventionsController::class, '
 
 
 $app->router->post('/conventions/{id:\d+}/edit', [ConventionsController::class, 'editConvention']);
+
+// PostulerController
+
+$app->router->get('/postuler/seProposer/{id:\d+}', [PostulerController::class, 'se_proposer']);
+
+
 
 
 $app->run();
