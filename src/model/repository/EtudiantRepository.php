@@ -75,6 +75,13 @@ class EtudiantRepository extends LdapRepository
         );
     }
 
+    public function updateEtu(string $numEtu, string $nom, string $prenom, string $tel, string $mailPerso, string $mailUniv, string $adresse, string $codePostal, string $ville, string $pays): void
+    {
+        $statement = Database::get_conn()->prepare("CALL updateEtuImp(?,?,?,?,?,?,?,?,?,?,?)");
+        $statement->execute([$numEtu, $nom, $prenom, $tel, $mailPerso, $mailUniv, null, $adresse, $codePostal, $pays, $ville]);
+
+    }
+
     /**
      * @throws ServerErrorException
      */

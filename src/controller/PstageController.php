@@ -87,6 +87,7 @@ class PstageController extends AbstractController
             if ($request->getMethod() === 'post') {
                 if ($form->validate($request->getBody())) {
                     $_SESSION['simulateurEtu'] = $form->getParsedBody();
+                    (new EtudiantRepository([]))->updateEtu($form->getParsedBody()['numEtudiant'], $form->getParsedBody()['nom'], $form->getParsedBody()['prenom'], $form->getParsedBody()['telephone'], $form->getParsedBody()['emailPerso'], $form->getParsedBody()['emailUniv'], $form->getParsedBody()['adresse'], $form->getParsedBody()['codePostal'], $form->getParsedBody()['ville'], "France");
                     return $this->render('simulateurP/General', ['vueChemin' => "previewetu.php", 'form' => $form]);
                 }
             }
