@@ -2,8 +2,6 @@
 
 namespace app\src\model\dataObject;
 
-use app\src\model\dataObject\Utilisateur;
-
 class Staff extends Utilisateur
 {
 
@@ -13,7 +11,7 @@ class Staff extends Utilisateur
     private string $prenom;
     private ?int $archiver;
 
-    public function __construct($idutilisateur, $role, $loginLdap, $prenom, $email, $nom, $numtelephone, $bio, $archiver)
+    public function __construct($idutilisateur, $email, $nom, $numtelephone, $bio, $archiver, $loginLdap, $prenom, $role)
     {
         parent::__construct($idutilisateur, $email, $nom, $numtelephone, $bio);
         $this->idutilisateur = $idutilisateur;
@@ -64,7 +62,6 @@ class Staff extends Utilisateur
         $this->prenom = $prenom;
     }
 
-
     public function getArchiver(): ?int
     {
         return $this->archiver;
@@ -74,8 +71,6 @@ class Staff extends Utilisateur
     {
         $this->archiver = $archiver;
     }
-
-
 
 
 }

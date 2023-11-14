@@ -85,9 +85,9 @@ $app->router->get('/user_test/{id}', [TestController::class, 'user_test']);
 // DashboardController
 
 $app->router->get('/candidatures', [DashboardController::class, 'candidatures']);
+$app->router->get('/candidatures/contacter/{id}', [DashboardController::class, 'contacterEntreprise']);
+$app->router->post('/candidatures/contacter/{id}', [DashboardController::class, 'contacterEntreprise']);
 $app->router->get('/candidatures/{idOffre}/{idUtilisateur}', [DashboardController::class, 'candidatures']);
-$app->router->post('/candidatures/contacter/{id}', [DashboardController::class, 'envoyerMailEntreprise']);
-$app->router->post('/candidatures/contacter', [DashboardController::class, 'contacterEntrepriseEtudiant']);
 $app->router->post('/candidatures', [DashboardController::class, 'candidatures']);
 
 $app->router->get('/utilisateurs/{id}/archiver', [DashboardController::class, 'archiver']);
@@ -95,6 +95,7 @@ $app->router->get('/utilisateurs/{id}/archiver', [DashboardController::class, 'a
 $app->router->get('/utilisateurs', [DashboardController::class, 'utilisateurs']);
 $app->router->get('/utilisateurs/{id}', [DashboardController::class, 'utilisateurs']);
 $app->router->post('/utilisateurs/{id}', [DashboardController::class, 'utilisateurs']);
+$app->router->post('/utilisateurs/{id}/role', [DashboardController::class, 'role']);
 
 $app->router->get('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPro']);
 $app->router->post('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPro']);

@@ -4,6 +4,7 @@ use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 
+\app\src\core\components\Notification::show();
 ?>
 
 <html lang="fr">
@@ -58,33 +59,29 @@ use app\src\model\dataObject\Roles;
                     <?php if (!Application::isGuest()): ?>
                         <a href="/"
                            class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Accueil</a>
-                        <a href="/offres"
-                           class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Offres</a>
-                        <?php if (!Auth::has_role(Roles::Enterprise, Roles::Tutor)): ?>
+                        <?php if (!Auth::has_role(Roles::ChefDepartment)): ?>
+                            <a href="/offres"
+                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Offres</a>
+                        <?php else: ?>
+                            <a href="/utilisateurs"
+                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Gestion
+                                roles</a>
+                        <?php endif; ?>
+                        <?php if (!Auth::has_role(Roles::Enterprise, Roles::Tutor, Roles::ChefDepartment)): ?>
                             <a href="/entreprises"
                                class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Entreprises</a>
                         <?php endif; ?>
-                        <?php if (Auth::has_role(Roles::Teacher)): ?>
-                            <a href="/candidatures"
-                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
-                        <?php endif; ?>
-                        <?php if (Auth::has_role(Roles::Student)): ?>
+                        <?php if (Auth::has_role(Roles::Student, Roles::Teacher, Roles::Tutor, Roles::Enterprise)): ?>
                             <a href="/candidatures"
                                class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
                             <a href="/explicationSimu"
                                class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Simulateur</a>
-                        <?php endif; ?>
-                        <?php if (Auth::has_role(Roles::Tutor)): ?>
-                            <a href="/candidatures"
-                               class="flex items-center text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
                         <?php endif; ?>
                         <?php if (Auth::has_role(Roles::Enterprise)): ?>
                             <a href="/offres/create"
                                class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Créer
                                 une
                                 offre</a>
-                            <a href="/candidatures"
-                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
                             <a href="/ListeTuteurPro"
                                class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Tuteurs</a>
                         <?php endif; ?>
