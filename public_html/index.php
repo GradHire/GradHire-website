@@ -94,6 +94,7 @@ $app->router->get('/utilisateurs/{id}/archiver', [DashboardController::class, 'a
 $app->router->get('/utilisateurs', [DashboardController::class, 'utilisateurs']);
 $app->router->get('/utilisateurs/{id}', [DashboardController::class, 'utilisateurs']);
 $app->router->post('/utilisateurs/{id}', [DashboardController::class, 'utilisateurs']);
+$app->router->post('/utilisateurs/{id}/role', [DashboardController::class, 'role']);
 
 $app->router->get('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPro']);
 $app->router->post('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPro']);

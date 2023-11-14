@@ -14,11 +14,28 @@ class StaffRepository extends LdapRepository
     protected static string $create_function = "creerStaff";
     protected static string $update_function = "updateStaff";
 
+    /**
+     * @throws ServerErrorException
+     */
+    public static function updateRole($id, $role): void
+    {
+        try {
+            $sql = "UPDATE Staff SET role = :role WHERE idutilisateur = :id";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['id' => $id, 'role' => $role]);
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
+    }
+
     public function role(): Roles
     {
-        if ($this->attributes["role"] === "responsable")
-            return Roles::Manager;
-        return Roles::Staff;
+        foreach (Roles::cases() as $case) {
+            if ($this->attributes["role"] === $case->value) {
+                return $case;
+            }
+        }
+        return Roles::Teacher;
     }
 
     /**
@@ -46,14 +63,14 @@ class StaffRepository extends LdapRepository
     {
         return new Staff(
             $dataObjectFormatTableau["idutilisateur"],
-            $dataObjectFormatTableau["role"],
-            $dataObjectFormatTableau["loginldap"],
-            $dataObjectFormatTableau["prenom"],
             $dataObjectFormatTableau["email"],
             $dataObjectFormatTableau["nom"],
             $dataObjectFormatTableau["numtelephone"],
             $dataObjectFormatTableau["bio"],
-            $dataObjectFormatTableau["archiver"]
+            $dataObjectFormatTableau["archiver"],
+            $dataObjectFormatTableau["loginldap"],
+            $dataObjectFormatTableau["prenom"],
+            $dataObjectFormatTableau["role"]
         );
     }
 
@@ -72,6 +89,23 @@ class StaffRepository extends LdapRepository
             return $emails;
         } catch
         (\Exception) {
+            throw new ServerErrorException();
+        }
+    }
+
+    public function getAll(): ?array
+    {
+        try {
+            $sql = "SELECT * FROM " . self::$view;
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute();
+            $resultat = $requete->fetchAll();
+            $utilisateurs = [];
+            foreach ($resultat as $utilisateur) {
+                $utilisateurs[] = $this->construireDepuisTableau($utilisateur);
+            }
+            return $utilisateurs;
+        } catch (PDOException) {
             throw new ServerErrorException();
         }
     }

@@ -2,19 +2,19 @@
 
 namespace app\src\controller;
 
+use app\src\core\components\Notification;
 use app\src\core\exception\ForbiddenException;
 use app\src\core\exception\NotFoundException;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
-use app\src\model\Form\fields\FormFile;
 use app\src\model\Form\FormModel;
-use app\src\model\repository\PostulerRepository;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
+use app\src\model\repository\PostulerRepository;
 use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\repository\TuteurRepository;
@@ -31,24 +31,48 @@ class DashboardController extends AbstractController
     {
         $id = $request->getRouteParams()['id'] ?? null;
         if (!is_null($id) && !Auth::has_role(Roles::Manager, Roles::Staff)) throw new ForbiddenException();
-        $utilisateur = null;
         if ($id != null) {
             if ((new EntrepriseRepository([]))->getByIdFull($id) != null) {
                 $utilisateur = (new EntrepriseRepository([]))->getByIdFull($id);
                 return $this->render('utilisateurs/detailEntreprise', ['utilisateur' => $utilisateur]);
-            } elseif ((new EtudiantRepository([]))->getByIdFull($id) != null && $id != null) {
+            } elseif ((new EtudiantRepository([]))->getByIdFull($id) != null) {
                 $utilisateur = (new EtudiantRepository([]))->getByIdFull($id);
                 return $this->render('utilisateurs/detailEtudiant', ['utilisateur' => $utilisateur]);
-            } elseif ((new TuteurRepository([]))->getByIdFull($id) != null && $id != null) {
+            } elseif ((new TuteurRepository([]))->getByIdFull($id) != null) {
                 $utilisateur = (new TuteurRepository([]))->getByIdFull($id);
                 return $this->render('utilisateurs/detailTuteur', ['utilisateur' => $utilisateur]);
-            } elseif ((new StaffRepository([]))->getByIdFull($id) != null && $id != null) {
+            } elseif ((new StaffRepository([]))->getByIdFull($id) != null) {
                 $utilisateur = (new StaffRepository([]))->getByIdFull($id);
                 return $this->render('utilisateurs/detailStaff', ['utilisateur' => $utilisateur]);
             }
         }
-        $utilisateur = (new UtilisateurRepository([]))->getAll();
+        if (Auth::has_role(Roles::ChefDepartment)) {
+            $utilisateur = (new StaffRepository([]))->getAll();
+            $utilisateur = array_filter($utilisateur, function ($user) {
+                return $user->getRole() !== Roles::ChefDepartment->value;
+            });
+        } else
+            $utilisateur = (new UtilisateurRepository([]))->getAll();
+
         return $this->render('utilisateurs/utilisateurs', ['utilisateurs' => $utilisateur]);
+    }
+
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
+    public function role(Request $req)
+    {
+        if ($req->getMethod() !== 'post')
+            throw new ForbiddenException();
+        if (!Auth::has_role(Roles::ChefDepartment)) throw new ForbiddenException();
+        if (!isset($req->getBody()['role']))
+            throw new ForbiddenException();
+        $role = $req->getBody()['role'];
+        $id = $req->getRouteParams()['id'];
+        StaffRepository::updateRole($id, $role);
+        Notification::createNotification("Le rôle de l'utilisateur a été modifié");
+        Application::redirectFromParam('/utilisateurs');
     }
 
     /**
