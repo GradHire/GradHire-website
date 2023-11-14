@@ -5,3 +5,4 @@ public_html/resources/css/output.css
 public_html/uploads
 public_html/pictures
 .phplint.cache
+yarn.lock
