@@ -52,7 +52,6 @@ class TuteurRepository extends ProRepository
             $dataObjectFormatTableau["prenom"],
             $dataObjectFormatTableau["fonction"],
             $dataObjectFormatTableau["identreprise"],
-            $dataObjectFormatTableau["idoffre"]
         );
     }
 
@@ -121,8 +120,7 @@ class TuteurRepository extends ProRepository
             "archiver",
             "prenom",
             "fonction",
-            "identreprise",
-            "idoffre"
+            "identreprise"
         ];
     }
 
