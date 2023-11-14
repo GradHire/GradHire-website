@@ -35,7 +35,7 @@ use app\src\model\repository\UtilisateurRepository;
             }
 
             if(empty($candidaturesAttente) && empty($candidaturesAutres)){
-                echo '<h2> Aucune Postuler </h2>';
+                echo "<h2>Vous n'avez postuler à aucune offre pour l'instant.</h2>";
             }
             ?>
 
