@@ -116,8 +116,8 @@ class EntrepriseRepository extends ProRepository
     {
         return new Entreprise(
             $dataObjectFormatTableau['idutilisateur'],
-            $dataObjectFormatTableau['bio'] ?? "",
             $dataObjectFormatTableau['statutjuridique'] ?? "",
+            $dataObjectFormatTableau['bio'] ?? "",
             $dataObjectFormatTableau['typestructure'] ?? "",
             $dataObjectFormatTableau['effectif'] ?? "",
             $dataObjectFormatTableau['codenaf'] ?? "",
@@ -126,7 +126,11 @@ class EntrepriseRepository extends ProRepository
             $dataObjectFormatTableau['siret'] ?? 0,
             $dataObjectFormatTableau['email'] ?? "",
             $dataObjectFormatTableau['nom'] ?? "",
-            $dataObjectFormatTableau['numtelephone'] ?? ""
+            $dataObjectFormatTableau['numtelephone'] ?? "",
+            $dataObjectFormatTableau['adresse'] ?? "",
+            $dataObjectFormatTableau['codepostal'] ?? "",
+            $dataObjectFormatTableau['nomville'] ?? "",
+            $dataObjectFormatTableau['pays'] ?? ""
         );
     }
 
@@ -137,10 +141,9 @@ class EntrepriseRepository extends ProRepository
     function getAll(): ?array
     {
         try {
-            $sql = "SELECT * FROM " . $this->getNomTable() . " JOIN Utilisateur ON " . $this->getNomTable() . ".idUtilisateur = Utilisateur.idUtilisateur";
+            $sql = "SELECT * FROM " . $this->getNomTable() . " e JOIN Utilisateur u ON e.idUtilisateur = u.idUtilisateur";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute();
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetchAll();
             if (!$resultat) {
                 return null;
@@ -155,6 +158,123 @@ class EntrepriseRepository extends ProRepository
             throw new ServerErrorException();
         }
     }
+
+    public function getByName(mixed $nomEnt, mixed $pays, mixed $department)
+    {
+        $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE nom = :nomEnt AND pays = :pays AND codePostal LIKE :department";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['nomEnt' => $nomEnt, 'pays' => $pays, 'department' => $department . '%']);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetchAll();
+        if (!$resultat) {
+            return null;
+        }
+        $entreprises = [];
+        foreach ($resultat as $entrepriseData) {
+            $entreprises[] = $this->construireDepuisTableau($entrepriseData);
+        }
+        return $entreprises;
+    }
+
+
+    public function getBySiret(mixed $siret, mixed $siren)
+    {
+        $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE siret = :siret AND siret LIKE  :siren";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['siret' => $siret, 'siren' => $siren . '%']);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetchAll();
+        if (!$resultat) {
+            return null;
+        }
+        $entreprises = [];
+        foreach ($resultat as $entrepriseData) {
+            $entreprises[] = $this->construireDepuisTableau($entrepriseData);
+        }
+        return $entreprises;
+    }
+
+
+    public function getByTel(mixed $tel, mixed $fax)
+    {
+        $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE numTelephone = :tel AND fax = :fax";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['tel' => $tel, 'fax' => $fax]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetchAll();
+        if (!$resultat) {
+            return null;
+        }
+        $entreprises = [];
+        foreach ($resultat as $entrepriseData) {
+            $entreprises[] = $this->construireDepuisTableau($entrepriseData);
+        }
+        return $entreprises;
+    }
+
+    public function getByAdresse(mixed $adresse, mixed $codePostal, mixed $pays)
+    {
+        $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE adresse = :adresse AND codePostal = :codePostal AND pays = :pays";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['adresse' => $adresse, 'codePostal' => $codePostal, 'pays' => $pays]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetchAll();
+        if (!$resultat) {
+            return null;
+        }
+        $entreprises = [];
+        foreach ($resultat as $entrepriseData) {
+            $entreprises[] = $this->construireDepuisTableau($entrepriseData);
+        }
+        return $entreprises;
+    }
+
+    public function getCodePostal(int $idUtilisateur): ?string
+    {
+        $sql = "SELECT codePostal FROM " . $this->getNomTable() . " WHERE idUtilisateur = :idUtilisateur";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idUtilisateur' => $idUtilisateur]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetch();
+        if (!$resultat) {
+            return null;
+        }
+        return $resultat['codepostal'];
+    }
+
+    public function getVille(int $idUtilisateur): ?string
+    {
+        $sql = "SELECT nomVille FROM " . $this->getNomTable() . "  WHERE idUtilisateur = :idUtilisateur";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idUtilisateur' => $idUtilisateur]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetch();
+        if (!$resultat) {
+            return null;
+        }
+        return $resultat['nomville'];
+    }
+
+    public function getPays(int $idUtilisateur): ?string
+    {
+        $sql = "SELECT pays FROM " . $this->getNomTable() . " WHERE idUtilisateur = :idUtilisateur";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idUtilisateur' => $idUtilisateur]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetch();
+        if (!$resultat) {
+            return null;
+        }
+        return $resultat['pays'];
+    }
+
+    public function create(mixed $nomEnt, mixed $email, mixed $tel, string $string, mixed $type, mixed $effectif, mixed $codeNaf, mixed $fax, mixed $web, mixed $voie, mixed $cedex, mixed $residence, mixed $codePostal, mixed $pays, mixed $ville, mixed $siret)
+    {
+        $sql = "SELECT creerEntImp(:nomEnt, :email, :tel, :string, :type, :effectif, :codeNaf, :fax, :web, :voie, :cedex, :residence, :codePostal, :pays, :ville, :siret) FROM DUAL";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['nomEnt' => $nomEnt, 'email' => $email, 'tel' => $tel, 'string' => $string, 'type' => $type, 'effectif' => $effectif, 'codeNaf' => $codeNaf, 'fax' => $fax, 'web' => $web, 'voie' => $voie, 'cedex' => $cedex, 'residence' => $residence, 'codePostal' => $codePostal, 'pays' => $pays, 'nomville' => $ville, 'siret' => $siret]);
+    }
+
 
     protected
     function getNomColonnes(): array
@@ -171,7 +291,11 @@ class EntrepriseRepository extends ProRepository
             "siret",
             "email",
             "nom",
-            "numTelephone"
+            "numTelephone",
+            "adresse",
+            "codePostal",
+            "nomville",
+            "pays"
         ];
     }
 }

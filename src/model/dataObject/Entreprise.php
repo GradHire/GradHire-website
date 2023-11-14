@@ -2,6 +2,9 @@
 
 namespace app\src\model\dataObject;
 
+use app\src\model\repository\ConventionRepository;
+use app\src\model\repository\EntrepriseRepository;
+
 class Entreprise extends Utilisateur
 {
     private int $idUtilisateur;
@@ -12,6 +15,10 @@ class Entreprise extends Utilisateur
     private ?string $fax;
     private ?string $siteWeb;
     private int $siret;
+    private ?string $adresse;
+    private ?string $codePostal;
+    private ?string $ville;
+    private ?string $pays;
 
     /**
      * Entreprise constructor.
@@ -27,9 +34,13 @@ class Entreprise extends Utilisateur
      * @param string $emailutilisateur
      * @param string $nomutilisateur
      * @param string $numtelutilisateur
+     * @param string|null $adresse
+     * @param string|null $codePostal
+     * @param string|null $ville
+     * @param string|null $pays
      */
 
-    public function __construct(int $idutilisateur, ?string $statutjuridique, ?string $bio, ?string $typestructure, ?string $effectif, ?string $codenaf, ?string $fax, ?string $siteweb, int $siret, string $emailutilisateur, string $nomutilisateur, string $numtelutilisateur)
+    public function __construct(int $idutilisateur, ?string $statutjuridique, ?string $bio, ?string $typestructure, ?string $effectif, ?string $codenaf, ?string $fax, ?string $siteweb, int $siret, string $emailutilisateur, string $nomutilisateur, string $numtelutilisateur, ?string $adresse, ?string $codePostal, ?string $ville, ?string $pays)
     {
         parent::__construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur, $bio);
         $this->idUtilisateur = $idutilisateur;
@@ -40,16 +51,20 @@ class Entreprise extends Utilisateur
         $this->fax = $fax;
         $this->siteWeb = $siteweb;
         $this->siret = $siret;
+        $this->adresse = $adresse;
+        $this->codePostal = $codePostal;
+        $this->ville = $ville;
+        $this->pays = $pays;
     }
 
-    public function getIdutilisateur(): int
+    public function getAdresse(): ?string
     {
-        return $this->idUtilisateur;
+        return $this->adresse;
     }
 
-    public function setIdutilisateur(int $idutilisateur): void
+    public function setAdresse(?string $adresse): void
     {
-        $this->idUtilisateur = $idutilisateur;
+        $this->adresse = $adresse;
     }
 
     public function getStatutjuridique(): ?string
@@ -122,8 +137,35 @@ class Entreprise extends Utilisateur
         $this->siret = $siret;
     }
 
+    public function getCodePostal(): ?string
+    {
+        return $this->codePostal;
+    }
+
+    public function getVille(): ?string
+    {
+        return $this->ville;
+    }
+
+    public function getPays(): ?string
+    {
+        return $this->pays;
+    }
+
+    public function getIdutilisateur(): int
+    {
+        return $this->idUtilisateur;
+    }
+
+    public function setIdutilisateur(int $idutilisateur): void
+    {
+        $this->idUtilisateur = $idutilisateur;
+    }
+
     protected function getValueColonne(string $nomColonne): string
     {
         return $this->$nomColonne;
     }
+
+
 }

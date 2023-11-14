@@ -17,6 +17,8 @@ use app\src\model\repository\OffresRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\Request;
+use Mosquitto\Client;
+use const http\Client\Curl\AUTH_ANY;
 
 class OffreController extends AbstractController
 {
@@ -90,8 +92,6 @@ class OffreController extends AbstractController
         if (isset($_GET['duree'])) $filter['duree'] = $_GET['duree'];
         if (isset($_GET['alternance'])) $filter['alternance'] = $_GET['alternance'];
         if (isset($_GET['stage'])) $filter['stage'] = $_GET['stage'];
-        $_GET['gratificationMin'] = 4.05;
-        $_GET['gratificationMax'] = 15;
         if (isset($_GET['gratificationMin'])) {
             if ($_GET['gratificationMin'] == "") $filter['gratificationMin'] = null;
             else if ($_GET['gratificationMin'] < 4.05) $filter['gratificationMin'] = 4.05;
@@ -173,12 +173,12 @@ class OffreController extends AbstractController
             if ($offre == null && $id != null) throw new NotFoundException();
 
             if ($request->getMethod() === 'post') {
-                (new OffresRepository())->updateToDraft($id);
+                (new OffresRepository())->updateToArchiver($id);
                 (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmailutilisateur()], "Archivage de votre offre", "Votre offre a été archivée");
                 $offre = (new OffresRepository())->getByIdWithUser($id);
                 return $this->render('offres/detailOffre', ['offre' => $offre]);
             } elseif ($request->getMethod() === 'get') {
-                (new OffresRepository())->updateToDraft($id);
+                (new OffresRepository())->updateToArchiver($id);
                 (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmailutilisateur()], "Archivage de votre offre", "Votre offre a été archivée");
                 Application::redirectFromParam("/offres");
             }
@@ -201,43 +201,58 @@ class OffreController extends AbstractController
         }
 
         $action = $_POST['action'];
-        $type = $_POST['radios'];
-        $theme = $_POST['theme'] ?? null;
-        $nbjour = $_POST['nbjour'] ?? null;
-        $nbheure = $_POST['nbheure'];
-        $distanciel = $type == "alternance" ? $_POST['distanciel'] : null;
-        $salaire = $_POST['salaire'];
-        $unitesalaire = "heures";
-        $avantage = $_POST['avantage'];
-        $description = $_POST['description'];
-        $dated = $_POST['dated'] ?? date("Y-m-d H:i:s");
-        $datef = $_POST['datef'] ?? date("Y-m-d H:i:s");
-        $duree = $_POST['duree'] ?? null;
-        $idUtilisateur = Application::getUser()->role() === Roles::Enterprise ? Application::getUser()->id() : $_POST['entreprise'];
         $idOffre = $_POST['id_offre'];
         if ($idOffre === "") {
             $idOffre = null;
         }
-        $idAnnee = date("Y");
-        $datecreation = date("Y-m-d H:i:s");
-
         if ($action == 'Supprimer Brouillon') {
             OffreForm::deleteOffre($idOffre);
             return $this->render('/offres/create');
         }
 
-        $titre = $_POST['titre'];
-        $statut = $action == 'Envoyer' ? "pending" : "draft";
+        $typeStage = $_POST['typeStage'] ?? null;
+        $typeAlternance = $_POST['typeAlternance'] ?? null;
+        $distanciel = $_POST['distanciel'] ?? null;
+        if (!empty($_POST['dureeStage']) && !empty($_POST['dureeAlternance'])) {
+            $duree = "stage : " . $_POST['dureeStage'] . " heure(s), alternance : " . $_POST['dureeAlternance'] . " an(s)";
+        } else if (!empty($_POST["dureeStage"]) && empty($_POST["dureeAlternance"])) {
+            $duree = $_POST['dureeStage'] . " heure(s)";
+        } else if (empty($_POST["dureeStage"]) && !empty($_POST["dureeAlternance"])) {
+            $duree = $_POST['dureeAlternance'] . " an(s)";
+        } else {
+            $duree = null;
+        }
 
+        $theme = $_POST['theme'] ?? null;
+        $sujet = $_POST['sujet'];
+        $nbJourTravailHebdo = $_POST['nbjourtravailhebdo'] ?? null;
+        $nbJourHeureHebdo = $_POST['nbheureparjour'];
+        $gratification = $_POST['gratification'];
+        $avantageNature = $_POST['avantage'];
+        $dateDebut = $_POST['datedebut'] ?? date("Y-m-d H:i:s");
+        $dateFin = $_POST['datefin'] ?? date("Y-m-d H:i:s");
+        $statut = $action == 'Envoyer' ? "en attente" : "brouillon";
+        $pourvue = 0;
+        $getDateDebut = explode("-", $dateDebut)[0];
+        $getDateFin = explode("-", $dateFin)[0];
+        if ($getDateDebut == $getDateFin) {
+            $annee = $getDateDebut;
+        } else {
+            $annee = $getDateDebut . "/" . $getDateFin;
+        }
         $anneeVisee = $duree == 1 ? "2" : "3";
+        $idUtilisateur = Application::getUser()->role() === Roles::Enterprise ? Application::getUser()->id() : $_POST['identreprise'];
+        $datecreation = date("Y-m-d H:i:s");
+        $description = $_POST['description'];
 
-        $offre = new Offre($idOffre, $duree, $theme, $titre, $nbjour, $nbheure, $salaire, $unitesalaire, $avantage,
-            $dated, $datef, $statut, $anneeVisee, $idAnnee, $idUtilisateur, $datecreation, $description);
+
+        $offre = new Offre($idOffre, $duree, $theme, $sujet, $nbJourTravailHebdo, $nbJourHeureHebdo, $gratification, $avantageNature,
+            $dateDebut, $dateFin, $statut, $pourvue, $anneeVisee, $annee, $idUtilisateur, $datecreation, $description);
 
         if ($idOffre === null) {
-            OffreForm::creerOffre($offre, $distanciel);
+            OffreForm::creerOffre($offre, $typeStage, $typeAlternance, $distanciel);
         } else {
-            OffreForm::updateOffre($offre, $distanciel);
+            OffreForm::updateOffre($offre, $typeStage, $typeAlternance, $distanciel);
         }
 
         return $this->render('/offres/create');
@@ -270,13 +285,30 @@ class OffreController extends AbstractController
                     $form->setError("Impossible de télécharger tous les fichiers");
                     return '';
                 }
-                $stmt = Database::get_conn()->prepare("INSERT INTO `Postuler`(`idoffre`, `idUtilisateur`, `dates`) VALUES (?,?" . date('d-m-Y') . " )");
-                $stmt->execute([$id, Application::getUser()->id()]);
+                $stmt = Database::get_conn()->prepare("INSERT INTO `Postuler`(`idoffre`, `idUtilisateur`, `dates`) VALUES (?,?,?)");
+                $values = [
+                    $id,
+                    Application::getUser()->id(),
+                    date("Y-m-d H:i:s")
+                ];
+                $stmt->execute($values);
                 Application::$app->response->redirect('/offres');
             }
         }
         return $this->render('candidature/postuler', [
             'form' => $form
         ]);
+    }
+
+    public function mapsOffres(): string
+    {
+        $offres = (new OffresRepository())->getAll();
+        $adresseList = [];
+        foreach ($offres as $offre) {
+            if (!in_array($offre->getAdresse(), $adresseList)) {
+                $adresseList[] = $offre->getAdresse();
+            }
+        }
+        return $this->render('offres/mapOffre', ['adresseList' => $adresseList]);
     }
 }

@@ -6,7 +6,7 @@ use app\src\model\dataObject\Utilisateur;
 
 class Etudiant extends Utilisateur
 {
-
+    private static int $convId = 0;
     private int $idUtilisateur;
     private string $prenom;
     private string $loginLDAP;
@@ -20,28 +20,27 @@ class Etudiant extends Utilisateur
     private ?int $codePostal;
     private ?string $pays;
     private ?bool $archiver;
-    private int $annee;
-
+    private ?int $annee;
 
     public function __construct(
         int     $idUtilisateur,
-        string $prenom,
-        string  $loginLDAP,
         string  $email,
         string  $nom,
         ?string $numTelephone,
-        ?string $numEtudiant,
-        ?string $adresse,
-        ?string $dateNaissance,
-        ?string $emailPerso,
-        ?string $codeSexe,
-        ?int     $idgroupe,
-        ?string  $nomVille,
-        ?int     $codePostal,
-        ?string $pays,
         ?string $bio,
-        ?bool    $archiver,
-        int     $annee
+        ?bool   $archiver,
+        ?string $nomVille,
+        ?int    $codePostal,
+        ?string $pays,
+        ?string $adresse,
+        ?string $emailPerso,
+        ?string $numEtudiant,
+        ?string $codeSexe,
+        ?int    $idgroupe,
+        ?int    $annee,
+        ?string $dateNaissance,
+        ?string $loginLDAP,
+        string  $prenom,
     )
     {
         parent::__construct($idUtilisateur, $email, $nom, $numTelephone, $bio);
@@ -59,6 +58,16 @@ class Etudiant extends Utilisateur
         $this->pays = $pays;
         $this->archiver = $archiver;
         $this->annee = $annee;
+    }
+
+    public static function getConvId(): int
+    {
+        return self::$convId;
+    }
+
+    public static function setConvId(int $convId): void
+    {
+        self::$convId = $convId;
     }
 
     public function getIdUtilisateur(): int
@@ -81,7 +90,7 @@ class Etudiant extends Utilisateur
         $this->prenom = $prenom;
     }
 
-    public function getLoginLDAP(): string
+    public function getLoginLDAP(): ?string
     {
         return $this->loginLDAP;
     }
@@ -191,7 +200,7 @@ class Etudiant extends Utilisateur
         $this->archiver = $archiver;
     }
 
-    public function getAnnee(): int
+    public function getAnnee(): ?int
     {
         return $this->annee;
     }
@@ -200,7 +209,6 @@ class Etudiant extends Utilisateur
     {
         $this->annee = $annee;
     }
-
 
 
     protected function getValueColonne(string $nomColonne): string

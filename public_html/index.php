@@ -1,8 +1,9 @@
 <?php
 
 use app\src\controller\AuthController;
+use app\src\controller\ConventionsController;
 use app\src\controller\DashboardController;
-use app\src\controller\ImportController;
+use app\src\controller\PstageController;
 use app\src\controller\OffreController;
 use app\src\controller\OpenController;
 use app\src\controller\TestController;
@@ -75,6 +76,8 @@ $app->router->get('/offres/{id:\d+}/edit', [OffreController::class, 'editOffre']
 $app->router->get('/offres/{id:\d+}/validate', [OffreController::class, 'validateOffre']);
 $app->router->get('/offres/{id:\d+}/archive', [OffreController::class, 'archiveOffre']);
 
+$app->router->get('/offres/maps', [OffreController::class, 'mapsOffres']);
+
 // TestController
 
 $app->router->get('/user_test/{id}', [TestController::class, 'user_test']);
@@ -82,7 +85,9 @@ $app->router->get('/user_test/{id}', [TestController::class, 'user_test']);
 // DashboardController
 
 $app->router->get('/candidatures', [DashboardController::class, 'candidatures']);
-$app->router->get('/candidatures/{id:\d+}', [DashboardController::class, 'candidatures']);
+$app->router->get('/candidatures/{idOffre}/{idUtilisateur}', [DashboardController::class, 'candidatures']);
+$app->router->post('/candidatures/contacter/{id}', [DashboardController::class, 'envoyerMailEntreprise']);
+$app->router->post('/candidatures/contacter', [DashboardController::class, 'contacterEntrepriseEtudiant']);
 $app->router->post('/candidatures', [DashboardController::class, 'candidatures']);
 
 $app->router->get('/utilisateurs/{id}/archiver', [DashboardController::class, 'archiver']);
@@ -94,8 +99,62 @@ $app->router->post('/utilisateurs/{id}', [DashboardController::class, 'utilisate
 $app->router->get('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPro']);
 $app->router->post('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPro']);
 
-$app->router->get('/importer', [ImportController::class, 'importercsv']);
-$app->router->post('/importer', [ImportController::class, 'importercsv']);
+$app->router->get('/importer', [PstageController::class, 'importercsv']);
+$app->router->post('/importer', [PstageController::class, 'importercsv']);
 
+$app->router->get('/explicationSimu', [PstageController::class, 'explicationSimu']);
+
+
+$app->router->get('/simulateur', [PstageController::class, 'simulateur']);
+$app->router->post('/simulateur', [PstageController::class, 'simulateur']);
+
+$app->router->get('/simulateurOffre', [PstageController::class, 'simulateurOffre']);
+$app->router->post('/simulateurOffre', [PstageController::class, 'simulateurOffre']);
+
+$app->router->get('/previewOffre', [PstageController::class, 'previewOffre']);
+
+$app->router->get('/creerEntreprise', [PstageController::class, 'creerEntreprise']);
+$app->router->post('/creerEntreprise', [PstageController::class, 'creerEntreprise']);
+
+$app->router->get('/simulateurServiceAccueil', [PstageController::class, 'simulateurServiceAccueil']);
+$app->router->post('/simulateurServiceAccueil', [PstageController::class, 'simulateurServiceAccueil']);
+
+$app->router->get('/creerService', [PstageController::class, 'creerService']);
+$app->router->post('/creerService', [PstageController::class, 'creerService']);
+
+$app->router->get('/previewServiceAccueil', [PstageController::class, 'previewServiceAccueil']);
+
+$app->router->get('/simulateurTuteur', [PstageController::class, 'simulateurTuteur']);
+
+$app->router->get('/creerTuteur', [PstageController::class, 'creerTuteur']);
+$app->router->post('/creerTuteur', [PstageController::class, 'creerTuteur']);
+
+$app->router->get('/simulateurCandidature', [PstageController::class, 'simulateurCandidature']);
+$app->router->post('/simulateurCandidature', [PstageController::class, 'simulateurCandidature']);
+
+$app->router->get('/previewCandidature', [PstageController::class, 'previewCandidature']);
+
+$app->router->get('/simulateurProfReferent', [PstageController::class, 'simulateurProfReferent']);
+$app->router->post('/simulateurProfReferent', [PstageController::class, 'simulateurProfReferent']);
+
+$app->router->get('/simulateurSignataire', [PstageController::class, 'simulateurSignataire']);
+$app->router->post('/simulateurSignataire', [PstageController::class, 'simulateurSignataire']);
+
+$app->router->get('/creerSignataire', [PstageController::class, 'creerSignataire']);
+$app->router->post('/creerSignataire', [PstageController::class, 'creerSignataire']);
+
+$app->router->get('/previewSignataire', [PstageController::class, 'previewSignataire']);
+
+$app->router->get('/visuRecapConv', [PstageController::class, 'visuRecapConv']);
+
+$app->router->get('/validersimulation', [PstageController::class, 'validersimulation']);
+// ConventionController
+
+$app->router->get('/conventions', [ConventionsController::class, 'afficherListeConventions']);
+$app->router->get('/conventions/{id:\d+}', [ConventionsController::class, 'detailConvention']);
+$app->router->get('/conventions/{id:\d+}/edit', [ConventionsController::class, 'editConvention']);
+
+
+$app->router->post('/conventions/{id:\d+}/edit', [ConventionsController::class, 'editConvention']);
 
 $app->run();

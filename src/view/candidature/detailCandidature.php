@@ -1,8 +1,9 @@
 <?php
 
-/** @var $candidatures \app\src\model\dataObject\Candidature */
+/** @var $candidatures \app\src\model\dataObject\Postuler */
 
 use app\src\model\Auth;
+use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\repository\OffresRepository;
@@ -11,12 +12,13 @@ use app\src\model\dataObject\Roles;
 $etudiant = (new EtudiantRepository([]))->getByIdFull($candidatures->getIdutilisateur());
 $nometudiant = (new UtilisateurRepository([]))->getUserById($candidatures->getIdutilisateur())->getNomutilisateur();
 $offre = (new OffresRepository())->getById($candidatures->getIdoffre());
+
 ?>
 
 <div class="mt-6 border-zinc-100 pt-12 pb-24">
     <?php
-    echo '<h2 class="font-bold text-lg">Candidature de
-'.$nometudiant. " " . $etudiant->getPrenomutilisateurldap() .'
+    echo '<h2 class="font-bold text-lg">Postuler de
+'.$nometudiant. " " . $etudiant->getLoginLDAP() .'
 </h2>';
     ?>
     <dl class="divide-y divide-zinc-100">
@@ -25,24 +27,24 @@ $offre = (new OffresRepository())->getById($candidatures->getIdoffre());
             <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <div>
                     <?php
-                    if ($candidatures->getEtatcandidature() == "on hold") {
+                    if ($candidatures->getStatut() == "en attente") {
                         echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-yellow-100 text-yellow-800\">
     En attente
     </span>";
-                    } else if ($candidatures->getEtatcandidature() == "accepted") {
+                    } else if ($candidatures->getStatut() == "valider") {
                         echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-green-100 text-green-800\">
     Acceptée
     </span>";
-                    } else if ($candidatures->getEtatcandidature() == "declined") {
+                    } else if ($candidatures->getStatut() == "refuser") {
                         echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-red-100 text-red-800\">
     Refusée
     </span>";
-                    } else if ($candidatures->getEtatcandidature() == "draft") {
+                    } else if ($candidatures->getStatut() == "brouillon") {
                         echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-zinc-100 text-zinc-800\">
     Archivée
     </span>";
                     }else{
-                        echo $candidatures->getEtatcandidature();
+                        echo $candidatures->getStatut();
                     }
                     ?>
                 </div>
@@ -79,10 +81,10 @@ $offre = (new OffresRepository())->getById($candidatures->getIdoffre());
 
 
 <?php
-if($candidatures->getEtatcandidature() == "on hold" && Auth::has_role(Roles::Enterprise,Roles::Manager,Roles::Staff)){
+if($candidatures->getStatut() == "en attente" && Auth::has_role(Roles::Enterprise,Roles::Manager,Roles::Staff)){
     echo "<div class='flex flex-col mb-3'>
     <form action='/candidatures' method='POST'>
-    <input type='hidden' name='idcandidature' value='".$candidatures->getIdcandidature()."'>
+    <input type='hidden' name='idcandidature' value='".$candidatures->getIdoffre()."_".$candidatures->getIdutilisateur()."'>
     ";
      ?>
 
@@ -95,6 +97,21 @@ if($candidatures->getEtatcandidature() == "on hold" && Auth::has_role(Roles::Ent
 
     <?php
 
+    echo "</form>
+    </div>";
+}
+
+if (Auth::has_role(Roles::Student, Roles::Manager) && $candidatures->getStatut() == "valider"){
+    echo "<div class='flex flex-col mb-3'>
+    <form action='/candidatures/contacter' method='POST'>
+    <input type='hidden' name='identreprise' value='".$offre->getIdutilisateur()."'>
+    <input type='hidden' name='idoffre' value='".$offre->getIdoffre()."'>
+    <input type='hidden' name='idetudiant' value='".$candidatures->getIdUtilisateur()."'>
+    ";
+    ?>
+    <input type="submit" name="action" value="Contacter l'entreprise"
+           class="w-full text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"/>
+    <?php
     echo "</form>
     </div>";
 }

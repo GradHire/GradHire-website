@@ -12,7 +12,7 @@ class TuteurEntrepriseRepository extends ProRepository
 {
     protected static string $create_function = "creerTuteur";
     protected static string $view = "TuteurVue";
-    private string $nomtable = "TuteurEntreprise";
+    private string $nomtable = "TuteurVue";
 
     /**
      * @throws ServerErrorException
@@ -92,11 +92,28 @@ class TuteurEntrepriseRepository extends ProRepository
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetchAll();
             if (!$resultat) return null;
+            foreach ($resultat as $key => $tuteur) {
+                $resultat[$key] = $this->construireTuteurProDepuisTableau($tuteur);
+            }
             return $resultat;
         } catch (\Exception) {
             throw new ServerErrorException();
         }
 
+    }
+
+    public function construireTuteurProDepuisTableau(array $tuteurData): ?TuteurEntreprise
+    {
+        return new TuteurEntreprise(
+            $tuteurData['idutilisateur'],
+            $tuteurData['prenom'] ?? "",
+            $tuteurData['fonction'] ?? "",
+            $tuteurData['identreprise'],
+            $tuteurData['email'] ?? "",
+            $tuteurData['nom'] ?? "",
+            $tuteurData['numtelephone'] ?? "",
+
+        );
     }
 
     public function getAll(bool $getArchived = false): ?array
@@ -128,18 +145,38 @@ class TuteurEntrepriseRepository extends ProRepository
         return $this->construireTuteurProDepuisTableau($resultat);
     }
 
-    public function construireTuteurProDepuisTableau(array $tuteurData): ?TuteurEntreprise
+    public function getFullByEntreprise(mixed $idEntreprise): ?array
     {
-        return new TuteurEntreprise(
-            $tuteurData['idutilisateur'],
-            $tuteurData['prenom'] ?? "",
-            $tuteurData['fonction'] ?? "",
-            $tuteurData['identreprise'],
-            $tuteurData['email'] ?? "",
-            $tuteurData['nom'] ?? "",
-            $tuteurData['numtelephone'] ?? "",
+        $sql = "SELECT * FROM $this->nomtable WHERE $this->nomtable.idEntreprise = :idEntreprise";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idEntreprise' => $idEntreprise]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetchAll();
+        if (!$resultat) {
+            return null;
+        }
+        foreach ($resultat as $key => $tuteur) {
+            $resultat[$key] = $this->construireTuteurProDepuisTableau($tuteur);
+        }
+        return $resultat;
+    }
 
-        );
+    public function create(mixed $nom, mixed $prenom, mixed $fonction, mixed $tel, mixed $email, mixed $idEntreprise)
+    {
+        $sql = "SELECT creerTuteur(:prenom, :nom, :email, :fonction, :idEntreprise, :hash, :tel) FROM DUAL ";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute([
+            'prenom' => $prenom,
+            'nom' => $nom,
+            'email' => $email,
+            'fonction' => $fonction,
+            'idEntreprise' => $idEntreprise,
+            'hash' => null,
+            'tel' => $tel
+        ]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetch();
+        return $resultat;
     }
 
     protected function getNomColonnes(): array

@@ -6,6 +6,7 @@
 /** @var $waiting array */
 
 
+use app\src\core\components\Modal;
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
@@ -15,8 +16,10 @@ use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 
 $this->title = "Tuteurs";
+
+$modal = new Modal("Voulez vous vraiment supprimer ce tuteur ?", "Supprimer", "");
 ?>
-    <div class="overflow-x-auto w-full pt-12 pb-24">
+    <div class="overflow-x-auto w-full pt-12">
 <?php
 
 if (Auth::has_role(Roles::Enterprise)) {
@@ -71,7 +74,6 @@ else {
 
 
         foreach ($tuteurs as $tuteur) {
-            $tuteur = (new TuteurEntrepriseRepository([]))->construireTuteurProDepuisTableau($tuteur);
             ?>
             <tr class="odd:bg-zinc-50">
                 <?php if (Auth::has_role(Roles::Manager, Roles::Staff)) { ?>
@@ -100,8 +102,8 @@ else {
                            class="inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">Voir
                             plus</a>
                     <?php } else { ?>
-                        <a href="utilisateurs/<?= $tuteur->getIdutilisateur() ?>/archiver?<?= Application::getRedirect() ?>"
-                           class="text-red-500 hover:text-red-700">Supprimer</a>
+                        <p <?= $modal->Show("utilisateurs/" . $tuteur->getIdutilisateur() . "/archiver?" . Application::getRedirect()) ?>
+                                class="text-red-500 hover:text-red-700">Supprimer</p>
                     <?php } ?>
                 </td>
             </tr>
@@ -114,25 +116,27 @@ else {
 <?php }
 
 if (count($waiting) > 0) { ?>
-    <h2 class="font-bold text-lg mt-4">Liste des tuteurs en attente</h2>
-    <table class="min-w-full divide-y-2 divide-zinc-200 bg-white text-sm">
-        <thead class="ltr:text-left rtl:text-right">
-        <tr>
-            <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900">
-                Email
-            </th>
-        </tr>
-        </thead>
-
-        <tbody class="divide-y divide-zinc-200">
-        <?php
-        foreach ($waiting as $tuteur) { ?>
-            <tr class="odd:bg-zinc-50">
-                <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
-                    <?= $tuteur["email"] ?>
-                </td>
+    <div class="overflow-x-auto w-full pt-6">
+        <h2 class="font-bold text-lg mt-4">Liste des tuteurs en attente</h2>
+        <table class="min-w-full divide-y-2 divide-zinc-200 bg-white text-sm">
+            <thead class="ltr:text-left rtl:text-right">
+            <tr>
+                <th class="whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900">
+                    Email
+                </th>
             </tr>
-        <?php } ?>
-        </tbody>
-    </table>
+            </thead>
+
+            <tbody class="divide-y divide-zinc-200">
+            <?php
+            foreach ($waiting as $tuteur) { ?>
+                <tr class="odd:bg-zinc-50">
+                    <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
+                        <?= $tuteur["email"] ?>
+                    </td>
+                </tr>
+            <?php } ?>
+            </tbody>
+        </table>
+    </div>
 <?php } ?>

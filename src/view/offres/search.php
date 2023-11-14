@@ -171,7 +171,7 @@ use app\src\model\dataObject\Roles;
                 <input
                         type="checkbox"
                         name="thematique[]"
-                        value="Sécurité"
+                        value="secu"
                         id="Securite"
                         class="peer hidden [&:checked_+_label_svg]:block"
                 />

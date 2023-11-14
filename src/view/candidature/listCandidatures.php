@@ -1,6 +1,6 @@
 <?php
-/** @var $candidaturesAttente \app\src\model\dataObject\Candidature */
-/** @var $candidaturesAutres \app\src\model\dataObject\Candidature */
+/** @var $candidaturesAttente \app\src\model\dataObject\Postuler */
+/** @var $candidaturesAutres \app\src\model\dataObject\Postuler */
 
 use app\src\model\Auth\Auth;
 use app\src\model\repository\OffresRepository;
@@ -28,7 +28,7 @@ use app\src\model\repository\UtilisateurRepository;
             }
 
             if(empty($candidaturesAttente) && empty($candidaturesAutres)){
-                echo '<h2> Aucune Candidature </h2>';
+                echo '<h2> Aucune Postuler </h2>';
             }
             ?>
 

@@ -24,21 +24,34 @@ class StaffRepository extends LdapRepository
     /**
      * @throws ServerErrorException
      */
-    public function getByIdFull($idutilisateur): ?Staff
+    public
+    function getManagersEmail(): array
     {
         try {
-            $sql = "SELECT * FROM " . self::$view . " WHERE idUtilisateur = :idUtilisateur";
-            $requete = Database::get_conn()->prepare($sql);
-            $requete->execute(['idUtilisateur' => $idutilisateur]);
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
-            $resultat = $requete->fetch();
-            if (!$resultat) {
-                return null;
-            }
-            return $this->construireDepuisTableau($resultat);
-        } catch (PDOException) {
+            $stmt = Database::get_conn()->prepare("SELECT email FROM StaffVue WHERE role='responsable'");
+            $stmt->execute();
+            $emails = [];
+            foreach ($stmt->fetchAll() as $email)
+                $emails[] = $email["email"];
+            return $emails;
+        } catch
+        (\Exception) {
             throw new ServerErrorException();
         }
+    }
+
+    public function getByNomPreFull(mixed $nom, mixed $prenom)
+    {
+        $sql = "SELECT * FROM " . self::$view . " WHERE nom = :nom AND prenom=:prenom";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['nom' => $nom, 'prenom' => $prenom]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetch();
+
+        if (!$resultat) {
+            return null;
+        }
+        return $this->construireDepuisTableau($resultat);
     }
 
     protected
@@ -52,7 +65,6 @@ class StaffRepository extends LdapRepository
             $dataObjectFormatTableau["email"],
             $dataObjectFormatTableau["nom"],
             $dataObjectFormatTableau["numtelephone"],
-            $dataObjectFormatTableau["mail"],
             $dataObjectFormatTableau["bio"],
             $dataObjectFormatTableau["archiver"]
         );
@@ -61,18 +73,19 @@ class StaffRepository extends LdapRepository
     /**
      * @throws ServerErrorException
      */
-    public
-    function getManagersEmail(): array
+    public function getByIdFull($idutilisateur): ?Staff
     {
         try {
-            $stmt = Database::get_conn()->prepare("SELECT email FROM StaffVue WHERE role='responsable'");
-            $stmt->execute();
-            $emails = [];
-            foreach ($stmt->fetchAll() as $email)
-                $emails[] = $email["email"];
-            return $emails;
-        } catch
-        (\Exception) {
+            $sql = "SELECT * FROM " . self::$view . " WHERE idUtilisateur = :idUtilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idUtilisateur' => $idutilisateur]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetch();
+            if (!$resultat) {
+                return null;
+            }
+            return $this->construireDepuisTableau($resultat);
+        } catch (PDOException) {
             throw new ServerErrorException();
         }
     }
