@@ -50,7 +50,6 @@ if (Auth::has_role(Roles::Staff, Roles::Manager, Roles::ChefDepartment)) {
                     </td>
                     <td class="whitespace-nowrap px-4 py-2">
                         <?php if (Auth::has_role(Roles::ChefDepartment)): ?>
-                            <!-- create a select with all the roles -->
                             <form action="/utilisateurs/<?= $utlisateur->getIdutilisateur(); ?>/role"
                                   method="post">
                                 <select name="role" id="role"

@@ -99,30 +99,30 @@ class DashboardController extends AbstractController
     /**
      * @throws ForbiddenException
      * @throws ServerErrorException
+     * @throws NotFoundException
      */
 
-
-    public function contacterEntrepriseEtudiant(Request $request): string
+    public function contacterEntreprise(Request $req): string
     {
-        return $this->render('candidature/contacter', [
-            'idoffre' => $_POST['idoffre'],
-            'identreprise' => $_POST['identreprise'],
-            'idetudiant' => $_POST['idetudiant'],
+        if (!Auth::has_role(Roles::Student)) throw new ForbiddenException();
+        $form = new FormModel([
+            'message' => FormModel::string("Message")->required()->asterisk()->forget(),
         ]);
-    }
-
-    public function envoyerMailEntreprise(Request $request): string
-    {
-        if ($_POST['message'] != null) {
-            $sujet = $_POST['sujet'];
-            $message = $_POST['message'];
-            $emailentreprise = $_POST['emailEntreprise'];
-            $emailEtudiant = $_POST['emailEtudiant'];
-            $mail = new MailRepository();
-            $mail->send_mail([$emailentreprise], $sujet, $message . "\n\n From : " . $emailEtudiant);
+        if ($req->getMethod() === 'post') {
+            if ($form->validate($req->getBody())) {
+                $idoffre = $req->getRouteParams()["id"];
+                $offre = (new OffresRepository())->getById($idoffre);
+                if ($offre == null) throw new NotFoundException();
+                $idEntreprise = $offre->getIdutilisateur();
+                $emailEntreprise = (new EntrepriseRepository([]))->getByIdFull($idEntreprise)->getEmailutilisateur();
+                $mail = new MailRepository();
+                $mail->send_mail([$emailEntreprise], Application::getUser()->full_name() . " vous a envoyer un message concernant l'offre " . $offre->getSujet(), "Message:\n" . $form->getParsedBody()['message']);
+                Application::redirectFromParam('/candidatures');
+            }
         }
-        Application::redirectFromParam('/candidatures');
-        return '';
+        return $this->render('candidature/contacter', [
+            'form' => $form
+        ]);
     }
 
     public function candidatures(Request $request): string
