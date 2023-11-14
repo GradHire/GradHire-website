@@ -20,7 +20,7 @@ class PostulerController extends AbstractController
     /**
      * @throws ServerErrorException
      */
-    public function se_proposer(Request $request): string
+    public function se_proposer(Request $request): void
     {
         if (Auth::has_role(Roles::Teacher)) {
             $idOffre = $request->getRouteParams()["id"] ?? null;
