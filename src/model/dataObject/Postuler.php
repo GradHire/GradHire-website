@@ -2,7 +2,9 @@
 
 namespace app\src\model\dataObject;
 
+use app\src\core\exception\ServerErrorException;
 use app\src\model\repository\ConventionRepository;
+use app\src\model\repository\OffresRepository;
 use app\src\model\repository\PostulerRepository;
 
 class Postuler extends AbstractDataObject
@@ -94,10 +96,9 @@ class Postuler extends AbstractDataObject
         return $this->$nomColonne;
     }
 
-    public function getIfPostuler(int $idUtilisateur): bool
+    public function getIfSuivi(int $idUtilisateur): bool
     {
-        if ((new ConventionRepository())->getByIdOffreAndIdUser($this->getIdOffre(), $this->getIdUtilisateur()) != null) return (new PostulerRepository())->getIfPostuler($this->getIdOffre(), $idUtilisateur);
-        else return false;
+        return (new PostulerRepository())->getIfSuivi($idUtilisateur, $this->getIdUtilisateur(),$this->getIdOffre());
     }
 
 

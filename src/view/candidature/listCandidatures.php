@@ -2,6 +2,7 @@
 /** @var $candidaturesAttente \app\src\model\dataObject\Postuler */
 /** @var $candidaturesAutres \app\src\model\dataObject\Postuler */
 
+use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\repository\OffresRepository;
@@ -15,6 +16,7 @@ use app\src\model\repository\UtilisateurRepository;
             <?php
             if (isset($error)) {
                 echo '<div class="w-full bg-red-200 rounded-lg p-4 text-red-700">' . $error . '</div>';
+
             }
             if (isset($success)) {
                 echo '<div class="w-full bg-green-200 rounded-lg p-4 text-green-700">' . $success . '</div>';
@@ -34,7 +36,7 @@ use app\src\model\repository\UtilisateurRepository;
                 require __DIR__ .'/candidature.php';
             }
 
-            if(empty($candidaturesAttente) && empty($candidaturesAutres)){
+            if(empty($candidaturesAttente) && empty($candidaturesAutres) && !isset($error) && !isset($success)){
                 echo "<h2>Vous n'avez postuler à aucune offre pour l'instant.</h2>";
             }
             ?>

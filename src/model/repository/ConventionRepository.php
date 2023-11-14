@@ -40,6 +40,7 @@ class ConventionRepository extends AbstractRepository
             $statement->bindParam(":idUser", $idUser);
             $statement->execute();
             $data = $statement->fetch();
+            print_r($data);
             if (!$data) return null;
             return $this->construireDepuisTableau($data);
         } catch (\Exception $e) {
@@ -192,16 +193,18 @@ class ConventionRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public function suivreConvention(int $idutilisateur, int $idOffre): void {
+    public function suivreConvention(int $idutilisateur, int $idOffre, int $idetudiant): void {
+        print_r($idutilisateur);
+        print_r($idOffre);
+        print_r($idetudiant);
         try {
-            $convention = $this->getByIdOffreAndIdUser($idOffre, $idutilisateur);
-            $statement = Database::get_conn()->prepare("INSERT INTO SuivreConvention (idutilisateur,idconvention) VALUES (:idutilisateur,:idconvention)");
-            $statement->bindParam(":idutilisateur", $idutilisateur);
-            $numconvention = $convention->getNumconvention();
-            $statement->bindParam(":idconvention", $numconvention);
+            $statement = Database::get_conn()->prepare("INSERT INTO Supervise (idUtilisateur, idOffre, idEtudiant) VALUES (?,?,?);");
+            $statement->bindParam(1, $idutilisateur);
+            $statement->bindParam(2, $idOffre);
+            $statement->bindParam(3, $idetudiant);
             $statement->execute();
         } catch (\Exception $e) {
-            throw new ServerErrorException("Erreur lors de la validation de la convention", 500, $e);
+            throw new ServerErrorException("Erreur lors du suivi de la convention", 500, $e);
         }
     }
 

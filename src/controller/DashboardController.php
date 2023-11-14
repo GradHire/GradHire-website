@@ -102,6 +102,10 @@ class DashboardController extends AbstractController
         return '';
     }
 
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
     public function candidatures(Request $request): string
     {
 
@@ -133,10 +137,11 @@ class DashboardController extends AbstractController
                 'candidaturesAutres' => array_merge((new PostulerRepository())->getByIdEntreprise($entrepriseid, 'valider'), (new PostulerRepository())->getByIdEntreprise($entrepriseid, 'refuser'))
             ];
         } else if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher)) {
-
             $array = ['candidaturesAttente' => (new PostulerRepository())->getByStatement('en attente'),
                 'candidaturesAutres' => array_merge((new PostulerRepository())->getByStatement('valider'), (new PostulerRepository())->getByStatement('refuser'))
             ];
+            if (isset($error)) $array['error'] = $error;
+            if (isset($success)) $array['success'] = $success;
         } else if (Auth::has_role(Roles::Student)) {
             $array = ['candidaturesAttente' => (new PostulerRepository())->getByIdEtudiant($userid, 'en attente'),
                 'candidaturesAutres' => array_merge((new PostulerRepository())->getByIdEtudiant($userid, 'valider'), (new PostulerRepository())->getByIdEtudiant($userid, 'refuser'))

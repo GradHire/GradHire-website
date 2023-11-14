@@ -92,7 +92,7 @@ class StaffRepository extends LdapRepository
     public function getCountPostulationTuteur(int $idUtilisateur): int
     {
         try {
-            $stmt = Database::get_conn()->prepare("SELECT COUNT(*) as 'nbPosutlation' FROM SuivreConvention WHERE idUtilisateur = :idUtilisateur");
+            $stmt = Database::get_conn()->prepare("SELECT COUNT(*) as 'nbPosutlation' FROM Supervise WHERE idUtilisateur = :idUtilisateur");
             $stmt->execute(['idUtilisateur' => $idUtilisateur]);
             $stmt->execute();
             $stmt->setFetchMode(\PDO::FETCH_ASSOC);

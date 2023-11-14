@@ -5,7 +5,10 @@
 
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
+use app\src\model\repository\ConventionRepository;
 use app\src\model\repository\OffresRepository;
+use app\src\model\repository\PostulerRepository;
+use app\src\model\repository\StaffRepository;
 use app\src\model\repository\UtilisateurRepository;
 
 ?>
@@ -75,19 +78,19 @@ use app\src\model\repository\UtilisateurRepository;
                                 plus</a>
                         </td>
                         <?php
-                        if (Auth::has_role(Roles::Teacher) && $candidature->getStatut() == 'valider' && !$candidature->getIfPostuler(Auth::get_user()->id())) {
+                        if (Auth::has_role(Roles::Teacher) && $candidature->getStatut() == 'valider' && !$candidature->getIfSuivi(Auth::get_user()->id()) && (new StaffRepository([]))->getCountPostulationTuteur(Auth::get_user()->id())<10){
                             ?>
                             <td class="whitespace-nowrap px-4 py-2">
                                 <a href="/postuler/seProposer/<?php echo $candidature->getIdOffre() ?>"
-                                   class="inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">Se
+                                   class="flex w-full justify-center rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">Se
                                     proposer comme tuteur</a>
                             </td>
                             <?php
-                        } else if (Auth::has_role(Roles::Teacher)) {
+                        } else if (Auth::has_role(Roles::Teacher) && $candidature->getStatut() == 'valider' && (new StaffRepository([]))->getCountPostulationTuteur(Auth::get_user()->id())<10 && $candidature->getIfSuivi(Auth::get_user()->id())){
                             ?>
                             <td class="whitespace-nowrap px-4 py-2">
                                 <a href="/postuler/seProposer/<?php echo $candidature->getIdOffre() ?>"
-                                   class="inline-block rounded bg-red-600 opacity-40 px-4 py-2 text-xs font-medium text-white hover:bg-red-700"> X </a>
+                                   class="flex w-full rounded bg-red-600 opacity-40 px-4 py-2 text-xs font-medium text-white hover:bg-red-700 justify-center"> X </a>
                             </td>
                             </tr>
                         <?php }
