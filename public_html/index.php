@@ -3,9 +3,9 @@
 use app\src\controller\AuthController;
 use app\src\controller\ConventionsController;
 use app\src\controller\DashboardController;
-use app\src\controller\PstageController;
 use app\src\controller\OffreController;
 use app\src\controller\OpenController;
+use app\src\controller\PstageController;
 use app\src\controller\TestController;
 use app\src\controller\UserController;
 use app\src\core\lib\Psr4AutoloaderClass;
@@ -40,6 +40,9 @@ $app->router->get('/pro_login', [AuthController::class, 'pro_login']);
 $app->router->post('/pro_login', [AuthController::class, 'pro_login']);
 
 $app->router->get('/logout', [AuthController::class, 'logout']);
+
+$app->router->get('/password', [AuthController::class, 'modifierMdp']);
+$app->router->post('/password', [AuthController::class, 'modifierMdp']);
 
 // UserController
 

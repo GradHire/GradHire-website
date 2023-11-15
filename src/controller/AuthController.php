@@ -2,10 +2,13 @@
 
 namespace app\src\controller;
 
+use app\src\core\components\Notification;
 use app\src\core\db\Database;
+use app\src\core\exception\ForbiddenException;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
+use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\LdapRepository;
@@ -142,6 +145,29 @@ class AuthController extends AbstractController
             }
         }
         return $this->render('register', [
+            'form' => $form
+        ]);
+    }
+
+    public function modifierMdp(Request $req): string
+    {
+        if (Application::isGuest() || !Auth::has_role(Roles::Enterprise, Roles::Tutor)) throw new ForbiddenException();
+        $form = new FormModel([
+            "actual" => FormModel::password("Mot de passe actuel")->required()->asterisk(),
+            "password" => FormModel::password("Nouveau mot de passe")->min(8)->asterisk()->required(),
+            "password2" => FormModel::password("Répéter mot de passe")->match('password')->asterisk()->required(),
+        ]);
+        if ($req->getMethod() === 'post') {
+            if ($form->validate($req->getBody())) {
+                $dt = $form->getParsedBody();
+                if (ProRepository::changePassword($dt["actual"], $dt["password"], $form)) {
+                    Notification::createNotification("Votre mot de passe a été modifié avec succès", "success");
+                    Application::$app->response->redirect('/profile');
+                    return '';
+                }
+            }
+        }
+        return $this->render('passwordChange', [
             'form' => $form
         ]);
     }
