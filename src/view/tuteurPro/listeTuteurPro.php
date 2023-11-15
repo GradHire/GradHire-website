@@ -76,7 +76,9 @@ else {
         foreach ($tuteurs as $tuteur) {
             ?>
             <tr class="odd:bg-zinc-50">
-                <?php if (Auth::has_role(Roles::Manager, Roles::Staff)) { ?>
+                <?php if (Auth::has_role(Roles::Manager, Roles::Staff)) {
+                    $tuteur = (new TuteurEntrepriseRepository([]))->construireTuteurProDepuisTableau($tuteur);
+                    ?>
                     <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                         <?= (new EntrepriseRepository([]))->getByIdFull($tuteur->getIdentreprise())->getNomutilisateur() ?>
                     </td>
