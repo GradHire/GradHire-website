@@ -3,6 +3,7 @@
 namespace app\src\controller;
 
 use app\src\core\exception\ForbiddenException;
+use app\src\core\middlewares\PSatgeMiddleware;
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
@@ -13,6 +14,7 @@ use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\ServiceAccueilRepository;
 use app\src\model\repository\SignataireRepository;
+use app\src\model\repository\SimulationPstageRepository;
 use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\Request;
@@ -20,6 +22,7 @@ use app\src\model\Request;
 
 class PstageController extends AbstractController
 {
+
     public function importercsv(Request $request): string
     {
         if (Auth::has_role(Roles::Staff, Roles::Manager)) {
@@ -428,9 +431,35 @@ class PstageController extends AbstractController
         } else throw new ForbiddenException();
     }
 
-    public function gererSimulPstage(Request $request)
+    public function gererSimulPstage(Request $request): string
     {
         if (Auth::has_role(Roles::Staff, Roles::Manager)) {
+            return $this->render('pstageConv/gererSimulPstage');
+        } else throw new ForbiddenException();
+    }
+
+    public function gererSimulPstagevalide(Request $request)
+    {
+        if (Auth::has_role(Roles::Staff, Roles::Manager)) {
+            $id = $request->getRouteParams()['id'] ?? null;
+            if ($id != null) {
+                $simul = (new SimulationPstageRepository([]));
+                $simul->updatevalide($id);
+                Application::$app->response->redirect("/gererSimulPstage");
+            }
+            return $this->render('pstageConv/gererSimulPstage');
+        } else throw new ForbiddenException();
+    }
+
+    public function gererSimulPstagerefuse(Request $request)
+    {
+        if (Auth::has_role(Roles::Staff, Roles::Manager)) {
+            $id = $request->getRouteParams()['id'] ?? null;
+            if ($id != null) {
+                $simul = (new SimulationPstageRepository([]));
+                $simul->updaterefuse($id);
+                Application::$app->response->redirect("/gererSimulPstage");
+            }
             return $this->render('pstageConv/gererSimulPstage');
         } else throw new ForbiddenException();
     }

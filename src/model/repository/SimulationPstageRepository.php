@@ -25,10 +25,10 @@ class SimulationPstageRepository extends AbstractRepository
     protected function construireDepuisTableau(array $dataObjectFormatTableau): AbstractDataObject
     {
         return new SimulationPstage(
-            $dataObjectFormatTableau['idSimulation'],
-            $dataObjectFormatTableau['nomFichier'],
+            $dataObjectFormatTableau['idsimulation'],
+            $dataObjectFormatTableau['nomfichier'],
             $dataObjectFormatTableau['statut'],
-            $dataObjectFormatTableau['idEtudiant']
+            $dataObjectFormatTableau['idetudiant']
         );
     }
 
@@ -42,6 +42,37 @@ class SimulationPstageRepository extends AbstractRepository
         $stmt->execute();
     }
 
+    public function getAll(): ?array
+    {
+        $sql = "Select * from SimulationPstage";
+        $stmt = Database::get_conn()->prepare($sql);
+        $stmt->execute();
+        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll();
+        if (!$result) {
+            return null;
+        }
+        $dataObjects = [];
+        foreach ($result as $dataObjectFormatTableau) $dataObjects[] = $this->construireDepuisTableau($dataObjectFormatTableau);
+        return $dataObjects;
+    }
+
+    public function updatevalide(mixed $id)
+    {
+        $sql = "UPDATE SimulationPstage SET statut = 'Validee' WHERE idSimulation = :id";
+        $stmt = Database::get_conn()->prepare($sql);
+        $stmt->bindValue(":id", $id);
+        $stmt->execute();
+    }
+
+    public function updaterefuse(mixed $id)
+    {
+        $sql = "UPDATE SimulationPstage SET statut = 'Refusee' WHERE idSimulation = :id";
+        $stmt = Database::get_conn()->prepare($sql);
+        $stmt->bindValue(":id", $id);
+        $stmt->execute();
+    }
+
     protected function getNomTable(): string
     {
         return "SimulationPstage";
@@ -49,6 +80,6 @@ class SimulationPstageRepository extends AbstractRepository
 
     protected function getNomColonnes(): array
     {
-        return ["idSimulation", "nomFichier", "statut", "idEtudiant"];
+        return ["idsimulation", "nomfichier", "statut", "idetudiant"];
     }
 }

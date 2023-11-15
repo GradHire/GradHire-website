@@ -155,6 +155,10 @@ $app->router->get('/visuRecapConv', [PstageController::class, 'visuRecapConv']);
 $app->router->get('/validersimulation', [PstageController::class, 'validersimulation']);
 
 $app->router->get('/gererSimulPstage', [PstageController::class, 'gererSimulPstage']);
+$app->router->get('/gererSimulPstage/valide/{id}', [PstageController::class, 'gererSimulPstagevalide']);
+$app->router->get('/gererSimulPstage/refuse/{id}', [PstageController::class, 'gererSimulPstagerefuse']);
+
+
 // ConventionController
 
 $app->router->get('/conventions', [ConventionsController::class, 'afficherListeConventions']);
