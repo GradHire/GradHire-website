@@ -13,6 +13,9 @@ if (Auth::has_role(Roles::Student)) {
 if ($files == null) {
     echo "Aucune simulation trouvé";
 } else {
+    if (Auth::has_role(Roles::Student)) {
+        echo "Si votre convention est validé vous pouvez passez sur Pstage \n";
+    }
     Table::createTable($files, ["nom", "prénom", "numEtudiant", "convention", "statut"], function ($file) {
         $etudiant = new EtudiantRepository([]);
         $etudiant = $etudiant->getByIdFull($file->getIdEtudiant());
