@@ -4,7 +4,6 @@
 
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
-use app\src\model\repository\OffresRepository;
 
 ?>
 
@@ -14,7 +13,7 @@ use app\src\model\repository\OffresRepository;
             <h3 class="text-lg font-semibold leading-7 text-zinc-900"><?= $offre->getSujet() ?></h3>
             <p class="mt-1 max-w-2xl text-sm leading-6 text-zinc-500">
                 <?php
-                try { 
+                try {
                     $date = new DateTime($offre->getDatecreation());
                     echo "Publiée le " . $date->format('d/m/Y') . " à " . $date->format('H:i:s');
                 } catch (Exception $e) {
@@ -104,7 +103,7 @@ use app\src\model\repository\OffresRepository;
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-zinc-900">Dates</dt>
                 <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?php
-                    try { 
+                    try {
                         $dateDebut = new DateTime($offre->getDatedebut());
                         if ($offre->getDatefin() != null) $dateFin = new DateTime($offre->getDatefin());
                         else $dateFin = null;
@@ -125,7 +124,8 @@ use app\src\model\repository\OffresRepository;
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-zinc-900">Gratification</dt>
                 <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?= $offre->getGratification() ?>
-                    €/h</dd>
+                    €/h
+                </dd>
             </div>
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-zinc-900">Description</dt>
@@ -137,14 +137,10 @@ use app\src\model\repository\OffresRepository;
             </div>
         </dl>
     </div>
-    <?php if ($offre->getAdresse() != null){
-        ?>
-        <iframe class="w-full h-[500px]" src="https://maps.google.com/maps?q=<?= $offre->getAdresse() ?>&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
-    <?php } ?>
     <?php if (Auth::has_role(Roles::Student) && !$offre->getUserPostuled()) { ?>
         <a href="<?php echo $offre->getIdOffre(); ?>/postuler"
            class="mt-6 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-zinc-600 hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 sm:w-auto">
             Postuler
         </a>
-     <?php } ?>
+    <?php } ?>
 </div>

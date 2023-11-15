@@ -16,8 +16,8 @@ $offre = (new OffresRepository())->getById($candidatures->getIdoffre());
 
 <div class="mt-6 border-zinc-100 pt-12 pb-24">
     <?php
-    echo '<h2 class="font-bold text-lg">Postuler de
-' . $nometudiant . " " . $etudiant->getLoginLDAP() . '
+    echo '<h2 class="font-bold text-lg">Candidature de 
+' . $etudiant->getPrenom() . " " . $etudiant->getNomutilisateur() . '
 </h2>';
     ?>
     <dl class="divide-y divide-zinc-100">

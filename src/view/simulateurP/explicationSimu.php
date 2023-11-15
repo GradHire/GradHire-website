@@ -25,7 +25,7 @@
 
     <p class="mb-4">Si vous avez des questions, n'hésitez pas à contacter le secrétariat.</p>
 
-    <a href="/simulateur" class="inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Continuer sur
-        le simulateur</a>
+    <a href="/simulateur" class="inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Commencer le
+        simulateur PStage</a>
 </div>
 

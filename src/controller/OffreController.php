@@ -17,8 +17,6 @@ use app\src\model\repository\OffresRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\Request;
-use Mosquitto\Client;
-use const http\Client\Curl\AUTH_ANY;
 
 class OffreController extends AbstractController
 {
