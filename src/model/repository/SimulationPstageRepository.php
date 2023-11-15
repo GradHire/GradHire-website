@@ -73,6 +73,22 @@ class SimulationPstageRepository extends AbstractRepository
         $stmt->execute();
     }
 
+    public function getByIdEtudiant(int $id)
+    {
+        $sql = "SELECT * FROM SimulationPstage WHERE idEtudiant = :id";
+        $stmt = Database::get_conn()->prepare($sql);
+        $stmt->bindValue(":id", $id);
+        $stmt->execute();
+        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll();
+        if (!$result) {
+            return null;
+        }
+        $dataObjects = [];
+        foreach ($result as $dataObjectFormatTableau) $dataObjects[] = $this->construireDepuisTableau($dataObjectFormatTableau);
+        return $dataObjects;
+    }
+
     protected function getNomTable(): string
     {
         return "SimulationPstage";

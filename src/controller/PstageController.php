@@ -433,7 +433,7 @@ class PstageController extends AbstractController
 
     public function gererSimulPstage(Request $request): string
     {
-        if (Auth::has_role(Roles::Staff, Roles::Manager)) {
+        if (Auth::has_role(Roles::Staff, Roles::Manager, Roles::Student)) {
             return $this->render('pstageConv/gererSimulPstage');
         } else throw new ForbiddenException();
     }

@@ -1,13 +1,15 @@
 <?php
 
 use app\src\core\components\Table;
-use app\src\model\Form\FormModel;
+use app\src\model\Auth;
+use app\src\model\dataObject\Roles;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\SimulationPstageRepository;
 
 $files = new SimulationPstageRepository([]);
-$files = $files->getAll();
-
+if (Auth::has_role(Roles::Student)) {
+    $files = $files->getByIdEtudiant(Auth::get_user()->id);
+} else $files = $files->getAll();
 if ($files == null) {
     echo "Aucune simulation trouvé";
 } else {
@@ -25,8 +27,10 @@ if ($files == null) {
         } else if ($file->getStatut() == "Refusee") {
             Table::chip("Refusé", "red");
         }
-        Table::button("/gererSimulPstage/valide/" . $file->getIdSimulation(), "valide");
-        Table::button("/gererSimulPstage/refuse/" . $file->getIdSimulation(), "refuse");
+        if (!Auth::has_role(Roles::Student)) {
+            Table::button("/gererSimulPstage/valide/" . $file->getIdSimulation(), "valide");
+            Table::button("/gererSimulPstage/refuse/" . $file->getIdSimulation(), "refuse");
+        }
     });
 
 } ?>
