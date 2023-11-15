@@ -2,8 +2,8 @@
 
 namespace app\src\controller;
 
+use app\src\core\middlewares\PSatgeMiddleware;
 use app\src\model\Application;
-use app\src\model\dataObject\ServiceAccueil;
 use app\src\model\Form\FormModel;
 use app\src\model\ImportPstage;
 use app\src\model\repository\EntrepriseRepository;
@@ -17,6 +17,12 @@ use app\src\model\Request;
 
 class PstageController extends AbstractController
 {
+
+    public function __construct()
+    {
+        $this->registerMiddleware(new PSatgeMiddleware());
+    }
+
     public function importercsv(Request $request): string
     {
 

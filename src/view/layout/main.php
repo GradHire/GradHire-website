@@ -74,8 +74,6 @@ use app\src\model\dataObject\Roles;
                         <?php if (Auth::has_role(Roles::Student, Roles::Teacher, Roles::Tutor, Roles::Enterprise)): ?>
                             <a href="/candidatures"
                                class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
-                            <a href="/explicationSimu"
-                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Simulateur</a>
                         <?php endif; ?>
                         <?php if (Auth::has_role(Roles::Enterprise)): ?>
                             <a href="/offres/create"
@@ -94,6 +92,10 @@ use app\src\model\dataObject\Roles;
                                class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Tuteurs</a>
                             <a href="/importer"
                                class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Import</a>
+                        <?php endif; ?>
+                        <?php if (Auth::has_role(Roles::Student)): ?>
+                            <a href="/explicationSimu"
+                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Simulateur</a>
                         <?php endif; ?>
                         <?php if (Auth::has_role(Roles::Enterprise, Roles::Student, Roles::Manager, Roles::Staff)): ?>
                             <a href="/conventions"
