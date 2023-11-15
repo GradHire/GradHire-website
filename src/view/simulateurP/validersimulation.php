@@ -6,9 +6,13 @@ use app\src\model\Auth;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\ServiceAccueilRepository;
+use app\src\model\repository\SimulationPstageRepository;
 use app\src\model\repository\TuteurRepository;
 
 $etudiant = $_SESSION["simulateurEtu"];
+$id = new EtudiantRepository([]);
+$id = $id->getByNumEtudiantFull($etudiant["numEtudiant"]);
+$_SESSION["idEtudiant"] = $id->getIdUtilisateur();
 $offre = $_SESSION['simulateurCandidature'];
 $accueil = new ServiceAccueilRepository();
 $accueil = $accueil->getFullByEntrepriseNom($_SESSION['idEntreprise'], $_SESSION['accueil']);
@@ -197,5 +201,6 @@ $pdf->Output($filename, 'D', true);
 ob_end_flush();
 $savePath = 'uploads/Pstage/';
 $pdf->Output($savePath . $filename, 'F', true);
-
+$simulationPstage = new SimulationPstageRepository([]);
+$simulationPstage->create($filename, $_SESSION["idEtudiant"], "En attente");
 ?>

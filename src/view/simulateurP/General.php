@@ -99,11 +99,11 @@
                 <?php
             } else if (isset($_SESSION["simulateurCandidature"])) {
                 ?>
-                <a href="simulateurCandidature">Candidature</a>
+                <a href="simulateurCandidature">Stage</a>
                 <?php
             } else {
                 ?>
-                <p class="text-gray-500">Candidature</p>
+                <p class="text-gray-500">Stage</p>
                 <?php
             }
             ?>

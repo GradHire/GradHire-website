@@ -144,10 +144,13 @@ use app\src\model\dataObject\Roles;
         <?php if (!Application::isGuest()): ?>
             <a href="/offres"
                class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Offres</a>
+            <?php if (Auth::has_role(Roles::Student)): ?>
+                <a href="/explicationSimu"
+                   class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Simulateur</a>
+            <?php endif; ?>
             <?php if (!Auth::has_role(Roles::Enterprise)): ?>
                 <a href="/entreprises"
                    class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Entreprises</a>
-
             <?php endif; ?>
             <?php if (Auth::has_role(Roles::Teacher)): ?>
                 <a href="/candidatures"
@@ -169,6 +172,8 @@ use app\src\model\dataObject\Roles;
                    class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
                 <a href="/ListeTuteurPro"
                    class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Tuteurs</a>
+                <a href="/importer"
+                   class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Import</a>
             <?php endif; ?>
         <?php endif; ?>
 
