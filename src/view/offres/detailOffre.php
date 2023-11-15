@@ -75,11 +75,15 @@ use app\src\model\dataObject\Roles;
     </span>";
                         } else if ($offre->getStatut() == "archiver") {
                             echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-red-100 text-red-800\">
-    Refusée
+    Archivée
     </span>";
                         } else if ($offre->getStatut() == "brouillon") {
                             echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-zinc-100 text-zinc-800\">
-    Archivée
+    Broillon
+    </span>";
+                        } else if ($offre->getStatut() == "refuser") {
+                            echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-red-100 text-red-800\">
+    Refusée
     </span>";
                         }
                         ?>

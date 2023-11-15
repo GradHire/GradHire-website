@@ -56,12 +56,13 @@ $app->router->get('/entreprises/{id:\d+}', [UserController::class, 'entreprises'
 
 // OffreController
 
+
 $app->router->get('/offres', [OffreController::class, 'offres']);
 
 $app->router->get('/offres/create', [OffreController::class, 'creeroffre']);
 $app->router->post('/offres/create', [OffreController::class, 'creeroffre']);
 
-$app->router->get('/offres/{id:\d+}', [OffreController::class, 'offres']);
+$app->router->get('/offres/{id:\d+}', [OffreController::class, 'detailOffre']);
 
 $app->router->get('/offres/{id:\d+}/postuler', [OffreController::class, 'postuler']);
 $app->router->post('/offres/{id:\d+}/postuler', [OffreController::class, 'postuler']);

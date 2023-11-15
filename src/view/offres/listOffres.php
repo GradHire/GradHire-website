@@ -1,11 +1,14 @@
 <?php
-/** @var $offres \app\src\model\dataObject\Offre */
+/** @var $offres Offre */
+
+/** @var $form FormModel */
 
 use app\src\core\components\Modal;
 use app\src\model\Application;
 use app\src\model\Auth;
+use app\src\model\dataObject\Offre;
 use app\src\model\dataObject\Roles;
-use app\src\model\repository\OffresRepository;
+use app\src\model\Form\FormModel;
 
 
 $this->title = 'Offres';
@@ -21,6 +24,7 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
             </svg>');
 }
 ?>
+
 <form class="m-0 p-0" method="GET" action="offres">
     <div class="w-full flex flex-col pt-12 pb-24 gap-4">
         <div class="flex flex-row gap-2 w-full">
@@ -43,7 +47,7 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                                   d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                         </svg>
                     </div>
-                    <input type="search" id="default-search" name="sujet"
+                    <input value="<?= $_GET["sujet"] ?? '' ?>" type="search" id="default-search" name="sujet"
                            class="block w-full p-4 pl-10 text-sm text-zinc-900 border-2 border-zinc-200 rounded-lg bg-zinc-50 focus:ring-zinc-500 focus:border-zinc-500 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500"
                            placeholder="Rechercher une offre">
                     <button type="submit"
@@ -54,11 +58,37 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
             </div>
         </div>
         <div class="grid grid-cols-1 gap-4 lg:grid-cols-4">
-            <form method="GET" action="offres">
-                <div class="rounded-lg p-4 border-2 border-zinc-200">
-                    <?php require_once __DIR__ . '/search.php'; ?>
+            <div class="rounded-lg p-4 border-2 border-zinc-200 w-full">
+                <?php
+                $form->start();
+                ?>
+                <div class=" flex flex-col gap-3">
+                    <div class="flex justify-between items-center">
+                        <p class="text-md text-black font-bold">Filtres</p>
+                        <?php if (Auth::has_role(Roles::Staff, Roles::Manager)) { ?>
+                            <label for="AcceptConditions" class="relative h-5 w-10 cursor-pointer">
+                                <input type="checkbox" id="AcceptConditions"
+                                       class="peer sr-only"/>
+                                <span class="absolute inset-0 rounded-full  bg-zinc-800 transition border-[1px] border-zinc-100 peer-checked:bg-red-500"></span>
+                                <span class="absolute shadow inset-y-0 start-0 m-1 h-3 w-3 rounded-full bg-white border-[1px] border-zinc-100 transition-all peer-checked:start-5"></span>
+                            </label>
+                        <?php } ?>
+                    </div>
+                    <div class="flex flex-row w-full gap-1">
+                        <?php
+                        $form->field("type");
+                        ?>
+                    </div>
+                    <?php
+                    $form->print_fields(["year", "duration", "theme", "gratification"]);
+                    $form->submit("Appliquer");
+                    $form->reset("Réinitialiser", true);
+                    ?>
                 </div>
-            </form>
+                <?php
+                $form->end();
+                ?>
+            </div>
 
             <div class="lg:col-span-3 rounded-lg flex flex-col gap-4">
                 <div class="flex flex-col gap-1 w-full">
@@ -67,11 +97,11 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                         <?php
                         if ($offres != null) {
                             foreach ($offres as $offre) {
-                                if ($offre->getStatut() === "valider") {
+                                if ($offre["statut"] === "valider") {
                                     if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher)) {
                                         require __DIR__ . '/offre.php';
-                                    } else if (!Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Teacher, Roles::Tutor) && !(new OffresRepository())->checkArchived($offre)) {
-                                        if (Application::getUser()->attributes()["annee"] == 3 && $offre->getAnneeVisee() == 2) {
+                                    } else if (!Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Teacher, Roles::Tutor) && $offre["statut"] !== "archiver") {
+                                        if (Application::getUser()->attributes()["annee"] == 3 && $offre["anneevisee"] == 2) {
                                             continue;
                                         } else {
                                             require __DIR__ . '/offre.php';
@@ -97,7 +127,7 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                     <?php
                     if ($offres != null) {
                         foreach ($offres as $offre) {
-                            if ($offre->getStatut() === "en attente" && Auth::has_role(Roles::Manager, Roles::Staff)) {
+                            if ($offre["statut"] === "en attente" && Auth::has_role(Roles::Manager, Roles::Staff)) {
                                 require __DIR__ . '/offre.php';
                             }
                         }
@@ -114,7 +144,7 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                     <?php
                     if ($offres != null) {
                         foreach ($offres as $offre) {
-                            if ($offre->getStatut() === "archiver" && Auth::has_role(Roles::Manager, Roles::Staff)) {
+                            if ($offre["statut"] === "archiver" && Auth::has_role(Roles::Manager, Roles::Staff)) {
                                 require __DIR__ . '/offre.php';
                             }
                         }
@@ -125,226 +155,6 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
         </div>
     </div>
 </form>
-<script>
-    window.addEventListener('DOMContentLoaded', function () {
-
-        const resetButton = document.getElementById('reset-button');
-        resetButton.addEventListener('click', resetFilters);
-
-
-        const alternanceInput = document.getElementById('alternance');
-        alternanceInput.addEventListener('change', updateUrl)
-
-        const stageInput = document.getElementById('stage');
-        stageInput.addEventListener('change', updateUrl)
-
-        const searchInput = document.getElementById('default-search');
-        searchInput.addEventListener('keyup', updateUrl);
-
-
-        const anneeViseeRadios = document.querySelectorAll('select[name="anneeVisee"]');
-        anneeViseeRadios.forEach(radio => {
-            radio.addEventListener('change', updateUrl);
-        });
-
-        const dureeRadios = document.querySelectorAll('select[name="duree"]');
-        dureeRadios.forEach(radio => {
-            radio.addEventListener('change', updateUrl);
-        });
-
-        const thematiqueCheckboxes = document.querySelectorAll('input[name="thematique[]"]');
-        thematiqueCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', updateUrl);
-        });
-
-        const gratificationMinSlider = document.getElementById("slider-1");
-        const gratificationMaxSlider = document.getElementById("slider-2");
-        gratificationMinSlider.addEventListener('change', updateUrl);
-        gratificationMaxSlider.addEventListener('change', updateUrl);
-    });
-
-
-    function resetFilters() {
-        const alternanceInput = document.getElementById('alternance');
-        alternanceInput.checked = false;
-
-        const stageInput = document.getElementById('stage');
-        stageInput.checked = false;
-
-        const searchInput = document.getElementById('default-search');
-        searchInput.value = "";
-
-        const selectedAnneeVisee = document.querySelector('select[name="anneeVisee"]');
-        selectedAnneeVisee.selectedIndex = 0;
-
-        const selectedThematique = Array.from(document.querySelectorAll('input[name="thematique[]"]:checked'));
-        selectedThematique.forEach(checkbox => {
-            checkbox.checked = false;
-        });
-
-        const selectedDuree = document.querySelector('select[name="duree"]');
-        selectedDuree.selectedIndex = 0;
-
-        const gratificationMinSlider = document.getElementById("slider-1");
-        gratificationMinSlider.value = gratificationMinSlider.min;
-
-        const gratificationMaxSlider = document.getElementById("slider-2");
-        gratificationMaxSlider.value = 12;
-
-        const newUrl = window.location.origin + window.location.pathname;
-        window.history.pushState(null, document.title, newUrl);
-
-        window.location.reload();
-    }
-
-    function updateUrl() {
-        const queryString = [];
-
-
-        const alternanceInput = document.getElementById('alternance');
-        if (alternanceInput.checked) {
-            queryString.push(`alternance=${alternanceInput.value}`);
-        }
-
-        const stageInput = document.getElementById('stage');
-        if (stageInput.checked) {
-            queryString.push(`stage=${stageInput.value}`);
-        }
-
-        const searchInput = document.getElementById('default-search');
-        if (searchInput.value && searchInput.value !== "") {
-            queryString.push(`sujet=${searchInput.value}`);
-        }
-
-        const selectedAnneeVisee = document.querySelector('select[name="anneeVisee"]');
-        if (selectedAnneeVisee.value && selectedAnneeVisee.value !== "") {
-            queryString.push(`anneeVisee=${selectedAnneeVisee.value}`);
-        }
-
-        const selectedThematique = Array.from(document.querySelectorAll('input[name="thematique[]"]:checked')).map(checkbox => checkbox.value);
-        if (selectedThematique.length > 0) {
-            queryString.push(`thematique[]=${selectedThematique.join('&thematique[]=')}`);
-        }
-
-        const selectedDuree = document.querySelector('select[name="duree"]');
-        if (selectedDuree.value && selectedDuree.value !== "") {
-            queryString.push(`duree=${selectedDuree.value}`);
-        }
-
-        const gratificationMinSlider = document.getElementById("slider-1");
-        const gratificationMaxSlider = document.getElementById("slider-2");
-
-        if (gratificationMinSlider.value !== null && gratificationMaxSlider.value !== null) {
-            queryString.push(`gratificationMin=${gratificationMinSlider.value}`, `gratificationMax=${gratificationMaxSlider.value}`);
-        }
-
-        const newUrl = window.location.origin + window.location.pathname + (queryString.length > 0 ? '?' + queryString.join('&') : '');
-        window.history.pushState(null, document.title, newUrl);
-
-        //reload the page sauf si c un update de search
-        if (event.target.id !== 'default-search') {
-            window.location.reload();
-        }
-    }
-
-    window.onload = function () {
-        slideOne();
-        slideTwo();
-
-        // Récupère les paramètres de recherche de l'URL
-        const searchParams = new URLSearchParams(window.location.search);
-
-        // Remplit les champs correspondants si leur paramètre est présent dans l'URL
-        fillFieldsBasedOnUrlParams(searchParams, 'alternance', 'checkbox');
-        fillFieldsBasedOnUrlParams(searchParams, 'stage', 'checkbox');
-        fillFieldsBasedOnUrlParams(searchParams, 'anneeVisee', 'select');
-        fillFieldsBasedOnUrlParams(searchParams, 'duree', 'select');
-        fillFieldsBasedOnUrlParams(searchParams, 'gratificationMin', 'range', 'slider-1');
-        fillFieldsBasedOnUrlParams(searchParams, 'gratificationMax', 'range', 'slider-2');
-
-        // Pour les cases à cocher de thématique, nous devrons effectuer un traitement particulier
-        const sujet = searchParams.get('sujet');
-        console.log(sujet);
-        const thematiques = searchParams.getAll('thematique[]');
-        console.log(thematiques);
-
-        if (sujet !== "") {
-            document.getElementById('default-search').value = sujet;
-        }
-
-        thematiques.forEach(thematique => {
-            document.querySelectorAll('input[name="thematique[]"]').forEach(checkbox => {
-                if (checkbox.value === thematique) {
-                    checkbox.checked = true;
-                }
-            });
-        });
-
-        if (searchParams.has('gratificationMin')) {
-            const sliderOne = document.getElementById("slider-1");
-            sliderOne.value = searchParams.get('gratificationMin');
-            slideOne();  // Met à jour l'affichage du slider
-        }
-
-        // Vérifie si gratificationMax est dans l'URL et met à jour slider-2 si c'est le cas
-        if (searchParams.has('gratificationMax')) {
-            const sliderTwo = document.getElementById("slider-2");
-            sliderTwo.value = searchParams.get('gratificationMax');
-            slideTwo();  // Met à jour l'affichage du slider
-        }
-    };
-
-    function fillFieldsBasedOnUrlParams(searchParams, param, type, elementId = null) {
-        // Si l'élément ID n'est pas passé, on suppose qu'il est le même que le paramètre
-        const element = document.getElementById(elementId || param);
-
-        if (searchParams.has(param)) {
-            if (type === 'checkbox') {
-                element.checked = searchParams.get(param) === 'true';
-            } else if (type === 'text' || type === 'select' || type === 'range') {
-                element.value = searchParams.get(param);
-            }
-        }
-    }
-
-    let sliderOne = document.getElementById("slider-1");
-    let sliderTwo = document.getElementById("slider-2");
-    let displayValOne = document.getElementById("range1");
-    let displayValTwo = document.getElementById("range2");
-    let minGap = 0;
-    let sliderTrack = document.querySelector(".slider-track");
-    let sliderMaxValue = document.getElementById("slider-1").max;
-
-    function slideOne() {
-        if (sliderTwo && parseInt(sliderTwo.value) - parseInt(sliderOne.value) <= minGap) {
-            sliderOne.value = parseInt(sliderTwo.value) - minGap;
-        }
-        if (displayValOne) {
-            displayValOne.textContent = sliderOne.value;
-        }
-        fillColor();
-    }
-
-    function slideTwo() {
-        if (sliderTwo && parseInt(sliderTwo.value) - parseInt(sliderOne.value) <= minGap) {
-            sliderTwo.value = parseInt(sliderOne.value) + minGap;
-        }
-        if (displayValTwo) {
-            displayValTwo.textContent = sliderTwo.value;
-        }
-        fillColor();
-    }
-
-    function fillColor() {
-        if (sliderTrack) {
-            percent1 = (sliderOne.value - 4.05) / (sliderMaxValue - 4.05) * 100;
-            percent2 = (sliderTwo.value - 4.05) / (sliderMaxValue - 4.05) * 100;
-            sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}%, #71717a ${percent1}%, #71717a ${percent2}%, #dadae5 ${percent2}%)`;
-        }
-    }
-
-
-</script>
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function () {
         const checkbox = document.querySelector('#AcceptConditions');

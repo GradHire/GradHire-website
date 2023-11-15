@@ -7,6 +7,7 @@ use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Offre;
+use app\src\model\dataObject\Roles;
 use PDOException;
 
 
@@ -15,166 +16,45 @@ class OffresRepository extends AbstractRepository
     private static int $count;
     private string $nomTable = "Offre";
 
-    protected static function checkOnlyStageOrAlternance($filter): bool
-    {
-        $listCherker = ['alternance', 'stage', 'gratificationMin', 'gratificationMax', 'sujet'];
-        //return true if it contains only stage or alternance
-        if (array_key_exists('alternance', $filter) && array_key_exists('stage', $filter)) {
-            return false;
-        } else if (array_key_exists('alternance', $filter)) {
-            foreach ($filter as $key => $value) {
-                if (!in_array($key, $listCherker)) return false;
-            }
-        } else if (array_key_exists('stage', $filter)) {
-            foreach ($filter as $key => $value) {
-                if (!in_array($key, $listCherker)) return false;
-            }
-        }
-        return false;
-    }
-
-    protected static function prepareSQLGratification(int $size, array $filter): array
-    {
-        $sql = array();
-        $sql = array_merge($sql, $filter);
-
-
-        $gratificationMaxTemp = $sql['gratificationMax'];
-        $gratificationMinTemp = $sql['gratificationMin'];
-
-        if ($sql['gratificationMin'] == null && $sql['gratificationMax'] == null) return $sql;
-        else if ($sql['gratificationMin'] != null && $sql['gratificationMax'] == null) $gratificationMaxTemp = 15;
-        else if ($sql['gratificationMin'] == null && $sql['gratificationMax'] != null) $gratificationMinTemp = 4.05;
-
-        if ($size > 1) $sql['sql'] = " gratification BETWEEN :gratificationMinTag AND :gratificationMaxTag AND ";
-        else $sql['sql'] = " gratification BETWEEN :gratificationMinTag AND :gratificationMaxTag ";
-
-        $sql['gratificationMin'] = $gratificationMinTemp;
-        $sql['gratificationMax'] = $gratificationMaxTemp;
-
-        return $sql;
-    }
-
-    protected static function prepareSQLFilter(array $values): string
-    {
-        $sql = "";
-        foreach ($values as $key => $value) {
-            if ($key != 'gratificationMin' && $key != 'gratificationMax' && $key != 'sujet') {
-                foreach ($value as $key2 => $value2) {
-                    if ($key == 'thematique') {
-                        if ($key2 == count($value) - 1) $sql .= $key . " = :" . $key . $key2 . "Tag AND ";
-                        else $sql .= $key . " = :" . $key . $key2 . "Tag OR ";
-                    } else {
-                        if ($key2 == count($value) - 1) $sql .= $key . " = :" . $key . "Tag AND ";
-                        else $sql .= $key . " = :" . $key . "Tag OR ";
-                    }
-                }
-            }
-        }
-        return $sql;
-    }
-
-    protected static function prepareSQLQSearch(array $arraySearch): string
-    {
-        {
-            $sql = "";
-            foreach ($arraySearch as $key => $value) {
-                if ($key == sizeof($arraySearch) - 1) $sql .= "sujet LIKE " . ":sujet" . $key . "Tag ";
-                else $sql .= "sujet LIKE " . ":sujet" . $key . "Tag OR ";
-            }
-            return $sql;
-        }
-    }
-
-    protected static function removeEndifAlone(string $sql): string
-    {
-        if (substr($sql, -4) == "AND " || substr($sql, -3) == "OR ") $sql = substr($sql, 0, -4);
-        return $sql;
-    }
-
-    protected static function constructSQLValues(?array $values, ?array $arraySearch, ?array $filter): array
-    {
-        if ($values != null) {
-            foreach ($values as $key => $value) {
-                if ($key != 'gratificationMin' && $key != 'gratificationMax' && $key != 'sujet') {
-                    if ($key == 'thematique') {
-                        foreach ($value as $key2 => $value2) {
-                            $values[$key . $key2 . "Tag"] = $value2;
-                        }
-                    } else {
-                        $values[$key . "Tag"] = $filter[$key];
-                    }
-                } else {
-                    $values['gratificationMinTag'] = $filter['gratificationMin'];
-                    $values['gratificationMaxTag'] = $filter['gratificationMax'];
-                }
-                unset($values[$key]);
-            }
-        }
-        if ($arraySearch != null) {
-            foreach ($arraySearch as $key => $value) {
-                $arraySearch['sujet' . $key . "Tag"] = '%' . $value . '%';
-                unset($arraySearch[$key]);
-            }
-        }
-        if ($values != null && $arraySearch != null) return array_merge($values, $arraySearch);
-        else if ($values != null) return $values;
-        else if ($arraySearch != null) return $arraySearch;
-        else return array();
-    }
-
     /**
      * @throws ServerErrorException
      */
-    public function getAll(): ?array
+    public static function getAllWithFilter($params): array
     {
         try {
-            $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idUtilisateur = Utilisateur.idUtilisateur";
+            $filtres = [];
+            $type = "";
+            if (!Auth::has_role(Roles::Manager, Roles::Staff)) $filtres[] = "statut = 'valider' AND pourvue = 0";
+            if (Auth::has_role(Roles::Enterprise, Roles::Tutor)) {
+                $id = Application::getUser()->id();
+                if (Auth::has_role(Roles::Tutor)) {
+                    $tuteur = (new TuteurEntrepriseRepository([]))->getById($id);
+                    $id = $tuteur->getIdentreprise();
+                }
+                $filtres[] = "idUtilisateur = " . $id;
+            }
+            if (isset($params['type']) && count($params['type']) == 1) {
+                if ($params['type'][0] == 'alternance') $type = " JOIN OffreAlternance oa ON oa.idoffre = o.idoffre";
+                else if ($params['type'][0] == 'stage') $type = " JOIN OffreStage os ON os.idoffre = o.idoffre";
+            }
+            if (isset($_GET['sujet']) && $_GET['sujet'] != "")
+                $filtres[] = "sujet LIKE :sujet";
+            if (isset($params['year']) && $params['year'] != "all") $filtres[] = "anneevisee=" . $params['year'];
+            if (isset($params["duration"]) && $params["duration"] != "all") $filtres[] = "duree=" . $params["duration"];
+            if (isset($params["theme"]) && count($params["theme"]) > 0) $filtres[] = self::constructFilterFromArray("thematique", $params["theme"]);
+            if (isset($params["gratification"]))
+                $filtres[] = "gratification BETWEEN " . $params["gratification"]["min"] . " AND " . $params["gratification"]["max"];
+            $condition = implode(" AND ", $filtres);
+            $where = count($filtres) > 0 && $condition !== "" ? " WHERE " . $condition : "";
+            $sql = "SELECT o.idoffre, thematique, sujet, datecreation, statut, u.nom, anneevisee, LEFT(o.description, 50) AS description  FROM Offre o JOIN Utilisateur u ON o.idUtilisateur = u.idUtilisateur " . $type . $where;
             $requete = Database::get_conn()->prepare($sql);
-            $requete->execute();
+            if (isset($_GET['sujet']) && $_GET['sujet'] != "")
+                $requete->execute([':sujet' => '%' . strip_tags($_GET['sujet']) . '%']);
+            else $requete->execute();
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
-            $resultat = $requete->fetchAll();
-            if (!$resultat) return null;
-            $offres = [];
-            foreach ($resultat as $offre_data) {
-                $offres[] = $this->construireDepuisTableau($offre_data);
-            }
-            return $offres;
-        } catch (PDOException) {
-            throw new ServerErrorException();
-        }
-    }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public
-    function deleteById($idOffre): bool
-    {
-        try {
-            $sql = "DELETE FROM $this->nomTable WHERE idoffre = :idoffre";
-            $requete = Database::get_conn()->prepare($sql);
-            $requete->execute(['idoffre' => $idOffre]);
-            return true;
-        } catch
-        (PDOException) {
-            throw new ServerErrorException();
-        }
-    }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public
-    function updateToArchiver($idOffre): bool
-    {
-        try {
-            $sql = "UPDATE $this->nomTable SET statut = 'archiver' WHERE idoffre = :idoffre";
-            $requete = Database::get_conn()->prepare($sql);
-            $requete->execute(['idoffre' => $idOffre]);
-            return true;
-        } catch
-        (PDOException) {
+            return $requete->fetchAll();
+        } catch (\Exception $e) {
+            print_r($e);
             throw new ServerErrorException();
         }
     }
@@ -221,6 +101,90 @@ class OffresRepository extends AbstractRepository
             $dataObjectFormatTableau['datecreation'],
             $dataObjectFormatTableau['description']
         );
+    }
+
+    private static function constructFilterFromArray($column, $types)
+    {
+        if (empty($types))
+            return "";
+        $filters = [];
+        foreach ($types as $type)
+            $filters[] = $column . "='" . $type . "'";
+        return "(" . implode(" OR ", $filters) . ")";
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getAllByEnterprise(): array
+    {
+        try {
+            $id = Application::getUser()->id();
+            if (Auth::has_role(Roles::Tutor)) {
+                $tuteur = (new TuteurEntrepriseRepository([]))->getById($id);
+                $id = $tuteur->getIdentreprise();
+            }
+            $sql = "SELECT idOffre, sujet, thematique, datecreation, statut FROM Offre WHERE idUtilisateur = :idUtilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idUtilisateur' => $id]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            return $requete->fetchAll();
+        } catch (\Exception $e) {
+            print_r($e);
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function getAll(): ?array
+    {
+        try {
+            $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idUtilisateur = Utilisateur.idUtilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute();
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetchAll();
+            if ($resultat == false) return null;
+            return $resultat;
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public
+    function deleteById($idOffre): bool
+    {
+        try {
+            $sql = "DELETE FROM $this->nomTable WHERE idoffre = :idoffre";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idoffre' => $idOffre]);
+            return true;
+        } catch
+        (PDOException) {
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public
+    function updateToArchiver($idOffre): bool
+    {
+        try {
+            $sql = "UPDATE $this->nomTable SET statut = 'archiver' WHERE idoffre = :idoffre";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idoffre' => $idOffre]);
+            return true;
+        } catch
+        (PDOException) {
+            throw new ServerErrorException();
+        }
     }
 
     /**
@@ -413,5 +377,4 @@ class OffresRepository extends AbstractRepository
         foreach ($filter as $key => $value) if ($value != "") return true;
         return false;
     }
-
 }

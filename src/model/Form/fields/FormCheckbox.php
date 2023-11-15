@@ -3,42 +3,44 @@
 namespace app\src\model\Form\fields;
 
 use app\src\model\Form\rules\RuleIsArray;
+use app\src\model\Form\rules\RuleIsValidArray;
 
 class FormCheckbox extends AnyAttribute
 {
-	private array $values;
-	private bool $horizontal = false;
+    private array $values;
+    private bool $horizontal = false;
 
-	/**
-	 * @param string $name
-	 * @param array $values
-	 */
-	public function __construct(string $name, array $values)
-	{
-		parent::__construct($name);
-		$this->values = $values;
-		$this->default = [];
-		$this->setType(new RuleIsArray());
-	}
+    /**
+     * @param string $name
+     * @param array $values
+     */
+    public function __construct(string $name, array $values)
+    {
+        parent::__construct($name);
+        $this->values = $values;
+        $this->default = [];
+        $this->setType(new RuleIsArray());
+        $this->addRule(new RuleIsValidArray(["allowed" => array_keys($values)]));
+    }
 
 
-	/**
-	 * @param string[] $value
-	 * @return $this
-	 */
-	public function default($value): static
-	{
-		$this->default = $value;
-		return $this;
-	}
+    /**
+     * @param string[] $value
+     * @return $this
+     */
+    public function default($value): static
+    {
+        $this->default = $value;
+        return $this;
+    }
 
-	function field(string $name, mixed $value): string
-	{
-		$value = $this->getValue($value);
-		$res = '<div class="flex gap-2 ' . ($this->horizontal ? 'flex-row' : 'flex-col') . '">';
-		foreach ($this->values as $id => $val) {
-			$checked = (in_array($id, $value) ? "checked" : '');
-			$res .= <<<HTML
+    function field(string $name, mixed $value): string
+    {
+        $value = $this->getValue($value);
+        $res = '<div class="flex gap-2 ' . ($this->horizontal ? 'flex-row' : 'flex-col') . '">';
+        foreach ($this->values as $id => $val) {
+            $checked = (in_array($id, $value) ? "checked" : '');
+            $res .= <<<HTML
 <div class="w-full">
 	<input
 	        type="checkbox"
@@ -72,19 +74,19 @@ class FormCheckbox extends AnyAttribute
 	</label>
 </div>
 HTML;
-		}
-		$res .= '</div>';
-		return $res;
-	}
+        }
+        $res .= '</div>';
+        return $res;
+    }
 
-	public function horizontal(): static
-	{
-		$this->horizontal = true;
-		return $this;
-	}
+    public function horizontal(): static
+    {
+        $this->horizontal = true;
+        return $this;
+    }
 
-	protected function getType(): string
-	{
-		return "checkbox";
-	}
+    protected function getType(): string
+    {
+        return "checkbox";
+    }
 }
