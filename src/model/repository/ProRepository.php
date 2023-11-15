@@ -4,6 +4,7 @@ namespace app\src\model\repository;
 
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
+use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\Form\FormModel;
 
@@ -61,6 +62,27 @@ class ProRepository extends UtilisateurRepository
         } catch
         (\Exception) {
             throw new ServerErrorException();
+        }
+    }
+
+    public static function changePassword(string $password, string $new, FormModel $form): bool
+    {
+        try {
+            $id = Application::getUser()->id();
+            $statement = Database::get_conn()->prepare("SELECT * FROM ComptePro WHERE idUtilisateur=?");
+            $statement->execute([$id]);
+            $user = $statement->fetch();
+            if (is_null($user) || $user === false || !password_verify($password, $user["hash"])) {
+                $form->setError("Mot de passe invalide");
+                return false;
+            }
+            $hash = password_hash($new, PASSWORD_DEFAULT);
+            $statement = Database::get_conn()->prepare("UPDATE ComptePro SET hash=? WHERE idUtilisateur=?");
+            $statement->execute([$hash, $id]);
+            return true;
+        } catch (\Exception $e) {
+            print_r($e);
+            return false;
         }
     }
 }

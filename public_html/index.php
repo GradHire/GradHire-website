@@ -3,9 +3,9 @@
 use app\src\controller\AuthController;
 use app\src\controller\ConventionsController;
 use app\src\controller\DashboardController;
-use app\src\controller\PstageController;
 use app\src\controller\OffreController;
 use app\src\controller\OpenController;
+use app\src\controller\PstageController;
 use app\src\controller\TestController;
 use app\src\controller\UserController;
 use app\src\core\lib\Psr4AutoloaderClass;
@@ -41,6 +41,9 @@ $app->router->post('/pro_login', [AuthController::class, 'pro_login']);
 
 $app->router->get('/logout', [AuthController::class, 'logout']);
 
+$app->router->get('/password', [AuthController::class, 'modifierMdp']);
+$app->router->post('/password', [AuthController::class, 'modifierMdp']);
+
 // UserController
 
 $app->router->get('/profile', [UserController::class, 'profile']);
@@ -56,12 +59,13 @@ $app->router->get('/entreprises/{id:\d+}', [UserController::class, 'entreprises'
 
 // OffreController
 
+
 $app->router->get('/offres', [OffreController::class, 'offres']);
 
 $app->router->get('/offres/create', [OffreController::class, 'creeroffre']);
 $app->router->post('/offres/create', [OffreController::class, 'creeroffre']);
 
-$app->router->get('/offres/{id:\d+}', [OffreController::class, 'offres']);
+$app->router->get('/offres/{id:\d+}', [OffreController::class, 'detailOffre']);
 
 $app->router->get('/offres/{id:\d+}/postuler', [OffreController::class, 'postuler']);
 $app->router->post('/offres/{id:\d+}/postuler', [OffreController::class, 'postuler']);
@@ -85,9 +89,9 @@ $app->router->get('/user_test/{id}', [TestController::class, 'user_test']);
 // DashboardController
 
 $app->router->get('/candidatures', [DashboardController::class, 'candidatures']);
+$app->router->get('/candidatures/contacter/{id}', [DashboardController::class, 'contacterEntreprise']);
+$app->router->post('/candidatures/contacter/{id}', [DashboardController::class, 'contacterEntreprise']);
 $app->router->get('/candidatures/{idOffre}/{idUtilisateur}', [DashboardController::class, 'candidatures']);
-$app->router->post('/candidatures/contacter/{id}', [DashboardController::class, 'envoyerMailEntreprise']);
-$app->router->post('/candidatures/contacter', [DashboardController::class, 'contacterEntrepriseEtudiant']);
 $app->router->post('/candidatures', [DashboardController::class, 'candidatures']);
 
 $app->router->get('/utilisateurs/{id}/archiver', [DashboardController::class, 'archiver']);
@@ -95,6 +99,7 @@ $app->router->get('/utilisateurs/{id}/archiver', [DashboardController::class, 'a
 $app->router->get('/utilisateurs', [DashboardController::class, 'utilisateurs']);
 $app->router->get('/utilisateurs/{id}', [DashboardController::class, 'utilisateurs']);
 $app->router->post('/utilisateurs/{id}', [DashboardController::class, 'utilisateurs']);
+$app->router->post('/utilisateurs/{id}/role', [DashboardController::class, 'role']);
 
 $app->router->get('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPro']);
 $app->router->post('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPro']);

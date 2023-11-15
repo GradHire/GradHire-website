@@ -10,6 +10,8 @@ use app\src\model\Form\rules\RuleRequired;
 
 abstract class FormAttribute
 {
+    public bool $labelSM = false;
+    public bool $labelBorder = false;
     protected string $name;
     protected bool $forget = false;
     protected bool $asterisk = false;
@@ -83,6 +85,18 @@ abstract class FormAttribute
             $this->params[] = $name;
         else
             $this->params[$name] = $value;
+    }
+
+    public function sm(): static
+    {
+        $this->labelSM = true;
+        return $this;
+    }
+
+    public function border(): static
+    {
+        $this->labelBorder = true;
+        return $this;
     }
 
     public function id(string $id): static
