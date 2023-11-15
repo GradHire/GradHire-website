@@ -47,12 +47,13 @@ class OffresRepository extends AbstractRepository
             $where = count($filtres) > 0 && $condition !== "" ? " WHERE " . $condition : "";
             $sql = "SELECT o.idoffre, thematique, sujet, datecreation, statut, u.nom, anneevisee, LEFT(o.description, 50) AS description  FROM Offre o JOIN Utilisateur u ON o.idUtilisateur = u.idUtilisateur " . $type . $where;
             $requete = Database::get_conn()->prepare($sql);
-            if (isset($_GET['sujet']))
-                $requete->execute([':sujet' => '%' . htmlspecialchars($_GET['sujet']) . '%']);
+            if (isset($_GET['sujet']) && $_GET['sujet'] != "")
+                $requete->execute([':sujet' => '%' . strip_tags($_GET['sujet']) . '%']);
             else $requete->execute();
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             return $requete->fetchAll();
-        } catch (\Exception) {
+        } catch (\Exception $e) {
+            print_r($e);
             throw new ServerErrorException();
         }
     }
@@ -108,7 +109,7 @@ class OffresRepository extends AbstractRepository
         $filters = [];
         foreach ($types as $type)
             $filters[] = $column . "='" . $type . "'";
-        return implode(" OR ", $filters);
+        return "(" . implode(" OR ", $filters) . ")";
     }
 
     /**
