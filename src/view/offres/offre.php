@@ -11,7 +11,7 @@ use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 
-$id_offre = $offre->getIdoffre();
+$id_offre = $offre["idoffre"];
 
 ?>
 <div class="relative  <?php if (Auth::has_role(Roles::Staff, Roles::Manager)) { ?> offreBox <?php } ?>  ">
@@ -47,32 +47,24 @@ $id_offre = $offre->getIdoffre();
         d="M5.25 8.25h15m-16.5 7.5h15m-1.8-13.5l-3.9 19.5m-2.1-19.5l-3.9 19.5"/>
 </svg>
 
-        <?= ucfirst($offre->getThematique()) ?></span>
-                <?php $dateCreation = new DateTime($offre->getDatecreation());
+        <?= ucfirst($offre["thematique"]) ?></span>
+                <?php $dateCreation = new DateTime($offre["datecreation"]);
                 $dateCreation = $dateCreation->format('d/m/Y');
                 echo "<p class=\"block text-xs text-zinc-500\">" . $dateCreation . "</p>";
                 ?>
             </div>
             <div class=" text-lg font-bold mt-2 text-zinc-900">
-                <p><?= ucfirst($offre->getSujet()) ?></p>
+                <p><?= ucfirst($offre["sujet"]) ?></p>
             </div>
             <div>
                 <p class="text-sm text-zinc-500">
-                    <?php
-                    if (strlen($offre->getDescription()) > 50) echo substr(ucfirst($offre->getDescription()), 0, 50) . "…";
-                    else echo ucfirst($offre->getDescription()) ?>
+                    <?= ucfirst($offre["description"]) ?>
                 </p>
             </div>
             <div class="mt-4 flex w-full gap-1">
                 <div class="flex flex-row gap-1 items-center">
-                    <img class="w-5 h-5 rounded-full" src="<?= $offre->getPicture() ?>"
-                         alt="Jese Leos avatar"/>
                     <span class="whitespace-nowrap px-1 py-0.5 font-medium text-center flex justify-center items-center text-xs text-zinc-400">
-            <?php
-            $userId = $offre->getIdutilisateur();
-            if (isset($utilisateurs[$userId])) echo $utilisateurs[$userId];
-            else echo 'Inconnu';
-            ?>
+                        <?= ucfirst($offre["nom"]) ?>
         </span>
                 </div>
                 <span class="group w-full pr-2 group-hover:pr-0 duration-150 inline-flex items-end justify-end gap-1 text-sm font-medium text-zinc-600"><span
