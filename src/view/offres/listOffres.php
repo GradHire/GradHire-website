@@ -157,7 +157,7 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
 		</div>
 	</div>
 </div>
-<script type="text/javascript">
+<script>
     function search() {
         //add parameter sujet to url
         let url = new URL(window.location.href);
