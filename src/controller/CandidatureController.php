@@ -1,4 +1,5 @@
 <?php
+
 namespace app\src\controller;
 
 use app\src\controller\AbstractController;
@@ -16,7 +17,8 @@ use app\src\model\repository\PostulerRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\Request;
 
-class CandidatureController extends AbstractController {
+class CandidatureController extends AbstractController
+{
 
     /**
      * @throws ForbiddenException
@@ -52,12 +54,15 @@ class CandidatureController extends AbstractController {
             $array = ['candidaturesAttente' => (new PostulerRepository())->getCandidaturesAttenteEntreprise($entrepriseid),
                 'candidaturesAutres' => array_merge((new PostulerRepository())->getByIdEntreprise($entrepriseid, 'validee'), (new PostulerRepository())->getByIdEntreprise($entrepriseid, 'refusee'))
             ];
-        } else if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher)) {
+        } else if (Auth::has_role(Roles::Manager, Roles::Staff)) {
             $array = ['candidaturesAttente' => (new PostulerRepository())->getByStatementAttente(),
                 'candidaturesAutres' => array_merge((new PostulerRepository())->getByStatement('validee'), (new PostulerRepository())->getByStatement('refusee'))
             ];
             if (isset($error)) $array['error'] = $error;
             if (isset($success)) $array['success'] = $success;
+        } else if (Auth::has_role(Roles::Teacher)) {
+            $array = ['candidaturesAttente' => (new PostulerRepository())->getByStatementAttenteTuteur()];
+            $array['candidaturesAutres'] = array_merge((new PostulerRepository())->getByStatementTuteur(Auth::get_user()->id(), 'validee'), (new PostulerRepository())->getByStatementTuteur(Auth::get_user()->id(), 'refusee'));
         } else if (Auth::has_role(Roles::Student)) {
             $array = ['candidaturesAttente' => (new PostulerRepository())->getCandidaturesAttenteEtudiant($userid),
                 'candidaturesAutres' => array_merge((new PostulerRepository())->getByIdEtudiant($userid, 'validee'), (new PostulerRepository())->getByIdEtudiant($userid, 'refusee'))
@@ -93,11 +98,12 @@ class CandidatureController extends AbstractController {
     /**
      * @throws ServerErrorException
      */
-    public function validerAsEntreprise(Request $request){
+    public function validerAsEntreprise(Request $request)
+    {
         if (Auth::has_role(Roles::Enterprise)) {
-            $idEtudiant= $request->getRouteParams()["idEtudiant"];
+            $idEtudiant = $request->getRouteParams()["idEtudiant"];
             $idOffre = $request->getRouteParams()["idOffre"];
-            (new PostulerRepository())->validerCandidatureEntreprise($idEtudiant,$idOffre);
+            (new PostulerRepository())->validerCandidatureEntreprise($idEtudiant, $idOffre);
             Application::redirectFromParam("/candidatures");
         }
     }
@@ -105,11 +111,12 @@ class CandidatureController extends AbstractController {
     /**
      * @throws ServerErrorException
      */
-    public function validerAsEtudiant(Request $request){
+    public function validerAsEtudiant(Request $request)
+    {
         if (Auth::has_role(Roles::Student)) {
-            $idEtudiant= $request->getRouteParams()["idEtudiant"];
+            $idEtudiant = $request->getRouteParams()["idEtudiant"];
             $idOffre = $request->getRouteParams()["idOffre"];
-            (new PostulerRepository())->validerCandidatureEtudiant($idEtudiant,$idOffre);
+            (new PostulerRepository())->validerCandidatureEtudiant($idEtudiant, $idOffre);
             Application::redirectFromParam("/candidatures");
         }
     }
@@ -117,11 +124,12 @@ class CandidatureController extends AbstractController {
     /**
      * @throws ServerErrorException
      */
-    public function refuser(Request $request){
+    public function refuser(Request $request)
+    {
         if (Auth::has_role(Roles::Student, Roles::Enterprise)) {
-            $idEtudiant= $request->getRouteParams()["idEtudiant"];
+            $idEtudiant = $request->getRouteParams()["idEtudiant"];
             $idOffre = $request->getRouteParams()["idOffre"];
-            (new PostulerRepository())->refuserCandidature($idEtudiant,$idOffre);
+            (new PostulerRepository())->refuserCandidature($idEtudiant, $idOffre);
             Application::redirectFromParam("/candidatures");
         }
     }

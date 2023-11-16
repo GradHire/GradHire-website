@@ -80,9 +80,19 @@ class TuteurRepository extends ProRepository
         } catch (PDOException) {
             throw new ServerErrorException('erreur Insert Staff');
         }
+        try {
+            $sql = "UPDATE Postuler SET Statut = 'validee' WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idUtilisateur' => $idEtudiant,
+                'idOffre' => $idOffre,
+            ]);
+        } catch (PDOException) {
+            throw new ServerErrorException('erreur Update Postuler');
+        }
         $this->refuserTuteur($idUtilisateur, $idOffre, $idEtudiant);
     }
-//TODO: faire en sorte que si l'enseignant est deja un tuteur cele ne change pas son role (car bug qui met les autrestuteurs en enseignant)
+
     /**
      * @throws ServerErrorException
      */
@@ -139,8 +149,7 @@ class TuteurRepository extends ProRepository
             ]);
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
-            $nbFoisTuteur = $resultat["nbfoistuteur"];
-            if ($nbFoisTuteur < 1) {
+            if ($resultat["nbfoistuteur"] < 1) {
                 $sql = "UPDATE Staff SET role = 'enseignant' WHERE idUtilisateur = :idUtilisateur";
                 $requete = Database::get_conn()->prepare($sql);
                 $requete->execute([
@@ -175,6 +184,14 @@ class TuteurRepository extends ProRepository
         } catch (\Exception $e) {
             throw new ServerErrorException("Erreur  lors du se proposer de la convention");
         }
+        try {
+            $statement = Database::get_conn()->prepare("UPDATE Postuler SET Statut = 'en attente responsable' WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre");
+            $statement->bindParam(":idUtilisateur", $idetudiant);
+            $statement->bindParam(":idOffre", $idOffre);
+            $statement->execute();
+        } catch (\Exception $e) {
+            throw new ServerErrorException("Erreur lors du se proposer de la convention");
+        }
     }
 
     /**
@@ -187,6 +204,14 @@ class TuteurRepository extends ProRepository
             $statement->bindParam(":idUtilisateur", $idUtilisateur);
             $statement->bindParam(":idOffre", $idOffre);
             $statement->bindParam(":idEtudiant", $idEtudiant);
+            $statement->execute();
+        } catch (\Exception $e) {
+            throw new ServerErrorException("Erreur lors du se de proposer de la convention");
+        }
+        try {
+            $statement = Database::get_conn()->prepare("UPDATE Postuler SET Statut = 'en attente tuteur' WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre");
+            $statement->bindParam(":idUtilisateur", $idEtudiant);
+            $statement->bindParam(":idOffre", $idOffre);
             $statement->execute();
         } catch (\Exception $e) {
             throw new ServerErrorException("Erreur lors du se de proposer de la convention");
