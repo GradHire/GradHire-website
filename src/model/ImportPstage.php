@@ -128,7 +128,7 @@ class ImportPstage
     private function insertOffreStage($row, $idEntreprise): int
     {
         $description = $row[20] . $row[21];
-        $this->execute("SELECT creerOffreStage('$row[22]','$row[18]','$row[19]','$row[23]','$row[24]','$row[25]','$row[43]','$row[13]','$row[14]','assigner',1,'$row[36]',$idEntreprise,'$description') FROM DUAL;");
+        $this->execute("SELECT creerOffreStage('$row[22]','$row[18]','$row[19]','$row[23]','$row[24]','$row[25]','$row[43]','$row[13]','$row[14]','valider',1,'$row[36]',$idEntreprise,'$description') FROM DUAL;");
         $sql = "SELECT idOffre FROM Offre WHERE thematique = '$row[18]' AND sujet = '$row[19]'";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
