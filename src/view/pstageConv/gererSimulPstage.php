@@ -31,8 +31,12 @@ if ($files == null) {
             Table::chip("Refusé", "red");
         }
         if (!Auth::has_role(Roles::Student)) {
-            Table::button("/gererSimulPstage/valide/" . $file->getIdSimulation(), "valide");
-            Table::button("/gererSimulPstage/refuse/" . $file->getIdSimulation(), "refuse");
+            if ($file->getStatut() != "Validee") {
+                Table::button("/gererSimulPstage/valide/" . $file->getIdSimulation(), "Valider", "green");
+            }
+            if ($file->getStatut() != "Refusee") {
+                Table::button("/gererSimulPstage/refuse/" . $file->getIdSimulation(), "Refuser", "red");
+            }
         }
     });
 } ?>

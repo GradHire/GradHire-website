@@ -6,16 +6,23 @@ class Table
 {
     public static function createTable(array $values, array $columns, callable $callback)
     {
-        $sort = $_GET['sort'] ?? null;
-        $order = $_GET['order'] ?? null;
+        $i = (time() + rand(0, 1000));
+        $id = "table-" . $i;
+        $cols = count($columns);
+        $empty = 'empty-' . $i;
 
         echo <<<HTML
-<table class="min-w-full divide-y-2 divide-zinc-200 bg-white text-sm" id="table">
+<div class="flex pt-4 mb-4 gap-2 pr-2 w-full">
+    <input onkeydown="if(event.key === 'Enter')search('search-$i', '$id', $cols, '$empty', 'clear-$i')" type="text" id="search-$i" placeholder="Rechercher" class="shadow-sm w-full bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block px-2.5 py-2 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light">
+   <button onclick="search('search-$i', '$id', $cols, '$empty', 'clear-$i')" class="text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800">Rechercher</button>
+<button style="display: none" id="clear-$i" onclick="clearInput('search-$i');search('search-$i', '$id', $cols, '$empty', 'clear-$i')" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">X</button>
+</div>
+<table class="min-w-full divide-y-2 divide-zinc-200 bg-white text-sm" id="$id">
         <thead class="ltr:text-left rtl:text-right">
         <tr>
 HTML;
         for ($i = 0; $i < count($columns); $i++) {
-            echo '<th class="select-none cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900 hover:bg-gray-100" onclick="sortTable(this, ' . $i . ')">
+            echo '<th class="select-none cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900 hover:bg-gray-100" onclick="sortTable(\'' . $id . '\', this, ' . $i . ')">
 				<div class="flex justify-between items-center">
 				' . $columns[$i] . ' <i class="fa-solid fa-sort"></i>
 				</div>                
@@ -29,15 +36,7 @@ HTML;
 
         <tbody class="divide-y divide-zinc-200">
 HTML;
-        if ($values == null || count($values) == 0) {
-            echo <<<HTML
-<tr class="odd:bg-zinc-50">
-<td class="whitespace-nowrap px-4 py-2 font-medium text-zinc-900" colspan="5">
-Aucun résultat
-</td>
-</tr>
-HTML;
-        } else {
+        if (count($values) > 0) {
             foreach ($values as $value) {
                 echo <<<HTML
 <tr class="odd:bg-zinc-50">
@@ -48,26 +47,38 @@ HTML;
 HTML;
             }
         }
+        $style = count($values) > 0 ? "display: none" : '';
         echo <<<HTML
 </tbody>
     </table>
+    <p id="$empty" style="$style" class="pl-4 pt-2 text-zinc-800">Aucun résultats</p>
 <script type="text/javascript" src="/resources/js/table.js"></script>
 HTML;
     }
 
-    public static function button($link, $text = "Voir plus")
+    public static function button($link, $text = "Voir plus", $color = "")
     {
+        $c = "bg-zinc-600 hover:bg-zinc-700";
+        if ($color == "red")
+            $c = "bg-red-600 hover:bg-red-700";
+        elseif ($color == "green")
+            $c = "bg-green-600 hover:bg-green-700";
         self::cell(<<<HTML
 	<a href="$link"
-	   class="inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">$text</a>
+	   class="inline-block rounded  px-4 py-2 text-xs font-medium text-white $c">$text</a>
 HTML
         );
     }
 
     public static function cell($value)
     {
+        $color = "text-zinc-900";
+        if ($value == null || $value == "") {
+            $value = "(Vide)";
+            $color = "text-zinc-400";
+        }
         echo <<<HTML
-<td class="whitespace-nowrap px-4 py-2 font-medium text-zinc-900">
+<td class="whitespace-nowrap px-4 py-2 font-medium $color">
 $value
 </td>
 HTML;
