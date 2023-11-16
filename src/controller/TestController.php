@@ -27,4 +27,19 @@ class TestController extends AbstractController
         Auth::generate_token($user, "true");
         Application::$app->response->redirect('/');
     }
+
+    public function page1(): string
+    {
+        return $this->render('tests/page1', ['currentTab' => $_SESSION['currentTab'] ?? 'tab1']);
+    }
+
+    public function page2(): string
+    {
+        return $this->render('tests/page2');
+    }
+
+    public function page3(): string
+    {
+        return $this->render('tests/page3');
+    }
 }

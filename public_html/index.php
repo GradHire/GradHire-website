@@ -92,6 +92,11 @@ $app->router->get('/offres/maps', [OffreController::class, 'mapsOffres']);
 
 $app->router->get('/user_test/{id}', [TestController::class, 'user_test']);
 
+$app->router->get('/dashboard', [DashboardController::class, 'showDashboard']);
+$app->router->post('/dashboard', [DashboardController::class, 'showDashboard']);
+
+
+
 // CandidatureContoller
 $app->router->get('/candidatures', [CandidatureController::class, 'candidatures']);
 $app->router->get('/candidatures/contacter/{id}', [CandidatureController::class, 'contacterEntreprise']);
@@ -104,18 +109,32 @@ $app->router->get('/candidatures/validerEtudiant/{idEtudiant}/{idOffre}', [Candi
 
 // DashboardController
 
+$app->router->get('/candidatures', [DashboardController::class, 'candidatures']);
+$app->router->get('/candidatures/contacter/{id}', [DashboardController::class, 'contacterEntreprise']);
+$app->router->post('/candidatures/contacter/{id}', [DashboardController::class, 'contacterEntreprise']);
+$app->router->get('/candidatures/{idOffre}/{idUtilisateur}', [DashboardController::class, 'candidatures']);
+$app->router->post('/candidatures', [DashboardController::class, 'candidatures']);
+
 $app->router->get('/utilisateurs/{id}/archiver', [DashboardController::class, 'archiver']);
 
 $app->router->get('/utilisateurs', [DashboardController::class, 'utilisateurs']);
 $app->router->get('/utilisateurs/{id}', [DashboardController::class, 'utilisateurs']);
 $app->router->post('/utilisateurs/{id}', [DashboardController::class, 'utilisateurs']);
-$app->router->post('/utilisateurs/{id}/role', [DashboardController::class, 'role']);
 
 $app->router->get('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPro']);
 $app->router->post('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPro']);
 
 $app->router->get('/importer', [PstageController::class, 'importercsv']);
 $app->router->post('/importer', [PstageController::class, 'importercsv']);
+
+$app->router->get('/page1', [TestController::class, 'page1']);
+$app->router->post('/page1', [TestController::class, 'page1']);
+
+$app->router->get('/page2', [TestController::class, 'page2']);
+$app->router->post('/page2', [TestController::class, 'page2']);
+
+$app->router->get('/page3', [TestController::class, 'page3']);
+$app->router->post('/page3', [TestController::class, 'page3']);
 
 $app->router->get('/explicationSimu', [PstageController::class, 'explicationSimu']);
 

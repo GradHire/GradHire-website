@@ -24,6 +24,26 @@ use app\src\model\Request;
 
 class DashboardController extends AbstractController
 {
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function showDashboard(): string
+    {
+        $statsDistributionDomaine = (new OffresRepository())->getStatsDistributionDomaine();
+        $statsDensembleStageEtAlternance = (new OffresRepository())->getStatsDensembleStageEtAlternance();
+        $statsCandidaturesParMois = (new PostulerRepository())->getStatsCandidaturesParMois();
+        $offres = (new OffresRepository())->getOffresDernierSemaine();
+
+        return $this->render('dashboard/dashboard', [
+            'statsDistributionDomaine' => $statsDistributionDomaine,
+            'statsDensembleStageEtAlternance' => $statsDensembleStageEtAlternance,
+            'statsCandidaturesParMois' => $statsCandidaturesParMois,
+            'offres' => $offres
+        ]);
+    }
+
+
     /**
      * @throws ForbiddenException
      * @throws ServerErrorException
@@ -137,4 +157,6 @@ class DashboardController extends AbstractController
             return '';
         } else throw new ForbiddenException();
     }
+
+
 }

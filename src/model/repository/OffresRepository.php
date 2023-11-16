@@ -368,6 +368,26 @@ class OffresRepository extends AbstractRepository
 		];
 	}
 
+    /**
+     * @throws ServerErrorException
+     */
+    public function getStatsDistributionDomaine(): false|array
+    {
+        return Database::get_conn()->query("CALL DistributionStageAlternanceParDomaine()")->fetchAll();
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function getStatsDensembleStageEtAlternance()
+    {
+        return Database::get_conn()->query("CALL ObtenirVueDensembleStageEtAlternance()")->fetch();
+    }
+
+    public function getOffresDernierSemaine()
+    {
+        return Database::get_conn()->query("CALL ObtenirOffresDernierSemaine()")->fetchAll();
+    }
 
 	protected
 	function checkFilterNotEmpty(array $filter): bool
