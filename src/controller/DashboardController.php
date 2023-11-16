@@ -108,7 +108,8 @@ class DashboardController extends AbstractController
     {
         if (!Auth::has_role(Roles::Student)) throw new ForbiddenException();
         $form = new FormModel([
-            'message' => FormModel::string("Message")->required()->asterisk()->forget(),
+            'Objet' => FormModel::string("Objet")->required()->asterisk()->forget(),
+            'message' => FormModel::string("Message")->required()->asterisk()->forget()->textarea(),
         ]);
         if ($req->getMethod() === 'post') {
             if ($form->validate($req->getBody())) {
@@ -118,7 +119,7 @@ class DashboardController extends AbstractController
                 $idEntreprise = $offre->getIdutilisateur();
                 $emailEntreprise = (new EntrepriseRepository([]))->getByIdFull($idEntreprise)->getEmailutilisateur();
                 $mail = new MailRepository();
-                $mail->send_mail([$emailEntreprise], Application::getUser()->full_name() . " vous a envoyer un message concernant l'offre " . $offre->getSujet(), "Message:\n" . $form->getParsedBody()['message']);
+                $mail->send_mail([$emailEntreprise], $form->getParsedBody()['Objet'], $form->getParsedBody()['message'] . "\n le message a été envoyé pour l'offre : " . $offre->getSujet());
                 Application::redirectFromParam('/candidatures');
             }
         }
