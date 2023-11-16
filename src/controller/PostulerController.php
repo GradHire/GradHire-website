@@ -29,12 +29,15 @@ class PostulerController extends AbstractController
             $idUtilisateur = Application::getUser()->id();
             $countPostulation = (new StaffRepository([]))->getCountPostulationTuteur($idUtilisateur);
             if ($countPostulation < 10) {
-                (new ConventionRepository([]))->suivreConvention($idUtilisateur,$idOffre,$idEtudiant);
+                (new TuteurRepository([]))->seProposer($idUtilisateur, $idOffre, $idEtudiant);
             }
             Application::redirectFromParam("/candidatures");
         }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function se_deproposer(Request $request): void {
         if (Auth::has_role(Roles::Teacher)) {
             $idOffre = $request->getRouteParams()["id"] ?? null;
@@ -42,7 +45,7 @@ class PostulerController extends AbstractController
             $idUtilisateur = Application::getUser()->id();
             $countPostulation = (new StaffRepository([]))->getCountPostulationTuteur($idUtilisateur);
             if($countPostulation >0) {
-                (new ConventionRepository([]))->seDeProposer($idUtilisateur,$idOffre,$idEtudiant);
+                (new TuteurRepository([]))->seDeProposer($idUtilisateur,$idOffre,$idEtudiant);
             }
             Application::redirectFromParam("/candidatures");
         }
@@ -78,8 +81,7 @@ class PostulerController extends AbstractController
             $staff = (new StaffRepository([]))->getByIdFull($idUtilisateur);
             $idOffre = $request->getRouteParams()["idOffre"] ?? null;
             $idEtudiant = (NEW PostulerRepository())->getByIdOffre($idOffre)[0]->getIdUtilisateur();
-            $identreprise = (new OffresRepository())->getById($idOffre)->getIdutilisateur();
-            (new TuteurRepository([]))->addTuteur($staff->getIdutilisateur(),$idOffre,$idEtudiant,"tuteur",$identreprise);
+            (new TuteurRepository([]))->addTuteur($staff->getIdutilisateur(),$idOffre,$idEtudiant);
         }
         Application::redirectFromParam("/postuler/listeTuteur/".$idOffre."/".$idEtudiant);
     }
@@ -87,14 +89,13 @@ class PostulerController extends AbstractController
     /**
      * @throws ServerErrorException
      */
-    public function refuserAsTuteur(Request $request): void{
+    public function annulerAsTuteur(Request $request): void{
         if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::ManagerAlternance, Roles::ManagerStage)) {
             $idUtilisateur = $request->getRouteParams()["idUser"] ?? null;
             $staff = (new StaffRepository([]))->getByIdFull($idUtilisateur);
             $idOffre = $request->getRouteParams()["idOffre"] ?? null;
             $idEtudiant = (NEW PostulerRepository())->getByIdOffre($idOffre)[0]->getIdUtilisateur();
-            $identreprise = (new OffresRepository())->getById($idOffre)->getIdutilisateur();
-            (new TuteurRepository([]))->removeTuteur($staff->getIdutilisateur(),$idOffre,$idEtudiant,"tuteur",$identreprise);
+            (new TuteurRepository([]))->annulerTuteur($staff->getIdutilisateur(),$idOffre,$idEtudiant);
         }
         Application::redirectFromParam("/postuler/listeTuteur/".$idOffre."/".$idEtudiant);
     }

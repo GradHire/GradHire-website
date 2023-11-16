@@ -114,7 +114,7 @@ $app->router->get('/postuler/seProposer/{id:\d+}', [PostulerController::class, '
 $app->router->get('/postuler/seDeproposer/{id:\d+}', [PostulerController::class, 'se_deproposer']);
 $app->router->get('/postuler/listeTuteur/{idOffre}/{idUser}', [PostulerController::class, 'listeTuteurPostuler']);
 $app->router->get('/postuler/accepter_as_tuteur/{idUser}/{idOffre}', [PostulerController::class, 'accepterAsTuteur']);
-$app->router->get('/postuler/unaccepte_as_tuteur/{idUser}/{idOffre}', [PostulerController::class, 'refuserAsTuteur']);
+$app->router->get('/postuler/unaccepte_as_tuteur/{idUser}/{idOffre}', [PostulerController::class, 'annulerAsTuteur']);
 
 
 

@@ -189,36 +189,6 @@ class ConventionRepository extends AbstractRepository
         }
     }
 
-    /**
-     * @throws ServerErrorException
-     */
-    public function suivreConvention(int $idutilisateur, int $idOffre, int $idetudiant): void {
-        try {
-            $statement = Database::get_conn()->prepare("INSERT INTO Supervise (idUtilisateur, idOffre, idEtudiant) VALUES (?,?,?);");
-            $statement->bindParam(1, $idutilisateur);
-            $statement->bindParam(2, $idOffre);
-            $statement->bindParam(3, $idetudiant);
-            $statement->execute();
-        } catch (\Exception $e) {
-            throw new ServerErrorException("Erreur lors du suivi de la convention", 500, $e);
-        }
-    }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public function seDeProposer(int $idUtilisateur, mixed $idOffre, $idEtudiant)
-    {
-        try {
-            $statement = Database::get_conn()->prepare("DELETE FROM Supervise WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant");
-            $statement->bindParam(":idUtilisateur", $idUtilisateur);
-            $statement->bindParam(":idOffre", $idOffre);
-            $statement->bindParam(":idEtudiant", $idEtudiant);
-            $statement->execute();
-        } catch (\Exception $e) {
-            throw new ServerErrorException("Erreur lors du se de proposer de la convention", 500, $e);
-        }
-    }
 
     protected function getNomTable(): string
     {

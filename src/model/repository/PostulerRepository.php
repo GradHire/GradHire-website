@@ -132,8 +132,12 @@ class PostulerRepository extends AbstractRepository
         return $resultat;
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getSiTuteurPostuler(?int $getIdUtilisateur, ?int $getIdOffre)
     {
+        try {
         $sql = "SELECT * FROM Supervise WHERE idEtudiant=:idUtilisateur AND idOffre=:idOffre";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idUtilisateur' => $getIdUtilisateur, 'idOffre' => $getIdOffre]);
@@ -141,10 +145,14 @@ class PostulerRepository extends AbstractRepository
         $resultat = $requete->fetch();
         if (!$resultat) return false;
         return true;
+        } catch (\Exception) {
+            throw new ServerErrorException('erreurs getSiTuteurPostuler');
+        }
     }
 
     public function getTuteurByIdOffre(mixed $idOffre): ?array
     {
+        try {
         $sql = "SELECT * FROM Supervise WHERE idOffre=:idOffre";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idOffre' => $idOffre]);
@@ -152,6 +160,9 @@ class PostulerRepository extends AbstractRepository
         $resultat = $requete->fetchAll();
         if (!$resultat) return null;
         return $resultat;
+        } catch (\Exception) {
+            throw new ServerErrorException('erreurs getTuteurByIdOffre');
+        }
     }
 
 

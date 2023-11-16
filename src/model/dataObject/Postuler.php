@@ -104,6 +104,4 @@ class Postuler extends AbstractDataObject
     public function getSiTuteurPostuler(): bool {
         return (new PostulerRepository())->getSiTuteurPostuler($this->getIdUtilisateur(),$this->getIdOffre());
     }
-
-
 }

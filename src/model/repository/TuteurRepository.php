@@ -58,21 +58,30 @@ class TuteurRepository extends ProRepository
     /**
      * @throws ServerErrorException
      */
-    public function addTuteur($idUtilisateur, $idOffre, $idEtudiant, $fonction, $idEntreprise): void
+    public function addTuteur($idUtilisateur, $idOffre, $idEtudiant): void
     {
+        //TODO: faire en sorte que tout les autres tuteurs qui ont postuler pour cette offre soit refuser
         try {
-            $sql = "INSERT INTO TuteurProf VALUES(:idUtilisateur,:idOffre,:idEtudiant,:fonction,:idEntreprise)";
+            $sql = "UPDATE Supervise SET Statut = 'validee' WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute([
                 'idUtilisateur' => $idUtilisateur,
                 'idOffre' => $idOffre,
                 'idEtudiant' => $idEtudiant,
-                'fonction' => $fonction,
-                'idEntreprise' => $idEntreprise
             ]);
         } catch (PDOException) {
-            throw new ServerErrorException();
+            throw new ServerErrorException('erreur Update Supervise');
         }
+        try {
+            $sql = "UPDATE Staff SET role = 'tuteur' WHERE idUtilisateur = :idUtilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idUtilisateur' => $idUtilisateur,
+            ]);
+        } catch (PDOException) {
+            throw new ServerErrorException('erreur Insert Staff');
+        }
+        $this->refuserTuteur($idUtilisateur, $idOffre, $idEtudiant);
     }
 
     /**
@@ -80,32 +89,98 @@ class TuteurRepository extends ProRepository
      */
     public function getIfTuteurAlreadyExist($idUtilisateur, $idOffre, $idEtudiant): bool
     {
-        $sql = "SELECT * FROM TuteurProf WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute([
-            'idUtilisateur' => $idUtilisateur,
-            'idOffre' => $idOffre,
-            'idEtudiant' => $idEtudiant
-        ]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetch();
-        if ($resultat == null) {
-            return false;
+        try {
+            $sql = "SELECT * FROM Supervise s JOIN Staff st ON st.idUtilisateur = s.idUtilisateur WHERE s.idUtilisateur = :idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant AND role = 'tuteur'";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idUtilisateur' => $idUtilisateur,
+                'idOffre' => $idOffre,
+                'idEtudiant' => $idEtudiant
+            ]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetch();
+            if ($resultat == null) {
+                return false;
+            }
+            return true;
+        } catch (PDOException) {
+            throw new ServerErrorException('erreur getIfTuteurAlreadyExist');
         }
-        return true;
     }
 
-    public function removeTuteur(int $getIdutilisateur, mixed $idOffre, $idEtudiant, string $string, int $identreprise)
+    /**
+     * @throws ServerErrorException
+     */
+    public function refuserTuteur(int $getIdutilisateur, mixed $idOffre, $idEtudiant)
     {
-        $sql = "DELETE FROM TuteurProf WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant AND fonction = :fonction AND idEntreprise = :idEntreprise";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute([
-            'idUtilisateur' => $getIdutilisateur,
-            'idOffre' => $idOffre,
-            'idEtudiant' => $idEtudiant,
-            'fonction' => $string,
-            'idEntreprise' => $identreprise
-        ]);
+        try {
+            $sql = "UPDATE Supervise SET Statut = 'refusee' WHERE idUtilisateur!=:idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idUtilisateur' => $getIdutilisateur,
+                'idOffre' => $idOffre,
+                'idEtudiant' => $idEtudiant
+            ]);
+        } catch (PDOException) {
+            throw new ServerErrorException('erreur refuser tuteur');
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function annulerTuteur(int $iduser, int $idOffre, int $idetudiant): void
+    {
+        try{
+            $sql = "UPDATE Supervise SET Statut = 'en attente' WHERE idOffre = :idOffre AND idEtudiant = :idEtudiant";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idOffre' => $idOffre,
+                'idEtudiant' => $idetudiant
+            ]);
+        } catch (PDOException) {
+            throw new ServerErrorException('erreur annuler tuteur');
+        }
+        try {
+            $sql = "UPDATE Staff SET role = 'enseignant' WHERE idUtilisateur = :idUtilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idUtilisateur' => $iduser,
+            ]);
+        } catch (PDOException) {
+            throw new ServerErrorException('erreur Insert Staff');
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function seProposer(int $idutilisateur, int $idOffre, int $idetudiant): void {
+        try {
+            $statement = Database::get_conn()->prepare("INSERT INTO Supervise VALUES (?,?,?,'en attente');");
+            $statement->bindParam(1, $idutilisateur);
+            $statement->bindParam(2, $idOffre);
+            $statement->bindParam(3, $idetudiant);
+            $statement->execute();
+        } catch (\Exception $e) {
+            throw new ServerErrorException("Erreur  lors du se proposer de la convention");
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function seDeProposer(int $idUtilisateur, mixed $idOffre, $idEtudiant)
+    {
+        try {
+            $statement = Database::get_conn()->prepare("DELETE FROM Supervise WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant");
+            $statement->bindParam(":idUtilisateur", $idUtilisateur);
+            $statement->bindParam(":idOffre", $idOffre);
+            $statement->bindParam(":idEtudiant", $idEtudiant);
+            $statement->execute();
+        } catch (\Exception $e) {
+            throw new ServerErrorException("Erreur lors du se de proposer de la convention");
+        }
     }
 
     protected
