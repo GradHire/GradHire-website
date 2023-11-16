@@ -177,7 +177,6 @@ EOT;
     <div class="relative grow isolate overflow-hidden w-full gap-4 flex flex-col bg-zinc-50 border rounded-2xl text-[#1A2421] backdrop-blur-xl [ p-8 md:p-10 lg:p-10 ] [ border-[1px] border-solid border-black  border-opacity-10 ] [ shadow-black/5 shadow-2xl ]">
         <div id="tab1"
              class="<?php if ($currentTab === 'tab1') echo 'flex flex-col w-full gap-2 items-start justify-start'; else echo 'hidden'; ?>">
-
             <div class="w-full flex flex-row justify-around items-center bg-white border rounded-[8px]">
                 <?php
                 $numBlockChart1 = new NumBlockChart('Stages', $statsDensembleStageEtAlternance['nombreoffresstageactives'], $statsCandidaturesParMois, 'mois', 'nombrecandidatures', '#f542ad');
@@ -206,7 +205,7 @@ EOT;
                 </div>
             </div>
             <div class="w-full h-[1px] bg-zinc-300"></div>
-            <div class="flex flex-col mt-2">
+            <div class="flex flex-col mt-2 w-full">
                 <div class="w-full flex flex-row justify-between items-center">
                     <h2 class="text-md font-bold text-zinc-700 mb-4">Dernières offres ajoutées</h2>
                     <a href="/offres"
@@ -216,7 +215,7 @@ EOT;
                     </a>
                 </div>
 
-                <div class="w-full flex flex-col gap-2 justify-start items-start max-h-[450px] overflow-y-scroll pr-3">
+                <div class="w-full flex flex-col gap-2 justify-start items-start max-h-[580px] overflow-y-scroll pr-3">
                     <div class="flex flex-row justify-start items-start w-full h-full">
                         <div class="w-full flex flex-col justify-start items-start">
                             <?php
