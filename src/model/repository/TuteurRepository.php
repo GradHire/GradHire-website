@@ -91,6 +91,17 @@ class TuteurRepository extends ProRepository
             throw new ServerErrorException('erreur Update Postuler');
         }
         $this->refuserTuteur($idUtilisateur, $idOffre, $idEtudiant);
+        try {
+            //refuser toutes les autres candidatures
+            $sql = "UPDATE Postuler SET statut = 'refusee' WHERE idUtilisateur != :idUtilisateur AND idOffre = :idOffre";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idUtilisateur' => $idEtudiant,
+                'idOffre' => $idOffre,
+            ]);
+        } catch (PDOException) {
+            throw new ServerErrorException('erreur Update Postuler');
+        }
     }
 
     /**

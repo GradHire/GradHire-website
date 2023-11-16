@@ -45,7 +45,7 @@ class PostulerRepository extends AbstractRepository
 
     public function getByIdEntreprise($identreprise, string $etat): ?array
     {
-        $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE idUtilisateur= :id AND statut=:etat";
+        $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE identreprise= :id AND statut=:etat";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['id' => $identreprise, 'etat' => $etat]);
         $requete->setFetchMode(\PDO::FETCH_ASSOC);

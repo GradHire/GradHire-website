@@ -105,7 +105,7 @@ class ImportPstage
 
     private function insertReferent($row)
     {
-        $this->execute("Select creerStaff('$row[29]','$row[30]','$row[31]','$row[31]') FROM DUAL ;");
+        $this->execute("Select creerStaffImp('$row[29]','$row[30]','$row[31]','$row[31]') FROM DUAL ;");
     }
 
     private function exist(string $string, string $string1, mixed $int, string $string2, mixed $identreprise)
