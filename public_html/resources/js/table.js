@@ -1,12 +1,12 @@
 let oldTh = null;
 
-function sortTable(th, n) {
+function sortTable(tableId, th, n) {
     if (oldTh != null) {
         oldTh.querySelector('.fa-solid').className = 'fa-solid fa-sort';
     }
     oldTh = th;
     let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-    table = document.getElementById("table");
+    table = document.getElementById(tableId);
     switching = true;
     dir = "asc";
 
@@ -46,6 +46,41 @@ function sortTable(th, n) {
                 dir = "desc";
                 switching = true;
             }
+        }
+    }
+}
+
+function search(input, tableId, columns, empty) {
+    const search = document.getElementById(input).value.trim();
+    const table = document.getElementById(tableId);
+    const tr = table.getElementsByTagName("tr");
+
+    let res = false;
+    for (let i = 1; i < tr.length; i++) {
+        let found = false;
+        for (let j = 0; j < columns; j++) {
+            const td = tr[i].getElementsByTagName("td")[j];
+            if (td) {
+                const txtValue = td.textContent || td.innerText;
+                if (txtValue.toLowerCase().indexOf(search.toLowerCase()) > -1) {
+                    found = true;
+                    res = true;
+                    break;
+                }
+            }
+        }
+        tr[i].style.display = found ? "" : "none";
+    }
+
+    if (res)
+        document.getElementById(empty).style.display = 'none'
+    else
+        document.getElementById(empty).style.display = 'block'
+
+
+    if (search === '') {
+        for (let i = 1; i < tr.length; i++) {
+            tr[i].style.display = "";
         }
     }
 }
