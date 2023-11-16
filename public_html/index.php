@@ -65,6 +65,8 @@ $app->router->get('/offres', [OffreController::class, 'offres']);
 
 $app->router->get('/offres/create', [OffreController::class, 'creeroffre']);
 $app->router->post('/offres/create', [OffreController::class, 'creeroffre']);
+$app->router->get('/offres/create/{id:\d+}', [OffreController::class, 'creeroffre']);
+$app->router->post('/offres/create/{id:\d+}', [OffreController::class, 'creeroffre']);
 
 $app->router->get('/offres/{id:\d+}', [OffreController::class, 'detailOffre']);
 

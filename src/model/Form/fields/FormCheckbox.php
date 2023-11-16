@@ -41,7 +41,7 @@ class FormCheckbox extends AnyAttribute
         foreach ($this->values as $id => $val) {
             $checked = (in_array($id, $value) ? "checked" : '');
             $res .= <<<HTML
-<div class="w-full">
+<div class="w-full select-none">
 	<input
 	        type="checkbox"
 	        name="{$name}[]"
@@ -53,7 +53,7 @@ class FormCheckbox extends AnyAttribute
 	
 	<label
 	        for="$id"
-	        class="block cursor-pointer rounded-lg border border-zinc-100 bg-white p-2 text-sm font-medium hover:border-zinc-200 peer-checked:border-zinc-500 peer-checked:ring-1 peer-checked:ring-zinc-500"
+	        class="block cursor-pointer bg-zinc-50 rounded-lg border border-zinc-200 p-2 text-sm font-medium hover:border-zinc-200 peer-checked:border-zinc-500 peer-checked:ring-1 peer-checked:ring-zinc-500"
 	>
 	<span class="flex items-center justify-between">
 	    <span class="text-zinc-700">$val</span>

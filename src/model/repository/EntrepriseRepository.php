@@ -77,6 +77,25 @@ class EntrepriseRepository extends ProRepository
         }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getList(): array
+    {
+        try {
+            $sql = "SELECT idUtilisateur, nom FROM EntrepriseVue";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute();
+            $resultat = $requete->fetchAll();
+            if (!$resultat) {
+                return [];
+            }
+            return $resultat;
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
+    }
+
     public
     function role(): Roles
     {
@@ -176,7 +195,6 @@ class EntrepriseRepository extends ProRepository
         return $entreprises;
     }
 
-
     public function getBySiret(mixed $siret, mixed $siren)
     {
         $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE siret = :siret AND siret LIKE  :siren";
@@ -193,7 +211,6 @@ class EntrepriseRepository extends ProRepository
         }
         return $entreprises;
     }
-
 
     public function getByTel(mixed $tel, mixed $fax)
     {
@@ -274,7 +291,6 @@ class EntrepriseRepository extends ProRepository
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['nomEnt' => $nomEnt, 'email' => $email, 'tel' => $tel, 'string' => $string, 'type' => $type, 'effectif' => $effectif, 'codeNaf' => $codeNaf, 'fax' => $fax, 'web' => $web, 'voie' => $voie, 'cedex' => $cedex, 'residence' => $residence, 'codePostal' => $codePostal, 'pays' => $pays, 'nomville' => $ville, 'siret' => $siret]);
     }
-
 
     protected
     function getNomColonnes(): array

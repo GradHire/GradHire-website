@@ -4,7 +4,6 @@ namespace app\src\model\Form\rules;
 
 
 use app\src\model\Form\FormInputValue;
-use app\src\model\Form\FormValidationException;
 
 class RuleIsInt extends FormAttributeRule
 {
@@ -14,7 +13,7 @@ class RuleIsInt extends FormAttributeRule
      */
     public function process(FormInputValue $value): void
     {
-        if (!filter_var($value->getValue(), FILTER_VALIDATE_INT))
-            throw new FormValidationException("Ce champs n'est pas une int");
+        if (is_string($value->getValue()) && is_numeric($value->getValue()))
+            $value->setValue((int)$value->getValue());
     }
 }
