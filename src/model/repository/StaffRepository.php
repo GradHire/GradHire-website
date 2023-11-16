@@ -38,6 +38,39 @@ class StaffRepository extends LdapRepository
         return Roles::Teacher;
     }
 
+    public function getAllTuteurProf(): ?array
+    {
+        try {
+            $sql = "SELECT * FROM TuteurUniversiteVue";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute();
+            $resultat = $requete->fetchAll();
+            $utilisateurs = [];
+            foreach ($resultat as $utilisateur) {
+                $utilisateurs[] = $this->construireDepuisTableau($utilisateur);
+            }
+            return $utilisateurs;
+        } catch (PDOException) {
+            throw new ServerErrorException();
+        }
+    }
+
+    protected
+    function construireDepuisTableau(array $dataObjectFormatTableau): Staff
+    {
+        return new Staff(
+            $dataObjectFormatTableau["idutilisateur"],
+            $dataObjectFormatTableau["email"],
+            $dataObjectFormatTableau["nom"],
+            $dataObjectFormatTableau["numtelephone"],
+            $dataObjectFormatTableau["bio"],
+            $dataObjectFormatTableau["archiver"],
+            $dataObjectFormatTableau["loginldap"],
+            $dataObjectFormatTableau["prenom"],
+            $dataObjectFormatTableau["role"]
+        );
+    }
+
     /**
      * @throws ServerErrorException
      */
@@ -69,22 +102,6 @@ class StaffRepository extends LdapRepository
             return null;
         }
         return $this->construireDepuisTableau($resultat);
-    }
-
-    protected
-    function construireDepuisTableau(array $dataObjectFormatTableau): Staff
-    {
-        return new Staff(
-            $dataObjectFormatTableau["idutilisateur"],
-            $dataObjectFormatTableau["email"],
-            $dataObjectFormatTableau["nom"],
-            $dataObjectFormatTableau["numtelephone"],
-            $dataObjectFormatTableau["bio"],
-            $dataObjectFormatTableau["archiver"],
-            $dataObjectFormatTableau["loginldap"],
-            $dataObjectFormatTableau["prenom"],
-            $dataObjectFormatTableau["role"]
-        );
     }
 
     /**

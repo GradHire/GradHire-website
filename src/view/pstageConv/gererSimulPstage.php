@@ -35,5 +35,4 @@ if ($files == null) {
             Table::button("/gererSimulPstage/refuse/" . $file->getIdSimulation(), "refuse");
         }
     });
-
 } ?>
