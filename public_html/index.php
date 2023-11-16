@@ -1,24 +1,24 @@
 <?php
 
 use app\src\controller\AuthController;
+use app\src\controller\CandidatureController;
 use app\src\controller\ConventionsController;
 use app\src\controller\DashboardController;
 use app\src\controller\OffreController;
 use app\src\controller\OpenController;
-use app\src\controller\PstageController;
 use app\src\controller\PostulerController;
+use app\src\controller\PstageController;
 use app\src\controller\TestController;
 use app\src\controller\UserController;
 use app\src\core\lib\Psr4AutoloaderClass;
 use app\src\model\Application;
-use app\src\controller\CandidatureController;
 
 
 require_once __DIR__ . '/../src/core/lib/Psr4AutoloaderClass.php';
 require_once __DIR__ . '/../src/config.php';
 
 if (session_status() == PHP_SESSION_NONE)
-    session_start();
+	session_start();
 
 $loader = new Psr4AutoloaderClass();
 $loader->register();
@@ -62,6 +62,7 @@ $app->router->get('/entreprises/{id:\d+}', [UserController::class, 'entreprises'
 
 // OffreController
 
+$app->router->get('/subscribe', [OffreController::class, 'subscribeNewsletter']);
 
 $app->router->get('/offres', [OffreController::class, 'offres']);
 
@@ -184,7 +185,6 @@ $app->router->get('/postuler/seDeproposer/{id:\d+}', [PostulerController::class,
 $app->router->get('/postuler/listeTuteur/{idOffre}/{idUser}', [PostulerController::class, 'listeTuteurPostuler']);
 $app->router->get('/postuler/accepter_as_tuteur/{idUser}/{idOffre}', [PostulerController::class, 'accepterAsTuteur']);
 $app->router->get('/postuler/unaccepte_as_tuteur/{idUser}/{idOffre}', [PostulerController::class, 'annulerAsTuteur']);
-
 
 
 $app->run();

@@ -87,6 +87,8 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
 				$form->submit("Appliquer");
 				$form->reset("Réinitialiser", true);
 				?>
+				<a href="/subscribe" class="text-center"><i class="fa-regular fa-bell"></i> S'abonner à la
+				                                                                            newsletter</a>
 			</div>
 			<?php
 			$form->end();
