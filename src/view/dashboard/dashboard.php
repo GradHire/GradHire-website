@@ -3,6 +3,7 @@
 use app\src\core\components\charts\BarChartH;
 use app\src\core\components\charts\LineChart;
 use app\src\core\components\charts\NumBlock;
+use app\src\core\components\charts\NumBlockChart;
 use app\src\core\components\charts\PercentageBlock;
 use app\src\core\components\charts\PieChart;
 use app\src\core\components\charts\SVGBarChart;
@@ -116,31 +117,13 @@ EOT;
         <div class="relative w-full bg-zinc-50 isolate overflow-hidden border rounded-2xl text-[#1A2421] backdrop-blur-xl [ p-2 md:p-4 ] [ border-[1px] border-solid border-black  border-opacity-10 ] [ shadow-black/5 shadow-2xl ]">
             <div id="tab1"
                  class="<?php if ($currentTab === 'tab1') echo 'flex flex-col gap-2 items-start justify-start'; else echo 'hidden'; ?>">
-                <div class="container mx-auto pt-4">
-                    <h2 class="text-md font-bold text-zinc-700 mb-4">Distribution des offres par Domaine</h2>
-                    <div class="w-full">
-                        <?php
-                        $barChart = new BarChartH($statsDistributionDomaine);
-                        $barChart->render();
-                        ?>
-
-                    </div>
-                </div>
-                <div class="w-full h-[1px] bg-zinc-300"></div>
-                <?php
-                $pieChart = new PieChart($statsDistributionDomaine, $totalOffers, ["#e4e4e7", "#d4d4d8", "#a1a1aa", "#71717a", "#52525b", "#3f3f46", "#27272a", "#18181b", "#09090b"]);
-                $pieChart->render();
-                ?>
-                <div class="w-full h-[1px] bg-zinc-300"></div>
-                <div class="w-full min-h-[100px]">
+                <div class="w-full flex flex-row justify-center items-center gap-2">
                     <?php
-                    $lineChart = new LineChart($statsCandidaturesParMois, 'mois', 'nombrecandidatures');
-                    $lineChart->render();
+                    $percentageBlock = new PercentageBlock('Stages', $statsDensembleStageEtAlternance['nombreoffresstageactives']);
+                    $percentageBlock->render();
                     ?>
                 </div>
                 <div class="w-full h-[1px] bg-zinc-300"></div>
-                <div class="w-full h-[1px] bg-zinc-300"></div>
-
                 <div class="w-full flex flex-row justify-center items-center gap-2">
                     <?php
                     $numBlockStage = new NumBlock('Stages', $statsDensembleStageEtAlternance['nombreoffresstageactives']);
@@ -153,21 +136,64 @@ EOT;
                     $numBlockPourvues->render();
                     ?>
                 </div>
-                <div class="w-full flex flex-row justify-center items-center gap-2">
-                    <?php
-                    $percentageBlock = new PercentageBlock('Stages', $statsDensembleStageEtAlternance['nombreoffresstageactives']);
-                    $percentageBlock->render();
-                    ?>
+                <div class="w-full h-[1px] bg-zinc-300"></div>
+                <div class="container mx-auto pt-4">
+                    <h2 class="text-md font-bold text-zinc-700 mb-4">Candidatures validées par mois</h2>
+                    <div class="w-full min-h-[100px]">
+                        <?php
+                        $size = [
+                            'width' => 300,
+                            'height' => 150,
+                            'padding' => 20
+                        ];
+                        $lineChart = new LineChart($statsCandidaturesParMois, 'mois', 'nombrecandidatures', true, $size, '#910aff');
+                        $lineChart->render();
+                        ?>
+                    </div>
                 </div>
+                <div class="w-full h-[1px] bg-zinc-300"></div>
+                <div class="container mx-auto pt-4">
+                    <h2 class="text-md font-bold text-zinc-700 mb-4">Distribution des offres par Domaine</h2>
+                    <div class="w-full">
+                        <?php
+                        $barChart = new BarChartH($statsDistributionDomaine);
+                        $barChart->render();
+                        ?>
+
+                    </div>
+                </div>
+                <div class="w-full h-[1px] bg-zinc-300"></div>
+                <?php
+                $pieChart = new PieChart($statsDistributionDomaine, $totalOffers, ["#10b981", "#f59e0b", "#3b82f6", "#f43f5e", "#6366f1", "#ec4899", "#fbbf24", "#84cc16", "#1d4ed8", "#7c3aed", "#f472b6", "#fbbf24", "#10b981", "#f59e0b", "#3b82f6", "#f43f5e", "#6366f1", "#ec4899", "#fbbf24", "#84cc16", "#1d4ed8", "#7c3aed", "#f472b6", "#fbbf24"], true);
+                $pieChart->render();
+                ?>
             </div>
             <div id="tab2" class="<?php if ($currentTab === 'tab2') echo 'flex'; else echo 'hidden'; ?>"></div>
             <div id="tab3" class="<?php if ($currentTab === 'tab3') echo 'flex'; else echo 'hidden'; ?>"></div>
         </div>
     </div>
     <div class="relative grow isolate overflow-hidden w-full gap-4 flex flex-col bg-zinc-50 border rounded-2xl text-[#1A2421] backdrop-blur-xl [ p-8 md:p-10 lg:p-10 ] [ border-[1px] border-solid border-black  border-opacity-10 ] [ shadow-black/5 shadow-2xl ]">
-        <div class="w-full">
+        <div class="w-full flex flex-row justify-around items-center bg-white border rounded-[8px]">
             <?php
-            $svgbarChart = new SVGBarChart($statsDistributionDomaine, 'thematique', 'nombreoffres');
+            $numBlockChart1 = new NumBlockChart('Stages', $statsDensembleStageEtAlternance['nombreoffresstageactives'], $statsCandidaturesParMois, 'mois', 'nombrecandidatures', '#f542ad');
+            $numBlockChart2 = new NumBlockChart('Stages', $statsDensembleStageEtAlternance['nombreoffresstageactives'], $statsCandidaturesParMois, 'mois', 'nombrecandidatures', '#4296f5');
+            $numBlockChart3 = new NumBlockChart('Stages', $statsDensembleStageEtAlternance['nombreoffresstageactives'], $statsCandidaturesParMois, 'mois', 'nombrecandidatures', '#42f54e');
+            $numBlockChart1->render();
+            echo '<span class="w-[1px] bg-zinc-300 h-[100px] mr-2"></span>';
+            $numBlockChart2->render();
+            echo '<span class="w-[1px] bg-zinc-300 h-[100px] mr-2"></span>';
+            $numBlockChart3->render();
+            ?>
+        </div>
+        <div class="w-full h-[1px] bg-zinc-300"></div>
+        <div class="w-full ">
+            <?php
+            $size = [
+                'width' => 600,
+                'height' => 150,
+                'padding' => 20
+            ];
+            $svgbarChart = new SVGBarChart($statsDistributionDomaine, 'thematique', 'nombreoffres', true, $size, '#f56642');
             $svgbarChart->render();
             ?>
         </div>

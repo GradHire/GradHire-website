@@ -11,8 +11,12 @@ class LineChart
     private $padding;
     private $colName1;
     private $colName2;
+    private $legend;
+    private $color;
+    private $width;
+    private $height;
 
-    public function __construct(array $data, string $colName1, string $colName2)
+    public function __construct(array $data, string $colName1, string $colName2, bool $legend, array $size, string $color)
     {
         $this->data = $data;
         $this->colName1 = $colName1;
@@ -20,7 +24,11 @@ class LineChart
         $this->chartId = uniqid('linechart_', true);
         $columnValues = array_column($data, 'nombrecandidatures');
         $this->maxValue = $columnValues ? max($columnValues) : 0;
-        $this->padding = 20;
+        $this->legend = $legend;
+        $this->color = $color;
+        $this->width = $size['width'];
+        $this->height = $size['height'];
+        $this->padding = $size['padding'];
     }
 
     public function getChartId(): string
@@ -31,9 +39,8 @@ class LineChart
     public function render(): void
     {
 
-        $viewBoxWidth = 300;
-        $viewBoxHeight = 150;
-        $this->padding = 20;
+        $viewBoxWidth = $this->width;
+        $viewBoxHeight = $this->height;
 
         $innerWidth = $viewBoxWidth - 2 * $this->padding;
         $innerHeight = $viewBoxHeight - 2 * $this->padding;
@@ -74,18 +81,20 @@ class LineChart
         <svg id="{$this->chartId}" width="100%" height="100%" viewBox="0 0 $viewBoxWidth $viewBoxHeight" class="line-chart">
         <defs>
         <linearGradient id="$gradientId" x1="0%" y1="100%" x2="0%" y2="0%">
-            <stop offset="10%" style="stop-color:#575757; stop-opacity:0" />
-            <stop offset="100%" style="stop-color:#575757; stop-opacity:1" />
+            <stop offset="10%" style="stop-opacity:0.15;stop-color:{$this->color}" />
+            <stop offset="100%" style="stop-opacity:0.8;stop-color:{$this->color}" />
         </linearGradient>
     </defs>
     <path d="$filledPathPoints" fill="url(#$gradientId)" />
-        <polyline fill="none" stroke="#575757" stroke-linecap='round' stroke-width="2" points="$pointsString" />
+        <polyline fill="none" stroke-linecap='round' stroke-width="2" points="$pointsString" stroke="{$this->color}" />
     EOT;
 
-        foreach ($points as $index => $point) {
-            list($x, $y) = explode(',', $point);
-            echo "<line x1='{$x}' y1='{$xAxisYPosition}' x2='{$x}' y2='{$y}' stroke='rgba(87,87,87,0.25)' stroke-width='1' stroke-dasharray='5,5' />";
-            echo "<line x1='{$yAxisXPosition}' y1='{$y}' x2='{$x}' y2='{$y}' stroke='rgba(87,87,87,0.25)' stroke-width='1' stroke-dasharray='5,5' />";
+        if ($this->legend) {
+            foreach ($points as $index => $point) {
+                list($x, $y) = explode(',', $point);
+                echo "<line x1='{$x}' y1='{$xAxisYPosition}' x2='{$x}' y2='{$y}' stroke-width='1' stroke-dasharray='5,5' stroke={$this->color} />";
+                echo "<line x1='{$yAxisXPosition}' y1='{$y}' x2='{$x}' y2='{$y}' stroke-width='1' stroke-dasharray='5,5' stroke={$this->color} />";
+            }
         }
 
         $index = 0;
@@ -94,17 +103,16 @@ class LineChart
             $yLabelPosition = $xAxisYPosition + 15;
             $percentageHeight = $this->calculatePercentage($row[$this->colName2]);
             $y = $innerHeight - ($percentageHeight / 100 * $innerHeight) + $this->padding;
-
-            echo "<text font-size='10' x='$x' y='$yLabelPosition' text-anchor='middle'>{$row[$this->colName1]}</text>";
-            $yAxisValue = round($row[$this->colName2], 2);
-            echo "<text x='" . ($yAxisXPosition - 5) . "' y='$y' font-size='10' text-anchor='end' alignment-baseline='middle'>{$yAxisValue}</text>";
-
-            echo "<circle cx='{$x}' cy='{$y}' r='3' fill='#575757' />";
+            if ($this->legend) {
+                echo "<text font-size='10' x='$x' y='$yLabelPosition' text-anchor='middle'>{$row[$this->colName1]}</text>";
+                $yAxisValue = round($row[$this->colName2], 2);
+                echo "<text x='" . ($yAxisXPosition - 5) . "' y='$y' font-size='10' text-anchor='end' alignment-baseline='middle'>{$yAxisValue}</text>";
+                echo "<circle cx='{$x}' cy='{$y}' r='3' fill={$this->color} />";
+            }
             $index++;
         }
 
         echo <<<EOT
-    <polyline fill="none" stroke="#575757" stroke-width="2" points="$pointsString" />
     </svg>
     EOT;
 

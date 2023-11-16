@@ -28,8 +28,8 @@ class BarChartH
             $percentage = $this->calculatePercentage($row['nombreoffres']);
             $domain = !empty($row['thematique']) ? $row['thematique'] : 'Autre';
             echo <<<EOT
-<div class="mb-2 rounded-md bg-gradient-to-r from-zinc-200 to-zinc-400 relative overflow-hidden shadow">
-    <div class="h-[18px] rounded-md bg-gradient-to-r from-zinc-400 to-zinc-600 animated-bar shadow-md"
+<div class="mb-2 rounded-md bg-gradient-to-r from-blue-200 to-blue-400 relative overflow-hidden shadow">
+    <div class="h-[18px] rounded-md bg-gradient-to-r from-violet-500 to-violet-600 animated-bar shadow-md"
          style="width: 0;"
          data-chart-id="{$this->chartId}"
          data-percentage="{$percentage}">
