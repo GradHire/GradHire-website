@@ -26,7 +26,6 @@ class CandidatureController extends AbstractController
      */
     public function candidatures(Request $request): string
     {
-
         $userid = Application::getUser()->id();
         $idOffre = $request->getRouteParams()['idOffre'] ?? null;
         $idUtilisateur = $request->getRouteParams()['idUtilisateur'] ?? null;

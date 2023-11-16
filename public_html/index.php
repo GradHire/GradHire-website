@@ -174,9 +174,11 @@ $app->router->get('/gererSimulPstage/refuse/{id}', [PstageController::class, 'ge
 $app->router->get('/conventions', [ConventionsController::class, 'afficherListeConventions']);
 $app->router->get('/conventions/{id:\d+}', [ConventionsController::class, 'detailConvention']);
 $app->router->get('/conventions/{id:\d+}/edit', [ConventionsController::class, 'editConvention']);
-
-
 $app->router->post('/conventions/{id:\d+}/edit', [ConventionsController::class, 'editConvention']);
+$app->router->get('/validateConventionPedagogiquement/{id:\d+}', [ConventionsController::class, 'validateConventionPedagogiquement']);
+$app->router->get('/unvalidateConventionPedagogiquement/{id:\d+}', [ConventionsController::class, 'unvalidateConventionPedagogiquement']);
+$app->router->get('/unvalidateConvention/{id:\d+}', [ConventionsController::class, 'unvalidateConvention']);
+$app->router->get('/validateConvention/{id:\d+}', [ConventionsController::class, 'validateConvention']);
 
 // PostulerController
 
