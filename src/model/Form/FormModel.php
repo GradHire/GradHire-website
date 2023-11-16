@@ -163,7 +163,6 @@ HTML;
 				if (!is_null($err)) {
 					$this->errors[$name] = $err;
 					$this->parsedBody = [];
-					print_r($err);
 					return false;
 				}
 				if ($field instanceof FormFile) {
