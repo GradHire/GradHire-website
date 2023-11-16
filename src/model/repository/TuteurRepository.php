@@ -82,7 +82,7 @@ class TuteurRepository extends ProRepository
         }
         $this->refuserTuteur($idUtilisateur, $idOffre, $idEtudiant);
     }
-
+//TODO: faire en sorte que si l'enseignant est deja un tuteur cele ne change pas son role (car bug qui met les autrestuteurs en enseignant)
     /**
      * @throws ServerErrorException
      */
