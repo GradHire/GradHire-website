@@ -29,6 +29,7 @@ class DashboardController extends AbstractController
      */
     public function utilisateurs(Request $request): string
     {
+        if (Auth::has_role(Roles::Student)) Application::redirectFromParam('/profile');
         $id = $request->getRouteParams()['id'] ?? null;
         if (!is_null($id) && !Auth::has_role(Roles::Manager, Roles::Staff)) throw new ForbiddenException();
         if ($id != null) {
