@@ -60,7 +60,6 @@ class TuteurRepository extends ProRepository
      */
     public function addTuteur($idUtilisateur, $idOffre, $idEtudiant): void
     {
-        //TODO: faire en sorte que tout les autres tuteurs qui ont postuler pour cette offre soit refuser
         try {
             $sql = "UPDATE Supervise SET Statut = 'validee' WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant";
             $requete = Database::get_conn()->prepare($sql);
