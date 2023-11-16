@@ -362,6 +362,11 @@ class OffresRepository extends AbstractRepository
         return Database::get_conn()->query("CALL ObtenirVueDensembleStageEtAlternance()")->fetch();
     }
 
+    public function getOffresDernierSemaine()
+    {
+        return Database::get_conn()->query("CALL ObtenirOffresDernierSemaine()")->fetchAll();
+    }
+
     protected
     function getNomColonnes(): array
     {

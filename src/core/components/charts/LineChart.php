@@ -39,7 +39,9 @@ class LineChart
         $innerHeight = $viewBoxHeight - 2 * $this->padding;
 
         $points = [];
-        $increment = $innerWidth / (count($this->data) - 1);
+        $count = count($this->data);
+        if ($count <= 1) $increment = $innerWidth;
+        else $increment = $innerWidth / (count($this->data) - 1);
         $index = 0;
 
 
@@ -123,6 +125,11 @@ class LineChart
 
     private function calculatePercentage($value): float
     {
-        return ($value / $this->maxValue) * 100;
+        if ($this->maxValue == 0) {
+            return 0;
+        } else {
+            return ($value / $this->maxValue) * 100;
+        }
     }
+
 }

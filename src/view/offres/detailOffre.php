@@ -79,7 +79,7 @@ use app\src\model\dataObject\Roles;
     </span>";
                         } else if ($offre->getStatut() == "brouillon") {
                             echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-zinc-100 text-zinc-800\">
-    Broillon
+    Brouillon
     </span>";
                         } else if ($offre->getStatut() == "refuser") {
                             echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-red-100 text-red-800\">
@@ -147,6 +147,7 @@ use app\src\model\dataObject\Roles;
             <?php
             if ($offre->getAdresse() != null) {
                 ?>
+<!--                <iframe src="https://yandex.com/map-widget/v1/?ll=3.850089%2C43.634623&mode=search&sll=10.854186%2C49.182076&sspn=73.212891%2C44.753627&text=--><?php //= $offre->getAdresse() ?><!--&z=16.97" class="w-full h-[500px]" frameborder="1" allowfullscreen="true" style="position:relative;"></iframe>-->
                 <iframe
                         class="w-full h-[500px]" src="https://maps.google.com/maps?q=<?= $offre->getAdresse() ?>&t=&z=13&ie=UTF8&iwloc=&output=embed">
                 </iframe>

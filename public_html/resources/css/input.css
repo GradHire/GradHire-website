@@ -216,3 +216,4 @@ input[type="range"]:active::-webkit-slider-thumb {
 .animated-bar {
     animation: slideIn 1.5s ease forwards;
 }
+

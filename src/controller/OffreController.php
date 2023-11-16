@@ -44,7 +44,7 @@ class OffreController extends AbstractController
         return $this->render('offres/listOffres', ['offres' => $offres, "form" => $form]);
     }
 
-    public function detailOffre(Request $request)
+    public function detailOffre(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
         $offre = (new OffresRepository())->getByIdWithUser($id);

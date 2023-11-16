@@ -3,6 +3,7 @@
 use app\src\core\components\charts\BarChartH;
 use app\src\core\components\charts\LineChart;
 use app\src\core\components\charts\NumBlock;
+use app\src\core\components\charts\PercentageBlock;
 use app\src\core\components\charts\PieChart;
 use app\src\core\components\charts\SVGBarChart;
 
@@ -10,10 +11,11 @@ $this->title = 'Dashboard';
 /** @var array $statsDistributionDomaine
  * @var array $statsDensembleStageEtAlternance
  * @var array $statsCandidaturesParMois
+ * @var array $offres
  */
 
 //print "<pre>";
-//print_r($statsCandidaturesParMois);
+//print_r($offres);
 //print "</pre>";
 
 $currentTab = $_COOKIE['currentTab'] ?? 'tab1';
@@ -28,6 +30,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $totalOffers = array_sum(array_column($statsDistributionDomaine, 'nombreoffres'));
 
 echo '<script type="text/javascript" src="/resources/js/animate-counter.js"></script>';
+
+
+function OffreCard($offre)
+{
+
+    $mail = substr($offre['emailentreprise'], 0, 6) . '…' . substr($offre['emailentreprise'], -3);
+    $description = substr($offre['description'], 0, 50) . '…';
+    $date = date_create($offre['datecreation']);
+    $date = date_format($date, 'd/m/Y');
+
+
+    echo <<<EOT
+<div class="h-[125px] w-full border-gray-200 border rounded-[8px] flex flex-col justify-between items-center bg-white relative px-6 py-2 mb-5">
+                <div class="w-full flex flex-row items-center justify-between">
+                    <a class="font-semibold" href="/offres/{$offre['idoffre']}">Offre n°{$offre['idoffre']}</a>
+                    <p class="text-zinc-400 font-light text-xs">{$date}</p>
+                </div>
+                <div class="w-full flex flex-row justify-between items-center text-xs">
+                    <div class="grid grid-cols-2 max-w-[200px]">
+                    <p class="font-light text-zinc-400">Nom Entreprise : </p>
+                                        <a href="/entreprises/{$offre['idutilisateur']}">{$offre['nomentreprise']}</a>
+                    <p class="font-light text-zinc-400">Sujet : </p>
+                                        <p>{$offre['sujet']}</p>
+
+                    <p class="font-light text-zinc-400">Thematique : </p>
+                                        <p>{$offre['thematique']}</p>
+                    </div>
+                    <div class="h-full w-[1px] bg-zinc-300"></div>
+                    <div class="grid grid-cols-2 max-w-[200px]">
+                    <p class="font-light text-zinc-400">Description : </p>
+                                        <p>{$description}</p>
+                    <p class="font-light text-zinc-400">Email : </p>
+                                        <p><a href="mailto:{$offre['emailentreprise']}">{$mail}</a></p>
+
+                    <p class="font-light text-zinc-400">Telephone : </p>
+                    <p><a href="tel:{$offre['telephoneentreprise']}">{$offre['telephoneentreprise']}</a></p>
+                    </div>
+                    <div class="h-full w-[1px] bg-zinc-300"></div>
+                    <div class="rounded-[8px] shadow overflow-hidden">
+                        <iframe src="https://yandex.com/map-widget/v1/?ll=3.850089%2C43.634623&mode=search&sll=10.854186%2C49.182076&sspn=73.212891%2C44.753627&text={$offre['adresse']}&z=16.97" width="150" height="60"  allowfullscreen></iframe>
+                    </div>
+                </div>
+                <div class="h-[50px] w-full border-zinc-200 border rounded-[8px] bg-zinc-50 absolute bottom-0 scale-[98%] translate-y-[8px] -z-[1]"></div>
+                <div class="h-[50px] w-full border-zinc-200 border rounded-[8px] bg-zinc-100  absolute bottom-0 scale-[95%] translate-y-[16px] -z-[2]"></div>
+</div>
+EOT;
+}
+
 
 ?>
 <script>
@@ -89,13 +139,6 @@ echo '<script type="text/javascript" src="/resources/js/animate-counter.js"></sc
                     ?>
                 </div>
                 <div class="w-full h-[1px] bg-zinc-300"></div>
-                <div class="w-full">
-                    <?php
-                    $svgbarChart = new SVGBarChart($statsDistributionDomaine, 'thematique', 'nombreoffres');
-                    $svgbarChart->render();
-                    ?>
-
-                </div>
                 <div class="w-full h-[1px] bg-zinc-300"></div>
 
                 <div class="w-full flex flex-row justify-center items-center gap-2">
@@ -110,11 +153,41 @@ echo '<script type="text/javascript" src="/resources/js/animate-counter.js"></sc
                     $numBlockPourvues->render();
                     ?>
                 </div>
+                <div class="w-full flex flex-row justify-center items-center gap-2">
+                    <?php
+                    $percentageBlock = new PercentageBlock('Stages', $statsDensembleStageEtAlternance['nombreoffresstageactives']);
+                    $percentageBlock->render();
+                    ?>
+                </div>
             </div>
             <div id="tab2" class="<?php if ($currentTab === 'tab2') echo 'flex'; else echo 'hidden'; ?>"></div>
             <div id="tab3" class="<?php if ($currentTab === 'tab3') echo 'flex'; else echo 'hidden'; ?>"></div>
         </div>
     </div>
-    <div class="relative grow isolate overflow-hidden w-full bg-zinc-50 h-[600px] border rounded-2xl text-[#1A2421] backdrop-blur-xl [ p-8 md:p-10 lg:p-10 ] [ border-[1px] border-solid border-black  border-opacity-10 ] [ shadow-black/5 shadow-2xl ]">
+    <div class="relative grow isolate overflow-hidden w-full gap-4 flex flex-col bg-zinc-50 border rounded-2xl text-[#1A2421] backdrop-blur-xl [ p-8 md:p-10 lg:p-10 ] [ border-[1px] border-solid border-black  border-opacity-10 ] [ shadow-black/5 shadow-2xl ]">
+        <div class="w-full">
+            <?php
+            $svgbarChart = new SVGBarChart($statsDistributionDomaine, 'thematique', 'nombreoffres');
+            $svgbarChart->render();
+            ?>
+        </div>
+        <div class="flex flex-col mt-2">
+            <div class="w-full flex flex-row justify-between items-center">
+                <h2 class="text-md font-bold text-zinc-700 mb-4">Dernières offres ajoutées</h2>
+                <a href="/offres"
+                   class="text-sm font-medium text-zinc-700 hover:text-zinc-500 flex flex-row items-center justify-end group">
+                    <span class="group w-full pr-2 duration-150 group-hover:underline inline-flex items-center justify-end gap-2  text-sm font-medium text-zinc-600">
+                            Voir plus</span>
+                </a>
+            </div>
+
+            <div class="w-full flex flex-col gap-2 justify-start items-start max-h-[450px] overflow-y-scroll pr-3">
+                <div class="flex flex-row justify-start items-start w-full">
+                <?php
+                foreach ($offres as $offre) OffreCard($offre);
+                ?>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
