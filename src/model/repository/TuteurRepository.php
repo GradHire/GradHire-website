@@ -89,7 +89,7 @@ class TuteurRepository extends ProRepository
     public function getIfTuteurAlreadyExist($idUtilisateur, $idOffre, $idEtudiant): bool
     {
         try {
-            $sql = "SELECT * FROM Supervise s JOIN Staff st ON st.idUtilisateur = s.idUtilisateur WHERE s.idUtilisateur = :idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant AND role = 'tuteur'";
+            $sql = "SELECT * FROM Supervise s JOIN Staff st ON st.idUtilisateur = s.idUtilisateur WHERE s.idUtilisateur = :idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant AND role = 'tuteur' AND statut = 'validee'";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute([
                 'idUtilisateur' => $idUtilisateur,
@@ -130,6 +130,26 @@ class TuteurRepository extends ProRepository
      */
     public function annulerTuteur(int $iduser, int $idOffre, int $idetudiant): void
     {
+        try {
+            //on vas d'abord verifier si il est plusieurs fois tutor
+            $sql = "SELECT COUNT(*) as 'nbFoisTuteur' FROM Supervise s JOIN Staff st on st.idUtilisateur = s.idUtilisateur WHERE s.idUtilisateur = :idUtilisateur AND statut = 'validee'";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idUtilisateur' => $iduser,
+            ]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetch();
+            $nbFoisTuteur = $resultat["nbfoistuteur"];
+            if ($nbFoisTuteur < 1) {
+                $sql = "UPDATE Staff SET role = 'enseignant' WHERE idUtilisateur = :idUtilisateur";
+                $requete = Database::get_conn()->prepare($sql);
+                $requete->execute([
+                    'idUtilisateur' => $iduser,
+                ]);
+            }
+        } catch (PDOException) {
+            throw new ServerErrorException('erreur Insert Staff');
+        }
         try{
             $sql = "UPDATE Supervise SET Statut = 'en attente' WHERE idOffre = :idOffre AND idEtudiant = :idEtudiant";
             $requete = Database::get_conn()->prepare($sql);
@@ -139,15 +159,6 @@ class TuteurRepository extends ProRepository
             ]);
         } catch (PDOException) {
             throw new ServerErrorException('erreur annuler tuteur');
-        }
-        try {
-            $sql = "UPDATE Staff SET role = 'enseignant' WHERE idUtilisateur = :idUtilisateur";
-            $requete = Database::get_conn()->prepare($sql);
-            $requete->execute([
-                'idUtilisateur' => $iduser,
-            ]);
-        } catch (PDOException) {
-            throw new ServerErrorException('erreur Insert Staff');
         }
     }
 
