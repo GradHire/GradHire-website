@@ -189,6 +189,11 @@ class ConventionRepository extends AbstractRepository
         }
     }
 
+    public function getPourcentageEtudiantsConventionCetteAnnee(): false|array
+    {
+        return Database::get_conn()->query("CALL PourcentageEtudiantsConventionCetteAnnee()")->fetch();
+    }
+
 
     protected function getNomTable(): string
     {

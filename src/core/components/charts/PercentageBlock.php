@@ -6,17 +6,34 @@ class PercentageBlock
 {
     private $title;
     private $value;
+    private $text;
+    private $text2;
+    private $text3;
+    private $value2;
+    private $value3;
 
-    public function __construct($title, $value)
+
+    public function __construct($title, $text, $text2, $text3, $value, $value2, $value3)
     {
         $this->title = $title;
         $this->value = (int)$value;
+        $this->text = $text;
+        $this->text2 = $text2;
+        $this->text3 = $text3;
+        $this->value2 = (int)$value2;
+        $this->value3 = (int)$value3;
+
     }
 
     public function render(): void
     {
         $title = $this->title;
         $value = $this->value;
+        $text = $this->text;
+        $text2 = $this->text2;
+        $text3 = $this->text3;
+        $value2 = $this->value2;
+        $value3 = $this->value3;
 
         echo <<<EOT
 <div class="w-full border rounded-2xl p-4 flex flex-col items-center justify-start bg-gradient-to-r from-blue-300 to-blue-400 shadow">
@@ -28,7 +45,7 @@ class PercentageBlock
 
 </div>
 <div class="w-full">
-    <p class="text-xs font-medium text-blue-50 w-full text-left leading-3">Text</p>
+    <p class="text-xs font-medium text-blue-50 w-full text-left leading-3">$text</p>
     <p class="text-lg font-bold text-zinc-700 w-full text-left ">$title</p>
 </div>
 </div>
@@ -40,10 +57,10 @@ class PercentageBlock
     </div>
     <div class="h-[40px] w-[1px] bg-zinc-300"></div>
     <div class="grid grid-cols-2 gap-2 content-center w-[50%] px-6">
-    <p class="text-xs font-medium text-zinc-400 place-self-start self-center">Text</p>
-    <p class="text-md font-medium text-zinc-800 place-self-end self-center flex flex-row"><span aria-hidden="true" class="block transition-all group-hover:ms-0.5 rotate-90 text-red-600">&rarr;</span><span class="counter" data-target="$value">0</span><span>%</span></p>
-    <p class="text-xs font-medium text-zinc-400 place-self-start self-center">Text</p>
-    <p class="text-md font-medium text-zinc-800 place-self-end self-center flex flex-row"><span aria-hidden="true" class="block transition-all group-hover:ms-0.5 -rotate-90 text-green-600">&rarr;</span><span class="counter" data-target="$value">0</span><span>%</span></p>
+    <p class="text-xs font-medium text-zinc-400 place-self-start self-center">$text2</p>
+    <p class="text-md font-medium text-zinc-800 place-self-end self-center flex flex-row"><span aria-hidden="true" class="block transition-all group-hover:ms-0.5 rotate-90 text-red-600">&rarr;</span><span class="counter" data-target="$value2">0</span><span>%</span></p>
+    <p class="text-xs font-medium text-zinc-400 place-self-start self-center">$text3</p>
+    <p class="text-md font-medium text-zinc-800 place-self-end self-center flex flex-row"><span aria-hidden="true" class="block transition-all group-hover:ms-0.5 -rotate-90 text-green-600">&rarr;</span><span class="counter" data-target="$value3">0</span><span>%</span></p>
     </div>
 </div>
 </div>

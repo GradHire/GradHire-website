@@ -13,11 +13,12 @@ $this->title = 'Dashboard';
  * @var array $statsDensembleStageEtAlternance
  * @var array $statsCandidaturesParMois
  * @var array $offres
+ * @var array $pourcentageEtudiantsConventionCetteAnnee
  */
 
-//print "<pre>";
-//print_r($offres);
-//print "</pre>";
+print "<pre>";
+print_r($pourcentageEtudiantsConventionCetteAnnee);
+print "</pre>";
 
 $currentTab = $_COOKIE['currentTab'] ?? 'tab1';
 
@@ -118,7 +119,9 @@ EOT;
                  class="<?php if ($currentTab === 'tab1') echo 'flex flex-col gap-2 items-start justify-start'; else echo 'hidden'; ?>">
                 <div class="w-full flex flex-row justify-center items-center gap-2">
                     <?php
-                    $percentageBlock = new PercentageBlock('Stages', $statsDensembleStageEtAlternance['nombreoffresstageactives']);
+//                        public function __construct($title, $text, $text2, $text3, $value, $value2, $value3)
+
+                    $percentageBlock = new PercentageBlock('Conventions signées', 'General', 'BUT2', 'BUT3', $pourcentageEtudiantsConventionCetteAnnee['pourcentageannuel'], $pourcentageEtudiantsConventionCetteAnnee['pourcentageannuel2'], $pourcentageEtudiantsConventionCetteAnnee['pourcentageannuel3']);
                     $percentageBlock->render();
                     ?>
                 </div>

@@ -34,12 +34,14 @@ class DashboardController extends AbstractController
         $statsDensembleStageEtAlternance = (new OffresRepository())->getStatsDensembleStageEtAlternance();
         $statsCandidaturesParMois = (new PostulerRepository())->getStatsCandidaturesParMois();
         $offres = (new OffresRepository())->getOffresDernierSemaine();
+        $pourcentageEtudiantsConventionCetteAnnee = (new ConventionRepository())->getPourcentageEtudiantsConventionCetteAnnee();
 
         return $this->render('dashboard/dashboard', [
             'statsDistributionDomaine' => $statsDistributionDomaine,
             'statsDensembleStageEtAlternance' => $statsDensembleStageEtAlternance,
             'statsCandidaturesParMois' => $statsCandidaturesParMois,
-            'offres' => $offres
+            'offres' => $offres,
+            'pourcentageEtudiantsConventionCetteAnnee' => $pourcentageEtudiantsConventionCetteAnnee
         ]);
     }
 
