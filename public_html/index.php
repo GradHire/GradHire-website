@@ -11,6 +11,8 @@ use app\src\controller\TestController;
 use app\src\controller\UserController;
 use app\src\core\lib\Psr4AutoloaderClass;
 use app\src\model\Application;
+use app\src\controller\CandidatureController;
+
 
 require_once __DIR__ . '/../src/core/lib/Psr4AutoloaderClass.php';
 require_once __DIR__ . '/../src/config.php';
@@ -89,13 +91,17 @@ $app->router->get('/offres/maps', [OffreController::class, 'mapsOffres']);
 
 $app->router->get('/user_test/{id}', [TestController::class, 'user_test']);
 
-// DashboardController
+// CandidatureContoller
+$app->router->get('/candidatures', [CandidatureController::class, 'candidatures']);
+$app->router->get('/candidatures/contacter/{id}', [CandidatureController::class, 'contacterEntreprise']);
+$app->router->post('/candidatures/contacter/{id}', [CandidatureController::class, 'contacterEntreprise']);
+$app->router->get('/candidatures/{idOffre}/{idUtilisateur}', [CandidatureController::class, 'candidatures']);
+$app->router->post('/candidatures', [CandidatureController::class, 'candidatures']);
+$app->router->get('/candidatures/refuser/{idEtudiant}/{idOffre}', [CandidatureController::class, 'refuser']);
+$app->router->get('/candidatures/validerEntreprise/{idEtudiant}/{idOffre}', [CandidatureController::class, 'validerAsEntreprise']);
+$app->router->get('/candidatures/validerEtudiant/{idEtudiant}/{idOffre}', [CandidatureController::class, 'validerAsEtudiant']);
 
-$app->router->get('/candidatures', [DashboardController::class, 'candidatures']);
-$app->router->get('/candidatures/contacter/{id}', [DashboardController::class, 'contacterEntreprise']);
-$app->router->post('/candidatures/contacter/{id}', [DashboardController::class, 'contacterEntreprise']);
-$app->router->get('/candidatures/{idOffre}/{idUtilisateur}', [DashboardController::class, 'candidatures']);
-$app->router->post('/candidatures', [DashboardController::class, 'candidatures']);
+// DashboardController
 
 $app->router->get('/utilisateurs/{id}/archiver', [DashboardController::class, 'archiver']);
 
