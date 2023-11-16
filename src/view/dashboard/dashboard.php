@@ -79,7 +79,6 @@ function OffreCard($offre)
 EOT;
 }
 
-
 ?>
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
@@ -124,17 +123,20 @@ EOT;
                     ?>
                 </div>
                 <div class="w-full h-[1px] bg-zinc-300"></div>
-                <div class="w-full flex flex-row justify-center items-center gap-2">
-                    <?php
-                    $numBlockStage = new NumBlock('Stages', $statsDensembleStageEtAlternance['nombreoffresstageactives']);
-                    $numBlockStage->render();
+                <div class="container mx-auto pt-4">
+                    <h2 class="text-md font-bold text-zinc-700 mb-4">Offres de stage et d'alternance</h2>
+                    <div class="w-full flex flex-row justify-center items-center gap-2">
+                        <?php
+                        $numBlockStage = new NumBlock('Stages', $statsDensembleStageEtAlternance['nombreoffresstageactives']);
+                        $numBlockStage->render();
 
-                    $numBlockAlternance = new NumBlock('Alternances', $statsDensembleStageEtAlternance['nombreoffresalternanceactives']);
-                    $numBlockAlternance->render();
+                        $numBlockAlternance = new NumBlock('Alternances', $statsDensembleStageEtAlternance['nombreoffresalternanceactives']);
+                        $numBlockAlternance->render();
 
-                    $numBlockPourvues = new NumBlock('Pourvues', $statsDensembleStageEtAlternance['nombrepositionspourvues']);
-                    $numBlockPourvues->render();
-                    ?>
+                        $numBlockPourvues = new NumBlock('Pourvues', $statsDensembleStageEtAlternance['nombrepositionspourvues']);
+                        $numBlockPourvues->render();
+                        ?>
+                    </div>
                 </div>
                 <div class="w-full h-[1px] bg-zinc-300"></div>
                 <div class="container mx-auto pt-4">
@@ -173,65 +175,71 @@ EOT;
         </div>
     </div>
     <div class="relative grow isolate overflow-hidden w-full gap-4 flex flex-col bg-zinc-50 border rounded-2xl text-[#1A2421] backdrop-blur-xl [ p-8 md:p-10 lg:p-10 ] [ border-[1px] border-solid border-black  border-opacity-10 ] [ shadow-black/5 shadow-2xl ]">
-        <div class="w-full flex flex-row justify-around items-center bg-white border rounded-[8px]">
-            <?php
-            $numBlockChart1 = new NumBlockChart('Stages', $statsDensembleStageEtAlternance['nombreoffresstageactives'], $statsCandidaturesParMois, 'mois', 'nombrecandidatures', '#f542ad');
-            $numBlockChart2 = new NumBlockChart('Stages', $statsDensembleStageEtAlternance['nombreoffresstageactives'], $statsCandidaturesParMois, 'mois', 'nombrecandidatures', '#4296f5');
-            $numBlockChart3 = new NumBlockChart('Stages', $statsDensembleStageEtAlternance['nombreoffresstageactives'], $statsCandidaturesParMois, 'mois', 'nombrecandidatures', '#42f54e');
-            $numBlockChart1->render();
-            echo '<span class="w-[1px] bg-zinc-300 h-[100px] mr-2"></span>';
-            $numBlockChart2->render();
-            echo '<span class="w-[1px] bg-zinc-300 h-[100px] mr-2"></span>';
-            $numBlockChart3->render();
-            ?>
-        </div>
-        <div class="w-full h-[1px] bg-zinc-300"></div>
-        <div class="w-full ">
-            <?php
-            $size = [
-                'width' => 600,
-                'height' => 150,
-                'padding' => 20
-            ];
-            $svgbarChart = new SVGBarChart($statsDistributionDomaine, 'thematique', 'nombreoffres', true, $size, '#f56642');
-            $svgbarChart->render();
-            ?>
-        </div>
-        <div class="w-full h-[1px] bg-zinc-300"></div>
-        <div class="flex flex-col mt-2">
-            <div class="w-full flex flex-row justify-between items-center">
-                <h2 class="text-md font-bold text-zinc-700 mb-4">Dernières offres ajoutées</h2>
-                <a href="/offres"
-                   class="text-sm font-medium text-zinc-700 hover:text-zinc-500 flex flex-row items-center justify-end group">
+        <div id="tab1"
+             class="<?php if ($currentTab === 'tab1') echo 'flex flex-col w-full gap-2 items-start justify-start'; else echo 'hidden'; ?>">
+
+            <div class="w-full flex flex-row justify-around items-center bg-white border rounded-[8px]">
+                <?php
+                $numBlockChart1 = new NumBlockChart('Stages', $statsDensembleStageEtAlternance['nombreoffresstageactives'], $statsCandidaturesParMois, 'mois', 'nombrecandidatures', '#f542ad');
+                $numBlockChart2 = new NumBlockChart('Stages', $statsDensembleStageEtAlternance['nombreoffresstageactives'], $statsCandidaturesParMois, 'mois', 'nombrecandidatures', '#4296f5');
+                $numBlockChart3 = new NumBlockChart('Stages', $statsDensembleStageEtAlternance['nombreoffresstageactives'], $statsCandidaturesParMois, 'mois', 'nombrecandidatures', '#42f54e');
+                $numBlockChart1->render();
+                echo '<span class="w-[1px] bg-zinc-300 h-[100px] mr-2"></span>';
+                $numBlockChart2->render();
+                echo '<span class="w-[1px] bg-zinc-300 h-[100px] mr-2"></span>';
+                $numBlockChart3->render();
+                ?>
+            </div>
+            <div class="w-full h-[1px] bg-zinc-300"></div>
+            <div class="container mx-auto pt-4">
+                <h2 class="text-md font-bold text-zinc-700 mb-4">Distribution des offres par Domaine</h2>
+                <div class="w-full ">
+                    <?php
+                    $size = [
+                        'width' => 600,
+                        'height' => 150,
+                        'padding' => 20
+                    ];
+                    $svgbarChart = new SVGBarChart($statsDistributionDomaine, 'thematique', 'nombreoffres', true, $size, '#f56642');
+                    $svgbarChart->render();
+                    ?>
+                </div>
+            </div>
+            <div class="w-full h-[1px] bg-zinc-300"></div>
+            <div class="flex flex-col mt-2">
+                <div class="w-full flex flex-row justify-between items-center">
+                    <h2 class="text-md font-bold text-zinc-700 mb-4">Dernières offres ajoutées</h2>
+                    <a href="/offres"
+                       class="text-sm font-medium text-zinc-700 hover:text-zinc-500 flex flex-row items-center justify-end group">
                     <span class="group w-full pr-2 duration-150 group-hover:underline inline-flex items-center justify-end gap-2  text-sm font-medium text-zinc-600">
                             Voir plus</span>
-                </a>
-            </div>
+                    </a>
+                </div>
 
-            <div class="w-full flex flex-col gap-2 justify-start items-start max-h-[450px] overflow-y-scroll pr-3">
-                <div class="flex flex-row justify-start items-start w-full h-full">
-                    <div class="w-full flex flex-col justify-start items-start">
-                        <?php
-                        $counter = 0;
-                        foreach ($offres as $offre) {
-                            echo <<<EOT
+                <div class="w-full flex flex-col gap-2 justify-start items-start max-h-[450px] overflow-y-scroll pr-3">
+                    <div class="flex flex-row justify-start items-start w-full h-full">
+                        <div class="w-full flex flex-col justify-start items-start">
+                            <?php
+                            $counter = 0;
+                            foreach ($offres as $offre) {
+                                echo <<<EOT
 <div class="flex flex-row justify-between items-center gap-2 w-full relative">
 EOT;
-                            if ($counter != 0) {
-                                echo <<<EOT
+                                if ($counter != 0) {
+                                    echo <<<EOT
 <span class="w-[1px] bg-zinc-300 h-[150px] mr-2"></span>
 <span class="w-6 h-6 border-zinc-300 border-b border-l rounded-bl-2xl absolute -translate-y-3 -z-[1]"></span>
 
 EOT;
-                            } else {
-                                echo <<<EOT
+                                } else {
+                                    echo <<<EOT
 <span class="w-[1px] bg-zinc-300 h-[75px] translate-y-14 mr-2"></span>
 <span class="w-6 h-6 border-zinc-300 border-t border-l rounded-tl-2xl absolute translate-y-3 -z-[1]"></span>
 EOT;
-                            }
+                                }
 
-                            $counter += 1;
-                            echo <<<EOT
+                                $counter += 1;
+                                echo <<<EOT
 <div class="min-w-[18px] min-h-[18px] max-w-[18px] flex justify-center items-center max-h-[18px] border border-zinc-300 bg-white rounded-full">
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"  class="w-3 h-3 stroke-zinc-500">
   <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
@@ -240,17 +248,18 @@ EOT;
 </div>
 EOT;
 
-                            OffreCard($offre);
-                            echo <<<EOT
+                                OffreCard($offre);
+                                echo <<<EOT
 </div>
 EOT;
-                        }
-                        ?>
+                            }
+                            ?>
+                        </div>
                     </div>
                 </div>
+
+
             </div>
-
-
         </div>
     </div>
 </div>
