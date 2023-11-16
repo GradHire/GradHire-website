@@ -13,7 +13,7 @@ use app\src\model\Form\FormModel;
 
 $this->title = 'Offres';
 
-Auth::check_role(Roles::Student, Roles::Manager, Roles::Staff, Roles::Teacher, Roles::Tutor);
+
 if (Auth::has_role(Roles::Staff, Roles::Manager)) {
     $modal = new Modal("Êtes-vous sûr de vouloir archiver cette offre ?", "Oui, archiver", '
  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -25,7 +25,7 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
 }
 ?>
 
-<form class="m-0 p-0" method="GET" action="offres">
+<form class="m-0 p-0 w-full" method="GET" action="offres">
     <div class="w-full flex flex-col pt-12 pb-24 gap-4">
         <div class="flex flex-row gap-2 w-full">
             <?php

@@ -23,6 +23,19 @@ use app\src\model\Request;
 
 class DashboardController extends AbstractController
 {
+
+    public function showDashboard(): string
+    {
+        $statsDistributionDomaine = (new OffresRepository())->getStatsDistributionDomaine();
+        $statsDensembleStageEtAlternance = (new OffresRepository())->getStatsDensembleStageEtAlternance();
+
+        return $this->render('dashboard/dashboard', [
+            'statsDistributionDomaine' => $statsDistributionDomaine,
+            'statsDensembleStageEtAlternance' => $statsDensembleStageEtAlternance
+        ]);
+    }
+
+
     /**
      * @throws ForbiddenException
      * @throws ServerErrorException
@@ -200,4 +213,6 @@ class DashboardController extends AbstractController
             return '';
         } else throw new ForbiddenException();
     }
+
+
 }

@@ -346,6 +346,22 @@ class OffresRepository extends AbstractRepository
         }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
+    public function getStatsDistributionDomaine(): false|array
+    {
+        return Database::get_conn()->query("CALL DistributionStageAlternanceParDomaine()")->fetchAll();
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function getStatsDensembleStageEtAlternance()
+    {
+        return Database::get_conn()->query("CALL ObtenirVueDensembleStageEtAlternance()")->fetch();
+    }
+
     protected
     function getNomColonnes(): array
     {

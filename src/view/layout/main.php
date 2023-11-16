@@ -59,6 +59,8 @@ use app\src\model\dataObject\Roles;
                     <?php if (!Application::isGuest()): ?>
                         <a href="/"
                            class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Accueil</a>
+                        <a href="/dashboard"
+                           class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Dashboard</a>
                         <?php if (!Auth::has_role(Roles::ChefDepartment)): ?>
                             <a href="/offres"
                                class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Offres</a>
@@ -175,8 +177,6 @@ use app\src\model\dataObject\Roles;
                    class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Import</a>
             <?php endif; ?>
         <?php endif; ?>
-
-
     </div>
 </div>
 <div id="blur-background" class="hidden w-screen h-screen fixed z-50 top-0 left-0 backdrop-blur-md"></div>
