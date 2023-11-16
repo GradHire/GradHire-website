@@ -12,7 +12,7 @@ class Table
         $empty = 'empty-' . $i;
 
         echo <<<HTML
-<div class="flex mb-4 gap-2 pr-2">
+<div class="flex pt-4 mb-4 gap-2 pr-2 w-full">
     <input onkeydown="if(event.key === 'Enter')search('search-$i', '$id', $cols, '$empty', 'clear-$i')" type="text" id="search-$i" placeholder="Rechercher" class="shadow-sm w-full bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block px-2.5 py-2 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light">
    <button onclick="search('search-$i', '$id', $cols, '$empty', 'clear-$i')" class="text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800">Rechercher</button>
 <button style="display: none" id="clear-$i" onclick="clearInput('search-$i');search('search-$i', '$id', $cols, '$empty', 'clear-$i')" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">X</button>
@@ -67,8 +67,13 @@ HTML
 
     public static function cell($value)
     {
+        $color = "text-zinc-900";
+        if ($value == null || $value == "") {
+            $value = "(Vide)";
+            $color = "text-zinc-400";
+        }
         echo <<<HTML
-<td class="whitespace-nowrap px-4 py-2 font-medium text-zinc-900">
+<td class="whitespace-nowrap px-4 py-2 font-medium $color">
 $value
 </td>
 HTML;
