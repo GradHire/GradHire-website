@@ -44,7 +44,7 @@ class PostulerController extends AbstractController
             $idEtudiant = (new PostulerRepository())->getByIdOffre($idOffre)[0]->getIdUtilisateur();
             $idUtilisateur = Application::getUser()->id();
             $countPostulation = (new StaffRepository([]))->getCountPostulationTuteur($idUtilisateur);
-            if($countPostulation >0) {
+            if($countPostulation > 0) {
                 (new TuteurRepository([]))->seDeProposer($idUtilisateur,$idOffre,$idEtudiant);
             }
             Application::redirectFromParam("/candidatures");
@@ -81,8 +81,8 @@ class PostulerController extends AbstractController
             $staff = (new StaffRepository([]))->getByIdFull($idUtilisateur);
             $idOffre = $request->getRouteParams()["idOffre"] ?? null;
             $idEtudiant = (NEW PostulerRepository())->getByIdOffre($idOffre)[0]->getIdUtilisateur();
-            //TODO: set the state of the canidature to validee
             (new TuteurRepository([]))->addTuteur($staff->getIdutilisateur(),$idOffre,$idEtudiant);
+
         }
         Application::redirectFromParam("/postuler/listeTuteur/".$idOffre."/".$idEtudiant);
     }

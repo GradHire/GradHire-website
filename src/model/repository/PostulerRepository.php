@@ -255,6 +255,49 @@ class PostulerRepository extends AbstractRepository
         }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
+    public function getByStatementAttenteTuteur()
+    {
+        try {
+        $sql = "SELECT nom,sujet,dates,idOffre, idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE statut = 'en attente tuteur' OR statut = 'en attente responsable'";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute();
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = [];
+        foreach ($requete as $item) {
+            $resultat[] = $this->construireDepuisTableau($item);
+        }
+        return $resultat;
+        } catch (\Exception) {
+            throw new ServerErrorException('erreurs getByStatementAttenteTuteur');
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function getByStatementTuteur(int $idutilisateur, string $string)
+    {
+        try {
+            $sql = "SELECT nom,sujet,dates,p.idOffre, p.idUtilisateur,idEntreprise,p.statut FROM $this->nomTable p JOIN Supervise su ON su.idOffre=p.idOffre WHERE p.idUtilisateur=:idutilisateur AND su.statut = :statut";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idutilisateur' => $idutilisateur,
+                'statut' => $string
+            ]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = [];
+            foreach ($requete as $item) {
+                $resultat[] = $this->construireDepuisTableau($item);
+            }
+            return $resultat;
+        } catch (\Exception) {
+            throw new ServerErrorException('erreurs getByStatementTuteur');
+        }
+    }
+
 
     protected
     function getNomColonnes(): array

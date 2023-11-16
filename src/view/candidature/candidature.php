@@ -23,7 +23,7 @@ use app\src\model\repository\UtilisateurRepository;
                 $entreprise = (new UtilisateurRepository([]))->getUserById($candidature->getIdEntreprise());
                 $etudiant = (new UtilisateurRepository([]))->getUserById($candidature->getIdUtilisateur());
                 if (Auth::has_role(Roles::Teacher, Roles::Student, Roles::Staff, Roles::Manager,Roles::Enterprise)) {
-                    if (Auth::has_role(Roles::Teacher) && $candidature->getStatut() != "en attente tuteur") return;
+                    if (Auth::has_role(Roles::Teacher) && !($candidature->getStatut() == "en attente tuteur" || $candidature->getStatut() == "en attente responsable")) return;
                     Table::cell($entreprise->getNomutilisateur());
                     Table::cell($offre->getSujet());
                     Table::cell($etudiant->getEmailutilisateur());
@@ -34,9 +34,13 @@ use app\src\model\repository\UtilisateurRepository;
                         Table::chip("En attente etudiant", "yellow");
                     } elseif ($candidature->getStatut() == 'en attente tuteur') {
                         Table::chip("En attente tuteur", "yellow");
+                    } elseif ($candidature->getStatut() == 'en attente responsable') {
+                        Table::chip("En attente responsable", "yellow");
                     } elseif ($candidature->getStatut() == 'refusee') {
                         Table::chip("Refusé", "red");
-                    } else Table::chip("Accepté", "green");
+                    } elseif ($candidature->getStatut() == 'validee') {
+                        Table::chip("Accepté", "green");
+                    }
                     Table::button("/candidatures/" . $candidature->getIdOffre() . "/" . $candidature->getIdUtilisateur(), "Voir plus");
                     if (Auth::has_role(Roles::Enterprise)){
                         if ($candidature->getStatut() == "en attente entreprise") {
@@ -50,13 +54,15 @@ use app\src\model\repository\UtilisateurRepository;
                             Table::button("/candidatures/refuser/" . $candidature->getIdUtilisateur() ."/". $candidature->getIdOffre(), "Refuser");
                         }
                     }
-                    else if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::ManagerStage, Roles::ManagerAlternance) && $candidature->getStatut() == 'en attente tuteur' && $candidature->getSiTuteurPostuler()) {
+                    else if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::ManagerStage, Roles::ManagerAlternance) && $candidature->getStatut() == 'en attente responsable' && $candidature->getSiTuteurPostuler()) {
                         Table::button("/postuler/listeTuteur/" . $candidature->getIdOffre() . "/" . $candidature->getIdUtilisateur(), "Voir Liste Tuteur");
                     }
-                    if (Auth::has_role(Roles::Teacher) && $candidature->getStatut() == 'en attente tuteur' && !$candidature->getIfSuivi(Auth::get_user()->id()) && (new StaffRepository([]))->getCountPostulationTuteur(Auth::get_user()->id()) < 10) {
-                        Table::button("/postuler/seProposer/" . $candidature->getIdOffre(), "Se proposer comme tuteur");
-                    } else if (Auth::has_role(Roles::Teacher) && $candidature->getStatut() == 'en attente tuteur' && (new StaffRepository([]))->getCountPostulationTuteur(Auth::get_user()->id()) < 10 && $candidature->getIfSuivi(Auth::get_user()->id())) {
-                        Table::button("/postuler/seDeproposer/" . $candidature->getIdOffre(), "X");
+                    else if (Auth::has_role(Roles::Teacher) && (new StaffRepository([]))->getCountPostulationTuteur(Auth::get_user()->id()) < 10){
+                        if (!$candidature->getIfSuivi(Auth::get_user()->id())){
+                            Table::button("/postuler/seProposer/" . $candidature->getIdOffre(), "Se proposer comme tuteur");
+                        } else {
+                            Table::button("/postuler/seDeproposer/" . $candidature->getIdOffre(), "X");
+                        }
                     }
                 }
             });

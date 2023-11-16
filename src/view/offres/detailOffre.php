@@ -4,7 +4,7 @@
 
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
-
+use app\src\model\repository\EtudiantRepository;
 ?>
 
 <div class="w-full pt-12 pb-24">
