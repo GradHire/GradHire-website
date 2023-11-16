@@ -27,10 +27,9 @@ class PstageController extends AbstractController
     {
         if (Auth::has_role(Roles::Staff, Roles::Manager)) {
             $form = new FormModel([
-                "file" => FormModel::file("File")->required()->accept(["csv"])
+                "file" => FormModel::file("File")->required()
             ]);
             $form->useFile();
-
             if ($request->getMethod() === 'post') {
                 if ($form->validate($request->getBody())) {
                     $path = "Import/";
@@ -49,7 +48,6 @@ class PstageController extends AbstractController
                         $i++;
                         continue;
                     }
-                    if ($num != 82) break;
                     $importer->importerligne($data);
                 }
             }

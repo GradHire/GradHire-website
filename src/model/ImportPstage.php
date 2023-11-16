@@ -15,6 +15,7 @@ class ImportPstage
 
     public function importerligne($row)
     {
+
         if (!$this->recordExists('Utilisateur', 'email', $row[7])) $this->insertEtudiant($row);
         else $this->updateEtudiant($row);
         $idetu = $this->find('Utilisateur', 'email', $row[7], 'idUtilisateur');
@@ -22,6 +23,7 @@ class ImportPstage
         if (!$this->recordExists('Entreprise', 'siret', $row[55])) $this->insertEntreprise($row);
         else $this->updateEntreprise($row);
         $identreprise = $this->find('Entreprise', 'siret', $row[55], 'idUtilisateur');
+
 
         if (!$this->recordExists('Utilisateur', 'email', $row[79])) $this->insertTuteur($row, $identreprise);
         else $this->updateTuteur($row, $identreprise);
