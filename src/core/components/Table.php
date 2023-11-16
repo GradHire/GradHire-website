@@ -56,11 +56,16 @@ HTML;
 HTML;
     }
 
-    public static function button($link, $text = "Voir plus")
+    public static function button($link, $text = "Voir plus", $color = "")
     {
+        $c = "bg-zinc-600 hover:bg-zinc-700";
+        if ($color == "red")
+            $c = "bg-red-600 hover:bg-red-700";
+        elseif ($color == "green")
+            $c = "bg-green-600 hover:bg-green-700";
         self::cell(<<<HTML
 	<a href="$link"
-	   class="inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">$text</a>
+	   class="inline-block rounded  px-4 py-2 text-xs font-medium text-white $c">$text</a>
 HTML
         );
     }
