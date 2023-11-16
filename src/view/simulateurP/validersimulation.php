@@ -41,7 +41,7 @@ $interruption = $offre["interruption"];
 if ($interruption == "Oui") {
     $periodeStage .= " (avec interruption du " . $offre["dateDebutInterruption"] . " au " . $offre["dateFinInterruption"] . ")";
 }
-$dureeTravail = "Temps Plein sur" . $offre["nbJour"] . "jour(s)/semaine";
+$dureeTravail = "Temps Plein sur" . $offre["nbJour"] . " jour(s)/semaine";
 $commentairesTravail = $offre["commentairetravail"];
 $langueConvention = "Francais (stage en France)";
 $gratification = $offre["gratification"];

@@ -2,6 +2,9 @@
 
 namespace app\src\model\dataObject;
 
+use app\src\core\exception\ServerErrorException;
+use app\src\model\repository\ConventionRepository;
+use app\src\model\repository\OffresRepository;
 use app\src\model\repository\PostulerRepository;
 
 class Postuler extends AbstractDataObject
@@ -93,5 +96,12 @@ class Postuler extends AbstractDataObject
         return $this->$nomColonne;
     }
 
+    public function getIfSuivi(int $idUtilisateur): bool
+    {
+        return (new PostulerRepository())->getIfSuivi($idUtilisateur, $this->getIdUtilisateur(),$this->getIdOffre());
+    }
 
+    public function getSiTuteurPostuler(): bool {
+        return (new PostulerRepository())->getSiTuteurPostuler($this->getIdUtilisateur(),$this->getIdOffre());
+    }
 }
