@@ -223,11 +223,15 @@ $modal = new Modal("Voulez vous vraiment archiver votre compte ?", "Oui, archive
                             </dd>
                         </div>
                         <div class="pt-6 flex gap-2">
-                            <div class="text-zinc-900">
-                                <a href="/password"
-                                   class="inline-block rounded-md border border-transparent px-5 py-2 text-center font-medium text-white hover:bg-gray-500 bg-gray-400 text-sm">
-                                    Changer mot de passe</a>
-                            </div>
+                            <?php
+                            if (Auth::has_role(Roles::Enterprise, Roles::Tutor)) {
+                                ?>
+                                <div class="text-zinc-900">
+                                    <a href="/password"
+                                       class="inline-block rounded-md border border-transparent px-5 py-2 text-center font-medium text-white hover:bg-gray-500 bg-gray-400 text-sm">
+                                        Changer mot de passe</a>
+                                </div>
+                            <?php } ?>
                             <div class="text-zinc-900">
                                 <p <?= $modal->Show("/utilisateurs/" . $user->id() . "/archiver") ?>
                                         class="inline-block rounded-md border border-transparent px-5 py-2 text-center font-medium text-white hover:bg-red-800 bg-red-600 text-sm">

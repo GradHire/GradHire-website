@@ -11,7 +11,6 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
 <div class="w-full max-w-md flex flex-col pt-12 pb-24">
     <?php
     $offred = (new OffresRepository)->draftExist(Application::getUser()->id());
-    //si offred est vide
     if ($offred != null) {
         $offrechoisi = $offred[0];
         if (Application::getUser()->role() === Roles::Enterprise) {
