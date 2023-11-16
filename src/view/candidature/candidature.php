@@ -24,6 +24,7 @@ use app\src\model\repository\UtilisateurRepository;
                 $entreprise = (new UtilisateurRepository([]))->getUserById($candidature->getIdEntreprise());
                 $etudiant = (new UtilisateurRepository([]))->getUserById($candidature->getIdUtilisateur());
                 if (Auth::has_role(Roles::Teacher, Roles::Student, Roles::Staff, Roles::Manager,Roles::Enterprise)) {
+                    if (Auth::has_role(Roles::Teacher) && $candidature->getStatut() != "en attente tuteur") return;
                     Table::cell($entreprise->getNomutilisateur());
                     Table::cell($offre->getSujet());
                     Table::cell($etudiant->getEmailutilisateur());
@@ -53,7 +54,7 @@ use app\src\model\repository\UtilisateurRepository;
                     else if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::ManagerStage, Roles::ManagerAlternance) && $candidature->getStatut() == 'en attente tuteur' && $candidature->getSiTuteurPostuler()) {
                         Table::button("/postuler/listeTuteur/" . $candidature->getIdOffre() . "/" . $candidature->getIdUtilisateur(), "Voir Liste Tuteur");
                     }
-                    else if (Auth::has_role(Roles::Teacher) && $candidature->getStatut() == 'en attente tuteur' && !$candidature->getIfSuivi(Auth::get_user()->id()) && (new StaffRepository([]))->getCountPostulationTuteur(Auth::get_user()->id()) < 10) {
+                    if (Auth::has_role(Roles::Teacher) && $candidature->getStatut() == 'en attente tuteur' && !$candidature->getIfSuivi(Auth::get_user()->id()) && (new StaffRepository([]))->getCountPostulationTuteur(Auth::get_user()->id()) < 10) {
                         Table::button("/postuler/seProposer/" . $candidature->getIdOffre(), "Se proposer comme tuteur");
                     } else if (Auth::has_role(Roles::Teacher) && $candidature->getStatut() == 'en attente tuteur' && (new StaffRepository([]))->getCountPostulationTuteur(Auth::get_user()->id()) < 10 && $candidature->getIfSuivi(Auth::get_user()->id())) {
                         Table::button("/postuler/seDeproposer/" . $candidature->getIdOffre(), "X");
