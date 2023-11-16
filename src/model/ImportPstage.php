@@ -38,7 +38,6 @@ class ImportPstage
         else $this->updateServiceAccueil($row, $identreprise);
 
         $idOffre = $this->insertOffreStage($row, $identreprise);
-
         if (!$this->recordExists('Convention', 'numConvention', $row[0])) $this->insertConvention($row, $idsignataire, $idetu, $idOffre);
 
     }

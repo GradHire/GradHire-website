@@ -50,6 +50,11 @@ class PstageController extends AbstractController
                     }
                     $importer->importerligne($data);
                 }
+                ?>
+                <div>
+                    <h1 class="text-3xl text-center">Importation réussi</h1>
+                </div>
+                <?php
             }
             return $this->render('Import', [
                 'form' => $form
