@@ -42,9 +42,7 @@ class ConventionsController extends AbstractController {
     public function validateConventionPedagogiquement(Request $request): string {
         $id = $request->getRouteParams()["id"];
         (new ConventionRepository())->getById($id)->validerPedagogiquement($id);
-        return $this->render('convention/detailConvention', [
-            'convention' => (new ConventionRepository())->getById($id)
-        ]);
+        Application::redirectFromParam("/conventions");
     }
 
     /**
@@ -53,9 +51,7 @@ class ConventionsController extends AbstractController {
     public function unvalidateConventionPedagogiquement(Request $request): string {
         $id = $request->getRouteParams()["id"];
         (new ConventionRepository())->getById($id)->unvalidatePedagogiquement($id);
-        return $this->render('convention/detailConvention', [
-            'convention' => (new ConventionRepository())->getById($id)
-        ]);
+        Application::redirectFromParam("/conventions");
     }
 
     /**
@@ -64,9 +60,7 @@ class ConventionsController extends AbstractController {
     public function unvalidateConvention(Request $request): string {
         $id = $request->getRouteParams()["id"];
         (new ConventionRepository())->getById($id)->unvalidate($id);
-        return $this->render('convention/detailConvention', [
-            'convention' => (new ConventionRepository())->getById($id)
-        ]);
+        Application::redirectFromParam("/conventions");
     }
 
     /**
@@ -75,8 +69,6 @@ class ConventionsController extends AbstractController {
     public function validateConvention(Request $request): string {
         $id = $request->getRouteParams()["id"];
         (new ConventionRepository())->getById($id)->valider($id);
-        return $this->render('convention/detailConvention', [
-            'convention' => (new ConventionRepository())->getById($id)
-        ]);
+        Application::redirectFromParam("/conventions");
     }
 }

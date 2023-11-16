@@ -248,6 +248,16 @@ class PostulerRepository extends AbstractRepository
         } catch (\Exception) {
             throw new ServerErrorException('erreurs validerCandidatureEtudiant');
         }
+        try {
+            $sql = "UPDATE Postuler SET statut = 'refusee' WHERE idOffre!=:idoffre AND idUtilisateur=:idutilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idoffre' => $idOffre,
+                'idutilisateur' => $idEtudiant
+            ]);
+        } catch (\Exception) {
+            throw new ServerErrorException('erreurs validerCandidatureEtudiant');
+        }
     }
 
     /**
