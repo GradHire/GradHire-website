@@ -8,13 +8,13 @@ $this->title = 'Entreprises';
 
 ?>
 <div class="overflow-x-auto w-full pt-12 pb-24">
-	<?php
-	Table::createTable($entreprises, ["Nom d'entreprise", "Email", "Téléphone", "Site web"], function ($entreprise) {
-		Table::cell($entreprise->getNomutilisateur());
-		Table::mail($entreprise->getEmailutilisateur());
-		Table::phone($entreprise->getNumtelutilisateur());
-		Table::link($entreprise->getSiteWeb());
-		Table::button("/entreprise/" . $entreprise->getIdutilisateur());
-	});
-	?>
+    <?php
+    Table::createTable($entreprises, ["Nom d'entreprise", "Email", "Téléphone", "Site web"], function ($entreprise) {
+        Table::cell($entreprise->getNomutilisateur());
+        Table::mail($entreprise->getEmailutilisateur());
+        Table::phone($entreprise->getNumtelutilisateur());
+        Table::link($entreprise->getSiteWeb());
+        Table::button("/entreprises/" . $entreprise->getIdutilisateur());
+    });
+    ?>
 </div>
