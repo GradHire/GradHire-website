@@ -50,7 +50,7 @@ function sortTable(tableId, th, n) {
     }
 }
 
-function search(input, tableId, columns, empty) {
+function search(input, tableId, columns, empty, clearId) {
     const search = document.getElementById(input).value.trim();
     const table = document.getElementById(tableId);
     const tr = table.getElementsByTagName("tr");
@@ -82,5 +82,12 @@ function search(input, tableId, columns, empty) {
         for (let i = 1; i < tr.length; i++) {
             tr[i].style.display = "";
         }
+        document.getElementById(clearId).style.display = 'none'
+    } else {
+        document.getElementById(clearId).style.display = 'block'
     }
+}
+
+function clearInput(inputId) {
+    document.getElementById(inputId).value = '';
 }
