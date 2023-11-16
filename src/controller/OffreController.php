@@ -2,6 +2,7 @@
 
 namespace app\src\controller;
 
+use app\src\core\components\Notification;
 use app\src\core\db\Database;
 use app\src\core\exception\ForbiddenException;
 use app\src\core\exception\NotFoundException;
@@ -12,6 +13,7 @@ use app\src\model\dataObject\Offre;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 use app\src\model\OffreForm;
+use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\UtilisateurRepository;
@@ -132,12 +134,87 @@ class OffreController extends AbstractController
     /**
      * @throws ForbiddenException
      * @throws ServerErrorException
+     * @throws NotFoundException
      */
     public function creeroffre(Request $request): string
     {
-        if (!Auth::has_role(Roles::Manager, Roles::Enterprise, Roles::Staff)) {
+        if (!Auth::has_role(Roles::Manager, Roles::Enterprise, Roles::Staff))
             throw new ForbiddenException();
+
+        $id = $request->getRouteParams()['id'] ?? null;
+        if ($id !== null && !Auth::has_role(Roles::Enterprise)) throw new NotFoundException();
+
+        $draft = $id !== null ? (new OffresRepository())->getById($id) : null;
+        if ($id !== null && $draft === null) throw new NotFoundException();
+        if ($id !== null && $draft->getIdutilisateur() !== Application::getUser()->id()) throw new ForbiddenException();
+
+        $offres = (new OffresRepository)->draftExist(Application::getUser()->id()) ?? [];
+        $options = ["new" => "Nouveau brouillon"];
+        foreach ($offres as $offre)
+            $options[$offre->getIdoffre()] = $offre->getSujet();
+
+        $brouillon = new FormModel([
+            "draft" => FormModel::select("Choisir un brouillon", $options)->id("draftSelect")->default($id !== null ? $id : "new")
+        ]);
+        $form = new FormModel([
+            "typeStage" => FormModel::checkbox("Type de stage", ["stage" => "Stage", "alternance" => "Alternance"])->horizontal(),
+            "sujet" => FormModel::string("Sujet")->required()->default($draft ? $draft->getSujet() : ""),
+            "theme" => FormModel::select("Thématique", ["Réseaux" => "Réseaux", "secu" => "Securite", "bdd" => "Base de Donnée", "DevWeb" => "Développement Web", "DevApp" => "Développement d'application"])->required()->default($draft ? $draft->getThematique() : ""),
+            "nbjourtravailhebdo" => FormModel::int("Nombre de jours de Travail")->min(1)->max(6)->required()->default($draft ? $draft->getNbjourtravailhebdo() : 5),
+            "nbheureparjour" => FormModel::double("Nombre d'heure par jour")->default($draft ? $draft->getNbJourTravailHebdo() : 7)->min(1)->max(12)->required(),
+            "gratification" => FormModel::double("Tarif horaire")->min(4.05)->max(15)->required()->default($draft ? $draft->getGratification() : 4.05),
+            "avantage" => FormModel::string("Avantages")->default($draft ? $draft->getAvantageNature() : ""),
+            "datedebut" => FormModel::date("Date de début")->id("dateDebut")->after(new \DateTime())->required()->default($draft ? $draft->getDateDebut() : ""),
+            "datefin" => FormModel::date("Date de fin")->id("dateFin")->after(new \DateTime())->required()->default($draft ? $draft->getDateFin() : ""),
+            "distanciel" => FormModel::int("Distanciel")->min(0)->max(6)->default(0)->id("distanciel"),
+            "dureeStage" => FormModel::int("Durée du stage (en heure)")->id("dureeStage")->min(1)->default(1),
+            "dureeAlternance" => FormModel::int("Durée de l'alternance")->id("dureeAlternance")->min(1)->default(1),
+            "description" => FormModel::string("Description")->textarea()->required()->default($draft ? $draft->getDescription() : ""),
+        ]);
+
+        if ($request->getMethod() === 'post') {
+            $action = $_POST['action'];
+            if ($action === "delete" && $id !== null && Auth::has_role(Roles::Enterprise)) {
+                OffreForm::deleteOffre($id);
+                Notification::createNotification("Brouillon supprimé");
+                header("Location: /offres/create");
+            }
+            print_r($request->getBody());
+            if ($form->validate($request->getBody())) {
+                $body = $form->getParsedBody();
+                $idUtilisateur = Auth::has_role(Roles::Enterprise) ? Application::getUser()->id() : $_POST['identreprise'];
+                $o = new Offre($id, $body["duree"], $body["theme"], $body["sujet"], $body["nbjourtravailhebdo"], $body["nbheureparjour"], $body["gratification"], $body["avantage"], $body["datedebut"], $body["datefin"], "brouillon", 0, $body["anneeVisee"], $body["annee"], $idUtilisateur, date("Y-m-d H:i:s"), $body["description"]);
+                
+                if ($action === "save" && Auth::has_role(Roles::Enterprise)) {
+                    /*if ($id !== null) {
+                        OffreForm::updateOffre($o);
+                        Notification::createNotification("Brouillon sauvegardé");
+                        header("Location: /offres/create");
+                    } else {
+                        OffreForm::creerOffre($o);
+                        Notification::createNotification("Brouillon sauvegardé");
+                        header("Location: /offres/create");
+                    }*/
+                } elseif ($action === "send") {
+
+                } else {
+                    throw new ForbiddenException();
+                }
+            }
         }
+
+        if (!Auth::has_role(Roles::Enterprise)) {
+            $entreprises = EntrepriseRepository::getList();
+            $options = [];
+            foreach ($entreprises as $entreprise) {
+                $options[$entreprise["idutilisateur"]] = $entreprise["nom"];
+            }
+            $enterpriseForm = new FormModel([
+                "identreprise" => FormModel::select("Entreprise", $options)->required(),
+            ]);
+        }
+
+        return $this->render('/offres/create', ['form' => $form, 'draft' => $brouillon, 'offre' => $id !== null, 'enterprises' => $enterpriseForm ?? null]);
 
         if ($request->getMethod() === 'get') {
             return $this->render('/offres/create');
@@ -198,7 +275,7 @@ class OffreController extends AbstractController
             OffreForm::updateOffre($offre, $typeStage, $typeAlternance, $distanciel);
         }
 
-        return $this->render('/offres/create');
+        return $this->render('/offres/create', ['form' => $form]);
     }
 
     /**

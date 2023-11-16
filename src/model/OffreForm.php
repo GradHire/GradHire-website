@@ -45,14 +45,14 @@ class OffreForm extends Model
  </div>');
         }
 
-        if ($typeStage != null && $typeAlternance == null){
+        if ($typeStage != null && $typeAlternance == null) {
             $sql = "INSERT INTO OffreStage VALUES (:idOffreTag)";
             $pdoStatement = Database::get_conn()->prepare($sql);
             $values = array(
                 "idOffreTag" => $id,
             );
             $pdoStatement->execute($values);
-        } elseif ($typeAlternance != null && $typeStage == null){
+        } elseif ($typeAlternance != null && $typeStage == null) {
             $sql = "INSERT INTO OffreAlternance VALUES (:idOffreTag, :distancielTag)";
             $pdoStatement = Database::get_conn()->prepare($sql);
             $values = array(
@@ -60,7 +60,7 @@ class OffreForm extends Model
                 "distancielTag" => $distanciel,
             );
             $pdoStatement->execute($values);
-        } elseif ($typeAlternance != null && $typeStage != null){
+        } elseif ($typeAlternance != null && $typeStage != null) {
             $sql = "INSERT INTO OffreStage VALUES (:idOffreTag)";
             $pdoStatement = Database::get_conn()->prepare($sql);
             $values = array(
@@ -130,7 +130,7 @@ class OffreForm extends Model
         );
         try {
             $pdoStatement->execute($values);
-        } catch (PDOException $e) {
+        } catch (PDOException) {
             return false;
         }
         return true;
