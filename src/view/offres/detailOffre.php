@@ -137,8 +137,22 @@ use app\src\model\dataObject\Roles;
             </div>
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-zinc-900">Adresse</dt>
-                <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?= $offre->getAdresse() ?></dd>
+                <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
+                    <?php
+                    $adr = $offre->getAdresse();
+                    if ($adr != null) echo $adr;
+                    else echo "Non renseignée";
+                    ?></dd>
             </div>
+            <?php
+            if ($offre->getAdresse() != null) {
+                ?>
+                <iframe
+                        class="w-full h-[500px]" src="https://maps.google.com/maps?q=<?= $offre->getAdresse() ?>&t=&z=13&ie=UTF8&iwloc=&output=embed">
+                </iframe>
+                <?php
+            }
+            ?>
         </dl>
     </div>
     <?php if (Auth::has_role(Roles::Student) && !$offre->getUserPostuled()) { ?>

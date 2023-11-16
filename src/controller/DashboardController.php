@@ -10,6 +10,8 @@ use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
+use app\src\model\repository\ConventionRepository;
+use app\src\model\repository\PostulerRepository;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\MailRepository;
@@ -126,6 +128,10 @@ class DashboardController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
     public function candidatures(Request $request): string
     {
 
@@ -157,10 +163,11 @@ class DashboardController extends AbstractController
                 'candidaturesAutres' => array_merge((new PostulerRepository())->getByIdEntreprise($entrepriseid, 'valider'), (new PostulerRepository())->getByIdEntreprise($entrepriseid, 'refuser'))
             ];
         } else if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher)) {
-
             $array = ['candidaturesAttente' => (new PostulerRepository())->getByStatement('en attente'),
                 'candidaturesAutres' => array_merge((new PostulerRepository())->getByStatement('valider'), (new PostulerRepository())->getByStatement('refuser'))
             ];
+            if (isset($error)) $array['error'] = $error;
+            if (isset($success)) $array['success'] = $success;
         } else if (Auth::has_role(Roles::Student)) {
             $array = ['candidaturesAttente' => (new PostulerRepository())->getByIdEtudiant($userid, 'en attente'),
                 'candidaturesAutres' => array_merge((new PostulerRepository())->getByIdEtudiant($userid, 'valider'), (new PostulerRepository())->getByIdEtudiant($userid, 'refuser'))

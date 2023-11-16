@@ -44,27 +44,157 @@ class TuteurRepository extends ProRepository
     {
         return new Tuteur(
             $dataObjectFormatTableau["idutilisateur"],
-            $dataObjectFormatTableau["bio"],
             $dataObjectFormatTableau["email"],
             $dataObjectFormatTableau["nom"],
             $dataObjectFormatTableau["numtelephone"],
+            $dataObjectFormatTableau["bio"],
+            $dataObjectFormatTableau["archiver"],
             $dataObjectFormatTableau["prenom"],
             $dataObjectFormatTableau["fonction"],
-            $dataObjectFormatTableau["identreprise"]
+            $dataObjectFormatTableau["identreprise"],
         );
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function addTuteur($idUtilisateur, $idOffre, $idEtudiant): void
+    {
+        try {
+            $sql = "UPDATE Supervise SET Statut = 'validee' WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idUtilisateur' => $idUtilisateur,
+                'idOffre' => $idOffre,
+                'idEtudiant' => $idEtudiant,
+            ]);
+        } catch (PDOException) {
+            throw new ServerErrorException('erreur Update Supervise');
+        }
+        try {
+            $sql = "UPDATE Staff SET role = 'tuteur' WHERE idUtilisateur = :idUtilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idUtilisateur' => $idUtilisateur,
+            ]);
+        } catch (PDOException) {
+            throw new ServerErrorException('erreur Insert Staff');
+        }
+        $this->refuserTuteur($idUtilisateur, $idOffre, $idEtudiant);
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function getIfTuteurAlreadyExist($idUtilisateur, $idOffre, $idEtudiant): bool
+    {
+        try {
+            $sql = "SELECT * FROM Supervise s JOIN Staff st ON st.idUtilisateur = s.idUtilisateur WHERE s.idUtilisateur = :idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant AND role = 'tuteur'";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idUtilisateur' => $idUtilisateur,
+                'idOffre' => $idOffre,
+                'idEtudiant' => $idEtudiant
+            ]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetch();
+            if ($resultat == null) {
+                return false;
+            }
+            return true;
+        } catch (PDOException) {
+            throw new ServerErrorException('erreur getIfTuteurAlreadyExist');
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function refuserTuteur(int $getIdutilisateur, mixed $idOffre, $idEtudiant)
+    {
+        try {
+            $sql = "UPDATE Supervise SET Statut = 'refusee' WHERE idUtilisateur!=:idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idUtilisateur' => $getIdutilisateur,
+                'idOffre' => $idOffre,
+                'idEtudiant' => $idEtudiant
+            ]);
+        } catch (PDOException) {
+            throw new ServerErrorException('erreur refuser tuteur');
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function annulerTuteur(int $iduser, int $idOffre, int $idetudiant): void
+    {
+        try{
+            $sql = "UPDATE Supervise SET Statut = 'en attente' WHERE idOffre = :idOffre AND idEtudiant = :idEtudiant";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idOffre' => $idOffre,
+                'idEtudiant' => $idetudiant
+            ]);
+        } catch (PDOException) {
+            throw new ServerErrorException('erreur annuler tuteur');
+        }
+        try {
+            $sql = "UPDATE Staff SET role = 'enseignant' WHERE idUtilisateur = :idUtilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idUtilisateur' => $iduser,
+            ]);
+        } catch (PDOException) {
+            throw new ServerErrorException('erreur Insert Staff');
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function seProposer(int $idutilisateur, int $idOffre, int $idetudiant): void {
+        try {
+            $statement = Database::get_conn()->prepare("INSERT INTO Supervise VALUES (?,?,?,'en attente');");
+            $statement->bindParam(1, $idutilisateur);
+            $statement->bindParam(2, $idOffre);
+            $statement->bindParam(3, $idetudiant);
+            $statement->execute();
+        } catch (\Exception $e) {
+            throw new ServerErrorException("Erreur  lors du se proposer de la convention");
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function seDeProposer(int $idUtilisateur, mixed $idOffre, $idEtudiant)
+    {
+        try {
+            $statement = Database::get_conn()->prepare("DELETE FROM Supervise WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant");
+            $statement->bindParam(":idUtilisateur", $idUtilisateur);
+            $statement->bindParam(":idOffre", $idOffre);
+            $statement->bindParam(":idEtudiant", $idEtudiant);
+            $statement->execute();
+        } catch (\Exception $e) {
+            throw new ServerErrorException("Erreur lors du se de proposer de la convention");
+        }
     }
 
     protected
     function getNomColonnes(): array
     {
         return [
-            "idUtilisateur",
-            "prenom",
-            "fonction",
+            "idutilisateur",
             "email",
             "nom",
-            "numTelephone",
-            "bio"
+            "numtelephone",
+            "bio",
+            "archiver",
+            "prenom",
+            "fonction",
+            "identreprise"
         ];
     }
 

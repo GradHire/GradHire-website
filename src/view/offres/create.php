@@ -184,8 +184,8 @@ Auth::check_role(Roles::Enterprise, Roles::Manager); ?>
 <?php if ($offred != null) echo $offrechoisi->getDescription() ?>
 </textarea>
             <div class="flex flex-row gap-4 w-full">
-                <input type="submit" name="action" value="Envoyer"
-                       class="w-full text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800"/>
+                <button type="submit" name="action" value="Envoyer"
+                       class="w-full text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800">Envoyer</button>
 
                 <?php if (Application::getUser()->role() === Roles::Enterprise) { ?>
                     <input type='hidden' name='sauvegarder_action' value='sauvegarder'>

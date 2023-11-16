@@ -115,7 +115,6 @@ class AuthController extends AbstractController
                 'form' => $form
             ]);
         } catch (\Exception $e) {
-            print_r($e);
             throw new ServerErrorException();
         }
     }

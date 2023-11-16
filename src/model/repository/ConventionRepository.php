@@ -32,6 +32,21 @@ class ConventionRepository extends AbstractRepository
         }
     }
 
+    public function getByIdOffreAndIdUser(int $idOffre, int $idUser): ?Convention
+    {
+        try {
+            $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$table . " WHERE idoffre = :idOffre AND idutilisateur = :idUser");
+            $statement->bindParam(":idOffre", $idOffre);
+            $statement->bindParam(":idUser", $idUser);
+            $statement->execute();
+            $data = $statement->fetch();
+            if (!$data) return null;
+            return $this->construireDepuisTableau($data);
+        } catch (\Exception $e) {
+            throw new ServerErrorException("Erreur lors de la récupération de la convention", 500, $e);
+        }
+    }
+
     /**
      * @throws ServerErrorException
      */
@@ -173,6 +188,7 @@ class ConventionRepository extends AbstractRepository
             throw new ServerErrorException("Erreur lors de la validation de la convention", 500, $e);
         }
     }
+
 
     protected function getNomTable(): string
     {
