@@ -98,7 +98,7 @@ class TuteurRepository extends ProRepository
             ]);
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
-            if ($resultat == null) {
+            if ($resultat == null || $resultat["statut"] == "en attente" || $resultat["statut"] == "refusee") {
                 return false;
             }
             return true;
