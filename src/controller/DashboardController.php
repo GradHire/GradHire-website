@@ -25,14 +25,19 @@ use app\src\model\Request;
 class DashboardController extends AbstractController
 {
 
+    /**
+     * @throws ServerErrorException
+     */
     public function showDashboard(): string
     {
         $statsDistributionDomaine = (new OffresRepository())->getStatsDistributionDomaine();
         $statsDensembleStageEtAlternance = (new OffresRepository())->getStatsDensembleStageEtAlternance();
+        $statsCandidaturesParMois = (new PostulerRepository())->getStatsCandidaturesParMois();
 
         return $this->render('dashboard/dashboard', [
             'statsDistributionDomaine' => $statsDistributionDomaine,
-            'statsDensembleStageEtAlternance' => $statsDensembleStageEtAlternance
+            'statsDensembleStageEtAlternance' => $statsDensembleStageEtAlternance,
+            'statsCandidaturesParMois' => $statsCandidaturesParMois,
         ]);
     }
 

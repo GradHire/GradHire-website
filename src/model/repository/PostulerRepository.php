@@ -6,6 +6,7 @@ use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\AbstractDataObject;
 use app\src\model\dataObject\Postuler;
+use PDOException;
 
 class PostulerRepository extends AbstractRepository
 {
@@ -69,6 +70,9 @@ class PostulerRepository extends AbstractRepository
 
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function setStatutPostuler(int $idutilisateur, int $idoffre, string $etat): void
     {
         $sql = "UPDATE $this->nomTable SET statut=:etat WHERE idUtilisateur=:idutilisateur AND idOffre=:idoffre";
@@ -105,6 +109,14 @@ class PostulerRepository extends AbstractRepository
         } catch (PDOException) {
             throw new ServerErrorException();
         }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function getStatsCandidaturesParMois(): false|array
+    {
+        return Database::get_conn()->query("CALL CandidaturesParMois()")->fetchAll();
     }
 
     public function getIfSuivi(int $idUtilisateur, $idetu, $idoffre): bool
