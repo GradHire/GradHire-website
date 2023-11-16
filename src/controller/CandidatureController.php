@@ -52,7 +52,6 @@ class CandidatureController extends AbstractController {
             $array = ['candidaturesAttente' => (new PostulerRepository())->getCandidaturesAttenteEntreprise($entrepriseid),
                 'candidaturesAutres' => array_merge((new PostulerRepository())->getByIdEntreprise($entrepriseid, 'validee'), (new PostulerRepository())->getByIdEntreprise($entrepriseid, 'refusee'))
             ];
-            print_r($array);
         } else if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher)) {
             $array = ['candidaturesAttente' => (new PostulerRepository())->getByStatementAttente(),
                 'candidaturesAutres' => array_merge((new PostulerRepository())->getByStatement('validee'), (new PostulerRepository())->getByStatement('refusee'))
@@ -63,7 +62,6 @@ class CandidatureController extends AbstractController {
             $array = ['candidaturesAttente' => (new PostulerRepository())->getCandidaturesAttenteEtudiant($userid),
                 'candidaturesAutres' => array_merge((new PostulerRepository())->getByIdEtudiant($userid, 'validee'), (new PostulerRepository())->getByIdEtudiant($userid, 'refusee'))
             ];
-            print_r($array);
         } else throw new ForbiddenException();
         return $this->render(
             'candidature/listCandidatures', $array);

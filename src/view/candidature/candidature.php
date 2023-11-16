@@ -19,7 +19,6 @@ use app\src\model\repository\UtilisateurRepository;
         <div class="overflow-x-auto w-full">
             <?php
             Table::createTable($candidatures, ["Nom de l'entreprise", "Sujet de l'offre", "Email étudiant", "Dates de candidature", "Etat de la candidature"], function ($candidature) {
-                print_r($candidature);
                 $offre = (new OffresRepository())->getById($candidature->getIdOffre());
                 $entreprise = (new UtilisateurRepository([]))->getUserById($candidature->getIdEntreprise());
                 $etudiant = (new UtilisateurRepository([]))->getUserById($candidature->getIdUtilisateur());
