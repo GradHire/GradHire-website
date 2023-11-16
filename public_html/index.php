@@ -18,7 +18,7 @@ require_once __DIR__ . '/../src/core/lib/Psr4AutoloaderClass.php';
 require_once __DIR__ . '/../src/config.php';
 
 if (session_status() == PHP_SESSION_NONE)
-	session_start();
+    session_start();
 
 $loader = new Psr4AutoloaderClass();
 $loader->register();
@@ -96,7 +96,6 @@ $app->router->get('/dashboard', [DashboardController::class, 'showDashboard']);
 $app->router->post('/dashboard', [DashboardController::class, 'showDashboard']);
 
 
-
 // CandidatureContoller
 $app->router->get('/candidatures', [CandidatureController::class, 'candidatures']);
 $app->router->get('/candidatures/contacter/{id}', [CandidatureController::class, 'contacterEntreprise']);
@@ -109,11 +108,6 @@ $app->router->get('/candidatures/validerEtudiant/{idEtudiant}/{idOffre}', [Candi
 
 // DashboardController
 
-$app->router->get('/candidatures', [DashboardController::class, 'candidatures']);
-$app->router->get('/candidatures/contacter/{id}', [DashboardController::class, 'contacterEntreprise']);
-$app->router->post('/candidatures/contacter/{id}', [DashboardController::class, 'contacterEntreprise']);
-$app->router->get('/candidatures/{idOffre}/{idUtilisateur}', [DashboardController::class, 'candidatures']);
-$app->router->post('/candidatures', [DashboardController::class, 'candidatures']);
 
 $app->router->get('/utilisateurs/{id}/archiver', [DashboardController::class, 'archiver']);
 
