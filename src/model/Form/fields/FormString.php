@@ -45,6 +45,13 @@ class FormString extends FormInputAttribute
         return $this;
     }
 
+    public function textarea(): static
+    {
+        $this->setParam("rows", 5);
+        $this->textArea = true;
+        return $this;
+    }
+
     public function length(int $len): static
     {
         $this->addRule(new RuleLength(['length' => $len]));

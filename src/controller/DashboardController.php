@@ -122,77 +122,7 @@ class DashboardController extends AbstractController
      * @throws NotFoundException
      */
 
-    public function contacterEntreprise(Request $req): string
-    {
-        if (!Auth::has_role(Roles::Student)) throw new ForbiddenException();
-        $form = new FormModel([
-            'message' => FormModel::string("Message")->required()->asterisk()->forget(),
-        ]);
-        if ($req->getMethod() === 'post') {
-            if ($form->validate($req->getBody())) {
-                $idoffre = $req->getRouteParams()["id"];
-                $offre = (new OffresRepository())->getById($idoffre);
-                if ($offre == null) throw new NotFoundException();
-                $idEntreprise = $offre->getIdutilisateur();
-                $emailEntreprise = (new EntrepriseRepository([]))->getByIdFull($idEntreprise)->getEmailutilisateur();
-                $mail = new MailRepository();
-                $mail->send_mail([$emailEntreprise], Application::getUser()->full_name() . " vous a envoyer un message concernant l'offre " . $offre->getSujet(), "Message:\n" . $form->getParsedBody()['message']);
-                Application::redirectFromParam('/candidatures');
-            }
-        }
-        return $this->render('candidature/contacter', [
-            'form' => $form
-        ]);
-    }
 
-    /**
-     * @throws ForbiddenException
-     * @throws ServerErrorException
-     */
-    public function candidatures(Request $request): string
-    {
-
-        $userid = Application::getUser()->id();
-        $idOffre = $request->getRouteParams()['idOffre'] ?? null;
-        $idUtilisateur = $request->getRouteParams()['idUtilisateur'] ?? null;
-        $candidatures = (new PostulerRepository())->getById($idOffre, $idUtilisateur);
-        if (Auth::has_role(Roles::Tutor)) $entrepriseid = (new TuteurEntrepriseRepository([]))->getById($userid)->getIdentreprise();
-        else if (Auth::has_role(Roles::Enterprise)) $entrepriseid = $userid;
-        if ($candidatures != null && $idOffre != null && $idUtilisateur != null) {
-            $offre = (new OffresRepository())->getById($candidatures->getIdoffre());
-            if (Auth::has_role(Roles::Staff, Roles::Manager, Roles::Teacher) || $candidatures->getIdutilisateur() == $userid || $offre->getIdutilisateur() == $entrepriseid) {
-                return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
-            } else throw new ForbiddenException();
-        }
-        if ($request->getMethod() === 'post') {
-            $id = explode('_', $_POST['idcandidature']);
-            $idOffre = $id[0] ?? null;
-            $idUtilisateur = $id[1] ?? null;
-            $candidature = (new PostulerRepository())->getById($idOffre, $idUtilisateur);
-            if ($request->getBody()['action'] === 'Accepter') {
-                $candidature->setStatutPostuler("valider");
-            } else {
-                $candidature->setStatutPostuler("refuser");
-            }
-        }
-        if (Auth::has_role(Roles::Enterprise, Roles::Tutor)) {
-            $array = ['candidaturesAttente' => (new PostulerRepository())->getByIdEntreprise($entrepriseid, 'en attente'),
-                'candidaturesAutres' => array_merge((new PostulerRepository())->getByIdEntreprise($entrepriseid, 'valider'), (new PostulerRepository())->getByIdEntreprise($entrepriseid, 'refuser'))
-            ];
-        } else if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher)) {
-            $array = ['candidaturesAttente' => (new PostulerRepository())->getByStatement('en attente'),
-                'candidaturesAutres' => array_merge((new PostulerRepository())->getByStatement('valider'), (new PostulerRepository())->getByStatement('refuser'))
-            ];
-            if (isset($error)) $array['error'] = $error;
-            if (isset($success)) $array['success'] = $success;
-        } else if (Auth::has_role(Roles::Student)) {
-            $array = ['candidaturesAttente' => (new PostulerRepository())->getByIdEtudiant($userid, 'en attente'),
-                'candidaturesAutres' => array_merge((new PostulerRepository())->getByIdEtudiant($userid, 'valider'), (new PostulerRepository())->getByIdEtudiant($userid, 'refuser'))
-            ];
-        } else throw new ForbiddenException();
-        return $this->render(
-            'candidature/listCandidatures', $array);
-    }
 
     /**
      * @throws ServerErrorException

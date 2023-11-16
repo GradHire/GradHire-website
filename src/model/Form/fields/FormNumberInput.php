@@ -8,20 +8,22 @@ use app\src\model\Form\rules\RuleMinNumber;
 
 class FormNumberInput extends FormInputAttribute
 {
-	public function min(int $value): static
-	{
-		$this->addRule(new RuleMinNumber(['min' => $value]));
-		return $this;
-	}
+    public function min(float $value): static
+    {
+        $this->addRule(new RuleMinNumber(['min' => $value]));
+        $this->setParam("min", $value);
+        return $this;
+    }
 
-	public function max(int $value): static
-	{
-		$this->addRule(new RuleMaxNumber(['max' => $value]));
-		return $this;
-	}
+    public function max(float $value): static
+    {
+        $this->addRule(new RuleMaxNumber(['max' => $value]));
+        $this->setParam("max", $value);
+        return $this;
+    }
 
-	protected function getType(): string
-	{
-		return "number";
-	}
+    protected function getType(): string
+    {
+        return "number";
+    }
 }

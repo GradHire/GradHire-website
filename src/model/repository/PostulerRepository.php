@@ -38,13 +38,14 @@ class PostulerRepository extends AbstractRepository
             $dataObjectFormatTableau['dates'],
             $dataObjectFormatTableau['idoffre'],
             $dataObjectFormatTableau['idutilisateur'],
+            $dataObjectFormatTableau['identreprise'],
             $dataObjectFormatTableau['statut']
         );
     }
 
     public function getByIdEntreprise($identreprise, string $etat): ?array
     {
-        $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,statut FROM $this->nomTable WHERE idUtilisateur= :id AND statut=:etat";
+        $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE idUtilisateur= :id AND statut=:etat";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['id' => $identreprise, 'etat' => $etat]);
         $requete->setFetchMode(\PDO::FETCH_ASSOC);
@@ -53,12 +54,37 @@ class PostulerRepository extends AbstractRepository
             $resultat[] = $this->construireDepuisTableau($item);
         }
         return $resultat;
+    }
 
+    public function getCandidaturesAttenteEntreprise($identreprise): ?array
+    {
+        $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE identreprise= :id AND statut LIKE 'en attente%'";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['id' => $identreprise]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = [];
+        foreach ($requete as $item) {
+            $resultat[] = $this->construireDepuisTableau($item);
+        }
+        return $resultat;
+    }
+
+    public function getCandidaturesAttenteEtudiant($identreprise): ?array
+    {
+        $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE idUtilisateur= :id AND statut LIKE 'en attente%'";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['id' => $identreprise]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = [];
+        foreach ($requete as $item) {
+            $resultat[] = $this->construireDepuisTableau($item);
+        }
+        return $resultat;
     }
 
     public function getByIdEtudiant($idEtudiant, string $etat): ?array
     {
-        $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,statut FROM $this->nomTable  WHERE idUtilisateur= :id AND statut=:etat";
+        $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM $this->nomTable  WHERE idUtilisateur= :id AND statut=:etat";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['id' => $idEtudiant, 'etat' => $etat]);
         $requete->setFetchMode(\PDO::FETCH_ASSOC);
@@ -82,9 +108,22 @@ class PostulerRepository extends AbstractRepository
 
     public function getByStatement(string $etat): array
     {
-        $sql = "SELECT nom,sujet,dates,idOffre, idUtilisateur,statut FROM $this->nomTable WHERE statut=:etat";
+        $sql = "SELECT nom,sujet,dates,idOffre, idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE statut=:etat";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['etat' => $etat]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = [];
+        foreach ($requete as $item) {
+            $resultat[] = $this->construireDepuisTableau($item);
+        }
+        return $resultat;
+    }
+
+    public function getByStatementAttente(): array
+    {
+        $sql = "SELECT nom,sujet,dates,idOffre, idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE statut LIKE 'en attente%'";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute();
         $requete->setFetchMode(\PDO::FETCH_ASSOC);
         $resultat = [];
         foreach ($requete as $item) {
@@ -177,6 +216,56 @@ class PostulerRepository extends AbstractRepository
         }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
+    public function refuserCandidature(int $idutilisateur, mixed $idOffre): void
+    {
+        try{
+            $sql = "UPDATE Postuler SET statut = 'refusee' WHERE idOffre=:idoffre AND idUtilisateur=:idutilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idoffre' => $idOffre,
+                'idutilisateur' => $idutilisateur
+            ]);
+        } catch (\Exception) {
+            throw new ServerErrorException('erreurs refuserCandidature');
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function validerCandidatureEtudiant(mixed $idEtudiant, mixed $idOffre): void
+    {
+        try{
+            $sql = "UPDATE Postuler SET statut = 'en attente tuteur' WHERE idOffre=:idoffre AND idUtilisateur=:idutilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idoffre' => $idOffre,
+                'idutilisateur' => $idEtudiant
+            ]);
+        } catch (\Exception) {
+            throw new ServerErrorException('erreurs validerCandidatureEtudiant');
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function validerCandidatureEntreprise(int $idUtilisateur, int $idOffre): void
+    {
+        try{
+            $sql = "UPDATE Postuler SET statut = 'en attente etudiant' WHERE idOffre=:idoffre AND idUtilisateur=:idutilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idoffre' => $idOffre,
+                'idutilisateur' => $idUtilisateur,
+            ]);
+        } catch (\Exception) {
+            throw new ServerErrorException('erreurs validerCandidatureEntreprise');
+        }
+    }
 
 
     protected

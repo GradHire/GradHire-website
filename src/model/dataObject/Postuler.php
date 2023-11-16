@@ -14,16 +14,28 @@ class Postuler extends AbstractDataObject
     private ?string $dates;
     private ?int $idOffre;
     private ?int $idUtilisateur;
+    private ?int $idEntreprise;
     private ?string $statut;
 
-    public function __construct(?string $sujet, ?string $nom, ?string $dates, ?int $idOffre, ?int $idUtilisateur, ?string $statut = null)
+    public function __construct(?string $sujet, ?string $nom, ?string $dates, ?int $idOffre, ?int $idUtilisateur,?int $idEntreprise, ?string $statut = null)
     {
         $this->sujet = $sujet;
         $this->nom = $nom;
         $this->dates = $dates;
         $this->idOffre = $idOffre;
         $this->idUtilisateur = $idUtilisateur;
+        $this->idEntreprise = $idEntreprise;
         $this->statut = $statut;
+    }
+
+    public function getIdEntreprise(): ?int
+    {
+        return $this->idEntreprise;
+    }
+
+    public function setIdEntreprise(?int $idEntreprise): void
+    {
+        $this->idEntreprise = $idEntreprise;
     }
 
     public function getStatut(): ?string

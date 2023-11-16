@@ -108,8 +108,7 @@ if ($candidatures->getStatut() == "en attente" && Auth::has_role(Roles::Enterpri
 
 if (Auth::has_role(Roles::Student) && $candidatures->getStatut() == "valider") {
     echo '<a href="/candidatures/contacter/' . $offre->getIdoffre() . '"
-                               class="inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">Voir
-                                plus</a>';
+                               class="inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">Contactez l\'entreprise</a>';
 }
 ?>
 
