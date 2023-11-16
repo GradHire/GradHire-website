@@ -179,27 +179,35 @@ class OffreController extends AbstractController
                 Notification::createNotification("Brouillon supprimé");
                 header("Location: /offres/create");
             }
-            print_r($request->getBody());
             if ($form->validate($request->getBody())) {
                 $body = $form->getParsedBody();
-                $idUtilisateur = Auth::has_role(Roles::Enterprise) ? Application::getUser()->id() : $_POST['identreprise'];
-                $o = new Offre($id, $body["duree"], $body["theme"], $body["sujet"], $body["nbjourtravailhebdo"], $body["nbheureparjour"], $body["gratification"], $body["avantage"], $body["datedebut"], $body["datefin"], "brouillon", 0, $body["anneeVisee"], $body["annee"], $idUtilisateur, date("Y-m-d H:i:s"), $body["description"]);
-                
-                if ($action === "save" && Auth::has_role(Roles::Enterprise)) {
-                    /*if ($id !== null) {
-                        OffreForm::updateOffre($o);
-                        Notification::createNotification("Brouillon sauvegardé");
-                        header("Location: /offres/create");
-                    } else {
-                        OffreForm::creerOffre($o);
-                        Notification::createNotification("Brouillon sauvegardé");
-                        header("Location: /offres/create");
-                    }*/
-                } elseif ($action === "send") {
+                $getDateDebut = explode("-", $body["datedebut"])[0];
+                $getDateFin = explode("-", $body["datefin"])[0];
+                $statut = $action == 'send' ? "en attente" : "brouillon";
 
+                $annee = $getDateDebut == $getDateFin ? $getDateDebut : $getDateDebut . "/" . $getDateFin;
+                if (!empty($_POST['dureeStage']) && !empty($_POST['dureeAlternance'])) {
+                    $duree = "stage : " . $_POST['dureeStage'] . " heure(s), alternance : " . $_POST['dureeAlternance'] . " an(s)";
+                } else if (!empty($_POST["dureeStage"]) && empty($_POST["dureeAlternance"])) {
+                    $duree = $_POST['dureeStage'] . " heure(s)";
+                } else if (empty($_POST["dureeStage"]) && !empty($_POST["dureeAlternance"])) {
+                    $duree = $_POST['dureeAlternance'] . " an(s)";
                 } else {
-                    throw new ForbiddenException();
+                    $duree = null;
                 }
+                $anneeVisee = $duree == 1 ? "2" : "3";
+                $idUtilisateur = Auth::has_role(Roles::Enterprise) ? Application::getUser()->id() : $_POST['identreprise'];
+                $o = new Offre($id, $duree, $body["theme"], $body["sujet"], $body["nbjourtravailhebdo"], $body["nbheureparjour"], $body["gratification"], $body["avantage"], $body["datedebut"], $body["datefin"], $statut, 0, $anneeVisee, $annee, $idUtilisateur, date("Y-m-d H:i:s"), $body["description"]);
+
+                $typeStage = in_array("stage", $body["typeStage"]) ? "stage" : null;
+                $typeAlternance = in_array("alternance", $body["typeStage"]) ? "alternance" : null;
+                $distanciel = $_POST['distanciel'] ?? null;
+                if ($id !== null)
+                    OffreForm::updateOffre($o, $typeStage);
+                else
+                    OffreForm::creerOffre($o, $typeStage, $typeAlternance, $distanciel);
+                Notification::createNotification($action === "send" ? "Offre publié" : "Brouillon sauvegardé");
+                header("Location: /offres/create");
             }
         }
 
@@ -215,67 +223,6 @@ class OffreController extends AbstractController
         }
 
         return $this->render('/offres/create', ['form' => $form, 'draft' => $brouillon, 'offre' => $id !== null, 'enterprises' => $enterpriseForm ?? null]);
-
-        if ($request->getMethod() === 'get') {
-            return $this->render('/offres/create');
-        }
-
-        $action = $_POST['action'];
-        $idOffre = $_POST['id_offre'];
-        if ($idOffre === "") {
-            $idOffre = null;
-        }
-        if ($action == 'Supprimer Brouillon') {
-            OffreForm::deleteOffre($idOffre);
-            return $this->render('/offres/create');
-        }
-
-        $typeStage = $_POST['typeStage'] ?? null;
-        $typeAlternance = $_POST['typeAlternance'] ?? null;
-        $distanciel = $_POST['distanciel'] ?? null;
-        if (!empty($_POST['dureeStage']) && !empty($_POST['dureeAlternance'])) {
-            $duree = "stage : " . $_POST['dureeStage'] . " heure(s), alternance : " . $_POST['dureeAlternance'] . " an(s)";
-        } else if (!empty($_POST["dureeStage"]) && empty($_POST["dureeAlternance"])) {
-            $duree = $_POST['dureeStage'] . " heure(s)";
-        } else if (empty($_POST["dureeStage"]) && !empty($_POST["dureeAlternance"])) {
-            $duree = $_POST['dureeAlternance'] . " an(s)";
-        } else {
-            $duree = null;
-        }
-
-        $theme = $_POST['theme'] ?? null;
-        $sujet = $_POST['sujet'];
-        $nbJourTravailHebdo = $_POST['nbjourtravailhebdo'] ?? null;
-        $nbJourHeureHebdo = $_POST['nbheureparjour'];
-        $gratification = $_POST['gratification'];
-        $avantageNature = $_POST['avantage'];
-        $dateDebut = $_POST['datedebut'] ?? date("Y-m-d H:i:s");
-        $dateFin = $_POST['datefin'] ?? date("Y-m-d H:i:s");
-        $statut = $action == 'Envoyer' ? "en attente" : "brouillon";
-        $pourvue = 0;
-        $getDateDebut = explode("-", $dateDebut)[0];
-        $getDateFin = explode("-", $dateFin)[0];
-        if ($getDateDebut == $getDateFin) {
-            $annee = $getDateDebut;
-        } else {
-            $annee = $getDateDebut . "/" . $getDateFin;
-        }
-        $anneeVisee = $duree == 1 ? "2" : "3";
-        $idUtilisateur = Application::getUser()->role() === Roles::Enterprise ? Application::getUser()->id() : $_POST['identreprise'];
-        $datecreation = date("Y-m-d H:i:s");
-        $description = $_POST['description'];
-
-
-        $offre = new Offre($idOffre, $duree, $theme, $sujet, $nbJourTravailHebdo, $nbJourHeureHebdo, $gratification, $avantageNature,
-            $dateDebut, $dateFin, $statut, $pourvue, $anneeVisee, $annee, $idUtilisateur, $datecreation, $description);
-
-        if ($idOffre === null) {
-            OffreForm::creerOffre($offre, $typeStage, $typeAlternance, $distanciel);
-        } else {
-            OffreForm::updateOffre($offre, $typeStage, $typeAlternance, $distanciel);
-        }
-
-        return $this->render('/offres/create', ['form' => $form]);
     }
 
     /**
