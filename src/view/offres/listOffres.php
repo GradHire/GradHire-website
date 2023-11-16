@@ -86,7 +86,11 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
 				$form->print_fields(["year", "duration", "theme", "gratification"]);
 				$form->submit("Appliquer");
 				$form->reset("Réinitialiser", true);
-				?>
+				if (Auth::has_role(Roles::Student)) {
+					?>
+					<a href="/subscribe" class="text-center"><i class="fa-regular fa-bell"></i> S'abonner à la
+					                                                                            newsletter</a>
+				<?php } ?>
 			</div>
 			<?php
 			$form->end();

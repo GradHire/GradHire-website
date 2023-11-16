@@ -14,6 +14,7 @@ use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 use app\src\model\OffreForm;
 use app\src\model\repository\EntrepriseRepository;
+use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\UtilisateurRepository;
@@ -65,10 +66,28 @@ class OffreController extends AbstractController
 		if ($request->getMethod() === 'get') {
 			(new OffresRepository())->updateToApproved($id);
 			(new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmailutilisateur()], "Validation de votre offre", "Votre offre a été validée");
-			$offre = (new OffresRepository())->getByIdWithUser($id);
-			return $this->render('offres/detailOffre', ['offre' => $offre]);
+			(new MailRepository())->send_mail(EtudiantRepository::getNewsletterEmails(), "Nouvelle offre pour vous", "Une nouvelle offre a été publiée. Vous pouvez la consulter au lien suivant : " . HOST . "/offres/$id");
+			header("Location: /offres/" . $id);
+			return '';
 		}
 		return $this->render('offres/detailOffre', ['offre' => $offre]);
+	}
+
+	/**
+	 * @throws ForbiddenException
+	 * @throws ServerErrorException
+	 * @throws NotFoundException
+	 */
+	public function subscribeNewsletter(Request $req)
+	{
+		if (!Auth::has_role(Roles::Student)) throw new ForbiddenException();
+		if ($req->getMethod() === 'get') {
+			EtudiantRepository::subscribeNewsletter();
+			Notification::createNotification("Vous êtes maintenant inscrit à la newsletter");
+			header("Location: /offres");
+			return;
+		}
+		throw new NotFoundException();
 	}
 
 	/**
