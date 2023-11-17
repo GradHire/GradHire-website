@@ -33,11 +33,14 @@ class ImportPstage
 
         $idsignataire = $this->find('Signataire', 'mailSignataire', $row[34], 'idSignataire');
         if (!$this->recordExists('Utilisateur', 'email', $row[31])) $this->insertReferent($row);
+        $idreferent = $this->find('Utilisateur', 'email', $row[31], 'idUtilisateur');
 
         if (!$this->exist('ServiceAccueil', 'nomService', $row[70], 'idEntreprise', $identreprise)) $this->insertServiceAccueil($row, $identreprise);
         else $this->updateServiceAccueil($row, $identreprise);
 
         $idOffre = $this->insertOffreStage($row, $identreprise);
+        $this->insertPostuler($row, $idOffre, $idetu);
+        $this->insertSuperviser($row, $idOffre, $idetu, $idreferent);
         if (!$this->recordExists('Convention', 'numConvention', $row[0])) $this->insertConvention($row, $idsignataire, $idetu, $idOffre);
 
     }
@@ -133,6 +136,16 @@ class ImportPstage
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         return $stmt->fetchColumn();
+    }
+
+    private function insertPostuler($row, int $idOffre, mixed $idetu)
+    {
+        $this->execute("SELECT creerPostuler($idetu,$idOffre) FROM DUAL;");
+    }
+
+    private function insertSuperviser($row, int $idOffre, mixed $idetu, mixed $idreferent)
+    {
+        $this->execute("INSERT INTO Supervise VALUES ($idreferent,$idOffre,$idetu,'validee')");
     }
 
     private function insertConvention($row, $idsignataire, $identreprise, $idOffre)

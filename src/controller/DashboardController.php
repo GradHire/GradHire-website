@@ -11,11 +11,11 @@ use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 use app\src\model\repository\ConventionRepository;
-use app\src\model\repository\PostulerRepository;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
+use app\src\model\repository\PostulerRepository;
 use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\repository\TuteurRepository;
@@ -30,6 +30,32 @@ class DashboardController extends AbstractController
      */
     public function showDashboard(): string
     {
+        $currentTab = $_COOKIE['currentTab'] ?? 'tab1';
+
+        $data = [];
+
+        if ($currentTab === 'tab1') {
+            $data['statsDistributionDomaine'] = (new OffresRepository())->getStatsDistributionDomaine();
+            $data['statsDensembleStageEtAlternance'] = (new OffresRepository())->getStatsDensembleStageEtAlternance();
+            $data['statsCandidaturesParMois'] = (new PostulerRepository())->getStatsCandidaturesParMois();
+            $data['offres'] = (new OffresRepository())->getOffresDernierSemaine();
+            $data['pourcentageEtudiantsConventionCetteAnnee'] = (new ConventionRepository())->getPourcentageEtudiantsConventionCetteAnnee();
+            $data['top5DomainesPlusDemandes'] = (new OffresRepository())->getTop5DomainesPlusDemandes();
+            $data['moyenneCandidaturesParOffreParDomaine'] = (new OffresRepository())->getMoyenneCandidaturesParOffreParDomaine();
+        } elseif ($currentTab === 'tab2') {
+            $data = [];
+        } elseif ($currentTab === 'tab3') {
+            $data = [];
+        }
+
+        return $this->render('dashboard/dashboard', [
+            'currentTab' => $currentTab,
+            'data' => $data
+        ]);
+    }
+
+    public function showDashboardOld(): string
+    {
         $statsDistributionDomaine = (new OffresRepository())->getStatsDistributionDomaine();
         $statsDensembleStageEtAlternance = (new OffresRepository())->getStatsDensembleStageEtAlternance();
         $statsCandidaturesParMois = (new PostulerRepository())->getStatsCandidaturesParMois();
@@ -38,7 +64,7 @@ class DashboardController extends AbstractController
         $top5DomainesPlusDemandes = (new OffresRepository())->getTop5DomainesPlusDemandes();
         $moyenneCandidaturesParOffreParDomaine = (new OffresRepository())->getMoyenneCandidaturesParOffreParDomaine();
 
-        return $this->render('dashboard/dashboard', [
+        return $this->render('dashboard/dashboard_old', [
             'statsDistributionDomaine' => $statsDistributionDomaine,
             'statsDensembleStageEtAlternance' => $statsDensembleStageEtAlternance,
             'statsCandidaturesParMois' => $statsCandidaturesParMois,
@@ -129,7 +155,6 @@ class DashboardController extends AbstractController
      * @throws ServerErrorException
      * @throws NotFoundException
      */
-
 
 
     /**
