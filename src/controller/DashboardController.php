@@ -35,13 +35,16 @@ class DashboardController extends AbstractController
         $data = [];
 
         if ($currentTab === 'tab1') {
-            $data['statsDistributionDomaine'] = (new OffresRepository())->getStatsDistributionDomaine();
-            $data['statsDensembleStageEtAlternance'] = (new OffresRepository())->getStatsDensembleStageEtAlternance();
-            $data['statsCandidaturesParMois'] = (new PostulerRepository())->getStatsCandidaturesParMois();
-            $data['offres'] = (new OffresRepository())->getOffresDernierSemaine();
-            $data['pourcentageEtudiantsConventionCetteAnnee'] = (new ConventionRepository())->getPourcentageEtudiantsConventionCetteAnnee();
-            $data['top5DomainesPlusDemandes'] = (new OffresRepository())->getTop5DomainesPlusDemandes();
-            $data['moyenneCandidaturesParOffreParDomaine'] = (new OffresRepository())->getMoyenneCandidaturesParOffreParDomaine();
+            //pourcentageEtudiantsConventionCetteAnnee -> percentageBlockData1
+
+//            $data['statsDistributionDomaine'] = (new OffresRepository())->getStatsDistributionDomaine();
+//            $data['statsDensembleStageEtAlternance'] = (new OffresRepository())->getStatsDensembleStageEtAlternance();
+//            $data['statsCandidaturesParMois'] = (new PostulerRepository())->getStatsCandidaturesParMois();
+//            $data['offres'] = (new OffresRepository())->getOffresDernierSemaine();
+            $data['percentageBlockData1'] = (new ConventionRepository())->getPourcentageEtudiantsConventionCetteAnnee();
+            $data['numBlockData1'] = (new OffresRepository())->getStatsDensembleStageEtAlternance();
+//            $data['top5DomainesPlusDemandes'] = (new OffresRepository())->getTop5DomainesPlusDemandes();
+//            $data['moyenneCandidaturesParOffreParDomaine'] = (new OffresRepository())->getMoyenneCandidaturesParOffreParDomaine();
         } elseif ($currentTab === 'tab2') {
             $data = [];
         } elseif ($currentTab === 'tab3') {
