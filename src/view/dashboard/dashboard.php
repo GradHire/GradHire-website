@@ -7,6 +7,9 @@ use app\src\core\components\charts\NumBlockChart;
 use app\src\core\components\charts\PercentageBlock;
 use app\src\core\components\charts\PieChart;
 use app\src\core\components\charts\SVGBarChart;
+use app\src\model\Application;
+use app\src\model\Auth;
+use app\src\model\dataObject\Roles;
 
 $this->title = 'Dashboard';
 /** @var array $statsDistributionDomaine
@@ -175,7 +178,53 @@ EOT;
                     </div>
                 </div>
             </div>
-            <div id="tab2" class="<?php if ($currentTab === 'tab2') echo 'flex'; else echo 'hidden'; ?>"></div>
+            <div id="tab2" class="<?php if ($currentTab === 'tab2') echo 'flex'; else echo 'hidden'; ?>">
+                <div class="flex flex-col w-full gap-2 items-center justify-center">
+                    <?php if (!Application::isGuest()): ?>
+                        <?php if (!Auth::has_role(Roles::ChefDepartment)): ?>
+                            <a href="/offres"
+                               class="flex items-center text-2xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800 border rounded-[8px] bg-white hover:bg-zinc-50 text-center w-full hover:underline p-4">Offres</a>
+                        <?php else: ?>
+                            <a href="/utilisateurs"
+                               class="flex items-center text-2xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800 border rounded-[8px] bg-white hover:bg-zinc-50 text-center w-full hover:underline p-4">Gestion
+                                roles</a>
+                        <?php endif; ?>
+                        <?php if (!Auth::has_role(Roles::Enterprise, Roles::Tutor, Roles::ChefDepartment)): ?>
+                            <a href="/entreprises"
+                               class="flex items-center text-2xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800 border rounded-[8px] bg-white hover:bg-zinc-50 text-center w-full hover:underline p-4">Entreprises</a>
+                        <?php endif; ?>
+                        <?php if (Auth::has_role(Roles::Student, Roles::Teacher, Roles::Tutor, Roles::Enterprise)): ?>
+                            <a href="/candidatures"
+                               class="flex items-center text-2xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800 border rounded-[8px] bg-white hover:bg-zinc-50 text-center w-full hover:underline p-4">Candidatures</a>
+                        <?php endif; ?>
+                        <?php if (Auth::has_role(Roles::Enterprise)): ?>
+                            <a href="/offres/create"
+                               class="flex items-center text-2xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800 border rounded-[8px] bg-white hover:bg-zinc-50 text-center w-full hover:underline p-4">Créer
+                                une
+                                offre</a>
+                            <a href="/ListeTuteurPro"
+                               class="flex items-center text-2xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800 border rounded-[8px] bg-white hover:bg-zinc-50 text-center w-full hover:underline p-4">Tuteurs</a>
+                        <?php endif; ?>
+                        <?php if (Auth::has_role(Roles::Manager, Roles::Staff)): ?>
+                            <a href="/utilisateurs"
+                               class="flex items-center text-2xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800 border rounded-[8px] bg-white hover:bg-zinc-50 text-center w-full hover:underline p-4">Utilisateurs</a>
+                            <a href="/candidatures"
+                               class="flex items-center text-2xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800 border rounded-[8px] bg-white hover:bg-zinc-50 text-center w-full hover:underline p-4">Candidatures</a>
+                            <a href="/ListeTuteurPro"
+                               class="flex items-center text-2xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800 border rounded-[8px] bg-white hover:bg-zinc-50 text-center w-full hover:underline p-4">Tuteurs</a>
+                            <a href="/importer"
+                               class="flex items-center text-2xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800 border rounded-[8px] bg-white hover:bg-zinc-50 text-center w-full hover:underline p-4">Import</a>
+                        <?php endif; ?>
+                        <?php if (Auth::has_role(Roles::Student)): ?>
+                            <a href="/explicationSimu"
+                               class="flex items-center text-2xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800 border rounded-[8px] bg-white hover:bg-zinc-50 text-center w-full hover:underline p-4">Simulateur</a>
+                        <?php endif; ?>
+                        <?php if (Auth::has_role(Roles::Enterprise, Roles::Student, Roles::Manager, Roles::Staff)): ?>
+                            <a href="/conventions"
+                               class="flex items-center text-2xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800 border rounded-[8px] bg-white hover:bg-zinc-50 text-center w-full hover:underline p-4">Conventions</a>
+                        <?php endif; endif; ?>
+                </div>
+            </div>
             <div id="tab3" class="<?php if ($currentTab === 'tab3') echo 'flex'; else echo 'hidden'; ?>"></div>
         </div>
     </div>
