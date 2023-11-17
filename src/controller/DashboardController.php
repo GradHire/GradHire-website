@@ -11,11 +11,11 @@ use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 use app\src\model\repository\ConventionRepository;
-use app\src\model\repository\PostulerRepository;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
+use app\src\model\repository\PostulerRepository;
 use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\repository\TuteurRepository;
@@ -131,7 +131,6 @@ class DashboardController extends AbstractController
      */
 
 
-
     /**
      * @throws ServerErrorException
      * @throws ForbiddenException
@@ -163,6 +162,4 @@ class DashboardController extends AbstractController
             return '';
         } else throw new ForbiddenException();
     }
-
-
 }

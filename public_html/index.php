@@ -110,6 +110,8 @@ $app->router->get('/candidatures/validerEtudiant/{idEtudiant}/{idOffre}', [Candi
 // DashboardController
 
 
+$app->router->post('/utilisateurs/{id}/role', [DashboardController::class, 'role']);
+
 $app->router->get('/utilisateurs/{id}/archiver', [DashboardController::class, 'archiver']);
 
 $app->router->get('/utilisateurs', [DashboardController::class, 'utilisateurs']);
