@@ -27,6 +27,7 @@ $loader->addNamespace('app', __DIR__ . '/../');
 $app = new Application(dirname(__DIR__));
 
 $app->router->get('/', 'home');
+$app->router->get('/about', 'about');
 
 // AuthController
 
@@ -200,6 +201,5 @@ $app->router->get('/postuler/seDeproposer/{id:\d+}', [PostulerController::class,
 $app->router->get('/postuler/listeTuteur/{idOffre}/{idUser}', [PostulerController::class, 'listeTuteurPostuler']);
 $app->router->get('/postuler/accepter_as_tuteur/{idUser}/{idOffre}', [PostulerController::class, 'accepterAsTuteur']);
 $app->router->get('/postuler/unaccepte_as_tuteur/{idUser}/{idOffre}', [PostulerController::class, 'annulerAsTuteur']);
-
 
 $app->run();
