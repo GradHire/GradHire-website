@@ -12,4 +12,5 @@ enum Roles: string
     case ManagerAlternance = "responsablealternance";
     case Enterprise = "entreprise";
     case Tutor = "tuteur";
+    case TutorTeacher = "tuteurprof";
 }

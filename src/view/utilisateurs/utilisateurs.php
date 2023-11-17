@@ -9,7 +9,7 @@ $this->title = 'Utilisateurs';
 
 
 Table::createTable($utilisateurs, ["nom", "email", "numéro de téléphone"], function ($utilisateur) {
-    $staffRoles = [Roles::Staff, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage, Roles::Teacher];
+    $staffRoles = [Roles::Staff, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage, Roles::Teacher, Roles::TutorTeacher];
     Table::cell($utilisateur->getNomutilisateur());
     Table::cell($utilisateur->getEmailutilisateur());
     Table::cell($utilisateur->getNumtelutilisateur());
