@@ -195,7 +195,7 @@ $app->router->get('/validateConvention/{id:\d+}', [ConventionsController::class,
 
 // PostulerController
 
-$app->router->get('/postuler/seProposer/{id:\d+}', [PostulerController::class, 'se_proposer']);
+$app->router->get('/postuler/seProposer/{idoffre:\d+}/{idetudiant:\d+}', [PostulerController::class, 'se_proposer']);
 $app->router->get('/postuler/seDeproposer/{id:\d+}', [PostulerController::class, 'se_deproposer']);
 $app->router->get('/postuler/listeTuteur/{idOffre}/{idUser}', [PostulerController::class, 'listeTuteurPostuler']);
 $app->router->get('/postuler/accepter_as_tuteur/{idUser}/{idOffre}', [PostulerController::class, 'accepterAsTuteur']);

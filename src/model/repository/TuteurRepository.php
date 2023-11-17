@@ -72,7 +72,7 @@ class TuteurRepository extends ProRepository
             throw new ServerErrorException('erreur Update Supervise');
         }
         try {
-            $sql = "UPDATE Staff SET role = 'tuteur' WHERE idUtilisateur = :idUtilisateur";
+            $sql = "UPDATE Staff SET role = 'tuteurprof' WHERE idUtilisateur = :idUtilisateur";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute([
                 'idUtilisateur' => $idUtilisateur,
@@ -110,7 +110,7 @@ class TuteurRepository extends ProRepository
     public function getIfTuteurAlreadyExist($idUtilisateur, $idOffre, $idEtudiant): bool
     {
         try {
-            $sql = "SELECT * FROM Supervise s JOIN Staff st ON st.idUtilisateur = s.idUtilisateur WHERE s.idUtilisateur = :idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant AND role = 'tuteur' AND statut = 'validee'";
+            $sql = "SELECT * FROM Supervise s JOIN Staff st ON st.idUtilisateur = s.idUtilisateur WHERE s.idUtilisateur = :idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant AND role = 'tuteurprof' AND statut = 'validee'";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute([
                 'idUtilisateur' => $idUtilisateur,
@@ -226,6 +226,41 @@ class TuteurRepository extends ProRepository
             $statement->execute();
         } catch (\Exception $e) {
             throw new ServerErrorException("Erreur lors du se de proposer de la convention");
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function getIdOffreByIdEtuAndIdOffre(int $idetudiant, int $idoffre){
+        try {
+            $statement = Database::get_conn()->prepare("SELECT idOffre FROM Supervise WHERE idEtudiant = :idEtudiant AND idOffre = :idOffre");
+            $statement->bindParam(":idEtudiant", $idetudiant);
+            $statement->bindParam(":idOffre", $idoffre);
+            $statement->execute();
+            $statement->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $statement->fetch();
+            return $resultat["idOffre"];
+        } catch (\Exception $e) {
+            throw new ServerErrorException("Erreur lors du se de proposer de la convention");
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function getNomTuteurByIdEtudiantAndIdOffre(int $idetudiant, int $idoffre): ?string{
+        try {
+            $statement = Database::get_conn()->prepare("SELECT nom, prenom FROM Supervise s JOIN StaffVue st ON s.idUtilisateur = st.idUtilisateur WHERE idEtudiant = :idEtudiant AND idOffre = :idOffre");
+            $statement->bindParam(":idEtudiant", $idetudiant);
+            $statement->bindParam(":idOffre", $idoffre);
+            $statement->execute();
+            $statement->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $statement->fetch();
+            $prenomAndNom = $resultat["prenom"]." ".$resultat["nom"];
+            return $prenomAndNom;
+        } catch (\Exception $e) {
+            throw new ServerErrorException("Erreur getNomTuteurByIdEtudiantAndIdOffre");
         }
     }
 

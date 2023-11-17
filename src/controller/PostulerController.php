@@ -24,8 +24,8 @@ class PostulerController extends AbstractController
     public function se_proposer(Request $request): void
     {
         if (Auth::has_role(Roles::Teacher)) {
-            $idOffre = $request->getRouteParams()["id"] ?? null;
-            $idEtudiant = (new PostulerRepository())->getByIdOffre($idOffre)[0]->getIdUtilisateur();
+            $idOffre = $request->getRouteParams()["idoffre"] ?? null;
+            $idEtudiant = $request->getRouteParams()["idetudiant"] ?? null;
             $idUtilisateur = Application::getUser()->id();
             $countPostulation = (new StaffRepository([]))->getCountPostulationTuteur($idUtilisateur);
             if ($countPostulation < 10) {
@@ -101,5 +101,4 @@ class PostulerController extends AbstractController
         }
         Application::redirectFromParam("/postuler/listeTuteur/".$idOffre."/".$idEtudiant);
     }
-
 }

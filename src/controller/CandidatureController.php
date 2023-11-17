@@ -15,6 +15,7 @@ use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\PostulerRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
+use app\src\model\repository\TuteurRepository;
 use app\src\model\Request;
 
 class CandidatureController extends AbstractController
@@ -30,8 +31,10 @@ class CandidatureController extends AbstractController
         $idOffre = $request->getRouteParams()['idOffre'] ?? null;
         $idUtilisateur = $request->getRouteParams()['idUtilisateur'] ?? null;
         $candidatures = (new PostulerRepository())->getById($idOffre, $idUtilisateur);
-        if (Auth::has_role(Roles::Tutor)) $entrepriseid = (new TuteurEntrepriseRepository([]))->getById($userid)->getIdentreprise();
-        else if (Auth::has_role(Roles::Enterprise)) $entrepriseid = $userid;
+//        if (Auth::has_role(Roles::Tutor)) {
+//            $entrepriseid = (new TuteurRepository([]))->getIdOffreByIdEtuAndIdOffre($userid,$idOffre);
+//        }
+        if (Auth::has_role(Roles::Enterprise)) $entrepriseid = $userid;
         if ($candidatures != null && $idOffre != null && $idUtilisateur != null) {
             $offre = (new OffresRepository())->getById($candidatures->getIdoffre());
             if (Auth::has_role(Roles::Staff, Roles::Manager, Roles::Teacher) || $candidatures->getIdutilisateur() == $userid || $offre->getIdutilisateur() == $entrepriseid) {
@@ -49,7 +52,7 @@ class CandidatureController extends AbstractController
                 $candidature->setStatutPostuler("refuser");
             }
         }
-        if (Auth::has_role(Roles::Enterprise, Roles::Tutor)) {
+        if (Auth::has_role(Roles::Enterprise)) {
             $array = ['candidaturesAttente' => (new PostulerRepository())->getCandidaturesAttenteEntreprise($entrepriseid),
                 'candidaturesAutres' => array_merge((new PostulerRepository())->getByIdEntreprise($entrepriseid, 'validee'), (new PostulerRepository())->getByIdEntreprise($entrepriseid, 'refusee'))
             ];
@@ -59,7 +62,7 @@ class CandidatureController extends AbstractController
             ];
             if (isset($error)) $array['error'] = $error;
             if (isset($success)) $array['success'] = $success;
-        } else if (Auth::has_role(Roles::Teacher)) {
+        } else if (Auth::has_role(Roles::Teacher,Roles::Tutor)) {
             $array = ['candidaturesAttente' => (new PostulerRepository())->getByStatementAttenteTuteur()];
             $array['candidaturesAutres'] = array_merge((new PostulerRepository())->getByStatementTuteur(Auth::get_user()->id(), 'validee'), (new PostulerRepository())->getByStatementTuteur(Auth::get_user()->id(), 'refusee'));
         } else if (Auth::has_role(Roles::Student)) {
@@ -71,6 +74,11 @@ class CandidatureController extends AbstractController
             'candidature/listCandidatures', $array);
     }
 
+    /**
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws ServerErrorException
+     */
     public function contacterEntreprise(Request $req): string
     {
         if (!Auth::has_role(Roles::Student)) throw new ForbiddenException();
