@@ -344,7 +344,17 @@ class OffresRepository extends AbstractRepository
 		}
 	}
 
-	protected
+    public function getTop5DomainesPlusDemandes(): false|array
+    {
+        return Database::get_conn()->query("CALL Top5DomainesPlusDemandes()")->fetchAll();
+    }
+
+    public function getMoyenneCandidaturesParOffreParDomaine(): false|array
+    {
+        return Database::get_conn()->query("CALL MoyenneCandidaturesParOffreParDomaine()")->fetchAll();
+    }
+
+    protected
 	function getNomColonnes(): array
 	{
 		return [

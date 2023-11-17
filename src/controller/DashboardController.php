@@ -35,13 +35,17 @@ class DashboardController extends AbstractController
         $statsCandidaturesParMois = (new PostulerRepository())->getStatsCandidaturesParMois();
         $offres = (new OffresRepository())->getOffresDernierSemaine();
         $pourcentageEtudiantsConventionCetteAnnee = (new ConventionRepository())->getPourcentageEtudiantsConventionCetteAnnee();
+        $top5DomainesPlusDemandes = (new OffresRepository())->getTop5DomainesPlusDemandes();
+        $moyenneCandidaturesParOffreParDomaine = (new OffresRepository())->getMoyenneCandidaturesParOffreParDomaine();
 
         return $this->render('dashboard/dashboard', [
             'statsDistributionDomaine' => $statsDistributionDomaine,
             'statsDensembleStageEtAlternance' => $statsDensembleStageEtAlternance,
             'statsCandidaturesParMois' => $statsCandidaturesParMois,
             'offres' => $offres,
-            'pourcentageEtudiantsConventionCetteAnnee' => $pourcentageEtudiantsConventionCetteAnnee
+            'pourcentageEtudiantsConventionCetteAnnee' => $pourcentageEtudiantsConventionCetteAnnee,
+            'top5DomainesPlusDemandes' => $top5DomainesPlusDemandes,
+            'moyenneCandidaturesParOffreParDomaine' => $moyenneCandidaturesParOffreParDomaine
         ]);
     }
 

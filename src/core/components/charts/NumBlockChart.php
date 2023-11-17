@@ -32,7 +32,7 @@ class NumBlockChart
     <p class="text-md font-medium text-zinc-400">$title</p>
     <div class="flex flex-col justify-start items-start w-4 translate-y-1">
     <p class="text-2xl font-medium text-zinc-800 leading-5 text-left"><span class="counter" data-target="$value">0</span></p>
-    <p class="text-xs font-thin text-zinc-400 text-left">textdasdasdasd</p>
+    <p class="text-xs font-thin text-zinc-400 text-left">Example</p>
     </div>
     </div>
 <div class="w-20 h-20">

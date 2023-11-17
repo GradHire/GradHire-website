@@ -14,11 +14,9 @@ $this->title = 'Dashboard';
  * @var array $statsCandidaturesParMois
  * @var array $offres
  * @var array $pourcentageEtudiantsConventionCetteAnnee
+ * @var array $top5DomainesPlusDemandes
+ * @var array $moyenneCandidaturesParOffreParDomaine
  */
-
-print "<pre>";
-print_r($pourcentageEtudiantsConventionCetteAnnee);
-print "</pre>";
 
 $currentTab = $_COOKIE['currentTab'] ?? 'tab1';
 
@@ -119,8 +117,6 @@ EOT;
                  class="<?php if ($currentTab === 'tab1') echo 'flex flex-col gap-2 items-start justify-start'; else echo 'hidden'; ?>">
                 <div class="w-full flex flex-row justify-center items-center gap-2">
                     <?php
-//                        public function __construct($title, $text, $text2, $text3, $value, $value2, $value3)
-
                     $percentageBlock = new PercentageBlock('Conventions signées', 'General', 'BUT2', 'BUT3', $pourcentageEtudiantsConventionCetteAnnee['pourcentageannuel'], $pourcentageEtudiantsConventionCetteAnnee['pourcentageannuel2'], $pourcentageEtudiantsConventionCetteAnnee['pourcentageannuel3']);
                     $percentageBlock->render();
                     ?>
@@ -158,20 +154,26 @@ EOT;
                 </div>
                 <div class="w-full h-[1px] bg-zinc-300"></div>
                 <div class="container mx-auto pt-4">
-                    <h2 class="text-md font-bold text-zinc-700 mb-4">Distribution des offres par Domaine</h2>
+                    <h2 class="text-md font-bold text-zinc-700 mb-4">Top 5 des domaines les plus demandés</h2>
                     <div class="w-full">
                         <?php
-                        $barChart = new BarChartH($statsDistributionDomaine);
+                        $barChart = new BarChartH($top5DomainesPlusDemandes);
                         $barChart->render();
                         ?>
 
                     </div>
                 </div>
                 <div class="w-full h-[1px] bg-zinc-300"></div>
-                <?php
-                $pieChart = new PieChart($statsDistributionDomaine, $totalOffers, ["#10b981", "#f59e0b", "#3b82f6", "#f43f5e", "#6366f1", "#ec4899", "#fbbf24", "#84cc16", "#1d4ed8", "#7c3aed", "#f472b6", "#fbbf24", "#10b981", "#f59e0b", "#3b82f6", "#f43f5e", "#6366f1", "#ec4899", "#fbbf24", "#84cc16", "#1d4ed8", "#7c3aed", "#f472b6", "#fbbf24"], true);
-                $pieChart->render();
-                ?>
+                <div class="container mx-auto pt-4">
+                    <h2 class="text-md font-bold text-zinc-700 mb-4">Distribution des offres par Domaine</h2>
+                    <div class="w-full">
+
+                        <?php
+                        $pieChart = new PieChart($statsDistributionDomaine, $totalOffers, ["#3d348b", "#7678ed", "#f7b801", "#f18701", "#f35b04", "#f542ad", "#4296f5", "#42f54e", "#f5df42"], true);
+                        $pieChart->render();
+                        ?>
+                    </div>
+                </div>
             </div>
             <div id="tab2" class="<?php if ($currentTab === 'tab2') echo 'flex'; else echo 'hidden'; ?>"></div>
             <div id="tab3" class="<?php if ($currentTab === 'tab3') echo 'flex'; else echo 'hidden'; ?>"></div>
@@ -182,9 +184,9 @@ EOT;
              class="<?php if ($currentTab === 'tab1') echo 'flex flex-col w-full gap-2 items-start justify-start'; else echo 'hidden'; ?>">
             <div class="w-full flex flex-row justify-around items-center bg-white border rounded-[8px]">
                 <?php
-                $numBlockChart1 = new NumBlockChart('Stages', $statsDensembleStageEtAlternance['nombreoffresstageactives'], $statsCandidaturesParMois, 'mois', 'nombrecandidatures', '#f542ad');
-                $numBlockChart2 = new NumBlockChart('Stages', $statsDensembleStageEtAlternance['nombreoffresstageactives'], $statsCandidaturesParMois, 'mois', 'nombrecandidatures', '#4296f5');
-                $numBlockChart3 = new NumBlockChart('Stages', $statsDensembleStageEtAlternance['nombreoffresstageactives'], $statsCandidaturesParMois, 'mois', 'nombrecandidatures', '#42f54e');
+                $numBlockChart1 = new NumBlockChart('Example', $statsDensembleStageEtAlternance['nombreoffresstageactives'], $statsCandidaturesParMois, 'mois', 'nombrecandidatures', '#f542ad');
+                $numBlockChart2 = new NumBlockChart('Example', $statsDensembleStageEtAlternance['nombreoffresstageactives'], $statsCandidaturesParMois, 'mois', 'nombrecandidatures', '#4296f5');
+                $numBlockChart3 = new NumBlockChart('Example', $statsDensembleStageEtAlternance['nombreoffresstageactives'], $statsCandidaturesParMois, 'mois', 'nombrecandidatures', '#42f54e');
                 $numBlockChart1->render();
                 echo '<span class="w-[1px] bg-zinc-300 h-[100px] mr-2"></span>';
                 $numBlockChart2->render();
@@ -194,7 +196,7 @@ EOT;
             </div>
             <div class="w-full h-[1px] bg-zinc-300"></div>
             <div class="container mx-auto pt-4">
-                <h2 class="text-md font-bold text-zinc-700 mb-4">Distribution des offres par Domaine</h2>
+                <h2 class="text-md font-bold text-zinc-700 mb-4">Moyenne des candidatures par offre par domaine</h2>
                 <div class="w-full ">
                     <?php
                     $size = [
@@ -202,7 +204,7 @@ EOT;
                         'height' => 150,
                         'padding' => 20
                     ];
-                    $svgbarChart = new SVGBarChart($statsDistributionDomaine, 'thematique', 'nombreoffres', true, $size, '#f56642');
+                    $svgbarChart = new SVGBarChart($moyenneCandidaturesParOffreParDomaine, 'thematique', 'moyennecandidaturesparoffre', true, $size, '#f56642');
                     $svgbarChart->render();
                     ?>
                 </div>
@@ -218,7 +220,7 @@ EOT;
                     </a>
                 </div>
 
-                <div class="w-full flex flex-col gap-2 justify-start items-start max-h-[580px] overflow-y-scroll pr-3">
+                <div class="w-full flex flex-col gap-2 justify-start items-start max-h-[635px] overflow-y-scroll pr-3">
                     <div class="flex flex-row justify-start items-start w-full h-full">
                         <div class="w-full flex flex-col justify-start items-start">
                             <?php

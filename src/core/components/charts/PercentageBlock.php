@@ -36,7 +36,7 @@ class PercentageBlock
         $value3 = $this->value3;
 
         echo <<<EOT
-<div class="w-full border rounded-2xl p-4 flex flex-col items-center justify-start bg-gradient-to-r from-blue-300 to-blue-400 shadow">
+<div class="w-full border rounded-2xl p-4 flex flex-col items-center justify-start bg-gradient-to-r from-[#add7f6] to-[#87bfff] shadow">
     <div class="flex flex-row gap-2 justify-center items-center w-full mb-2">
     <div class="w-[40px] h-[40px] min-h-[40px] min-w-[40px] max-h-[40px] shadow max-w-[40px] rounded-[8px] bg-white border gap-[3px] flex flex-row justify-center items-center">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-6 h-6 stroke-blue-400">
