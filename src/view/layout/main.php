@@ -62,51 +62,11 @@ use app\src\model\dataObject\Roles;
                            class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Accueil</a>
                         <a href="/dashboard"
                            class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Dashboard</a>
-                        <?php if (!Auth::has_role(Roles::ChefDepartment)): ?>
-                            <a href="/offres"
-                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Offres</a>
-                        <?php else: ?>
-                            <a href="/utilisateurs"
-                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Gestion
-                                roles</a>
-                        <?php endif; ?>
-                        <?php if (!Auth::has_role(Roles::Enterprise, Roles::Tutor, Roles::ChefDepartment)): ?>
-                            <a href="/entreprises"
-                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Entreprises</a>
-                        <?php endif; ?>
-                        <?php if (Auth::has_role(Roles::Student, Roles::Teacher, Roles::Tutor, Roles::Enterprise)): ?>
-                            <a href="/candidatures"
-                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
-                        <?php endif; ?>
-                        <?php if (Auth::has_role(Roles::Enterprise)): ?>
-                            <a href="/offres/create"
-                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Créer
-                                une
-                                offre</a>
-                            <a href="/ListeTuteurPro"
-                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Tuteurs</a>
-                        <?php endif; ?>
-                        <?php if (Auth::has_role(Roles::Manager, Roles::Staff)): ?>
-                            <a href="/utilisateurs"
-                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Utilisateurs</a>
-                            <a href="/candidatures"
-                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Candidatures</a>
-                            <a href="/ListeTuteurPro"
-                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Tuteurs</a>
-                            <a href="/importer"
-                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Import</a>
-                        <?php endif; ?>
-                        <?php if (Auth::has_role(Roles::Student)): ?>
-                            <a href="/explicationSimu"
-                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Simulateur</a>
-                        <?php endif; ?>
-                        <?php if (Auth::has_role(Roles::Enterprise, Roles::Student, Roles::Manager, Roles::Staff)): ?>
-                            <a href="/conventions"
-                               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Conventions</a>
-                        <?php endif; endif; ?>
-                    <a href="/about"
-                       class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">A
-                        propos</a>
+                        <a href="/about"
+                           class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">A
+                            propos</a>
+                    <?php endif; ?>
+
 
                 </div>
             </div>

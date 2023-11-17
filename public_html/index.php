@@ -95,6 +95,8 @@ $app->router->get('/user_test/{id}', [TestController::class, 'user_test']);
 
 $app->router->get('/dashboard', [DashboardController::class, 'showDashboard']);
 $app->router->post('/dashboard', [DashboardController::class, 'showDashboard']);
+$app->router->get('/dashboard_old', [DashboardController::class, 'showDashboardOld']);
+$app->router->post('/dashboard_old', [DashboardController::class, 'showDashboardOld']);
 
 
 // CandidatureContoller
