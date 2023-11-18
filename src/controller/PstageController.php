@@ -10,6 +10,7 @@ use app\src\model\dataObject\Roles;
 use app\src\model\dataObject\ServiceAccueil;
 use app\src\model\Form\FormModel;
 use app\src\model\ImportPstage;
+use app\src\model\ImportStudea;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\ServiceAccueilRepository;
@@ -57,6 +58,45 @@ class PstageController extends AbstractController
                 <?php
             }
             return $this->render('Import', [
+                'form' => $form
+            ]);
+        } else throw new ForbiddenException();
+    }
+
+    public function importerStudea(Request $request)
+    {
+        if (Auth::has_role(Roles::Staff, Roles::Manager)) {
+            $form = new FormModel([
+                "file" => FormModel::file("File")->required()
+            ]);
+            $form->useFile();
+            if ($request->getMethod() === 'post') {
+                if ($form->validate($request->getBody())) {
+                    $path = "ImportStudea/";
+                    if (!$form->getFile("file")->save($path, "file")) {
+                        $form->setError("Impossible de télécharger tous les fichiers");
+                        return '';
+                    }
+                }
+                $path = fopen("ImportStudea/file.csv", "r");
+                $i = 0;
+                $importer = new ImportStudea();
+                while (($data = fgetcsv($path, 100000, ";")) !== FALSE) {
+
+                    $num = count($data);
+                    if ($i == 0) {
+                        $i++;
+                        continue;
+                    }
+                    $importer->importerligneStudea($data);
+                }
+                ?>
+                <div>
+                    <h1 class="text-3xl text-center">Importation réussi</h1>
+                </div>
+                <?php
+            }
+            return $this->render('ImportStudea', [
                 'form' => $form
             ]);
         } else throw new ForbiddenException();

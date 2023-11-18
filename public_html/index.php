@@ -126,6 +126,9 @@ $app->router->post('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurP
 $app->router->get('/importer', [PstageController::class, 'importercsv']);
 $app->router->post('/importer', [PstageController::class, 'importercsv']);
 
+$app->router->get('/importerStudea', [PstageController::class, 'importerStudea']);
+$app->router->post('/importerStudea', [PstageController::class, 'importerStudea']);
+
 $app->router->get('/page1', [TestController::class, 'page1']);
 $app->router->post('/page1', [TestController::class, 'page1']);
 
