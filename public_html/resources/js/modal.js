@@ -12,6 +12,8 @@ function showModal(modalId, action) {
     modal.classList.remove("hidden");
     modal.classList.add("block");
     bg.classList.remove("hidden");
-    const btn = modal.querySelector(".action-btn");
-    btn.href = action;
+    if (action !== "") {
+        const btn = modal.querySelector(".action-btn");
+        btn.href = action;
+    }
 }
