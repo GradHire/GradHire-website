@@ -30,11 +30,12 @@ class HorizontalBarChartBlock implements ComponentInterface
         $color3 = $this->colors[2];
         $color4 = $this->colors[3];
 
+        echo '<div class="w-full flex flex-col gap-1.5 rounded-[8px] shadow p-4 bg-white border relative">';
+        echo '<button class="w-5 h-5 border hover:scale-105 duration-75 bg-green-500 backdrop-blur-md shadow absolute top-0 right-0 rounded-full translate-x-2 -translate-y-2 flex items-center justify-center"><span class="text-white text-xl">+</span></button>';
         foreach ($this->data as $row) {
             $percentage = $this->calculatePercentage($row[$this->row_1]);
             $domain = !empty($row[$this->row_2]) ? $row[$this->row_2] : 'Autre';
             echo <<<EOT
-                <div class="w-full flex flex-col">
                     <div class="rounded-md relative overflow-hidden shadow" style="background: linear-gradient(90deg, $color1 0%, $color2 100%);">
                         <div class="h-[18px] rounded-md animated-bar shadow-md"
                              style="width: 0; transition: width 1s ease-in-out; background: linear-gradient(90deg, $color3 0%, $color4 100%);"
@@ -43,9 +44,9 @@ class HorizontalBarChartBlock implements ComponentInterface
                         <p class="absolute left-0 top-0 ml-2 text-white drop-shadow uppercase text-[12px]">$domain</p>
                         <p class="absolute right-0 top-0 mr-2 text-white drop-shadow uppercase text-[12px]">{$row[$this->row_1]}</p>
                     </div>
-                </div>
             EOT;
         }
+        echo '</div>';
     }
 
     private function calculatePercentage($value): float|int

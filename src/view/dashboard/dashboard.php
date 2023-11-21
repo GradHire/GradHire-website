@@ -4,6 +4,7 @@ use app\src\core\components\dashboard_blocks\HorizontalBarChartBlock;
 use app\src\core\components\dashboard_blocks\NumBlock;
 use app\src\core\components\dashboard_blocks\PercentageBlock;
 use app\src\core\components\dashboard_blocks\PieChartBlock;
+use app\src\core\components\dashboard_blocks\VerticalBarChartBlock;
 
 /** @var array $data
  * @var string $currentTab
@@ -21,6 +22,7 @@ elseif ($currentTab === 'tab3') $this->title = 'Favoris';
 echo '<script type="text/javascript" src="/resources/js/animate-counter.js"></script>';
 echo '<script type="text/javascript" src="/resources/js/animate-barChartHorizontal.js"></script>';
 echo '<script type="text/javascript" src="/resources/js/animate-pieChart.js"></script>';
+echo '<script type="text/javascript" src="/resources/js/animate-barChartVertical.js"></script>';
 
 ?>
 
@@ -29,7 +31,7 @@ echo '<script type="text/javascript" src="/resources/js/animate-pieChart.js"></s
         <?php require __DIR__ . '/tabs.php'; ?>
         <div class="relative w-full bg-zinc-50 isolate overflow-hidden border rounded-2xl text-[#1A2421] backdrop-blur-xl [ p-2 md:p-4 ] [ border-[1px] border-solid border-black  border-opacity-10 ] [ shadow-black/5 shadow-2xl ]">
             <?php if ($currentTab === 'tab1') { ?>
-            <div class="flex flex-col gap-2 items-start justify-start">
+            <div class="flex flex-col gap-4 items-start justify-start">
                 <?php
                 new PercentageBlock([
                     'title' => 'Conventions signées',
@@ -63,6 +65,13 @@ echo '<script type="text/javascript" src="/resources/js/animate-pieChart.js"></s
                     'data' => $data['pieChartData1'] ?? [],
                     'row_1' => 'nombreoffres',
                     'row_2' => 'thematique',
+                ]);
+                new VerticalBarChartBlock([
+                    'data' => $data['barChartVerticalData1'] ?? [],
+                    'row_1' => 'moyennecandidaturesparoffre',
+                    'row_2' => 'thematique',
+                    'size' => [300, 150, 20, 4],
+                    'color' => '#8f34eb',
                 ]);
                 ?>
                 <?php

@@ -24,11 +24,14 @@ class PieChartBlock implements ComponentInterface
 
     public function render(): void
     {
+        echo '<div class="w-full flex flex-col gap-1.5 rounded-[8px] shadow p-4 bg-white border relative">';
+        echo '<button class="w-5 h-5 border hover:scale-105 duration-75 bg-green-500 backdrop-blur-md shadow absolute top-0 right-0 rounded-full translate-x-2 -translate-y-2 flex items-center justify-center"><span class="text-white text-xl">+</span></button>';
+
         $pieChartStyle = $this->createPieChartStyle();
         ob_start();
         ?>
         <div class="flex flex-row gap-2 items-center justify-around w-full">
-            <div class="pie-chart shadow drop-shadow" style="width: 200px; height: 200px; border-radius: 50%; background: conic-gradient(<?= $pieChartStyle ?>);"></div>
+            <div class="pie-chart shadow drop-shadow border" style="width: 200px; height: 200px; border-radius: 50%; background: conic-gradient(<?= $pieChartStyle ?>);"></div>
             <div class="pie-chart-legend uppercase text-[12px] grid grid-cols-1 gap-y-2 gap-x-2">
                 <?php foreach ($this->data as $index => $row): ?>
                     <div class="flex flex-row gap-1">
@@ -46,6 +49,7 @@ class PieChartBlock implements ComponentInterface
         <?php
         $content = ob_get_clean();
         echo $content;
+        echo '</div>';
     }
 
     private function createPieChartStyle(): string

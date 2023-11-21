@@ -44,6 +44,7 @@ class DashboardController extends AbstractController
             $data['numBlockData1'] = (new OffresRepository())->getStatsDensembleStageEtAlternance();
             $data['barChartHorizontalData1'] = (new OffresRepository())->getTop5DomainesPlusDemandes();
             $data['pieChartData1'] = (new OffresRepository())->getStatsDistributionDomaine();
+            $data['barChartVerticalData1'] = (new OffresRepository())->getMoyenneCandidaturesParOffreParDomaine();
 
 //            $data['moyenneCandidaturesParOffreParDomaine'] = (new OffresRepository())->getMoyenneCandidaturesParOffreParDomaine();
         } elseif ($currentTab === 'tab2') {

@@ -48,8 +48,7 @@ class PercentageBlock implements ComponentInterface
         echo <<<EOT
 
 <div class="w-full border rounded-2xl p-4 flex flex-col items-center justify-start shadow relative " style="background: linear-gradient(90deg, $color1 0%, $color2 100%);">
-<!--<button class="w-6 h-6 border hover:scale-105 duration-75 bg-green-500 backdrop-blur-md shadow absolute top-0 right-0 rounded-full translate-x-2 -translate-y-2 flex items-center justify-center"><span class="text-white text-xl">+</span></button>-->
-<!--<button class="w-6 h-6 border hover:scale-105 duration-75 bg-red-500 backdrop-blur-md shadow absolute top-0 right-0 rounded-full translate-x-2 -translate-y-2 flex items-center justify-center"><span class="text-white text-center -translate-y-[0.4px] text-xl">-</span></button>-->
+<button class="w-5 h-5 border hover:scale-105 duration-75 bg-green-500 backdrop-blur-md shadow absolute top-0 right-0 rounded-full translate-x-2 -translate-y-2 flex items-center justify-center"><span class="text-white text-xl">+</span></button>
     <div class="flex flex-row gap-2 justify-center items-center w-full mb-2">
         <div class="w-[40px] h-[40px] min-h-[40px] min-w-[40px] max-h-[40px] shadow max-w-[40px] rounded-[8px] bg-white border gap-[3px] flex flex-row justify-center items-center">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="$color2" stroke-width="1.5" class="w-6 h-6 drop-shadow">
