@@ -200,10 +200,11 @@ $app->router->get('/validateConvention/{id:\d+}', [ConventionsController::class,
 
 // PostulerController
 
-$app->router->get('/postuler/seProposer/{idoffre:\d+}/{idetudiant:\d+}', [PostulerController::class, 'se_proposer']);
-$app->router->get('/postuler/seDeproposer/{id:\d+}', [PostulerController::class, 'se_deproposer']);
+$app->router->get('/postuler/seProposer/{idoffre:\d+}/{idetudiant:\d+}', [PostulerController::class, 'se_proposerProf']);
+$app->router->get('/postuler/seDeproposer/{id:\d+}', [PostulerController::class, 'se_deproposerProf']);
 $app->router->get('/postuler/listeTuteur/{idOffre}/{idUser}', [PostulerController::class, 'listeTuteurPostuler']);
-$app->router->get('/postuler/accepter_as_tuteur/{idUser}/{idOffre}', [PostulerController::class, 'accepterAsTuteur']);
-$app->router->get('/postuler/unaccepte_as_tuteur/{idUser}/{idOffre}', [PostulerController::class, 'annulerAsTuteur']);
+$app->router->get('/postuler/accepter_as_tuteur/{idUser}/{idOffre}/{idEtu}', [PostulerController::class, 'accepterAsTuteur']);
+$app->router->get('/postuler/unaccepte_as_tuteur/{idUser}/{idOffre}/{idEtu}', [PostulerController::class, 'annulerAsTuteur']);
+$app->router->post('/postuler/assignerCommeTuteur/{idOffre}/{idUser}/{idEtu}', [PostulerController::class, 'assignerTuteurEntreprise']);
 
 $app->run();
