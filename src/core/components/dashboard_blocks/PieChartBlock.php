@@ -43,9 +43,6 @@ class PieChartBlock implements ComponentInterface
                 <?php endforeach; ?>
             </div>
         </div>
-        <script>
-
-        </script>
         <?php
         $content = ob_get_clean();
         echo $content;

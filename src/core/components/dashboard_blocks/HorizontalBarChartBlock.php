@@ -39,7 +39,7 @@ class HorizontalBarChartBlock implements ComponentInterface
                     <div class="rounded-md relative overflow-hidden shadow" style="background: linear-gradient(90deg, $color1 0%, $color2 100%);">
                         <div class="h-[18px] rounded-md animated-bar shadow-md"
                              style="width: 0; transition: width 1s ease-in-out; background: linear-gradient(90deg, $color3 0%, $color4 100%);"
-                             data-percentage="{$percentage}">
+                             data-percentage="$percentage">
                         </div>
                         <p class="absolute left-0 top-0 ml-2 text-white drop-shadow uppercase text-[12px]">$domain</p>
                         <p class="absolute right-0 top-0 mr-2 text-white drop-shadow uppercase text-[12px]">{$row[$this->row_1]}</p>

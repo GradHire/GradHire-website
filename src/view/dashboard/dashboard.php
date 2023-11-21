@@ -1,6 +1,7 @@
 <?php
 
 use app\src\core\components\dashboard_blocks\HorizontalBarChartBlock;
+use app\src\core\components\dashboard_blocks\LineChartBlock;
 use app\src\core\components\dashboard_blocks\NumBlock;
 use app\src\core\components\dashboard_blocks\PercentageBlock;
 use app\src\core\components\dashboard_blocks\PieChartBlock;
@@ -23,6 +24,7 @@ echo '<script type="text/javascript" src="/resources/js/animate-counter.js"></sc
 echo '<script type="text/javascript" src="/resources/js/animate-barChartHorizontal.js"></script>';
 echo '<script type="text/javascript" src="/resources/js/animate-pieChart.js"></script>';
 echo '<script type="text/javascript" src="/resources/js/animate-barChartVertical.js"></script>';
+echo '<script type="text/javascript" src="/resources/js/animate-lineChart.js"></script>';
 
 ?>
 
@@ -55,6 +57,11 @@ echo '<script type="text/javascript" src="/resources/js/animate-barChartVertical
                 new NumBlock([
                     'title' => 'Pourvues',
                     'value' => $data['numBlockData1']['nombrepositionspourvues'] ?? 0,
+                ]);
+                new LineChartBlock([
+                    'data' => $data['lineChartData1'] ?? [],
+                    'row_1' => 'nombrecandidatures',
+                    'row_2' => 'mois'
                 ]);
                 new HorizontalBarChartBlock([
                     'data' => $data['barChartHorizontalData1'] ?? [],

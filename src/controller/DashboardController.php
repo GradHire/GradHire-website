@@ -40,11 +40,13 @@ class DashboardController extends AbstractController
 //            $data['statsDistributionDomaine'] = (new OffresRepository())->getStatsDistributionDomaine();
 //            $data['statsCandidaturesParMois'] = (new PostulerRepository())->getStatsCandidaturesParMois();
 //            $data['offres'] = (new OffresRepository())->getOffresDernierSemaine();
+
             $data['percentageBlockData1'] = (new ConventionRepository())->getPourcentageEtudiantsConventionCetteAnnee();
             $data['numBlockData1'] = (new OffresRepository())->getStatsDensembleStageEtAlternance();
             $data['barChartHorizontalData1'] = (new OffresRepository())->getTop5DomainesPlusDemandes();
             $data['pieChartData1'] = (new OffresRepository())->getStatsDistributionDomaine();
             $data['barChartVerticalData1'] = (new OffresRepository())->getMoyenneCandidaturesParOffreParDomaine();
+            $data['lineChartData1'] = (new PostulerRepository())->getStatsCandidaturesParMois();
 
 //            $data['moyenneCandidaturesParOffreParDomaine'] = (new OffresRepository())->getMoyenneCandidaturesParOffreParDomaine();
         } elseif ($currentTab === 'tab2') {
