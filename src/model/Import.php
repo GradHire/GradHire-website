@@ -71,8 +71,7 @@ class Import
 
     private function updateEtudiant($row)
     {
-
-        $this->execute("Call updateEtuImp('$row[1]','$row[2]','$row[3]', '$row[4]', '$row[6]','$row[7]', '$row[42]', '$row[44]', '$row[45]', '$row[46]', '$row[47]')");
+        $this->execute("Call updateEtuImp('$row[1]','$row[2]','$row[3]', '$row[4]', '$row[6]','$row[7]', '$row[42]', '$row[44]', '$row[45]', '$row[46]', '$row[47]', '$row[12]')");
     }
 
     private function insertEntreprise($row)
@@ -99,7 +98,7 @@ class Import
 
     private function insertSignataire($row, $identreprise)
     {
-        $this->execute("Select creerSignataire('$row[32]','$row[33]','$row[34]','$row[35]',$identreprise) FROM DUAL ;");
+        $this->execute("Select creerSignataire('$row[32]','$row[33]','$row[34]','$row[35]','$identreprise') FROM DUAL ;");
     }
 
     private function updateSignataire($row)
@@ -141,16 +140,34 @@ class Import
 
     private function insertPostuler($row, int $idOffre, mixed $idetu)
     {
-        $this->execute("SELECT creerPostuler($idetu,$idOffre) FROM DUAL;");
+        $this->execute("SELECT creerPostuler('$idetu','$idOffre') FROM DUAL;");
     }
 
     private function insertSuperviser($row, int $idOffre, mixed $idetu, mixed $idreferent, mixed $idtuteur)
     {
-        $this->execute("INSERT INTO Supervise VALUES ($idreferent,$idOffre,$idetu,'validee',$idtuteur)");
+        $this->execute("INSERT INTO Supervise VALUES ('$idreferent','$idOffre','$idetu','validee','$idtuteur')");
     }
 
     private function insertConvention($row, $idsignataire, $identreprise, $idOffre)
     {
         $this->execute("SELECT creerConvention('$row[0]','$row[53]','$row[28]','$row[48]','$row[52]','$row[51]','$idsignataire','$row[15]','$row[16]','$row[17]','$identreprise','$idOffre','$row[38]') FROM DUAL;");
+    }
+
+    public function importerligneStudea($data)
+    {
+        if (!$this->recordExists('Utilisateur', 'email', $data[28])) $this->insertEtudiantStudea($data);
+        else $this->updateEtudiantStudea($data);
+    }
+
+    private function insertEtudiantStudea($data)
+    {
+        $adresse = $data[30] . " " . $data[31];
+        $this->execute("SELECT creerEtuImp ('$data[41]','$data[9]','$data[10]','$data[27]','$data[29]','$data[28]','$data[8]','$adresse',$data[32],'France',$data[33],$data[5]) FROM dual");
+    }
+
+    private function updateEtudiantStudea($data)
+    {
+        $adresse = $data[30] . " " . $data[31];
+        $this->execute("Call updateEtuImp('$data[41]','$data[9]','$data[10]','$data[27]','$data[29]','$data[28]','$data[8]','$adresse',$data[32],'France',$data[33],$data[5])");
     }
 }
