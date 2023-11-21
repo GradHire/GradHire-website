@@ -18,20 +18,11 @@ const DAYS = [
     'Sunday' => 'Dimanche',
 ];
 
-const MONTHS = [
-    'January' => 'Janvier',
-    'February' => 'Février',
-    'March' => 'Mars',
-    'April' => 'Avril',
-    'May' => 'Mai',
-    'June' => 'Juin',
-
-];
-
 class Calendar
 {
     /**
      * @param Event[] $events
+     * @throws ServerErrorException
      */
     public static function render(array $events): void
     {
@@ -74,6 +65,7 @@ class Calendar
 
     /**
      * @param Event[] $events
+     * @throws ServerErrorException
      */
     public static function renderWeek(array $events, bool $visible = false): void
     {
