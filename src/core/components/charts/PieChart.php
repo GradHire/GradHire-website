@@ -15,7 +15,7 @@ class PieChart
         $this->colors = $colors;
     }
 
-    public function render()
+    public function render(): void
     {
         $pieChartStyle = $this->createPieChartStyle();
         ob_start();

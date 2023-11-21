@@ -162,14 +162,12 @@ EOT;
                         $barChart = new BarChartH($top5DomainesPlusDemandes);
                         $barChart->render();
                         ?>
-
                     </div>
                 </div>
                 <div class="w-full h-[1px] bg-zinc-300"></div>
                 <div class="container mx-auto pt-4">
                     <h2 class="text-md font-bold text-zinc-700 mb-4">Distribution des offres par Domaine</h2>
                     <div class="w-full">
-
                         <?php
                         $pieChart = new PieChart($statsDistributionDomaine, $totalOffers, ["#3d348b", "#7678ed", "#f7b801", "#f18701", "#f35b04", "#f542ad", "#4296f5", "#42f54e", "#f5df42"], true);
                         $pieChart->render();
