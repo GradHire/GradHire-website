@@ -37,7 +37,9 @@ use app\src\model\repository\UtilisateurRepository;
             }
 
             if(empty($candidaturesAttente) && empty($candidaturesAutres) && !isset($error) && !isset($success)){
-                echo "<h2>Vous n'avez postuler à aucune offre pour l'instant.</h2>";
+                if (Auth::has_role(Roles::Tutor, Roles::Teacher)) echo "<h2>Aucune offre ne cherche de tuteur pour l'instant.</h2>";
+                else if (Auth::has_role(Roles::Enterprise)) echo "<h2>Aucun étudiant n'a postuler sur une de vos offre.</h2";
+                else echo "<h2>Vous n'avez postuler à aucune offre pour l'instant.</h2>";
             }
             ?>
 

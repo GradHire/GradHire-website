@@ -9,8 +9,9 @@ class Staff extends Utilisateur
     private string $loginLdap;
     private string $prenom;
     private ?int $archiver;
+    private ?int $idtuteurentreprise;
 
-    public function __construct($idutilisateur, $email, $nom, $numtelephone, $bio, $archiver, $loginLdap, $prenom, $role)
+    public function __construct($idutilisateur, $email, $nom, $numtelephone, $bio, $archiver, $loginLdap, $prenom, $role, ?int $idtuteurentreprise)
     {
         parent::__construct($idutilisateur, $email, $nom, $numtelephone, $bio);
         $this->idutilisateur = $idutilisateur;
@@ -18,6 +19,17 @@ class Staff extends Utilisateur
         $this->loginLdap = $loginLdap;
         $this->prenom = $prenom;
         $this->archiver = $archiver;
+        $this->idtuteurentreprise = $idtuteurentreprise;
+    }
+
+    public function getIdtuteurentreprise(): ?int
+    {
+        return $this->idtuteurentreprise;
+    }
+
+    public function setIdtuteurentreprise(?int $idtuteurentreprise): void
+    {
+        $this->idtuteurentreprise = $idtuteurentreprise;
     }
 
 

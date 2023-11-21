@@ -75,7 +75,7 @@ use app\src\model\repository\TuteurRepository;
                 if (!(new TuteurRepository([]))->getIfTuteurAlreadyExist($professeur->getIdutilisateur(), $idOffre, $prof['idetudiant'])) {
                     ?>
                     <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
-                        <a href="/postuler/accepter_as_tuteur/<?php echo $professeur->getIdUtilisateur(); ?>/<?php echo $idOffre; ?>"
+                        <a href="/postuler/accepter_as_tuteur/<?php echo $professeur->getIdUtilisateur(); ?>/<?php echo $idOffre; ?>/<?php echo $prof['idetudiant']; ?>"
                            class="flex w-full rounded bg-green-600 px-4 py-2 text-xs font-medium text-white hover:bg-green-700 justify-center">
                             Accepter comme tuteur </a>
                     </td>
@@ -83,7 +83,7 @@ use app\src\model\repository\TuteurRepository;
                 } elseif ((new TuteurRepository([]))->getIfTuteurAlreadyExist($professeur->getIdutilisateur(), $idOffre, $prof['idetudiant'])){
                     ?>
                     <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
-                        <a href="/postuler/unaccepte_as_tuteur/<?php echo $professeur->getIdUtilisateur(); ?>/<?php echo $idOffre; ?>"
+                        <a href="/postuler/unaccepte_as_tuteur/<?php echo $professeur->getIdUtilisateur(); ?>/<?php echo $idOffre; ?>/<?php echo $prof['idetudiant']; ?>"
                            class="flex w-full rounded bg-orange-600 px-4 py-2 text-xs font-medium text-white hover:bg-orange-700 justify-center">
                             Annuler Validation </a>
                     </td>
