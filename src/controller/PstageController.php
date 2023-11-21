@@ -2,6 +2,7 @@
 
 namespace app\src\controller;
 
+use app\src\core\components\Notification;
 use app\src\core\exception\ForbiddenException;
 use app\src\core\middlewares\PSatgeMiddleware;
 use app\src\model\Application;
@@ -9,7 +10,7 @@ use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\dataObject\ServiceAccueil;
 use app\src\model\Form\FormModel;
-use app\src\model\ImportPstage;
+use app\src\model\Import;
 use app\src\model\ImportStudea;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
@@ -41,7 +42,7 @@ class PstageController extends AbstractController
                 }
                 $path = fopen("Import/file.csv", "r");
                 $i = 0;
-                $importer = new ImportPstage();
+                $importer = new Import();
                 while (($data = fgetcsv($path, 100000, ";")) !== FALSE) {
 
                     $num = count($data);
@@ -51,11 +52,7 @@ class PstageController extends AbstractController
                     }
                     $importer->importerligne($data);
                 }
-                ?>
-                <div>
-                    <h1 class="text-3xl text-center">Importation réussi</h1>
-                </div>
-                <?php
+                Notification::createNotification("Importation réussi");
             }
             return $this->render('Import', [
                 'form' => $form
@@ -80,7 +77,7 @@ class PstageController extends AbstractController
                 }
                 $path = fopen("ImportStudea/file.csv", "r");
                 $i = 0;
-                $importer = new ImportStudea();
+                $importer = new Import();
                 while (($data = fgetcsv($path, 100000, ";")) !== FALSE) {
 
                     $num = count($data);
@@ -90,11 +87,7 @@ class PstageController extends AbstractController
                     }
                     $importer->importerligneStudea($data);
                 }
-                ?>
-                <div>
-                    <h1 class="text-3xl text-center">Importation réussi</h1>
-                </div>
-                <?php
+                Notification::createNotification("Importation réussi");
             }
             return $this->render('ImportStudea', [
                 'form' => $form

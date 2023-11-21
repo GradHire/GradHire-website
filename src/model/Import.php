@@ -4,7 +4,7 @@ namespace app\src\model;
 
 use app\src\core\db\Database;
 
-class ImportPstage
+class Import
 {
     private $db;
 
@@ -27,6 +27,7 @@ class ImportPstage
 
         if (!$this->recordExists('Utilisateur', 'email', $row[79])) $this->insertTuteur($row, $identreprise);
         else $this->updateTuteur($row, $identreprise);
+        $idtuteur = $this->find('Utilisateur', 'email', $row[79], 'idUtilisateur');
 
         if (!$this->recordExists('Signataire', 'mailSignataire', $row[34])) $this->insertSignataire($row, $identreprise);
         else $this->updateSignataire($row);
@@ -40,7 +41,7 @@ class ImportPstage
 
         $idOffre = $this->insertOffreStage($row, $identreprise);
         $this->insertPostuler($row, $idOffre, $idetu);
-        $this->insertSuperviser($row, $idOffre, $idetu, $idreferent);
+        $this->insertSuperviser($row, $idOffre, $idetu, $idreferent, $idtuteur);
         if (!$this->recordExists('Convention', 'numConvention', $row[0])) $this->insertConvention($row, $idsignataire, $idetu, $idOffre);
 
     }
@@ -143,14 +144,19 @@ class ImportPstage
         $this->execute("SELECT creerPostuler($idetu,$idOffre) FROM DUAL;");
     }
 
-    private function insertSuperviser($row, int $idOffre, mixed $idetu, mixed $idreferent)
+    private function insertSuperviser($row, int $idOffre, mixed $idetu, mixed $idreferent, mixed $idtuteur)
     {
-        $this->execute("INSERT INTO Supervise VALUES ($idreferent,$idOffre,$idetu,'validee')");
+        $this->execute("INSERT INTO Supervise VALUES ($idreferent,$idOffre,$idetu,'validee',$idtuteur)");
     }
 
     private function insertConvention($row, $idsignataire, $identreprise, $idOffre)
     {
         $this->execute("SELECT creerConvention('$row[0]','$row[53]','$row[28]','$row[48]','$row[52]','$row[51]','$idsignataire','$row[15]','$row[16]','$row[17]','$identreprise','$idOffre','$row[38]') FROM DUAL;");
+    }
+
+    public function importerligneStudea($data)
+    {
+
     }
 
 
