@@ -66,7 +66,7 @@ class Import
 
     private function insertEtudiant($row)
     {
-        $this->execute("SELECT creerEtuImp ('$row[1]','$row[2]','$row[3]', '$row[4]', '$row[6]','$row[7]', '$row[42]', '$row[44]', '$row[45]', '$row[46]', '$row[47]') FROM dual");
+        $this->execute("SELECT creerEtuImp ('$row[1]','$row[2]','$row[3]', '$row[4]', '$row[6]','$row[7]', '$row[42]', '$row[44]', '$row[45]', '$row[46]', '$row[47]','$row[12]') FROM dual");
     }
 
     private function updateEtudiant($row)
@@ -153,11 +153,4 @@ class Import
     {
         $this->execute("SELECT creerConvention('$row[0]','$row[53]','$row[28]','$row[48]','$row[52]','$row[51]','$idsignataire','$row[15]','$row[16]','$row[17]','$identreprise','$idOffre','$row[38]') FROM DUAL;");
     }
-
-    public function importerligneStudea($data)
-    {
-
-    }
-
-
 }
