@@ -68,19 +68,11 @@ class TuteurRepository extends ProRepository
                 'idOffre' => $idOffre,
                 'idEtudiant' => $idEtudiant,
             ]);
-        } catch (PDOException) {
-            throw new ServerErrorException('erreur Update Supervise');
-        }
-        try {
-            $sql = "UPDATE Staff SET role = 'tuteurprof' WHERE idUtilisateur = :idUtilisateur";
+            $sql = "UPDATE Staff SET role = 'tuteurprof' WHERE idUtilisateur = :idUtilisateur AND role = 'enseignant'";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute([
                 'idUtilisateur' => $idUtilisateur,
             ]);
-        } catch (PDOException) {
-            throw new ServerErrorException('erreur Insert Staff');
-        }
-        try {
             $sql = "UPDATE Postuler SET Statut = 'validee' WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute([
@@ -185,9 +177,9 @@ class TuteurRepository extends ProRepository
     /**
      * @throws ServerErrorException
      */
-    public function seProposer(int $idutilisateur, int $idOffre, int $idetudiant): void {
+    public function seProposerProf(int $idutilisateur, int $idOffre, int $idetudiant): void {
         try {
-            $statement = Database::get_conn()->prepare("INSERT INTO Supervise VALUES (?,?,?,'en attente');");
+            $statement = Database::get_conn()->prepare("INSERT INTO Supervise VALUES (?,?,?,'en attente',null);");
             $statement->bindParam(1, $idutilisateur);
             $statement->bindParam(2, $idOffre);
             $statement->bindParam(3, $idetudiant);
@@ -196,7 +188,7 @@ class TuteurRepository extends ProRepository
             throw new ServerErrorException("Erreur  lors du se proposer de la convention");
         }
         try {
-            $statement = Database::get_conn()->prepare("UPDATE Postuler SET Statut = 'en attente responsable' WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre");
+            $statement = Database::get_conn()->prepare("UPDATE Postuler SET Statut = 'en attente tuteur entreprise' WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre");
             $statement->bindParam(":idUtilisateur", $idetudiant);
             $statement->bindParam(":idOffre", $idOffre);
             $statement->execute();
@@ -208,7 +200,7 @@ class TuteurRepository extends ProRepository
     /**
      * @throws ServerErrorException
      */
-    public function seDeProposer(int $idUtilisateur, mixed $idOffre, $idEtudiant)
+    public function seDeProposerProf(int $idUtilisateur, mixed $idOffre, $idEtudiant)
     {
         try {
             $statement = Database::get_conn()->prepare("DELETE FROM Supervise WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant");
@@ -220,7 +212,7 @@ class TuteurRepository extends ProRepository
             throw new ServerErrorException("Erreur lors du se de proposer de la convention");
         }
         try {
-            $statement = Database::get_conn()->prepare("UPDATE Postuler SET Statut = 'en attente tuteur' WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre");
+            $statement = Database::get_conn()->prepare("UPDATE Postuler SET Statut = 'en attente tuteur entreprise' WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre");
             $statement->bindParam(":idUtilisateur", $idEtudiant);
             $statement->bindParam(":idOffre", $idOffre);
             $statement->execute();
@@ -261,6 +253,45 @@ class TuteurRepository extends ProRepository
             return $prenomAndNom;
         } catch (\Exception $e) {
             throw new ServerErrorException("Erreur getNomTuteurByIdEtudiantAndIdOffre");
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function getTuteurByIdEtudiantAndIdOffre(int $idetudiant, int $idoffre): ?array{
+        try {
+            $statement = Database::get_conn()->prepare("SELECT * FROM Supervise s JOIN StaffVue st ON s.idUtilisateur = st.idUtilisateur WHERE idEtudiant = :idEtudiant AND idOffre = :idOffre");
+            $statement->bindParam(":idEtudiant", $idetudiant);
+            $statement->bindParam(":idOffre", $idoffre);
+            $statement->execute();
+            $statement->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $statement->fetch();
+            if (!$resultat) {
+                return null;
+            }
+            return $resultat;
+        } catch (\Exception $e) {
+            throw new ServerErrorException("Erreur getNomTuteurByIdEtudiantAndIdOffre");
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function assigneCommeTuteurEntreprise(mixed $idUtilisateur, mixed $idOffre, mixed $idEtudiant, mixed $idTuteurEntreprise)
+    {
+        try {
+            $sql = "UPDATE Supervise SET idTuteurEntreprise = :idTuteurEntreprise WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idUtilisateur' => $idUtilisateur,
+                'idOffre' => $idOffre,
+                'idEtudiant' => $idEtudiant,
+                'idTuteurEntreprise' => $idTuteurEntreprise
+            ]);
+        } catch (PDOException) {
+            throw new ServerErrorException('erreur assigneCommeTuteurEntreprise');
         }
     }
 

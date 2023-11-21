@@ -79,13 +79,14 @@ if (Auth::has_role(Roles::Manager, Roles::Staff)) {
     if ($tuteurs == null) {
         echo "<p>Aucun tuteur Universitaire trouvé</p>";
     } else {
-        Table::createTable($tuteurs, ["nom", "prénom", "email", "numtelephone", "bio", "role"], function ($tuteur) {
+        Table::createTable($tuteurs, ["nom", "prénom", "email", "numtelephone", "bio", "role", "tuteur entreprsie"], function ($tuteur) {
             Table::cell($tuteur->getNomutilisateur());
             Table::cell($tuteur->getPrenom());
             Table::cell($tuteur->getEmailutilisateur());
             Table::cell($tuteur->getNumtelutilisateur());
             Table::cell($tuteur->getBio());
             Table::cell($tuteur->getRole());
+            Table::cell($tuteur->getIdtuteurentreprise());
             Table::button("/utilisateurs/" . $tuteur->getIdutilisateur());
         });
     }

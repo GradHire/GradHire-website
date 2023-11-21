@@ -62,7 +62,7 @@ class CandidatureController extends AbstractController
             ];
             if (isset($error)) $array['error'] = $error;
             if (isset($success)) $array['success'] = $success;
-        } else if (Auth::has_role(Roles::Teacher,Roles::Tutor)) {
+        } else if (Auth::has_role(Roles::Teacher,Roles::Tutor, Roles::TutorTeacher)) {
             $array = ['candidaturesAttente' => (new PostulerRepository())->getByStatementAttenteTuteur()];
             $array['candidaturesAutres'] = array_merge((new PostulerRepository())->getByStatementTuteur(Auth::get_user()->id(), 'validee'), (new PostulerRepository())->getByStatementTuteur(Auth::get_user()->id(), 'refusee'));
         } else if (Auth::has_role(Roles::Student)) {

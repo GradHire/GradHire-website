@@ -240,7 +240,7 @@ class PostulerRepository extends AbstractRepository
     public function validerCandidatureEtudiant(mixed $idEtudiant, mixed $idOffre): void
     {
         try {
-            $sql = "UPDATE Postuler SET statut = 'en attente tuteur' WHERE idOffre=:idoffre AND idUtilisateur=:idutilisateur";
+            $sql = "UPDATE Postuler SET statut = 'en attente tuteur prof' WHERE idOffre=:idoffre AND idUtilisateur=:idutilisateur";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute([
                 'idoffre' => $idOffre,
@@ -294,7 +294,7 @@ class PostulerRepository extends AbstractRepository
     public function getByStatementAttenteTuteur()
     {
         try {
-            $sql = "SELECT nom,sujet,dates,idOffre, idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE statut = 'en attente tuteur' OR statut = 'en attente responsable'";
+            $sql = "SELECT nom,sujet,dates,idOffre, idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE statut = 'en attente tuteur prof' OR statut = 'en attente responsable' OR statut = 'en attente tuteur entreprise'";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute();
             $requete->setFetchMode(\PDO::FETCH_ASSOC);

@@ -41,7 +41,7 @@ class StaffRepository extends LdapRepository
     public function getAllTuteurProf(): ?array
     {
         try {
-            $sql = "SELECT * FROM TuteurUniversiteVue";
+            $sql = "SELECT * FROM Supervise s JOIN StaffVue sv ON s.idUtilisateur = sv.idUtilisateur";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute();
             $resultat = $requete->fetchAll();
@@ -58,6 +58,20 @@ class StaffRepository extends LdapRepository
     protected
     function construireDepuisTableau(array $dataObjectFormatTableau): Staff
     {
+        if (isset($dataObjectFormatTableau["idtuteurentreprise"])) {
+            return new Staff(
+                $dataObjectFormatTableau["idutilisateur"],
+                $dataObjectFormatTableau["email"],
+                $dataObjectFormatTableau["nom"],
+                $dataObjectFormatTableau["numtelephone"],
+                $dataObjectFormatTableau["bio"],
+                $dataObjectFormatTableau["archiver"],
+                $dataObjectFormatTableau["loginldap"],
+                $dataObjectFormatTableau["prenom"],
+                $dataObjectFormatTableau["role"],
+                $dataObjectFormatTableau["idtuteurentreprise"]
+            );
+        } else
         return new Staff(
             $dataObjectFormatTableau["idutilisateur"],
             $dataObjectFormatTableau["email"],
@@ -67,7 +81,8 @@ class StaffRepository extends LdapRepository
             $dataObjectFormatTableau["archiver"],
             $dataObjectFormatTableau["loginldap"],
             $dataObjectFormatTableau["prenom"],
-            $dataObjectFormatTableau["role"]
+            $dataObjectFormatTableau["role"],
+            null
         );
     }
 
