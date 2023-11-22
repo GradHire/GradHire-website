@@ -217,3 +217,17 @@ input[type="range"]:active::-webkit-slider-thumb {
     animation: slideIn 1.5s ease forwards;
 }
 
+.calendar-arrow {
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #e0e0e0;
+    cursor: pointer;
+}
+
+.calendar-arrow.disabled {
+    pointer-events: none;
+    opacity: 0.4;
+}

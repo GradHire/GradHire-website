@@ -5,7 +5,6 @@ use app\src\controller\CandidatureController;
 use app\src\controller\ConventionsController;
 use app\src\controller\DashboardController;
 use app\src\controller\OffreController;
-use app\src\controller\OpenController;
 use app\src\controller\PostulerController;
 use app\src\controller\PstageController;
 use app\src\controller\TestController;
@@ -28,6 +27,9 @@ $app = new Application(dirname(__DIR__));
 
 $app->router->get('/', 'home');
 $app->router->get('/about', 'about');
+
+
+$app->router->get('/calendar', 'calendar');
 
 // AuthController
 

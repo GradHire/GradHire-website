@@ -188,6 +188,4 @@ class DashboardController extends AbstractController
             return '';
         } else throw new ForbiddenException();
     }
-
-
 }
