@@ -1,11 +1,11 @@
 <?php
 
 const HOST = 'http://localhost:8080';
-const DB_HOSTNAME = 'srv1046.hstgr.io';
-const DB_DB = 'u542990794_gradhire';
-const DB_PORT = '3306';
-const DB_LOGIN = 'u542990794_admin_gradhire';
-const DB_PASSWORD = '*2+:SiA5*';
+const DB_HOSTNAME = 'ep-royal-grass-68203166-pooler.eu-central-1.postgres.vercel-storage.com';
+const DB_DB = 'GradHire';
+const DB_PORT = '5432';
+const DB_LOGIN = 'default';
+const DB_PASSWORD = 'g9r1DWxtSbIK';
 const JWT_TOKEN = "1234";
 const SMTP_SERVER = 'mail.quoifeur.com';
 const SMTP_USERNAME = 'feur@quoifeur.com';

@@ -1,0 +1,3 @@
+<?php
+echo '<button class="w-5 h-5 border hover:scale-105 duration-75 bg-green-500 backdrop-blur-md shadow absolute top-0 right-0 rounded-full translate-x-2 -translate-y-2 flex items-center justify-center"><span class="text-white text-xl">+</span></button>';
+//echo '<button class="w-5 h-5 border hover:scale-105 duration-75 bg-red-500 backdrop-blur-md shadow absolute top-0 right-0 rounded-full translate-x-2 -translate-y-2 flex items-center justify-center"><span class="text-white text-center -translate-y-[0.4px] text-xl">-</span></button>';

@@ -35,19 +35,18 @@ class DashboardController extends AbstractController
         $data = [];
 
         if ($currentTab === 'tab1') {
-            $data['statsDistributionDomaine'] = (new OffresRepository())->getStatsDistributionDomaine();
-            $data['statsDensembleStageEtAlternance'] = (new OffresRepository())->getStatsDensembleStageEtAlternance();
-            $data['statsCandidaturesParMois'] = (new PostulerRepository())->getStatsCandidaturesParMois();
-            $data['offres'] = (new OffresRepository())->getOffresDernierSemaine();
-            $data['pourcentageEtudiantsConventionCetteAnnee'] = (new ConventionRepository())->getPourcentageEtudiantsConventionCetteAnnee();
-            $data['top5DomainesPlusDemandes'] = (new OffresRepository())->getTop5DomainesPlusDemandes();
-            $data['moyenneCandidaturesParOffreParDomaine'] = (new OffresRepository())->getMoyenneCandidaturesParOffreParDomaine();
+            $data['percentageBlockData1'] = (new ConventionRepository())->getPourcentageEtudiantsConventionCetteAnnee();
+            $data['numBlockData1'] = (new OffresRepository())->getStatsDensembleStageEtAlternance();
+            $data['barChartHorizontalData1'] = (new OffresRepository())->getTop5DomainesPlusDemandes();
+            $data['pieChartData1'] = (new OffresRepository())->getStatsDistributionDomaine();
+            $data['barChartVerticalData1'] = (new OffresRepository())->getMoyenneCandidaturesParOffreParDomaine();
+            $data['lineChartData1'] = (new PostulerRepository())->getStatsCandidaturesParMois();
+            $data['lastActionsData1'] = (new OffresRepository())->getOffresDernierSemaine();
         } elseif ($currentTab === 'tab2') {
             $data = [];
         } elseif ($currentTab === 'tab3') {
             $data = [];
         }
-
         return $this->render('dashboard/dashboard', [
             'currentTab' => $currentTab,
             'data' => $data
