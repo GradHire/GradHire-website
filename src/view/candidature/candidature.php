@@ -69,8 +69,9 @@ use app\src\model\repository\UtilisateurRepository;
                                 foreach ($tuteursEntreprise as $tuteur) {
                                     $options .= "<option value=".$tuteur->getIdutilisateur().">".$tuteur->getPrenom()."</option>";
                                 }
-                                Table::cell('<form action="/postuler/assignerCommeTuteur/' . $candidature->getIdOffre() . "/" . $tuteurProf['idutilisateur'] . '/' . $candidature->getIdUtilisateur().'"
-              method="post">
+                                Table::cell('
+                               <form action="/postuler/assignerCommeTuteur/' . $candidature->getIdOffre() . "/" . $tuteurProf['idutilisateur'] . '/' . $candidature->getIdUtilisateur().'"
+                method="post">
             <select name="idtuteur" id="idtuteur"
                     class="border-gray-600 border-2 text-zinc-700 rounded-lg sm:text-sm px-2 py-1 cursor-pointer">
                 ' . $options . '

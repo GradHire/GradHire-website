@@ -57,10 +57,11 @@ class PostulerController extends AbstractController
      */
     public function assignerTuteurEntreprise(Request $request): void {
         if (Auth::has_role(Roles::Enterprise)) {
-            $idOffre = $request->getRouteParams()["id"] ?? null;
+            $idOffre = $request->getRouteParams()["idOffre"] ?? null;
             $idEtudiant = $request->getRouteParams()["idEtu"] ?? null;
             $idUtilisateur = $request->getRouteParams()["idUser"] ?? null;
-            $idTuteurEntreprise = $request->getRouteParams()["idTuteur"] ?? null;
+            $idTuteurEntreprise = $request->getBody()["idtuteur"] ?? null;
+            print_r($request);
             (new TuteurRepository([]))->assigneCommeTuteurEntreprise($idUtilisateur,$idOffre,$idEtudiant,$idTuteurEntreprise);
             Application::redirectFromParam("/candidatures");
         }

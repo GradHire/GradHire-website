@@ -293,6 +293,16 @@ class TuteurRepository extends ProRepository
         } catch (PDOException) {
             throw new ServerErrorException('erreur assigneCommeTuteurEntreprise');
         }
+        try {
+            $sql = "UPDATE Postuler SET statut = 'en attente responsable' WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idUtilisateur' => $idEtudiant,
+                'idOffre' => $idOffre,
+            ]);
+        } catch (PDOException) {
+            throw new ServerErrorException('erreur assigneCommeTuteurEntreprise');
+        }
     }
 
     protected
