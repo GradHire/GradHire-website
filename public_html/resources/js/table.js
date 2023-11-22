@@ -91,3 +91,4 @@ function search(input, tableId, columns, empty, clearId) {
 function clearInput(inputId) {
     document.getElementById(inputId).value = '';
 }
+

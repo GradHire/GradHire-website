@@ -53,28 +53,6 @@ class DashboardController extends AbstractController
         ]);
     }
 
-    public function showDashboardOld(): string
-    {
-        $statsDistributionDomaine = (new OffresRepository())->getStatsDistributionDomaine();
-        $statsDensembleStageEtAlternance = (new OffresRepository())->getStatsDensembleStageEtAlternance();
-        $statsCandidaturesParMois = (new PostulerRepository())->getStatsCandidaturesParMois();
-        $offres = (new OffresRepository())->getOffresDernierSemaine();
-        $pourcentageEtudiantsConventionCetteAnnee = (new ConventionRepository())->getPourcentageEtudiantsConventionCetteAnnee();
-        $top5DomainesPlusDemandes = (new OffresRepository())->getTop5DomainesPlusDemandes();
-        $moyenneCandidaturesParOffreParDomaine = (new OffresRepository())->getMoyenneCandidaturesParOffreParDomaine();
-
-        return $this->render('dashboard/dashboard_old', [
-            'statsDistributionDomaine' => $statsDistributionDomaine,
-            'statsDensembleStageEtAlternance' => $statsDensembleStageEtAlternance,
-            'statsCandidaturesParMois' => $statsCandidaturesParMois,
-            'offres' => $offres,
-            'pourcentageEtudiantsConventionCetteAnnee' => $pourcentageEtudiantsConventionCetteAnnee,
-            'top5DomainesPlusDemandes' => $top5DomainesPlusDemandes,
-            'moyenneCandidaturesParOffreParDomaine' => $moyenneCandidaturesParOffreParDomaine
-        ]);
-    }
-
-
     /**
      * @throws ForbiddenException
      * @throws ServerErrorException

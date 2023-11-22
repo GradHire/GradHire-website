@@ -394,6 +394,9 @@ class OffresRepository extends AbstractRepository
         return Database::get_conn()->query("SELECT * FROM ObtenirVueDensembleStageEtAlternance();")->fetch();
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getOffresDernierSemaine()
     {
         return Database::get_conn()->query("SELECT * FROM ObtenirOffresDernierSemaine();")->fetchAll();

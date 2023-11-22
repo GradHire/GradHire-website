@@ -8,12 +8,15 @@ class Separator implements ComponentInterface
     private string $color;
     private string $width;
     private string $height;
+    private string $orientation;
 
     public function __construct(array $params)
     {
         $this->color = $params['color'] ?? 'zinc-300';
+        $this->orientation = $params['orientation'] ?? 'horizontal';
 
-        if ($params['orientation'] === 'vertical') {
+
+        if ($this->orientation === 'vertical') {
             $this->width = $params['width'] ?? '[1px]';
             $this->height = $params['height'] ?? 'full';
         } else {

@@ -5,7 +5,9 @@ use app\src\core\components\dashboard_blocks\LineChartBlock;
 use app\src\core\components\dashboard_blocks\NumBlock;
 use app\src\core\components\dashboard_blocks\PercentageBlock;
 use app\src\core\components\dashboard_blocks\PieChartBlock;
+use app\src\core\components\dashboard_blocks\TitleBlock;
 use app\src\core\components\dashboard_blocks\VerticalBarChartBlock;
+use app\src\core\components\Separator;
 
 /** @var array $data
  * @var string $currentTab
@@ -81,6 +83,8 @@ EOT;
             <?php if ($currentTab === 'tab1') { ?>
             <div class="flex flex-col gap-4 items-start justify-start">
                 <?php
+                new TitleBlock([
+                    'title' => 'Exemple de titre', 'subtitle' => 'Exemple de sous-titre']);
                 new PercentageBlock([
                     'title' => 'Conventions signées',
                     'text' => 'General',
@@ -90,6 +94,7 @@ EOT;
                     'value2' => ($data['percentageBlockData1']['pourcentageannuel2'] ?? 0),
                     'value3' => ($data['percentageBlockData1']['pourcentageannuel3'] ?? 0),
                 ]);
+                new Separator([]);
                 echo '<div class="flex flex-row w-full gap-2">';
                 new NumBlock([
                     'title' => 'Stages',
