@@ -48,7 +48,7 @@ class Auth
     public static function load_user_by_id(string $id): ?UtilisateurRepository
     {
         try {
-            $statement = Database::get_conn()->prepare("SELECT getRole(?) FROM DUAL");
+            $statement = Database::get_conn()->prepare("SELECT * from getRole(?);");
             $statement->execute([$id]);
             $role = $statement->fetchColumn();
             if (!$role)
