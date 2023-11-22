@@ -191,7 +191,7 @@ class ConventionRepository extends AbstractRepository
 
     public function getPourcentageEtudiantsConventionCetteAnnee(): false|array
     {
-        return Database::get_conn()->query("CALL PourcentageEtudiantsConventionCetteAnnee()")->fetch();
+        return Database::get_conn()->query("SELECT * FROM PourcentageEtudiantsConventionCetteAnnee();")->fetch();
     }
 
 

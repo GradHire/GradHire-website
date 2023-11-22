@@ -5,11 +5,11 @@ use app\src\controller\CandidatureController;
 use app\src\controller\ConventionsController;
 use app\src\controller\DashboardController;
 use app\src\controller\OffreController;
-use app\src\controller\OpenController;
 use app\src\controller\PostulerController;
 use app\src\controller\PstageController;
 use app\src\controller\TestController;
 use app\src\controller\UserController;
+use app\src\core\exception\ServerErrorException;
 use app\src\core\lib\Psr4AutoloaderClass;
 use app\src\model\Application;
 
@@ -24,10 +24,18 @@ $loader = new Psr4AutoloaderClass();
 $loader->register();
 $loader->addNamespace('app', __DIR__ . '/../');
 
-$app = new Application(dirname(__DIR__));
+try {
+    $app = new Application(dirname(__DIR__));
+} catch (ServerErrorException $e) {
+    echo $e->getMessage();
+    exit();
+}
 
 $app->router->get('/', 'home');
 $app->router->get('/about', 'about');
+
+
+$app->router->get('/calendar', 'calendar');
 
 // AuthController
 
@@ -95,9 +103,6 @@ $app->router->get('/user_test/{id}', [TestController::class, 'user_test']);
 
 $app->router->get('/dashboard', [DashboardController::class, 'showDashboard']);
 $app->router->post('/dashboard', [DashboardController::class, 'showDashboard']);
-$app->router->get('/dashboard_old', [DashboardController::class, 'showDashboardOld']);
-$app->router->post('/dashboard_old', [DashboardController::class, 'showDashboardOld']);
-
 
 // CandidatureContoller
 $app->router->get('/candidatures', [CandidatureController::class, 'candidatures']);

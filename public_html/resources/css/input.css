@@ -217,3 +217,40 @@ input[type="range"]:active::-webkit-slider-thumb {
     animation: slideIn 1.5s ease forwards;
 }
 
+.fadeIn {
+    opacity: 0;
+    animation: fadeInAnimation 0.25s ease-out forwards;
+}
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.calendar-arrow {
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #e0e0e0;
+    cursor: pointer;
+}
+
+@keyframes fadeInAnimationVerticalBarChart {
+    0% {
+        transform-origin: bottom;
+        transform: scaleY(0);
+    }
+    100% {
+        transform: scaleY(1);
+    }
+}
+.calendar-arrow.disabled {
+    pointer-events: none;
+    opacity: 0.4;
+}

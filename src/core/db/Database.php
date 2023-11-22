@@ -25,19 +25,19 @@ class Database
     {
         if (!isset(self::$connexion)) {
             try {
-                $dsn = "mysql:host=" . DB_HOSTNAME . ";dbname=" . DB_DB . ";port=" . DB_PORT;
+                $dsn = "pgsql:host=" . DB_HOSTNAME . ";dbname=" . DB_DB . ";port=" . DB_PORT;
                 $options = [
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 ];
                 self::$connexion = new PDO($dsn, DB_LOGIN, DB_PASSWORD, $options);
                 self::$connexion->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
-            } catch
-            (PDOException) {
+            } catch (PDOException) {
                 //throw new ServerErrorException();
             }
         }
 
         return self::$connexion;
     }
+
 }
