@@ -5,11 +5,11 @@ use app\src\controller\CandidatureController;
 use app\src\controller\ConventionsController;
 use app\src\controller\DashboardController;
 use app\src\controller\OffreController;
-use app\src\controller\OpenController;
 use app\src\controller\PostulerController;
 use app\src\controller\PstageController;
 use app\src\controller\TestController;
 use app\src\controller\UserController;
+use app\src\core\exception\ServerErrorException;
 use app\src\core\lib\Psr4AutoloaderClass;
 use app\src\model\Application;
 
@@ -24,7 +24,12 @@ $loader = new Psr4AutoloaderClass();
 $loader->register();
 $loader->addNamespace('app', __DIR__ . '/../');
 
-$app = new Application(dirname(__DIR__));
+try {
+    $app = new Application(dirname(__DIR__));
+} catch (ServerErrorException $e) {
+    echo $e->getMessage();
+    exit();
+}
 
 $app->router->get('/', 'home');
 $app->router->get('/about', 'about');

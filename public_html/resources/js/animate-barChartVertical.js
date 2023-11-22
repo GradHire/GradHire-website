@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         bars.forEach((bar, i) => {
             setTimeout(function() {
-                bar.style.height = "0";
                 bar.style.transformOrigin = "bottom";
                 bar.style.animation = "fadeInAnimationVerticalBarChart 1s ease-out forwards";
             }, i * animationStartDelay);

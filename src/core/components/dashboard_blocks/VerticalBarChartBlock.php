@@ -22,11 +22,11 @@ class VerticalBarChartBlock implements ComponentInterface
         $this->data = $params['data'] ?? [];
         $this->row_1 = $params['row_1'] ?? 'Row1';
         $this->row_2 = $params['row_2'] ?? 'Row2';
-        $this->color = $params['color'] ?? '#910aff';
-        $this->width = $params['size'][0] ?? 600;
-        $this->height = $params['size'][1] ?? 150;
+        $this->color = $params['color'] ?? '#8f34eb';
+        $this->width = $params['size'][0] ?? 300;
+        $this->height = $params['size'][1] ?? 280;
         $this->padding = $params['size'][2] ?? 20;
-        $this->rounding = $params['size'][3] ?? 10;
+        $this->rounding = $params['size'][3] ?? 4;
 
         $columnValues = array_column($this->data, $this->row_1);
         $this->maxValue = $columnValues ? max($columnValues) : 1;
@@ -57,8 +57,9 @@ class VerticalBarChartBlock implements ComponentInterface
         EOT;
 
         $labelIncrement = $this->height / $this->maxValue;
-        for ($i = 0; $i <= $this->maxValue; $i += $this->maxValue / 10) {
+        for ($i = 0; $i <= $this->maxValue; $i += $this->maxValue / 18) {
             $yPos = $this->height - $this->padding - $labelIncrement * $i;
+//dsdasa
             echo "<line class='drop-shadow' x1=\"" . ($this->padding) . "\" y1=\"$yPos\" x2=\"" . ($this->width) . "\" y2=\"$yPos\" stroke-width=\"1\" stroke=\"$this->color\" opacity=\"0.075\" />";
         }
 
@@ -72,26 +73,26 @@ class VerticalBarChartBlock implements ComponentInterface
 
         foreach ($this->data as $row) {
             $barHeight = $increment * $row[$this->row_1];
-            $yPos = $this->height - $barHeight + $this->rounding;
-            $barHeightNew = $barHeight - $this->padding;
+            $yPos = $this->height - $barHeight + $this->padding;
             echo <<<EOT
-            <rect class="barChartRect drop-shadow" x="$xOffset" y="$yPos" width="$barWidth" stroke="$this->color" height="$barHeightNew" fill="url(#$gradientId)" rx="$this->rounding" ry="$this->rounding" />
+            <rect class="barChartRect drop-shadow" x="$xOffset" y="$yPos" width="$barWidth" stroke="$this->color" height="$barHeight" fill="url(#$gradientId)" rx="$this->rounding" ry="$this->rounding" />
             EOT;
             echo "<line class='drop-shadow' x1=\"" . ($this->padding) . "\" y1=\"$yPos\" x2=\"" . ($xOffset + $barWidth / 2) . "\" y2=\"$yPos\" stroke-width=\"1\" stroke-dasharray=\"5,5\" stroke=\"$this->color\" />";
             echo "<circle class='drop-shadow' cx=\"" . ($xOffset + $barWidth / 2) . "\" cy=\"$yPos\" r=\"3\" fill=\"$this->color\" />";
             $xOffset += $barWidth;
         }
 
-        $labelIncrement = $this->height / $this->maxValue;
-        for ($i = 0; $i <= $this->maxValue; $i += $this->maxValue / 10) {
-            $yPos = $this->height - $this->padding - $labelIncrement * $i;
-            echo "<text class='drop-shadow' x=\"" . ($this->padding / 2) . "\" y=\"$yPos\" font-size=\"10\" text-anchor=\"middle\">" . round($i, 1) . "</text>";
+        $labelIncrement = ($this->height) / $this->maxValue;
+        for ($i = 0; $i <= $this->maxValue; $i += $this->maxValue / 6) {
+            $yPos = $this->height + $this->padding - $labelIncrement * $i;
+//dsdasa
+            echo "<text class='drop-shadow' x=\"" . ($this->padding / 2 - 1) . "\" y=\"$yPos\" font-size=\"10\" text-anchor=\"middle\">" . round($i, 2) . "</text>";
         }
 
         $xOffset = $this->padding + $barWidth / 2;
-        $temp1 = $this->height - $this->padding;
+        $temp1 = $this->height - $this->padding + 2;
         echo "<rect x=\"" . ($this->padding - 3) . "\" y=\"$temp1\" width=\"$this->width\" height=\"$this->padding\" fill=\"#fff\" />";
-        echo "<line class='drop-shadow' x1=\"$this->padding\" y1=\"$temp1\" x2=\"$this->width\" y2=\"$temp1\" stroke-width=\"1\"  stroke=\"$this->color\" />";
+        echo "<line class='drop-shadow' x1=\"$this->padding\" y1=\"$temp1\" x2=\"" . ($this->width - 1) . "\" y2=\"$temp1\" stroke-width=\"1\"  stroke=\"$this->color\" />";
 
         foreach ($this->data as $row) {
             $domain = !empty($row[$this->row_2]) ? strtoupper($row[$this->row_2]) : 'AUTRE';

@@ -23,7 +23,7 @@ class LineChartBlock implements ComponentInterface
         $this->data = $params['data'] ?? [];
         $this->row_1 = $params['row_1'] ?? 'Row1';
         $this->row_2 = $params['row_2'] ?? 'Row2';
-        $this->color = $params['color'] ?? '#910aff';
+        $this->color = $params['color'] ?? '#8f34eb';
         $this->legend = $params['legend'] ?? true;
         $this->width = $params['size'][0] ?? 300;
         $this->height = $params['size'][1] ?? 150;
@@ -117,10 +117,14 @@ class LineChartBlock implements ComponentInterface
             $percentageHeight = $this->calculatePercentage($row[$this->row_1]);
             $y = $innerHeight - ($percentageHeight / 100 * $innerHeight) + $this->padding;
             if ($this->legend) {
-                $date = explode('-', $row[$this->row_2]);
-                $month = $date[1];
-                $year = substr($date[0], 2);
-                echo "<text class='drop-shadow dateLineChart' font-size='10' x='$x' y='$yLabelPosition' text-anchor='middle'>$month/$year</text>";
+                if ($this->row_2 === 'mois') {
+                    $date = explode('-', $row[$this->row_2]);
+                    $month = $date[1];
+                    $year = substr($date[0], 2);
+                    echo "<text class='drop-shadow dateLineChart' font-size='10' x='$x' y='$yLabelPosition' text-anchor='middle'>$month/$year</text>";
+                } else {
+                    echo "<text class='drop-shadow' font-size='10' x='$x' y='$yLabelPosition' text-anchor='middle'>" . $row[$this->row_2] . "</text>";
+                }
                 $yAxisValue = round($row[$this->row_1], 2);
                 echo "<text class='drop-shadow' x='" . ($yAxisXPosition - 5) . "' y='$y' font-size='10' text-anchor='end' alignment-baseline='middle'>$yAxisValue</text>";
                 echo "<circle class='drop-shadow' cx='$x' cy='$y' r='3' fill=$this->color />";
