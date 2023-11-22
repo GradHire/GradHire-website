@@ -24,15 +24,14 @@ class Import
         else $this->updateEntreprise($row);
         $identreprise = $this->find('Entreprise', 'siret', $row[55], 'idUtilisateur');
 
-
         if (!$this->recordExists('Utilisateur', 'email', $row[79])) $this->insertTuteur($row, $identreprise);
         else $this->updateTuteur($row, $identreprise);
         $idtuteur = $this->find('Utilisateur', 'email', $row[79], 'idUtilisateur');
 
         if (!$this->recordExists('Signataire', 'mailSignataire', $row[34])) $this->insertSignataire($row, $identreprise);
         else $this->updateSignataire($row);
-
         $idsignataire = $this->find('Signataire', 'mailSignataire', $row[34], 'idSignataire');
+
         if (!$this->recordExists('Utilisateur', 'email', $row[31])) $this->insertReferent($row);
         $idreferent = $this->find('Utilisateur', 'email', $row[31], 'idUtilisateur');
 
@@ -58,57 +57,142 @@ class Import
         return $stmt->fetchColumn();
     }
 
-    private function execute($sql)
-    {
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute();
-    }
 
     private function insertEtudiant($row)
     {
-        $this->execute("SELECT creerEtuImp ('$row[1]','$row[2]','$row[3]', '$row[4]', '$row[6]','$row[7]', '$row[42]', '$row[44]', '$row[45]', '$row[46]', '$row[47]','$row[12]') FROM dual");
+        $sql = "SELECT creerEtuImp (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) FROM dual";
+        $this->extracted($sql, $row);
+    }
+
+    /**
+     * @param string $sql
+     * @param $row
+     * @return void
+     */
+    private function extracted(string $sql, $row): void
+    {
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(1, $row[1]);
+        $stmt->bindParam(2, $row[2]);
+        $stmt->bindParam(3, $row[3]);
+        $stmt->bindParam(4, $row[4]);
+        $stmt->bindParam(5, $row[6]);
+        $stmt->bindParam(6, $row[7]);
+        $stmt->bindParam(7, $row[42]);
+        $stmt->bindParam(8, $row[44]);
+        $stmt->bindParam(9, $row[45]);
+        $stmt->bindParam(10, $row[46]);
+        $stmt->bindParam(11, $row[47]);
+        $stmt->bindParam(12, $row[12]);
+        $stmt->execute();
     }
 
     private function updateEtudiant($row)
     {
-        $this->execute("Call updateEtuImp('$row[1]','$row[2]','$row[3]', '$row[4]', '$row[6]','$row[7]', '$row[42]', '$row[44]', '$row[45]', '$row[46]', '$row[47]', '$row[12]')");
+        $sql = "Call updateEtuImp(?,?,? ,? ,? ,? ,? ,? ,? ,? ,? ,?)";
+        $this->extracted($sql, $row);
     }
 
     private function insertEntreprise($row)
     {
-        $this->execute("SELECT creerEntImp('$row[54]','$row[68]','$row[66]','$row[62]','$row[63]','$row[64]','$row[65]','$row[67]','$row[69]','$row[57]','$row[58]','$row[56]','$row[59]','$row[61]','$row[60]','$row[55]') FROM dual");
+        $sql = "SELECT creerEntImp(?,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?) FROM dual";
+        $this->extracted1($sql, $row);
+    }
 
+    /**
+     * @param string $sql
+     * @param $row
+     * @return void
+     */
+    private function extracted1(string $sql, $row): void
+    {
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(1, $row[54]);
+        $stmt->bindParam(2, $row[68]);
+        $stmt->bindParam(3, $row[66]);
+        $stmt->bindParam(4, $row[62]);
+        $stmt->bindParam(5, $row[63]);
+        $stmt->bindParam(6, $row[64]);
+        $stmt->bindParam(7, $row[65]);
+        $stmt->bindParam(8, $row[67]);
+        $stmt->bindParam(9, $row[69]);
+        $stmt->bindParam(10, $row[57]);
+        $stmt->bindParam(11, $row[58]);
+        $stmt->bindParam(12, $row[56]);
+        $stmt->bindParam(13, $row[59]);
+        $stmt->bindParam(14, $row[61]);
+        $stmt->bindParam(15, $row[60]);
+        $stmt->bindParam(16, $row[55]);
+        $stmt->execute();
     }
 
     private function updateEntreprise($row)
     {
-        $this->execute("Call updateEntImp('$row[54]','$row[68]','$row[66]','$row[62]','$row[63]','$row[64]','$row[65]','$row[67]','$row[69]','$row[57]','$row[58]','$row[56]','$row[59]','$row[61]','$row[60]','$row[55]')");
+
+        $sql = "Call updateEntImp(?,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?)";
+        $this->extracted1($sql, $row);
     }
 
     private function insertTuteur($row, $identreprise)
     {
-
-        $this->execute("Select creerTuteur('$row[78]','$row[77]','$row[79]','$row[81]','$identreprise','','$row[80]') FROM DUAL ;");
+        $null = 'null';
+        $sql = "Select creerTuteur(?,? ,? ,? ,? ,? ,?) FROM DUAL";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(1, $row[78]);
+        $stmt->bindParam(2, $row[77]);
+        $stmt->bindParam(3, $row[79]);
+        $stmt->bindParam(4, $row[81]);
+        $stmt->bindParam(5, $identreprise);
+        $stmt->bindParam(6, $null);
+        $stmt->bindParam(7, $row[80]);
+        $stmt->execute();
     }
 
     private function updateTuteur($row, $identreprise)
     {
-        $this->execute("Call updateTuteurImp('$row[77]','$row[78]','$row[79]','$row[80]','$row[81]');");
+        $sql = "Call updateTuteurImp(?,? ,? ,? ,?)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(1, $row[77]);
+        $stmt->bindParam(2, $row[78]);
+        $stmt->bindParam(3, $row[79]);
+        $stmt->bindParam(4, $row[80]);
+        $stmt->bindParam(5, $row[81]);
+        $stmt->execute();
     }
 
     private function insertSignataire($row, $identreprise)
     {
-        $this->execute("Select creerSignataire('$row[32]','$row[33]','$row[34]','$row[35]','$identreprise') FROM DUAL ;");
+        //$this->prepare("Select creerSignataire('$row[32]','$row[33]','$row[34]','$row[35]','$identreprise') FROM DUAL ;");
+        $sql = "Select creerSignataire(?,? ,? ,? ,?) FROM DUAL";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(1, $row[32]);
+        $stmt->bindParam(2, $row[33]);
+        $stmt->bindParam(3, $row[34]);
+        $stmt->bindParam(4, $row[35]);
+        $stmt->bindParam(5, $identreprise);
+        $stmt->execute();
     }
 
     private function updateSignataire($row)
     {
-        $this->execute("Call updateSignataire('$row[32]','$row[33]','$row[34]','$row[35]') ;");
+        $sql = "Call updateSignataire(?,? ,? ,?)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(1, $row[32]);
+        $stmt->bindParam(2, $row[33]);
+        $stmt->bindParam(3, $row[34]);
+        $stmt->bindParam(4, $row[35]);
+        $stmt->execute();
     }
 
     private function insertReferent($row)
     {
-        $this->execute("Select creerStaffImp('$row[29]','$row[30]','$row[31]','$row[31]') FROM DUAL ;");
+        $sql = "Select creerStaffImp(?,? ,? ,?) FROM DUAL";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(1, $row[29]);
+        $stmt->bindParam(2, $row[30]);
+        $stmt->bindParam(3, $row[31]);
+        $stmt->bindParam(4, $row[31]);
+        $stmt->execute();
     }
 
     private function exist(string $string, string $string1, mixed $int, string $string2, mixed $identreprise)
@@ -120,18 +204,60 @@ class Import
 
     private function insertServiceAccueil($row, mixed $identreprise)
     {
-        $this->execute("Call creerServiceAccueil('$row[70]','$row[71]','$row[72]','$row[73]','$row[74]','$row[75]','$row[76]','$identreprise') ;");
+        $sql = "Select creerServiceAccueil(?,? ,? ,? ,? ,? ,? ,?) FROM DUAL";
+        $identreprise = $this->getIdentreprise($sql, $row, $identreprise);
+    }
+
+    /**
+     * @param string $sql
+     * @param $row
+     * @param mixed $identreprise
+     * @return mixed
+     */
+    private function getIdentreprise(string $sql, $row, mixed $identreprise): mixed
+    {
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(1, $row[70]);
+        $stmt->bindParam(2, $row[71]);
+        $stmt->bindParam(3, $row[72]);
+        $stmt->bindParam(4, $row[73]);
+        $stmt->bindParam(5, $row[74]);
+        $stmt->bindParam(6, $row[75]);
+        $stmt->bindParam(7, $row[76]);
+        $stmt->bindParam(8, $identreprise);
+        $stmt->execute();
+        return $identreprise;
     }
 
     private function updateServiceAccueil($row, mixed $identreprise)
     {
-        $this->execute("Call updateServiceAccueil('$row[70]','$row[71]','$row[72]','$row[73]','$row[74]','$row[75]','$row[76]','$identreprise') ;");
+        $sql = "Call updateServiceAccueil(?,? ,? ,? ,? ,? ,? ,?)";
+        $identreprise = $this->getIdentreprise($sql, $row, $identreprise);
     }
 
     private function insertOffreStage($row, $idEntreprise): int
     {
         $description = $row[20] . $row[21];
-        $this->execute("SELECT creerOffreStage('$row[22]','$row[18]','$row[19]','$row[23]','$row[24]','$row[25]','$row[43]','$row[13]','$row[14]','valider',1,'$row[36]',$idEntreprise,'$description') FROM DUAL;");
+        $valide = "valider";
+        $valider = 1;
+        $sql = "SELECT creerOffreStage(?,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ) FROM DUAL";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(1, $row[22]);
+        $stmt->bindParam(2, $row[18]);
+        $stmt->bindParam(3, $row[19]);
+        $stmt->bindParam(4, $row[23]);
+        $stmt->bindParam(5, $row[24]);
+        $stmt->bindParam(6, $row[25]);
+        $stmt->bindParam(7, $row[43]);
+        $stmt->bindParam(8, $row[13]);
+        $stmt->bindParam(9, $row[14]);
+        $stmt->bindParam(10, $valide);
+        $stmt->bindParam(11, $valider);
+        $stmt->bindParam(12, $row[36]);
+        $stmt->bindParam(13, $idEntreprise);
+        $stmt->bindParam(14, $description);
+        $stmt->execute();
+
         $sql = "SELECT idOffre FROM Offre WHERE thematique = '$row[18]' AND sujet = '$row[19]'";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
@@ -140,34 +266,257 @@ class Import
 
     private function insertPostuler($row, int $idOffre, mixed $idetu)
     {
-        $this->execute("SELECT creerPostuler('$idetu','$idOffre') FROM DUAL;");
+        $sql = "SELECT creerPostuler(?,?) FROM DUAL";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(1, $idetu);
+        $stmt->bindParam(2, $idOffre);
+        $stmt->execute();
     }
 
     private function insertSuperviser($row, int $idOffre, mixed $idetu, mixed $idreferent, mixed $idtuteur)
     {
-        $this->execute("INSERT INTO Supervise VALUES ('$idreferent','$idOffre','$idetu','validee','$idtuteur')");
+        $valide = "validee";
+        $sql = "INSERT INTO Supervise VALUES(?,? ,? ,? ,?)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(1, $idreferent);
+        $stmt->bindParam(2, $idOffre);
+        $stmt->bindParam(3, $idetu);
+        $stmt->bindParam(4, $valide);
+        $stmt->bindParam(5, $idtuteur);
+        $stmt->execute();
     }
 
-    private function insertConvention($row, $idsignataire, $identreprise, $idOffre)
+    private function insertConvention($row, $idsignataire, $idetu, $idOffre)
     {
-        $this->execute("SELECT creerConvention('$row[0]','$row[53]','$row[28]','$row[48]','$row[52]','$row[51]','$idsignataire','$row[15]','$row[16]','$row[17]','$identreprise','$idOffre','$row[38]') FROM DUAL;");
+        $sql = "SELECT creerConvention(?,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?) FROM DUAL";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(1, $row[0]);
+        $stmt->bindParam(2, $row[53]);
+        $stmt->bindParam(3, $row[28]);
+        $stmt->bindParam(4, $row[48]);
+        $stmt->bindParam(5, $row[52]);
+        $stmt->bindParam(6, $row[51]);
+        $stmt->bindParam(7, $idsignataire);
+        $stmt->bindParam(8, $row[15]);
+        $stmt->bindParam(9, $row[16]);
+        $stmt->bindParam(10, $row[17]);
+        $stmt->bindParam(11, $idetu);
+        $stmt->bindParam(12, $idOffre);
+        $stmt->bindParam(13, $row[38]);
+        $stmt->execute();
     }
 
     public function importerligneStudea($data)
     {
+
         if (!$this->recordExists('Utilisateur', 'email', $data[28])) $this->insertEtudiantStudea($data);
         else $this->updateEtudiantStudea($data);
+        $idetu = $this->find('Utilisateur', 'email', $data[28], 'idUtilisateur');
+
+        if (!$this->recordExists('Entreprise', 'siret', $data[58])) $this->insertEntrepriseStudea($data);
+        else $this->updateEntrepriseStudea($data);
+        $identreprise = $this->find('Entreprise', 'siret', $data[58], 'idUtilisateur');
+
+        if (!$this->recordExists('Utilisateur', 'email', $data[111])) $this->insertTuteurStudea($data, $identreprise);
+        else $this->updateTuteurStudea($data);
+
+        $idtuteur = $this->find('Utilisateur', 'email', $data[111], 'idUtilisateur');
+
+        if (!$this->recordExists('Signataire', 'mailSignataire', $data[96])) $this->insertSignataireStudea($data, $identreprise);
+        else $this->updateSignataireStudea($data);
+        $idsignataire = $this->find('Signataire', 'mailSignataire', $data[96], 'idSignataire');
+
+        $idreferent = 90;
+
+        $idOffre = $this->insertOffreStudea($data, $identreprise);
+
+        $this->updateoffrePourStudea($data, $idOffre);
+        $this->insertPostuler($data, $idOffre, $idetu);
+        $this->insertSuperviser($data, $idOffre, $idetu, $idreferent, $idtuteur);
+        if (!$this->recordExists('Convention', 'numConvention', $data[3])) $this->insertConventionStudea($data, $idsignataire, $idetu, $idOffre);
     }
 
-    private function insertEtudiantStudea($data)
+    private function insertEtudiantStudea($data): void
     {
+        $sql = "SELECT creerEtuImp(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?) FROM DUAL";
+        $this->executeEtuImpQuery($data, $sql);
+    }
+
+    private function executeEtuImpQuery($data, $sql): void
+    {
+        $pays = "France";
         $adresse = $data[30] . " " . $data[31];
-        $this->execute("SELECT creerEtuImp ('$data[41]','$data[9]','$data[10]','$data[27]','$data[29]','$data[28]','$data[8]','$adresse',$data[32],'France',$data[33],$data[5]) FROM dual");
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(1, $data[41]);
+        $stmt->bindParam(2, $data[9]);
+        $stmt->bindParam(3, $data[10]);
+        $stmt->bindParam(4, $data[27]);
+        $stmt->bindParam(5, $data[29]);
+        $stmt->bindParam(6, $data[28]);
+        $stmt->bindParam(7, $data[8]);
+        $stmt->bindParam(8, $adresse);
+        $stmt->bindParam(9, $data[32]);
+        $stmt->bindParam(10, $pays);
+        $stmt->bindParam(11, $data[33]);
+        $stmt->bindParam(12, $data[5]);
+        $stmt->execute();
     }
 
     private function updateEtudiantStudea($data)
     {
-        $adresse = $data[30] . " " . $data[31];
-        $this->execute("Call updateEtuImp('$data[41]','$data[9]','$data[10]','$data[27]','$data[29]','$data[28]','$data[8]','$adresse',$data[32],'France',$data[33],$data[5])");
+        $sql = "CALL updateEtuImp(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $this->executeEtuImpQuery($data, $sql);
+    }
+
+    private function insertEntrepriseStudea($data)
+    {
+
+        $sql = "SELECT creerEntImp(?, ?,?, ?,?,?,?, ?,?, ?,?,? ,?, ?,?,?) FROM DUAL";
+        $this->executeEntImpQuery($data, $sql);
+    }
+
+    private function executeEntImpQuery($data, $sql)
+    {
+        $null = "";
+        $pays = "France";
+        $adresse1 = $data[64] . " " . $data[65];
+        $adresse2 = $data[68] . " " . $data[69];
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(1, $data[60]);
+        $stmt->bindParam(2, $null);
+        $stmt->bindParam(3, $null);
+        $stmt->bindParam(4, $null);
+        $stmt->bindParam(5, $data[59]);
+        $stmt->bindParam(6, $data[63]);
+        $stmt->bindParam(7, $data[61]);
+        $stmt->bindParam(8, $null);
+        $stmt->bindParam(9, $null);
+        $stmt->bindParam(10, $adresse1);
+        $stmt->bindParam(11, $adresse2);
+        $stmt->bindParam(12, $null);
+        $stmt->bindParam(13, $data[66]);
+        $stmt->bindParam(14, $pays);
+        $stmt->bindParam(15, $data[67]);
+        $stmt->bindParam(16, $data[58]);
+        $stmt->execute();
+    }
+
+    private function updateEntrepriseStudea($data)
+    {
+        $sql = "CALL updateEntImp(?, ?,?, ?,?,?,?, ?,?, ?,?,? ,?, ?,?,?)";
+
+        $this->executeEntImpQuery($data, $sql);
+
+    }
+
+    private function insertTuteurStudea($data, mixed $identreprise)
+    {
+        $null = "";
+        $sql = "SELECT creerTuteur(?, ?,?, ?,?,?,?) FROM DUAL";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(1, $data[108]);
+        $stmt->bindParam(2, $data[107]);
+        $stmt->bindParam(3, $data[111]);
+        $stmt->bindParam(4, $data[109]);
+        $stmt->bindParam(5, $identreprise);
+        $stmt->bindParam(6, $null);
+        $stmt->bindParam(7, $data[110]);
+        $stmt->execute();
+    }
+
+    private function updateTuteurStudea($data)
+    {
+        $sql = "CALL updateTuteurImp(?, ?,?, ?,?)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(1, $data[107]);
+        $stmt->bindParam(2, $data[108]);
+        $stmt->bindParam(3, $data[111]);
+        $stmt->bindParam(4, $data[110]);
+        $stmt->bindParam(5, $data[109]);
+        $stmt->execute();
+    }
+
+    private function insertSignataireStudea($data, mixed $identreprise)
+    {
+        $sql = "SELECT creerSignataire(?, ?,?, ?,?) FROM DUAL";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(1, $data[93]);
+        $stmt->bindParam(2, $data[94]);
+        $stmt->bindParam(3, $data[96]);
+        $stmt->bindParam(4, $data[95]);
+        $stmt->bindParam(5, $identreprise);
+        $stmt->execute();
+    }
+
+    private function updateSignataireStudea($data)
+    {
+        $sql = "CALL updateSignataire(?, ?,?, ?)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(1, $data[93]);
+        $stmt->bindParam(2, $data[94]);
+        $stmt->bindParam(3, $data[96]);
+        $stmt->bindParam(4, $data[95]);
+        $stmt->execute();
+    }
+
+    private function insertOffreStudea($data, mixed $identreprise)
+    {
+        $null = "";
+        $valider = 1;
+        $valide = "valider";
+        $anneeuni = $data[6] . "-" . $data[7];
+        $sql = "SELECT creerOffreAlternance(?, ?,?, ?,?,?,?, ?,?, ?,?,? ,?, ?) FROM DUAL";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(1, $data[126]);
+        $stmt->bindParam(2, $null);
+        $stmt->bindParam(3, $null);
+        $stmt->bindParam(4, $null);
+        $stmt->bindParam(5, $null);
+        $stmt->bindParam(6, $null);
+        $stmt->bindParam(7, $null);
+        $stmt->bindParam(8, $data[139]);
+        $stmt->bindParam(9, $data[140]);
+        $stmt->bindParam(10, $valide);
+        $stmt->bindParam(11, $valider);
+        $stmt->bindParam(12, $anneeuni);
+        $stmt->bindParam(13, $identreprise);
+        $stmt->bindParam(14, $data[100]);
+        $stmt->execute();
+        $sql = "SELECT idOffre FROM Offre WHERE idOffre= (SELECT MAX(idOffre) FROM Offre)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $last_insert = $stmt->fetchColumn();
+        return $last_insert;
+    }
+
+    private function updateoffrePourStudea($data, mixed $idOffre)
+    {
+        $sql = "UPDATE Offre SET sujet = 'Offre N°$idOffre' WHERE idOffre = '$idOffre'";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+    }
+
+    private function insertConventionStudea($data, mixed $idsignataire, mixed $identreprise, mixed $idOffre)
+    {
+        $null = "";
+        $enattente = "en attente";
+        $sql = "SELECT creerConvention(?, ?,?, ?,?,?,?, ?,?, ?,?,? ,?) FROM DUAL";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(1, $data[3]);
+        $stmt->bindParam(2, $null);
+        $stmt->bindParam(3, $enattente);
+        $stmt->bindParam(4, $enattente);
+        $stmt->bindParam(5, $null);
+        $stmt->bindParam(6, $data[104]);
+        $stmt->bindParam(7, $idsignataire);
+        $stmt->bindParam(8, $null);
+        $stmt->bindParam(9, $data[139]);
+        $stmt->bindParam(10, $data[140]);
+        $stmt->bindParam(11, $identreprise);
+        $stmt->bindParam(12, $idOffre);
+        $stmt->bindParam(13, $null);
+        $stmt->execute();
     }
 }
