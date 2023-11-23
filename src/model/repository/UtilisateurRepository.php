@@ -119,7 +119,7 @@ class UtilisateurRepository extends AbstractRepository
             }
             return $this->construireDepuisTableau($resultat);
         } catch (PDOException) {
-            throw new ServerErrorException();
+            throw new ServerErrorException('erreur getUserById');
         }
     }
 

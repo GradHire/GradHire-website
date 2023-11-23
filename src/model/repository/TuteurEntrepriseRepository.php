@@ -97,7 +97,7 @@ class TuteurEntrepriseRepository extends ProRepository
             }
             return $resultat;
         } catch (\Exception) {
-            throw new ServerErrorException();
+            throw new ServerErrorException('erreur getAllTuteursByIdEntreprise');
         }
 
     }

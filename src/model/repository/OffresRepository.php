@@ -74,7 +74,7 @@ class OffresRepository extends AbstractRepository
 			return $this->construireDepuisTableau($resultat);
 		} catch
 		(PDOException) {
-			throw new ServerErrorException();
+			throw new ServerErrorException( 'erreurs getById');
 		}
 	}
 
