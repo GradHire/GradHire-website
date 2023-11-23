@@ -39,8 +39,11 @@ class Import
         else $this->updateServiceAccueil($row, $identreprise);
 
         $idOffre = $this->insertOffreStage($row, $identreprise);
-        $this->insertPostuler($row, $idOffre, $idetu);
-        $this->insertSuperviser($row, $idOffre, $idetu, $idreferent, $idtuteur);
+
+        if (!$this->recordExists('Postuler', 'idOffre', $idOffre) && !$this->recordExists('Postuler', 'idutilisateur', $idetu)) {
+            $this->insertPostuler($row, $idOffre, $idetu);
+            $this->insertSuperviser($row, $idOffre, $idetu, $idreferent, $idtuteur);
+        }
         if (!$this->recordExists('Convention', 'numConvention', $row[0])) $this->insertConvention($row, $idsignataire, $idetu, $idOffre);
 
     }
@@ -60,7 +63,7 @@ class Import
 
     private function insertEtudiant($row)
     {
-        $sql = "SELECT creerEtuImp (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) FROM dual";
+        $sql = "SELECT creerEtuImp (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
         $this->extracted($sql, $row);
     }
 
@@ -95,7 +98,7 @@ class Import
 
     private function insertEntreprise($row)
     {
-        $sql = "SELECT creerEntImp(?,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?) FROM dual";
+        $sql = "SELECT creerEntImp(?,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?) ";
         $this->extracted1($sql, $row);
     }
 
@@ -136,7 +139,7 @@ class Import
     private function insertTuteur($row, $identreprise)
     {
         $null = 'null';
-        $sql = "Select creerTuteur(?,? ,? ,? ,? ,? ,?) FROM DUAL";
+        $sql = "Select creerTuteur(?,? ,? ,? ,? ,? ,?) ";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(1, $row[78]);
         $stmt->bindParam(2, $row[77]);
@@ -162,8 +165,7 @@ class Import
 
     private function insertSignataire($row, $identreprise)
     {
-        //$this->prepare("Select creerSignataire('$row[32]','$row[33]','$row[34]','$row[35]','$identreprise') FROM DUAL ;");
-        $sql = "Select creerSignataire(?,? ,? ,? ,?) FROM DUAL";
+        $sql = "Select creerSignataire(?,? ,? ,? ,?) ";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(1, $row[32]);
         $stmt->bindParam(2, $row[33]);
@@ -186,7 +188,7 @@ class Import
 
     private function insertReferent($row)
     {
-        $sql = "Select creerStaffImp(?,? ,? ,?) FROM DUAL";
+        $sql = "Select creerStaffImp(?,? ,? ,?) ";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(1, $row[29]);
         $stmt->bindParam(2, $row[30]);
@@ -204,7 +206,7 @@ class Import
 
     private function insertServiceAccueil($row, mixed $identreprise)
     {
-        $sql = "Select creerServiceAccueil(?,? ,? ,? ,? ,? ,? ,?) FROM DUAL";
+        $sql = "Select creerServiceAccueil(?,? ,? ,? ,? ,? ,? ,?) ";
         $identreprise = $this->getIdentreprise($sql, $row, $identreprise);
     }
 
@@ -240,7 +242,7 @@ class Import
         $description = $row[20] . $row[21];
         $valide = "valider";
         $valider = 1;
-        $sql = "SELECT creerOffreStage(?,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ) FROM DUAL";
+        $sql = "SELECT creerOffreStage(?,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ) ";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(1, $row[22]);
         $stmt->bindParam(2, $row[18]);
@@ -266,7 +268,7 @@ class Import
 
     private function insertPostuler($row, int $idOffre, mixed $idetu)
     {
-        $sql = "SELECT creerPostuler(?,?) FROM DUAL";
+        $sql = "SELECT creerPostuler(?,?) ";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(1, $idetu);
         $stmt->bindParam(2, $idOffre);
@@ -288,7 +290,7 @@ class Import
 
     private function insertConvention($row, $idsignataire, $idetu, $idOffre)
     {
-        $sql = "SELECT creerConvention(?,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?) FROM DUAL";
+        $sql = "SELECT creerConvention(?,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?) ";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(1, $row[0]);
         $stmt->bindParam(2, $row[53]);
@@ -338,7 +340,7 @@ class Import
 
     private function insertEtudiantStudea($data): void
     {
-        $sql = "SELECT creerEtuImp(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?) FROM DUAL";
+        $sql = "SELECT creerEtuImp(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?) ";
         $this->executeEtuImpQuery($data, $sql);
     }
 
@@ -372,7 +374,7 @@ class Import
     private function insertEntrepriseStudea($data)
     {
 
-        $sql = "SELECT creerEntImp(?, ?,?, ?,?,?,?, ?,?, ?,?,? ,?, ?,?,?) FROM DUAL";
+        $sql = "SELECT creerEntImp(?, ?,?, ?,?,?,?, ?,?, ?,?,? ,?, ?,?,?) ";
         $this->executeEntImpQuery($data, $sql);
     }
 
@@ -414,7 +416,7 @@ class Import
     private function insertTuteurStudea($data, mixed $identreprise)
     {
         $null = "";
-        $sql = "SELECT creerTuteur(?, ?,?, ?,?,?,?) FROM DUAL";
+        $sql = "SELECT creerTuteur(?, ?,?, ?,?,?,?) ";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(1, $data[108]);
         $stmt->bindParam(2, $data[107]);
@@ -440,7 +442,7 @@ class Import
 
     private function insertSignataireStudea($data, mixed $identreprise)
     {
-        $sql = "SELECT creerSignataire(?, ?,?, ?,?) FROM DUAL";
+        $sql = "SELECT creerSignataire(?, ?,?, ?,?) ";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(1, $data[93]);
         $stmt->bindParam(2, $data[94]);
@@ -467,7 +469,7 @@ class Import
         $valider = 1;
         $valide = "valider";
         $anneeuni = $data[6] . "-" . $data[7];
-        $sql = "SELECT creerOffreAlternance(?, ?,?, ?,?,?,?, ?,?, ?,?,? ,?, ?) FROM DUAL";
+        $sql = "SELECT creerOffreAlternance(?, ?,?, ?,?,?,?, ?,?, ?,?,? ,?, ?) ";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(1, $data[126]);
         $stmt->bindParam(2, $null);
@@ -502,7 +504,7 @@ class Import
     {
         $null = "";
         $enattente = "en attente";
-        $sql = "SELECT creerConvention(?, ?,?, ?,?,?,?, ?,?, ?,?,? ,?) FROM DUAL";
+        $sql = "SELECT creerConvention(?, ?,?, ?,?,?,?, ?,?, ?,?,? ,?) ";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(1, $data[3]);
         $stmt->bindParam(2, $null);

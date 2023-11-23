@@ -132,7 +132,6 @@ class AuthController extends AbstractController
             "phone" => FormModel::phone("Téléphone")->required()->asterisk(),
             "password" => FormModel::password("Mot de passe")->min(8)->asterisk(),
             "password2" => FormModel::password("Répéter mot de passe")->match('password')->asterisk(),
-
         ]);
         if ($request->getMethod() === 'post') {
             if ($form->validate($request->getBody())) {
