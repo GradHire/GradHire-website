@@ -112,7 +112,6 @@ class TuteurEntrepriseRepository extends ProRepository
             $tuteurData['email'] ?? "",
             $tuteurData['nom'] ?? "",
             $tuteurData['numtelephone'] ?? "",
-
         );
     }
 
