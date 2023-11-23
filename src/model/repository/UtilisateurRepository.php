@@ -47,7 +47,7 @@ class UtilisateurRepository extends AbstractRepository
     static function save(array $values): static
     {
         try {
-            $statement = Database::get_conn()->prepare("SELECT " . static::$create_function . "(" . ltrim(str_repeat(",?", count($values)), ",") . ") FROM DUAL");
+            $statement = Database::get_conn()->prepare("SELECT * from " . static::$create_function . "(" . ltrim(str_repeat(",?", count($values)), ",") . ");");
             $statement->execute($values);
             return static::find_by_id(intval($statement->fetchColumn()));
         } catch (\Exception) {
