@@ -346,12 +346,12 @@ class OffresRepository extends AbstractRepository
 
     public function getTop5DomainesPlusDemandes(): false|array
     {
-        return Database::get_conn()->query("SELECT * FROM  Top5DomainesPlusDemandes();")->fetchAll();
+        return Database::get_conn()->query("SELECT * FROM top_5_domaines_plus_demandes_cache;")->fetchAll();
     }
 
     public function getMoyenneCandidaturesParOffreParDomaine(): false|array
     {
-        return Database::get_conn()->query("SELECT * FROM  MoyenneCandidaturesParOffreParDomaine();")->fetchAll();
+        return Database::get_conn()->query("SELECT * FROM moyenne_candidatures_par_offre_par_domaine_cache;")->fetchAll();
     }
 
     protected
@@ -383,23 +383,23 @@ class OffresRepository extends AbstractRepository
      */
     public function getStatsDistributionDomaine(): false|array
     {
-        return Database::get_conn()->query("SELECT * FROM  DistributionStageAlternanceParDomaine();")->fetchAll();
+        return Database::get_conn()->query("SELECT * FROM distribution_stage_alternance_par_domaine_cache;")->fetchAll();
     }
 
     /**
      * @throws ServerErrorException
      */
-    public function getStatsDensembleStageEtAlternance()
+    public function getStatsDensembleStageEtAlternance(): false|array
     {
-        return Database::get_conn()->query("SELECT * FROM ObtenirVueDensembleStageEtAlternance();")->fetch();
+        return Database::get_conn()->query("SELECT * FROM obtenir_vue_ensemble_stage_et_alternance_cache;")->fetch();
     }
 
     /**
      * @throws ServerErrorException
      */
-    public function getOffresDernierSemaine()
+    public function getOffresDernierSemaine(): false|array
     {
-        return Database::get_conn()->query("SELECT * FROM ObtenirOffresDernierSemaine();")->fetchAll();
+        return Database::get_conn()->query("SELECT * FROM obtenir_offres_dernier_semaine_cache;")->fetchAll();
     }
 
 	protected

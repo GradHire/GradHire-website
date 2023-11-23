@@ -156,7 +156,7 @@ class PostulerRepository extends AbstractRepository
      */
     public function getStatsCandidaturesParMois(): false|array
     {
-        return Database::get_conn()->query("SELECT * FROM  CandidaturesParMois();")->fetchAll();
+        return Database::get_conn()->query("SELECT * FROM candidatures_par_mois_cache;")->fetchAll();
     }
 
     public function getIfSuivi(int $idUtilisateur, $idetu, $idoffre): bool
