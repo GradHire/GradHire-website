@@ -162,7 +162,7 @@ class StaffRepository extends LdapRepository
     public function getCountPostulationTuteur(int $idUtilisateur): int
     {
         try {
-            $stmt = Database::get_conn()->prepare("SELECT COUNT(*) as 'nbPosutlation' FROM Supervise WHERE idUtilisateur = :idUtilisateur");
+            $stmt = Database::get_conn()->prepare("SELECT COUNT(*) as nbPosutlation FROM Supervise WHERE idUtilisateur = :idUtilisateur");
             $stmt->execute(['idUtilisateur' => $idUtilisateur]);
             $stmt->execute();
             $stmt->setFetchMode(\PDO::FETCH_ASSOC);
@@ -173,7 +173,7 @@ class StaffRepository extends LdapRepository
                 return $resultat["nbposutlation"];
             }
         } catch (\Exception) {
-            throw new ServerErrorException();
+            throw new ServerErrorException('erreur getCountPostulationTuteur');
         }
     }
 

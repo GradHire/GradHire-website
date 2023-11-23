@@ -30,47 +30,47 @@ use app\src\model\repository\UtilisateurRepository;
              *
              * @throws \app\src\core\exception\ServerErrorException
              */ $candidatures, $nameColonnes, function ($candidature) {
-                $offre = (new OffresRepository())->getById($candidature->getIdOffre());
-                $entreprise = (new UtilisateurRepository([]))->getUserById($candidature->getIdEntreprise());
-                $etudiant = (new UtilisateurRepository([]))->getUserById($candidature->getIdUtilisateur());
+                $offre = (new OffresRepository())->getById($candidature['idoffre']);
+                $entreprise = (new UtilisateurRepository([]))->getUserById($candidature['identreprise']);
+                $etudiant = (new UtilisateurRepository([]))->getUserById($candidature['idutilisateur']);
                 if (Auth::has_role(Roles::Teacher, Roles::Student, Roles::Staff, Roles::Manager, Roles::Enterprise, Roles::Tutor, Roles::TutorTeacher)) {
-                    if (Auth::has_role(Roles::Teacher, Roles::Tutor, Roles::TutorTeacher) && !($candidature->getStatut() == "en attente tuteur prof" || $candidature->getStatut() == "en attente responsable" || $candidature->getStatut() == "validee" || $candidature->getStatut() == "refusee" || $candidature->getStatut() == "en attente tuteur entreprise")) {
+                    if (Auth::has_role(Roles::Teacher, Roles::Tutor, Roles::TutorTeacher) && !($candidature['statut'] == "en attente tuteur prof" || $candidature['statut'] == "en attente responsable" || $candidature['statut'] == "validee" || $candidature['statut'] == "refusee" || $candidature['statut'] == "en attente tuteur entreprise")) {
                         print "l'etat de la candidature ne permet pas de voir plus d'information";
                         return;
                     }
                     Table::cell($entreprise->getNomutilisateur());
                     Table::cell($offre->getSujet());
                     Table::cell($etudiant->getEmailutilisateur());
-                    Table::cell($candidature->getDates());
-                    if ($candidature->getStatut() == 'en attente entreprise') {
+                    Table::cell($candidature['dates']);
+                    if ($candidature['statut'] == 'en attente entreprise') {
                         Table::chip("En attente entreprise", "yellow");
-                    } elseif ($candidature->getStatut() == 'en attente etudiant') {
+                    } elseif ($candidature['statut'] == 'en attente etudiant') {
                         Table::chip("En attente etudiant", "yellow");
-                    } elseif ($candidature->getStatut() == 'en attente tuteur prof') {
+                    } elseif ($candidature['statut'] == 'en attente tuteur prof') {
                         Table::chip("En attente tuteur prof", "yellow");
-                    } elseif ($candidature->getStatut() == 'en attente tuteur entreprise') {
+                    } elseif ($candidature['statut'] == 'en attente tuteur entreprise') {
                         Table::chip("En attente tuteur entreprise", "yellow");
-                    } elseif ($candidature->getStatut() == 'en attente responsable') {
+                    } elseif ($candidature['statut'] == 'en attente responsable') {
                         Table::chip("En attente responsable", "yellow");
-                    } elseif ($candidature->getStatut() == 'refusee') {
+                    } elseif ($candidature['statut'] == 'refusee') {
                         Table::chip("Refusé", "red");
-                    } elseif ($candidature->getStatut() == 'validee') {
+                    } elseif ($candidature['statut'] == 'validee') {
                         Table::chip("Accepté", "green");
                     }
                     if (Auth::has_role(Roles::Enterprise)) {
-                        if ($candidature->getStatut() == "en attente entreprise") {
-                            Table::button("/candidatures/validerEntreprise/" . $candidature->getIdUtilisateur() . "/" . $candidature->getIdOffre(), "Valider");
-                            Table::button("/candidatures/refuser/" . $candidature->getIdUtilisateur() . "/" . $candidature->getIdOffre(), "Refuser");
-                        } else if ($candidature->getStatut() == "en attente tuteur entreprise") {
+                        if ($candidature['statut'] == "en attente entreprise") {
+                            Table::button("/candidatures/validerEntreprise/" . $candidature['idutilisateur'] . "/" . $candidature['idoffre'], "Valider");
+                            Table::button("/candidatures/refuser/" . $candidature['idutilisateur'] . "/" . $candidature['idoffre'], "Refuser");
+                        } else if ($candidature['statut'] == "en attente tuteur entreprise") {
                             $tuteursEntreprise = (new TuteurEntrepriseRepository([]))->getAllTuteursByIdEntreprise(Auth::get_user()->Id());
-                            $tuteurProf = (new TuteurRepository([]))->getTuteurByIdEtudiantAndIdOffre($candidature->getIdUtilisateur(), $candidature->getIdOffre());
+                            $tuteurProf = (new TuteurRepository([]))->getTuteurByIdEtudiantAndIdOffre($candidature['idutilisateur'], $candidature['idoffre']);
                             if (!empty($tuteursEntreprise)) {
                                 $options = "";
                                 foreach ($tuteursEntreprise as $tuteur) {
                                     $options .= "<option value=".$tuteur->getIdutilisateur().">".$tuteur->getPrenom()."</option>";
                                 }
                                 Table::cell('
-                               <form action="/postuler/assignerCommeTuteur/' . $candidature->getIdOffre() . "/" . $tuteurProf['idutilisateur'] . '/' . $candidature->getIdUtilisateur().'"
+                               <form action="/postuler/assignerCommeTuteur/' . $candidature['idoffre'] . "/" . $tuteurProf['idutilisateur'] . '/' . $candidature['idutilisateur'].'"
                 method="post">
             <select name="idtuteur" id="idtuteur"
                     class="border-gray-600 border-2 text-zinc-700 rounded-lg sm:text-sm px-2 py-1 cursor-pointer">
@@ -88,25 +88,25 @@ use app\src\model\repository\UtilisateurRepository;
                         }
                     }
                     if (Auth::has_role(Roles::Student)) {
-                        if ($candidature->getStatut() == "en attente etudiant") {
-                            Table::button("/candidatures/validerEtudiant/" . $candidature->getIdUtilisateur() . "/" . $candidature->getIdOffre(), "Accpeté");
-                            Table::button("/candidatures/refuser/" . $candidature->getIdUtilisateur() . "/" . $candidature->getIdOffre(), "Refuser");
+                        if ($candidature['statut'] == "en attente etudiant") {
+                            Table::button("/candidatures/validerEtudiant/" . $candidature['idutilisateur'] . "/" .$candidature['idoffre'], "Accpeté");
+                            Table::button("/candidatures/refuser/" . $candidature['idutilisateur'] . "/" . $candidature['idoffre'], "Refuser");
                         }
-                    } else if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::ManagerStage, Roles::ManagerAlternance) && $candidature->getStatut() == 'en attente responsable' && $candidature->getSiTuteurPostuler()) {
-                        Table::button("/postuler/listeTuteur/" . $candidature->getIdOffre() . "/" . $candidature->getIdUtilisateur(), "Voir Liste Tuteur");
+                    } else if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::ManagerStage, Roles::ManagerAlternance) && $candidature['statut'] == 'en attente responsable' && (new PostulerRepository())->getSiTuteurPostuler($candidature['idutilisateur'], $candidature['idoffre'])) {
+                        Table::button("/postuler/listeTuteur/" . $candidature['idoffre'] . "/" . $candidature['idutilisateur'], "Voir Liste Tuteur");
                     } else if (Auth::has_role(Roles::Teacher, Roles::Tutor, Roles::TutorTeacher) && (new StaffRepository([]))->getCountPostulationTuteur(Auth::get_user()->id()) < 10) {
-                        if (!$candidature->getIfSuivi(Auth::get_user()->id())) {
-                            Table::button("/postuler/seProposer/" . $candidature->getIdOffre() . "/" . $candidature->getIdUtilisateur(), "Se proposer comme tuteur");
-                        } else if ($candidature->getStatut() == 'en attente responsable' || $candidature->getStatut() == 'en attente tuteur entreprise') {
-                            Table::button("/postuler/seDeproposer/" . $candidature->getIdOffre(), "X");
+                        if (!(new PostulerRepository())->getIfSuivi(Auth::get_user()->id(),$etudiant->getIdutilisateur(), $candidature['idoffre'])) {
+                            Table::button("/postuler/seProposer/" . $candidature['idoffre'] . "/" .$candidature['idutilisateur'], "Se proposer comme tuteur");
+                        } else if ($candidature['statut'] == 'en attente responsable' || $candidature['statut'] == 'en attente tuteur entreprise') {
+                            Table::button("/postuler/seDeproposer/" .$candidature['idoffre'], "X");
                         } else {
                             if (!Auth::has_role(Roles::Tutor, Roles::Teacher, Roles::TutorTeacher)) {
-                                $tuteur = (new TuteurRepository([]))->getNomTuteurByIdEtudiantAndIdOffre($candidature->getIdUtilisateur(), $candidature->getIdOffre());
+                                $tuteur = (new TuteurRepository([]))->getNomTuteurByIdEtudiantAndIdOffre($candidature['idutilisateur'], $candidature['idoffre']);
                                 Table::cell($tuteur);
                             }
                         }
                     }
-                    Table::button("/candidatures/" . $candidature->getIdOffre() . "/" . $candidature->getIdUtilisateur(), "Voir plus");
+                    Table::button("/candidatures/" . $candidature['idoffre'] . "/" . $candidature['idutilisateur'], "Voir plus");
                 }
             });
             ?>

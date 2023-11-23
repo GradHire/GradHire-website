@@ -20,7 +20,7 @@ if (!Application::isGuest()) {
     if (!Auth::has_role(Roles::ChefDepartment)) echo $linkOffres->render();
     else echo $linkUtilisateurs->render();
     if (!Auth::has_role(Roles::Enterprise, Roles::Tutor, Roles::ChefDepartment)) echo $linkEntreprises->render();
-    if (Auth::has_role(Roles::Student, Roles::Teacher, Roles::Tutor, Roles::Enterprise)) echo $linkCandidatures->render();
+    if (Auth::has_role(Roles::Student, Roles::Teacher, Roles::Tutor, Roles::TutorTeacher, Roles::Enterprise)) echo $linkCandidatures->render();
     if (Auth::has_role(Roles::Enterprise)) {
         echo $linkCreate->render();
         echo $linkTuteurs->render();
