@@ -11,7 +11,7 @@ class TuteurEntreprise extends Utilisateur
 
     public function __construct(int $idutilisateur, string $prenom, string $fonction, int $identreprise, string $emailutilisateur, string $nomutilisateur, string $numtelutilisateur)
     {
-        parent::__construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur, "", []);
+        parent::__construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur, "");
         $this->idutilisateur = $idutilisateur;
         $this->prenom = $prenom;
         $this->fonction = $fonction;

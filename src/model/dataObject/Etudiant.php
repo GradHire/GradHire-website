@@ -43,7 +43,7 @@ class Etudiant extends Utilisateur
         string  $prenom,
     )
     {
-        parent::__construct($idUtilisateur, $email, $nom, $numTelephone, $bio, []);
+        parent::__construct($idUtilisateur, $email, $nom, $numTelephone, $bio);
         $this->idUtilisateur = $idUtilisateur;
         $this->prenom = $prenom;
         $this->loginLDAP = $loginLDAP;
