@@ -9,7 +9,7 @@ class Utilisateur extends AbstractDataObject
     private string $nomUtilisateur;
     private string $emailUtilisateur;
     private ?string $bio;
-    private ?array $configuration;
+    private ?string $configuration;
 
     /**
      * @param string|null $numtelutilisateur
