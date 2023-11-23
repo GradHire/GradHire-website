@@ -100,6 +100,7 @@ class UtilisateurRepository extends AbstractRepository
             $dataObjectFormatTableau['nom'] ?? "",
             $dataObjectFormatTableau['numtelephone'] ?? "",
             $dataObjectFormatTableau['bio'] ?? "",
+            $dataObjectFormatTableau['configuration'] ?? [],
         );
     }
 
@@ -226,6 +227,11 @@ class UtilisateurRepository extends AbstractRepository
     {
         if (file_exists("./pictures/" . $this->id . ".jpg")) return "/pictures/" . $this->id . ".jpg";
         return "https://as2.ftcdn.net/v2/jpg/00/64/67/63/1000_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg";
+    }
+
+    public function get_configuration(): ?array
+    {
+        return $this->attributes["configuration"];
     }
 
     public function full_name(): string

@@ -42,7 +42,7 @@ class Entreprise extends Utilisateur
 
     public function __construct(int $idutilisateur, ?string $statutjuridique, ?string $bio, ?string $typestructure, ?string $effectif, ?string $codenaf, ?string $fax, ?string $siteweb, int $siret, string $emailutilisateur, string $nomutilisateur, string $numtelutilisateur, ?string $adresse, ?string $codePostal, ?string $ville, ?string $pays)
     {
-        parent::__construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur, $bio);
+        parent::__construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur, $bio, []);
         $this->idUtilisateur = $idutilisateur;
         $this->statutJuridique = $statutjuridique;
         $this->typeStructure = $typestructure;

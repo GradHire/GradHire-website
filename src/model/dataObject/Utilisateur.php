@@ -9,20 +9,23 @@ class Utilisateur extends AbstractDataObject
     private string $nomUtilisateur;
     private string $emailUtilisateur;
     private ?string $bio;
+    private ?array $configuration;
 
     /**
      * @param string|null $numtelutilisateur
      * @param string $nomutilisateur
      * @param string $emailutilisateur
      * @param ?int $idutilisateur
+     * @param ?array $configuration
      */
-    public function __construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur, $bio)
+    public function __construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur, $bio, $configuration)
     {
         $this->idUtilisateur = $idutilisateur;
         $this->emailUtilisateur = $emailutilisateur;
         $this->nomUtilisateur = $nomutilisateur;
         $this->numTelUtilisateur = $numtelutilisateur;
         $this->bio = $bio;
+        $this->configuration = $configuration;
     }
 
     public function getNumtelutilisateur(): ?string
@@ -78,6 +81,16 @@ class Utilisateur extends AbstractDataObject
     protected function getValueColonne(string $nomColonne): string
     {
         return $this->$nomColonne;
+    }
+
+    public function getConfiguration(): ?array
+    {
+        return $this->configuration;
+    }
+
+    public function setConfiguration(?array $configuration): void
+    {
+        $this->configuration = $configuration;
     }
 
 }

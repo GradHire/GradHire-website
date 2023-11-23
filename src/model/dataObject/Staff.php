@@ -13,7 +13,7 @@ class Staff extends Utilisateur
 
     public function __construct($idutilisateur, $email, $nom, $numtelephone, $bio, $archiver, $loginLdap, $prenom, $role, ?int $idtuteurentreprise)
     {
-        parent::__construct($idutilisateur, $email, $nom, $numtelephone, $bio);
+        parent::__construct($idutilisateur, $email, $nom, $numtelephone, $bio, []);
         $this->idutilisateur = $idutilisateur;
         $this->role = $role;
         $this->loginLdap = $loginLdap;

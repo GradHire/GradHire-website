@@ -8,6 +8,7 @@ use app\src\core\components\dashboard_blocks\PieChartBlock;
 use app\src\core\components\dashboard_blocks\TitleBlock;
 use app\src\core\components\dashboard_blocks\VerticalBarChartBlock;
 use app\src\core\components\Separator;
+use app\src\model\Application;
 
 /** @var array $data
  * @var string $currentTab
@@ -36,6 +37,7 @@ function OffreCard($offre)
     $date = date_create($offre['datecreation']);
     $date = date_format($date, 'd/m/Y');
 
+    print_r(Application::getUser()->get_configuration());
 
     echo <<<EOT
 <div class="h-[125px] w-full border-gray-200 border rounded-[8px] flex flex-col justify-between items-center bg-white relative px-6 py-3 mb-5">

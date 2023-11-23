@@ -11,9 +11,9 @@ class Tuteur extends Utilisateur
     private ?string $fonction;
     private int $idEntreprise;
 
-    public function __construct(int $idUtilisateur, string $emailUtilisateur, string $nomUtilisateur, ?string $numTelUtilisateur, ?string $bio,int $archiver, string $prenomtuteurp, ?string $fonctiontuteurp, int $idEntreprise)
+    public function __construct(int $idUtilisateur, string $emailUtilisateur, string $nomUtilisateur, ?string $numTelUtilisateur, ?string $bio, int $archiver, string $prenomtuteurp, ?string $fonctiontuteurp, int $idEntreprise)
     {
-        parent::__construct($idUtilisateur, $emailUtilisateur, $nomUtilisateur, $numTelUtilisateur, $bio);
+        parent::__construct($idUtilisateur, $emailUtilisateur, $nomUtilisateur, $numTelUtilisateur, $bio, []);
         $this->idUtilisateur = $idUtilisateur;
         $this->prenom = $prenomtuteurp;
         $this->archiver = $archiver;
