@@ -1,12 +1,12 @@
 <?php
 
 namespace app\src\model\dataObject;
-use app\src\model\dataObject\AbstractDataObject;
 
-class Soutenance extends AbstractDataObject{
+class Soutenance extends AbstractDataObject
+{
 
-    private int $id_soutenance;
-    private int $num_convention;
+    private int $idsoutenance;
+    private int $numconvention;
     private int $id_tuteur_prof;
     private int $id_tuteur_enterprise;
     private int $id_professeur;
@@ -16,7 +16,8 @@ class Soutenance extends AbstractDataObject{
     /**
      * @throws \Exception
      */
-    public function __construct(array $attributes){
+    public function __construct(array $attributes)
+    {
 
         foreach ($attributes as $key => $value)
             if (property_exists($this, $key)) {
@@ -30,22 +31,22 @@ class Soutenance extends AbstractDataObject{
 
     public function getIdSoutenance(): int
     {
-        return $this->id_soutenance;
+        return $this->idsoutenance;
     }
 
     public function setIdSoutenance(int $id_soutenance): void
     {
-        $this->id_soutenance = $id_soutenance;
+        $this->idsoutenance = $id_soutenance;
     }
 
     public function getNumConvention(): int
     {
-        return $this->num_convention;
+        return $this->numconvention;
     }
 
     public function setNumConvention(int $num_convention): void
     {
-        $this->num_convention = $num_convention;
+        $this->numconvention = $num_convention;
     }
 
     public function getIdTuteurProf(): int

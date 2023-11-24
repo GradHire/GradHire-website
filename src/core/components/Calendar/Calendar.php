@@ -148,12 +148,15 @@ class Calendar
     private static function renderEvent(Event $event): void
     {
         echo <<<HTML
-            <div class="flex cursor-pointer items-center hover:bg-zinc-100 p-2 gap-2 border-b-[1px] border-zinc-200" {$event->getModal()->show()}>
+            <div class="flex cursor-pointer items-center hover:bg-zinc-100 p-2 gap-2 border-b-[1px] border-zinc-200">
                 <div class="min-w-[100px]">
                     {$event->getStart()->format('H:i')} - {$event->getEnd()->format('H:i')}
                 </div>
                 <div class="rounded-full h-[10px] w-[10px]" style="background: {$event->getColor()}"></div>
-                {$event->getTitle()}
+                <div class="flex justify-between items-center w-full">                
+                    {$event->getTitle()}
+                    {$event->printBtn()}
+                </div>
             </div>
         HTML;
     }

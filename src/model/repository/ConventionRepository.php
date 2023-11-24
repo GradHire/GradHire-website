@@ -4,14 +4,26 @@ namespace app\src\model\repository;
 
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
-use app\src\model\Auth;
-use app\src\model\dataObject\AbstractDataObject;
 use app\src\model\dataObject\Convention;
 
 class ConventionRepository extends AbstractRepository
 {
     protected static string $table = "Convention";
 
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getStudentId(int $conventionId): int
+    {
+        try {
+            $statement = Database::get_conn()->prepare("SELECT idutilisateur FROM convention WHERE numconvention=?");
+            $statement->execute([$conventionId]);
+            $data = $statement->fetch();
+            return $data["idutilisateur"];
+        } catch (\Exception) {
+            throw new ServerErrorException();
+        }
+    }
 
     /**
      * @throws ServerErrorException
@@ -32,29 +44,29 @@ class ConventionRepository extends AbstractRepository
         }
     }
 
+    public function construireDepuisTableau(array $dataObjectFormatTableau): Convention
+    {
+        return new Convention(
+            $dataObjectFormatTableau["numconvention"],
+            $dataObjectFormatTableau["origineconvention"],
+            $dataObjectFormatTableau["conventionvalidee"],
+            $dataObjectFormatTableau["conventionvalideepedagogiquement"],
+            $dataObjectFormatTableau["datemodification"],
+            $dataObjectFormatTableau["datecreation"],
+            $dataObjectFormatTableau["idsignataire"],
+            $dataObjectFormatTableau["idinterruption"],
+            $dataObjectFormatTableau["idutilisateur"],
+            $dataObjectFormatTableau["idoffre"],
+            $dataObjectFormatTableau["commentaire"]
+        );
+    }
+
     public function getByIdOffreAndIdUser(int $idOffre, int $idUser): ?Convention
     {
         try {
             $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$table . " WHERE idoffre = :idOffre AND idutilisateur = :idUser");
             $statement->bindParam(":idOffre", $idOffre);
             $statement->bindParam(":idUser", $idUser);
-            $statement->execute();
-            $data = $statement->fetch();
-            if (!$data) return null;
-            return $this->construireDepuisTableau($data);
-        } catch (\Exception $e) {
-            throw new ServerErrorException("Erreur lors de la récupération de la convention", 500, $e);
-        }
-    }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public function getById(int $id): ?Convention
-    {
-        try {
-            $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$table . " WHERE numconvention = :id");
-            $statement->bindParam(":id", $id);
             $statement->execute();
             $data = $statement->fetch();
             if (!$data) return null;
@@ -86,21 +98,21 @@ class ConventionRepository extends AbstractRepository
         }
     }
 
-    public function construireDepuisTableau(array $dataObjectFormatTableau): Convention
+    /**
+     * @throws ServerErrorException
+     */
+    public function getById(int $id): ?Convention
     {
-        return new Convention(
-            $dataObjectFormatTableau["numconvention"],
-            $dataObjectFormatTableau["origineconvention"],
-            $dataObjectFormatTableau["conventionvalidee"],
-            $dataObjectFormatTableau["conventionvalideepedagogiquement"],
-            $dataObjectFormatTableau["datemodification"],
-            $dataObjectFormatTableau["datecreation"],
-            $dataObjectFormatTableau["idsignataire"],
-            $dataObjectFormatTableau["idinterruption"],
-            $dataObjectFormatTableau["idutilisateur"],
-            $dataObjectFormatTableau["idoffre"],
-            $dataObjectFormatTableau["commentaire"]
-        );
+        try {
+            $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$table . " WHERE numconvention = :id");
+            $statement->bindParam(":id", $id);
+            $statement->execute();
+            $data = $statement->fetch();
+            if (!$data) return null;
+            return $this->construireDepuisTableau($data);
+        } catch (\Exception $e) {
+            throw new ServerErrorException("Erreur lors de la récupération de la convention", 500, $e);
+        }
     }
 
     /**

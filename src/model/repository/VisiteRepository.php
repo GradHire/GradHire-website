@@ -79,7 +79,7 @@ class VisiteRepository extends AbstractRepository
      * @return Visite[]
      * @throws ServerErrorException
      */
-    public function getAll(): array
+    public static function getAllVisites(): array
     {
         try {
             $sql = "SELECT * FROM visite";
@@ -89,7 +89,7 @@ class VisiteRepository extends AbstractRepository
             $result = $stmt->fetchAll();
             $visites = [];
             foreach ($result as $row)
-                $visites[] = $this->construireDepuisTableau($row);
+                $visites[] = new Visite($row);
             return $visites;
         } catch (\Exception $e) {
             throw new ServerErrorException();

@@ -3,7 +3,6 @@
 namespace app\src\controller;
 
 use app\src\core\components\Calendar\Event;
-use app\src\core\components\FormModal;
 use app\src\core\components\Notification;
 use app\src\core\exception\ForbiddenException;
 use app\src\core\exception\NotFoundException;
@@ -177,29 +176,44 @@ class DashboardController extends AbstractController
     public function calendar(): string
     {
         $events = [];
+        $visites = [];
         if (Auth::has_role(Roles::Student)) {
             $visites = VisiteRepository::getAllByStudentId(Application::getUser()->id());
             $soutenances = SoutenanceRepository::getAllSoutenancesByIdEtudiant(Application::getUser()->id());
-        }
-        else if (Auth::has_role(Roles::Tutor)) {
+        } else if (Auth::has_role(Roles::Tutor)) {
             $visites = VisiteRepository::getAllByEnterpriseTutorId(Application::getUser()->id());
             $soutenances = SoutenanceRepository::getAllSoutenancesByIdTuteurEntreprise(Application::getUser()->id());
-        }
-        else if (Auth::has_role(Roles::TutorTeacher)) {
+        } else if (Auth::has_role(Roles::TutorTeacher)) {
             $visites = VisiteRepository::getAllByUniversityTutorId(Application::getUser()->id());
             $soutenances = SoutenanceRepository::getAllSoutenancesByIdTuteurProf(Application::getUser()->id());
-        }
-        else if (Auth::has_role(Roles::Teacher))
+        } else if (Auth::has_role(Roles::Teacher, Roles::Manager, Roles::ManagerStage, Roles::ManagerAlternance)) {
             $soutenances = SoutenanceRepository::getAllSoutenances();
-        else
+            $visites = VisiteRepository::getAllVisites();
+        } else
             throw new ForbiddenException();
 
-        $visitesModal = new FormModal();
-        $soutenancesModal = new FormModal();
-        foreach ($visites as $visite)
-            $events[] = new Event("Visite de stage", "Visite", $visite->getDebutVisite(), $visite->getFinVisite(), "#1c4ed8", $visitesModal);
-        foreach ($soutenances as $soutenance)
-            $events[] = new Event("Soutenance", "Soutenance", $soutenance->getDebutSoutenance(), $soutenance->getFinSoutenance(), "#1c4ed8", $soutenancesModal);
-        return $this->render('calendar', ['events' => $events, "visiteModal" => $visitesModal, "soutenanceModal" => $soutenancesModal]);
+        foreach ($visites as $visite) {
+            $title = "Visite de stage";
+            if (!Auth::has_role(Roles::Student)) {
+                $name = EtudiantRepository::getFullNameByID($visite->getIdEtudiant());
+                $title .= " de " . $name;
+            }
+            $e = new Event($title, $visite->getDebutVisite(), $visite->getFinVisite(), "#1c4ed8");
+            if (Auth::has_role(Roles::TutorTeacher))
+                $e->setButton("Voir plus", "/feur");
+            $events[] = $e;
+        }
+        foreach ($soutenances as $soutenance) {
+            $title = "Soutenance";
+            if (!Auth::has_role(Roles::Student)) {
+                $userId = ConventionRepository::getStudentId($soutenance->getNumConvention());
+                $name = EtudiantRepository::getFullNameByID($userId);
+                $title .= " de " . $name;
+            }
+            $e = new Event($title, $soutenance->getDebutSoutenance(), $soutenance->getFinSoutenance(), "#1c4ed8");
+            $e->setButton("Voir plus", "/conventions/" . $soutenance->getNumConvention());
+            $events[] = $e;
+        }
+        return $this->render('calendar', ['events' => $events]);
     }
 }
