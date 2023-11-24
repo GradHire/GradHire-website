@@ -27,6 +27,7 @@ class ConventionRepository extends AbstractRepository
         } catch (\Exception $e) {
             StackTrace::print( $e);
         }
+        return null;
     }
 
 
