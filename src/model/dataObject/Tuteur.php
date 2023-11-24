@@ -41,7 +41,7 @@ class Tuteur extends Utilisateur
         $this->idUtilisateur = $idUtilisateur;
     }
 
-    public function getPrenom(): string
+    public function getPrenom(): ?string
     {
         return $this->prenom;
     }

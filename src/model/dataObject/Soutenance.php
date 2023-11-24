@@ -7,9 +7,9 @@ class Soutenance extends AbstractDataObject
 
     private int $idsoutenance;
     private int $numconvention;
-    private int $id_tuteur_prof;
-    private int $id_tuteur_enterprise;
-    private int $id_professeur;
+    private int $idtuteurprof;
+    private int $idtuteurentreprise;
+    private ?int $idprof;
     private \DateTime $debut_soutenance;
     private \DateTime $fin_soutenance;
 
@@ -18,7 +18,6 @@ class Soutenance extends AbstractDataObject
      */
     public function __construct(array $attributes)
     {
-
         foreach ($attributes as $key => $value)
             if (property_exists($this, $key)) {
                 if ($key == "debut_soutenance" || $key == "fin_soutenance") {
@@ -51,32 +50,32 @@ class Soutenance extends AbstractDataObject
 
     public function getIdTuteurProf(): int
     {
-        return $this->id_tuteur_prof;
+        return $this->idtuteurprof;
     }
 
     public function setIdTuteurProf(int $id_tuteur_prof): void
     {
-        $this->id_tuteur_prof = $id_tuteur_prof;
+        $this->idtuteurprof = $id_tuteur_prof;
     }
 
     public function getIdTuteurEnterprise(): int
     {
-        return $this->id_tuteur_enterprise;
+        return $this->idtuteurentreprise;
     }
 
     public function setIdTuteurEnterprise(int $id_tuteur_enterprise): void
     {
-        $this->id_tuteur_enterprise = $id_tuteur_enterprise;
+        $this->idtuteurentreprise = $id_tuteur_enterprise;
     }
 
-    public function getIdProfesseur(): int
+    public function getIdProfesseur(): ?int
     {
-        return $this->id_professeur;
+        return $this->idprof;
     }
 
     public function setIdProfesseur(int $id_professeur): void
     {
-        $this->id_professeur = $id_professeur;
+        $this->idprof = $id_professeur;
     }
 
     public function getDebutSoutenance(): \DateTime

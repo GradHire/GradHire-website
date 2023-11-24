@@ -211,7 +211,7 @@ class DashboardController extends AbstractController
                 $title .= " de " . $name;
             }
             $e = new Event($title, $soutenance->getDebutSoutenance(), $soutenance->getFinSoutenance(), "#1c4ed8");
-            $e->setButton("Voir plus", "/conventions/" . $soutenance->getNumConvention());
+            $e->setButton("Voir plus", "/voirSoutenance/" . $soutenance->getNumConvention());
             $events[] = $e;
         }
         return $this->render('calendar', ['events' => $events]);

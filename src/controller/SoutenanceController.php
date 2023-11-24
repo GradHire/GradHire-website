@@ -29,8 +29,8 @@ class SoutenanceController extends AbstractController
                 'fin_soutenance' => FormModel::Date("Fin de la soutenance")->Required()->asterisk()->forget()->withHour()
             ]);
             if ($request->getMethod() == "post") {
-                if ($form->validate($request->getBody())){
-                    $values = array_merge($form->getParsedBody() , [
+                if ($form->validate($request->getBody())) {
+                    $values = array_merge($form->getParsedBody(), [
                         'numconvention' => $infosConvention['numconvention'],
                         'idtuteurprof' => $infosConvention['idtuteurprof'],
                         'idtuteurentreprise' => $infosConvention['idtuteurentreprise'],
@@ -51,7 +51,7 @@ class SoutenanceController extends AbstractController
      */
     public function etreJury(Request $request): void
     {
-        if (Auth::has_role(Roles::Teacher,Roles::TutorTeacher)) {
+        if (Auth::has_role(Roles::Teacher, Roles::TutorTeacher)) {
             $numConvention = $request->getRouteParam("numConvention");
             $idtuteurprof = Application::getUser()->id();
             SoutenanceRepository::seProposerCommeJury($idtuteurprof, $numConvention);
@@ -65,7 +65,7 @@ class SoutenanceController extends AbstractController
     {
         $numConvention = $request->getRouteParam("numConvention");
         $soutenance = SoutenanceRepository::getSoutenanceByNumConvention($numConvention);
-        return $this->render("soutenance/voir", [
+        return $this->render("soutenance/details", [
             "soutenance" => $soutenance
         ]);
     }
