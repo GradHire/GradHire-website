@@ -13,7 +13,7 @@ class ConventionRepository extends AbstractRepository
 {
     protected static string $table = "Convention";
 
-    public static function getByNumConvention(mixed $numConvention)
+    public static function getByNumConvention(mixed $numConvention): ?array
     {
         try {
         $sql = "SELECT numconvention,idtuteurprof,idtuteurentreprise FROM \"conventionValideVue\" WHERE numconvention = :numConvention";
@@ -23,8 +23,7 @@ class ConventionRepository extends AbstractRepository
         $resultat = $requete->fetch();
         if (!$resultat) {
             return null;
-        }
-        return $resultat;
+        } return $resultat;
         } catch (\Exception $e) {
             StackTrace::print( $e);
         }
@@ -34,7 +33,7 @@ class ConventionRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public function getAll(): array
+    public function getAll(): ?array
     {
         try {
             $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$table);
@@ -48,6 +47,7 @@ class ConventionRepository extends AbstractRepository
         } catch (\Exception $e) {
             StackTrace::print($e);
         }
+        return null;
     }
 
     public function getByIdOffreAndIdUser(int $idOffre, int $idUser): ?Convention
@@ -63,6 +63,7 @@ class ConventionRepository extends AbstractRepository
         } catch (\Exception $e) {
             StackTrace::print($e);
         }
+        return null;
     }
 
     /**
@@ -80,6 +81,7 @@ class ConventionRepository extends AbstractRepository
         } catch (\Exception $e) {
             StackTrace::print($e);
         }
+        return null;
     }
 
     /**
