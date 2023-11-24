@@ -23,41 +23,14 @@ class Etudiant extends Utilisateur
     private ?int $annee;
 
     public function __construct(
-        int     $idUtilisateur,
-        string  $email,
-        string  $nom,
-        ?string $numTelephone,
-        ?string $bio,
-        ?bool   $archiver,
-        ?string $nomVille,
-        ?int    $codePostal,
-        ?string $pays,
-        ?string $adresse,
-        ?string $emailPerso,
-        ?string $numEtudiant,
-        ?string $codeSexe,
-        ?int    $idgroupe,
-        ?int    $annee,
-        ?string $dateNaissance,
-        ?string $loginLDAP,
-        string  $prenom,
+        array $attributes
     )
     {
-        parent::__construct($idUtilisateur, $email, $nom, $numTelephone, $bio);
-        $this->idUtilisateur = $idUtilisateur;
-        $this->prenom = $prenom;
-        $this->loginLDAP = $loginLDAP;
-        $this->numEtudiant = $numEtudiant;
-        $this->adresse = $adresse;
-        $this->dateNaissance = $dateNaissance;
-        $this->emailPerso = $emailPerso;
-        $this->codeSexe = $codeSexe;
-        $this->idgroupe = $idgroupe;
-        $this->nomVille = $nomVille;
-        $this->codePostal = $codePostal;
-        $this->pays = $pays;
-        $this->archiver = $archiver;
-        $this->annee = $annee;
+        parent::__construct($attributes['idutilisateur'], $attributes['email'], $attributes['nom'], $attributes['numtelephone'], $attributes['bio']);
+        foreach ($attributes as $key => $value)
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
     }
 
     public static function getConvId(): int

@@ -92,26 +92,8 @@ class EtudiantRepository extends LdapRepository
     protected
     function construireDepuisTableau(array $dataObjectFormatTableau): Etudiant
     {
-        print_r($dataObjectFormatTableau);
         return new Etudiant(
-            $dataObjectFormatTableau["idutilisateur"],
-            $dataObjectFormatTableau["email"],
-            $dataObjectFormatTableau["nom"],
-            $dataObjectFormatTableau["numtelephone"],
-            $dataObjectFormatTableau["bio"],
-            $dataObjectFormatTableau["archiver"],
-            $dataObjectFormatTableau["nomville"],
-            $dataObjectFormatTableau["codepostal"],
-            $dataObjectFormatTableau["pays"],
-            $dataObjectFormatTableau["adresse"],
-            $dataObjectFormatTableau["emailperso"],
-            $dataObjectFormatTableau["numetudiant"],
-            $dataObjectFormatTableau["codesexe"],
-            $dataObjectFormatTableau["idgroupe"],
-            $dataObjectFormatTableau["annee"],
-            $dataObjectFormatTableau["datenaissance"],
-            $dataObjectFormatTableau["loginldap"],
-            $dataObjectFormatTableau["prenom"]
+            $dataObjectFormatTableau
         );
     }
 

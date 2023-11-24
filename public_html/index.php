@@ -7,6 +7,7 @@ use app\src\controller\DashboardController;
 use app\src\controller\OffreController;
 use app\src\controller\PostulerController;
 use app\src\controller\PstageController;
+use app\src\controller\SoutenanceController;
 use app\src\controller\TestController;
 use app\src\controller\UserController;
 use app\src\core\exception\ServerErrorException;
@@ -213,5 +214,9 @@ $app->router->get('/postuler/listeTuteur/{idOffre}/{idUser}', [PostulerControlle
 $app->router->get('/postuler/accepter_as_tuteur/{idUser}/{idOffre}/{idEtu}', [PostulerController::class, 'accepterAsTuteur']);
 $app->router->get('/postuler/unaccepte_as_tuteur/{idUser}/{idOffre}/{idEtu}', [PostulerController::class, 'annulerAsTuteur']);
 $app->router->post('/postuler/assignerCommeTuteur/{idOffre}/{idUser}/{idEtu}', [PostulerController::class, 'assignerTuteurEntreprise']);
+
+// SoutenanceController
+$app->router->get('/createSoutenance/{numConvention}', [SoutenanceController::class, 'createSoutenance']);
+$app->router->post('/createSoutenance/{numConvention}', [SoutenanceController::class, 'createSoutenance']);
 
 $app->run();

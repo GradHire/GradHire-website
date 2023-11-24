@@ -12,6 +12,40 @@ class ConventionRepository extends AbstractRepository
 {
     protected static string $table = "Convention";
 
+    public static function createSoutenance(?array $array)
+    {
+        try {
+            $sql = "INSERT INTO Soutenance (numConvention, idtuteurprof, idtuteurentreprise, idprof, debut_soutenance, fin_soutenance) VALUES (:numConvention, :dateSoutenance, :heureSoutenance, :salleSoutenance, :idUtilisateur)";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'numConvention' => $array['numConvention'],
+                'dateSoutenance' => $array['dateSoutenance'],
+                'heureSoutenance' => $array['heureSoutenance'],
+                'salleSoutenance' => $array['salleSoutenance'],
+                'idUtilisateur' => $array['idUtilisateur']
+            ]);
+        } catch (\Exception $e) {
+            StackTrace::print( $e);
+        }
+    }
+
+    public static function getByNumConvention(mixed $numConvention)
+    {
+        try {
+        $sql = "SELECT * FROM \"conventionValideVue\" WHERE numconvention = :numConvention";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['numConvention' => $numConvention]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetch();
+        if (!$resultat) {
+            return null;
+        }
+        return $resultat;
+        } catch (\Exception $e) {
+            StackTrace::print( $e);
+        }
+    }
+
 
     /**
      * @throws ServerErrorException

@@ -70,6 +70,18 @@ class SoutenanceRepository extends AbstractRepository
         return new Soutenance($dataObjectFormatTableau);
     }
 
+    public static function createSoutenance(?array $array){
+        $sql = "INSERT INTO soutenance (numconvention, idtuteurprof, idtuteurenterprise, debut_soutenance,fin_soutenance) VALUES (:numconvention, :idtuteurprof, :idtuteurenterprise, :debut_soutenance, :fin_soutenance)";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute([
+            'numconvention' => $array['numconvention'],
+            'idtuteurprof' => $array['idtuteurprof'],
+            'idtuteur_enterprise' => $array['idtuteurentreprise'],
+            'debut_soutenance' => $array['debut_soutenance'],
+            'fin_soutenance' => $array['fin_soutenance']
+        ]);
+    }
+
     protected function getNomColonnes(): array
     {
         return [

@@ -41,7 +41,10 @@ $this->title = 'Conventions';
                 Table::button("/validateConventionPedagogiquement/" . $convention->getNumConvention(), "Valider");
             else if ($convention->getConvetionValideePedagogiquement() == "1" && $convention->getConventionValide() == "0")
                 Table::button("/unvalidateConventionPedagogiquement/" . $convention->getNumConvention(), "Invalider");
-            else Table::cell("");
+            else if ($convention->getConventionValide() == "1" && $convention->getConvetionValideePedagogiquement() == "1")
+                Table::button("/createSoutenance/" . $convention->getNumConvention(), "Creer soutenance");
+            else
+                Table::cell("");
         } else if (Auth::has_role(Roles::Enterprise)) {
             if ($convention->getConventionValide() == "0" && $convention->getConvetionValideePedagogiquement() == "1")
                 Table::button("/validateConvention/" . $convention->getNumConvention(), "Valider");
