@@ -49,9 +49,9 @@ class SignataireRepository extends AbstractRepository
             $dataObjectFormatTableau['identreprise']);
     }
 
-    public function create(mixed $nomSignataire, mixed $prenomSignataire, mixed $fonctionSignataire, mixed $mailSignataire, mixed $idEntreprise): void
+    public function create(mixed $nomSignataire, mixed $prenomSignataire, mixed $fonctionSignataire, mixed $mailSignataire, mixed $idEntreprise)
     {
-        $sql = "SELECT * from creerSignataire(:nomSignataire, :prenomSignataire, :mailSignataire, :fonctionSignataire, :idEntreprise);";
+        $sql = "SELECT creerSignataire(:nomSignataire, :prenomSignataire, :mailSignataire, :fonctionSignataire, :idEntreprise) ";
         $stmt = Database::get_conn()->prepare($sql);
         $stmt->bindValue(":nomSignataire", $nomSignataire);
         $stmt->bindValue(":prenomSignataire", $prenomSignataire);

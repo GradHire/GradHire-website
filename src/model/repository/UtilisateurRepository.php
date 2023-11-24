@@ -47,7 +47,7 @@ class UtilisateurRepository extends AbstractRepository
     static function save(array $values): static
     {
         try {
-            $statement = Database::get_conn()->prepare("SELECT * from " . static::$create_function . "(" . ltrim(str_repeat(",?", count($values)), ",") . ");");
+            $statement = Database::get_conn()->prepare("SELECT " . static::$create_function . "(" . ltrim(str_repeat(",?", count($values)), ",") . ") ");
             $statement->execute($values);
             return static::find_by_id(intval($statement->fetchColumn()));
         } catch (\Exception) {
@@ -119,7 +119,7 @@ class UtilisateurRepository extends AbstractRepository
             }
             return $this->construireDepuisTableau($resultat);
         } catch (PDOException) {
-            throw new ServerErrorException('erreur getUserById');
+            throw new ServerErrorException();
         }
     }
 
@@ -227,7 +227,6 @@ class UtilisateurRepository extends AbstractRepository
         if (file_exists("./pictures/" . $this->id . ".jpg")) return "/pictures/" . $this->id . ".jpg";
         return "https://as2.ftcdn.net/v2/jpg/00/64/67/63/1000_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg";
     }
-
 
     public function full_name(): string
     {

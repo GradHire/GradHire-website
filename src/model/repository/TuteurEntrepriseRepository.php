@@ -112,6 +112,7 @@ class TuteurEntrepriseRepository extends ProRepository
             $tuteurData['email'] ?? "",
             $tuteurData['nom'] ?? "",
             $tuteurData['numtelephone'] ?? "",
+
         );
     }
 
@@ -162,7 +163,7 @@ class TuteurEntrepriseRepository extends ProRepository
 
     public function create(mixed $nom, mixed $prenom, mixed $fonction, mixed $tel, mixed $email, mixed $idEntreprise)
     {
-        $sql = "SELECT * from creerTuteur(:prenom, :nom, :email, :fonction, :idEntreprise, :hash, :tel);";
+        $sql = "SELECT creerTuteur(:prenom, :nom, :email, :fonction, :idEntreprise, :hash, :tel)  ";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute([
             'prenom' => $prenom,

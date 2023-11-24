@@ -126,13 +126,12 @@ class AuthController extends AbstractController
     {
         if (!Application::isGuest()) header("Location: /");
         $form = new FormModel([
-            "name" => FormModel::string("Nom entreprise")->required()->min(10)->asterisk(),
+            "name" => FormModel::string("Nom entreprise")->required()->min(1)->asterisk(),
             "email" => FormModel::email("Adresse mail")->required()->asterisk(),
             "siret" => FormModel::string("Siret")->required()->numeric()->asterisk()->length(14),
             "phone" => FormModel::phone("Téléphone")->required()->asterisk(),
             "password" => FormModel::password("Mot de passe")->min(8)->asterisk(),
             "password2" => FormModel::password("Répéter mot de passe")->match('password')->asterisk(),
-
         ]);
         if ($request->getMethod() === 'post') {
             if ($form->validate($request->getBody())) {
