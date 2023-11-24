@@ -15,7 +15,6 @@ class Import
 
     public function importerligne($row)
     {
-
         if (!$this->recordExists('Utilisateur', 'email', $row[7])) $this->insertEtudiant($row);
         else $this->updateEtudiant($row);
         $idetu = $this->find('Utilisateur', 'email', $row[7], 'idUtilisateur');
@@ -40,7 +39,7 @@ class Import
 
         $idOffre = $this->insertOffreStage($row, $identreprise);
 
-        if (!$this->recordExists('Postuler', 'idOffre', $idOffre) && !$this->recordExists('Postuler', 'idutilisateur', $idetu)) {
+        if (!$this->recordExists('Postuler', 'idOffre', $idOffre) || !$this->recordExists('Postuler', 'idutilisateur', $idetu)) {
             $this->insertPostuler($row, $idOffre, $idetu);
             $this->insertSuperviser($row, $idOffre, $idetu, $idreferent, $idtuteur);
         }
@@ -206,7 +205,7 @@ class Import
 
     private function insertServiceAccueil($row, mixed $identreprise)
     {
-        $sql = "Select creerServiceAccueil(?,? ,? ,? ,? ,? ,? ,?) ";
+        $sql = "CALL creerServiceAccueil(?,? ,? ,? ,? ,? ,? ,?) ";
         $identreprise = $this->getIdentreprise($sql, $row, $identreprise);
     }
 
@@ -291,6 +290,11 @@ class Import
     private function insertConvention($row, $idsignataire, $idetu, $idOffre)
     {
         $sql = "SELECT creerConvention(?,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?) ";
+        $row[28] = ($row[28] == "Oui") ? 1 : 0;
+        $row[48] = ($row[48] == "Oui") ? 1 : 0;
+        $row[51] = date('Y-m-d H:i:s', strtotime($row[51]));
+        $row[16] = date('Y-m-d', strtotime($row[16]));
+        $row[17] = date('Y-m-d', strtotime($row[17]));
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(1, $row[0]);
         $stmt->bindParam(2, $row[53]);
@@ -329,12 +333,13 @@ class Import
         $idsignataire = $this->find('Signataire', 'mailSignataire', $data[96], 'idSignataire');
 
         $idreferent = 90;
-
         $idOffre = $this->insertOffreStudea($data, $identreprise);
-
         $this->updateoffrePourStudea($data, $idOffre);
-        $this->insertPostuler($data, $idOffre, $idetu);
-        $this->insertSuperviser($data, $idOffre, $idetu, $idreferent, $idtuteur);
+
+        if (!$this->recordExists('Postuler', 'idOffre', $idOffre) || !$this->recordExists('Postuler', 'idutilisateur', $idetu)) {
+            $this->insertPostuler($data, $idOffre, $idetu);
+            $this->insertSuperviser($data, $idOffre, $idetu, $idreferent, $idtuteur);
+        }
         if (!$this->recordExists('Convention', 'numConvention', $data[3])) $this->insertConventionStudea($data, $idsignataire, $idetu, $idOffre);
     }
 
@@ -467,31 +472,41 @@ class Import
     {
         $null = "";
         $valider = 1;
+        $zero = 0;
         $valide = "valider";
         $anneeuni = $data[6] . "-" . $data[7];
-        $sql = "SELECT creerOffreAlternance(?, ?,?, ?,?,?,?, ?,?, ?,?,? ,?, ?) ";
+        // Convert the dates to the correct format
+        $date139 = $data[139];
+        $date140 = $data[140];
+        $date139 = date("Y-m-d", strtotime($date139));
+        $date140 = date("Y-m-d", strtotime($date140));
+
+        $sql = "SELECT creerOffreAlternance(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(1, $data[126]);
         $stmt->bindParam(2, $null);
         $stmt->bindParam(3, $null);
-        $stmt->bindParam(4, $null);
-        $stmt->bindParam(5, $null);
-        $stmt->bindParam(6, $null);
+        $stmt->bindParam(4, $zero);
+        $stmt->bindParam(5, $zero);
+        $stmt->bindParam(6, $zero);
         $stmt->bindParam(7, $null);
-        $stmt->bindParam(8, $data[139]);
-        $stmt->bindParam(9, $data[140]);
+        $stmt->bindParam(8, $date139);
+        $stmt->bindParam(9, $date140);
         $stmt->bindParam(10, $valide);
         $stmt->bindParam(11, $valider);
         $stmt->bindParam(12, $anneeuni);
         $stmt->bindParam(13, $identreprise);
         $stmt->bindParam(14, $data[100]);
         $stmt->execute();
-        $sql = "SELECT idOffre FROM Offre WHERE idOffre= (SELECT MAX(idOffre) FROM Offre)";
+
+        $sql = "SELECT idOffre FROM Offre WHERE idOffre = (SELECT MAX(idOffre) FROM Offre)";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         $last_insert = $stmt->fetchColumn();
+
         return $last_insert;
     }
+
 
     private function updateoffrePourStudea($data, mixed $idOffre)
     {
@@ -503,14 +518,19 @@ class Import
     private function insertConventionStudea($data, mixed $idsignataire, mixed $identreprise, mixed $idOffre)
     {
         $null = "";
-        $enattente = "en attente";
+        $studea = "Studea";
+        $date = date("Y-m-d");
+        $zero = 0;
+        $data[104] = date("Y-m-d", strtotime($data[104]));
+        $data[139] = date("Y-m-d", strtotime($data[139]));
+        $data[140] = date("Y-m-d", strtotime($data[140]));
         $sql = "SELECT creerConvention(?, ?,?, ?,?,?,?, ?,?, ?,?,? ,?) ";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(1, $data[3]);
-        $stmt->bindParam(2, $null);
-        $stmt->bindParam(3, $enattente);
-        $stmt->bindParam(4, $enattente);
-        $stmt->bindParam(5, $null);
+        $stmt->bindParam(2, $studea);
+        $stmt->bindParam(3, $zero);
+        $stmt->bindParam(4, $zero);
+        $stmt->bindParam(5, $date);
         $stmt->bindParam(6, $data[104]);
         $stmt->bindParam(7, $idsignataire);
         $stmt->bindParam(8, $null);

@@ -12,6 +12,7 @@ $linkCandidatures = new Lien('/candidatures', 'Candidatures');
 $linkCreate = new Lien('/offres/create', 'Créer une offre');
 $linkTuteurs = new Lien('/ListeTuteurPro', 'Tuteurs');
 $linkImport = new Lien('/importer', 'Import');
+$linkImportStudeants = new Lien('/importerStudea', 'Import Studea');
 $linkConventions = new Lien('/conventions', 'Conventions');
 $linkExplicationSimu = new Lien('/explicationSimu', 'Simulateur');
 
@@ -30,6 +31,7 @@ if (!Application::isGuest()) {
         echo $linkCandidatures->render();
         echo $linkTuteurs->render();
         echo $linkImport->render();
+        echo $linkImportStudeants->render();
     }
     if (Auth::has_role(Roles::Student)) echo $linkExplicationSimu->render();
     if (Auth::has_role(Roles::Enterprise, Roles::Student, Roles::Manager, Roles::Staff)) echo $linkConventions->render();
