@@ -53,30 +53,24 @@ class AuthController extends AbstractController
      */
     public function login(Request $request): string|null
     {
-        try {
-
-            if (!Application::isGuest()) header("Location: /");
-            $loginForm = new FormModel([
-                "username" => FormModel::string("Login ldap")->required(),
-                "password" => FormModel::password("Mot de passe")->required(),
-                "remember" => FormModel::switch("Rester connecté")->default(true)
-            ]);
-            if ($request->getMethod() === 'post') {
-                if ($loginForm->validate($request->getBody())) {
-                    $dt = $loginForm->getParsedBody();
-                    if (LdapRepository::login($dt["username"], $dt["password"], $dt["remember"], $loginForm)) {
-                        Application::redirectFromParam('/');
-                        return null;
-                    }
+        if (!Application::isGuest()) header("Location: /");
+        $loginForm = new FormModel([
+            "username" => FormModel::string("Login ldap")->required(),
+            "password" => FormModel::password("Mot de passe")->required(),
+            "remember" => FormModel::switch("Rester connecté")->default(true)
+        ]);
+        if ($request->getMethod() === 'post') {
+            if ($loginForm->validate($request->getBody())) {
+                $dt = $loginForm->getParsedBody();
+                if (LdapRepository::login($dt["username"], $dt["password"], $dt["remember"], $loginForm)) {
+                    Application::redirectFromParam('/');
+                    return null;
                 }
             }
-            return $this->render('login', [
-                'form' => $loginForm
-            ]);
-        } catch (\Exception $e) {
-            print_r($e);
         }
-        return '';
+        return $this->render('login', [
+            'form' => $loginForm
+        ]);
     }
 
     public function logout(Request $request, Response $response): void
