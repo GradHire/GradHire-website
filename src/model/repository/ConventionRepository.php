@@ -4,6 +4,7 @@ namespace app\src\model\repository;
 
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
+use app\src\core\lib\StackTrace;
 use app\src\model\Auth;
 use app\src\model\dataObject\AbstractDataObject;
 use app\src\model\dataObject\Convention;
@@ -12,27 +13,10 @@ class ConventionRepository extends AbstractRepository
 {
     protected static string $table = "Convention";
 
-    public static function createSoutenance(?array $array)
-    {
-        try {
-            $sql = "INSERT INTO Soutenance (numConvention, idtuteurprof, idtuteurentreprise, idprof, debut_soutenance, fin_soutenance) VALUES (:numConvention, :dateSoutenance, :heureSoutenance, :salleSoutenance, :idUtilisateur)";
-            $requete = Database::get_conn()->prepare($sql);
-            $requete->execute([
-                'numConvention' => $array['numConvention'],
-                'dateSoutenance' => $array['dateSoutenance'],
-                'heureSoutenance' => $array['heureSoutenance'],
-                'salleSoutenance' => $array['salleSoutenance'],
-                'idUtilisateur' => $array['idUtilisateur']
-            ]);
-        } catch (\Exception $e) {
-            StackTrace::print( $e);
-        }
-    }
-
     public static function getByNumConvention(mixed $numConvention)
     {
         try {
-        $sql = "SELECT * FROM \"conventionValideVue\" WHERE numconvention = :numConvention";
+        $sql = "SELECT numconvention,idtuteurprof,idtuteurentreprise FROM \"conventionValideVue\" WHERE numconvention = :numConvention";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['numConvention' => $numConvention]);
         $requete->setFetchMode(\PDO::FETCH_ASSOC);
@@ -62,7 +46,7 @@ class ConventionRepository extends AbstractRepository
             }
             return $conventions;
         } catch (\Exception $e) {
-            throw new ServerErrorException("Erreur lors de la récupération des conventions", 500, $e);
+            StackTrace::print($e);
         }
     }
 
@@ -77,7 +61,7 @@ class ConventionRepository extends AbstractRepository
             if (!$data) return null;
             return $this->construireDepuisTableau($data);
         } catch (\Exception $e) {
-            throw new ServerErrorException("Erreur lors de la récupération de la convention", 500, $e);
+            StackTrace::print($e);
         }
     }
 
@@ -94,7 +78,7 @@ class ConventionRepository extends AbstractRepository
             if (!$data) return null;
             return $this->construireDepuisTableau($data);
         } catch (\Exception $e) {
-            throw new ServerErrorException("Erreur lors de la récupération de la convention", 500, $e);
+            StackTrace::print($e);
         }
     }
 
@@ -116,7 +100,7 @@ class ConventionRepository extends AbstractRepository
                 "La convention n°" . $id . " de l'offre " . $offre->getSujet() . " a été validée pédagogiquement par le Staff "
             );
         } catch (\Exception $e) {
-            throw new ServerErrorException("Erreur lors de la validation pédagogique de la convention", 500, $e);
+            StackTrace::print($e);
         }
     }
 

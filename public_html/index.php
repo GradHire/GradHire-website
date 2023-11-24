@@ -220,6 +220,8 @@ $app->router->post('/postuler/assignerCommeTuteur/{idOffre}/{idUser}/{idEtu}', [
 
 // SoutenanceController
 $app->router->get('/createSoutenance/{numConvention}', [SoutenanceController::class, 'createSoutenance']);
+$app->router->get('/voirSoutenance/{numConvention}', [SoutenanceController::class, 'voirSoutenance']);
+$app->router->get('/seProposerJury/{numConvention}', [SoutenanceController::class, 'etreJury']);
 $app->router->post('/createSoutenance/{numConvention}', [SoutenanceController::class, 'createSoutenance']);
 
 $app->run();

@@ -23,7 +23,7 @@ if (!Application::isGuest()) {
     else echo $linkUtilisateurs->render();
     if (!Auth::has_role(Roles::Enterprise, Roles::Tutor, Roles::ChefDepartment)) echo $linkEntreprises->render();
     if (Auth::has_role(Roles::Student, Roles::Teacher, Roles::Tutor, Roles::TutorTeacher, Roles::Enterprise)) echo $linkCandidatures->render();
-    if (Auth::has_role(Roles::Teacher, Roles::Tutor, Roles::TutorTeacher, Roles::Student)) echo $linkCalendar->render();
+    if (Auth::has_role(Roles::Teacher, Roles::Tutor, Roles::TutorTeacher, Roles::Student, Roles::Manager, Roles::Staff, Roles::ManagerAlternance, Roles::ManagerStage)) echo $linkCalendar->render();
     if (Auth::has_role(Roles::Enterprise)) {
         echo $linkCreate->render();
         echo $linkTuteurs->render();
@@ -36,7 +36,7 @@ if (!Application::isGuest()) {
         echo $linkImportStudeants->render();
     }
     if (Auth::has_role(Roles::Student)) echo $linkExplicationSimu->render();
-    if (Auth::has_role(Roles::Enterprise, Roles::Student, Roles::Manager, Roles::Staff)) echo $linkConventions->render();
+    if (Auth::has_role(Roles::Enterprise, Roles::Student, Roles::Manager, Roles::Staff, Roles::ManagerStage, Roles::ManagerAlternance, Roles::Teacher,Roles::TutorTeacher,Roles::Tutor)) echo $linkConventions->render();
 }
 
 ?>

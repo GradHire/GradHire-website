@@ -191,7 +191,10 @@ class DashboardController extends AbstractController
         }
         else if (Auth::has_role(Roles::Teacher))
             $soutenances = SoutenanceRepository::getAllSoutenances();
-        else
+        else if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::ManagerStage, Roles::ManagerAlternance)){
+            $visites = (new VisiteRepository())->getAll();
+            $soutenances = SoutenanceRepository::getAllSoutenances();
+        } else
             throw new ForbiddenException();
 
         $visitesModal = new FormModal();

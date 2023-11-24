@@ -4,6 +4,7 @@ namespace app\src\model\repository;
 
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
+use app\src\core\lib\StackTrace;
 use app\src\model\dataObject\AbstractDataObject;
 use app\src\model\dataObject\Soutenance;
 
@@ -60,6 +61,75 @@ class SoutenanceRepository extends AbstractRepository
         return $dataObjects;
     }
 
+    public static function imTheEtudiant($id, $getNumConvention)
+    {
+        $sql = Database::get_conn()->prepare("SELECT * FROM " . self::$table . " WHERE idetudiant = :id AND numconvention = :numconvention");
+        $sql->execute([
+            'id' => $id,
+            'numconvention' => $getNumConvention
+        ]);
+        $result = $sql->fetch();
+        if ($result == null)
+            return false;
+        else
+            return true;
+    }
+
+    public static function imTheTuteurEntreprise($id, $getNumConvention)
+    {
+        $sql = Database::get_conn()->prepare("SELECT * FROM " . self::$table . " WHERE idtuteurentreprise = :id AND numconvention = :numconvention");
+        $sql->execute([
+            'id' => $id,
+            'numconvention' => $getNumConvention
+        ]);
+        $result = $sql->fetch();
+        if ($result == null)
+            return false;
+        else
+            return true;
+    }
+
+    public static function imTheTuteurProf($id, $getNumConvention)
+    {
+        $sql = Database::get_conn()->prepare("SELECT * FROM " . self::$table . " WHERE idtuteurprof = :id AND numconvention = :numconvention");
+        $sql->execute([
+            'id' => $id,
+            'numconvention' => $getNumConvention
+        ]);
+        $result = $sql->fetch();
+        if ($result == null)
+            return false;
+        else
+            return true;
+    }
+
+    public static function imTheJury($id, $getNumConvention)
+    {
+        $sql = Database::get_conn()->prepare("SELECT * FROM " . self::$table . " WHERE idprof = :id AND numconvention = :numconvention");
+        $sql->execute([
+            'id' => $id,
+            'numconvention' => $getNumConvention
+        ]);
+        $result = $sql->fetch();
+        if ($result == null)
+            return false;
+        else
+            return true;
+    }
+
+    public static function getSoutenanceByNumConvention(mixed $numConvention)
+    {
+        $sql = Database::get_conn()->prepare("SELECT * FROM soutenancesvue WHERE numconvention = :numconvention");
+        $sql->execute([
+            'numconvention' => $numConvention
+        ]);
+        $result = $sql->fetch();
+        if ($result == null)
+            return null;
+        else
+            return new Soutenance($result);
+    }
+
     public function getAll(): ?array
     {
         return parent::getAll();
@@ -71,15 +141,72 @@ class SoutenanceRepository extends AbstractRepository
     }
 
     public static function createSoutenance(?array $array){
-        $sql = "INSERT INTO soutenance (numconvention, idtuteurprof, idtuteurenterprise, debut_soutenance,fin_soutenance) VALUES (:numconvention, :idtuteurprof, :idtuteurenterprise, :debut_soutenance, :fin_soutenance)";
+        $debut_soutenance = date('Y-m-d H:i:s', strtotime($array['debut_soutenance']));
+        $fin_soutenance = date('Y-m-d H:i:s', strtotime($array['fin_soutenance']));
+        $sql = "INSERT INTO soutenances(numconvention, idtuteurprof, idtuteurentreprise, debut_soutenance, fin_soutenance) VALUES (:numconvention, :idtuteurprof, :idtuteurentreprise, :debut_soutenance, :fin_soutenance)";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute([
             'numconvention' => $array['numconvention'],
             'idtuteurprof' => $array['idtuteurprof'],
-            'idtuteur_enterprise' => $array['idtuteurentreprise'],
-            'debut_soutenance' => $array['debut_soutenance'],
-            'fin_soutenance' => $array['fin_soutenance']
+            'idtuteurentreprise' => $array['idtuteurentreprise'],
+            'debut_soutenance' => $debut_soutenance,
+            'fin_soutenance' => $fin_soutenance
         ]);
+    }
+
+    public static function getIfSoutenanceExist(int $numConvention): bool
+    {
+        $sql = Database::get_conn()->prepare("SELECT idsoutenance FROM " . self::$table . " WHERE numconvention = :numconvention");
+        $sql->execute([
+            'numconvention' => $numConvention
+        ]);
+        $result = $sql->fetch();
+        if ($result == null)
+            return false;
+        else
+            return true;
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public static function seProposerCommeJury(int $idprof , int $numConvention){
+        try{
+            $sql = "UPDATE soutenances SET idprof = :idprof WHERE numconvention = :numconvention";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idprof' => $idprof,
+                'numconvention' => $numConvention
+            ]);
+        } catch (\Exception $e) {
+            throw new ServerErrorException();
+        }
+    }
+
+    public static function getIfJuryExist(int $idprof, int $numConvention): bool{
+        $sql = Database::get_conn()->prepare("SELECT idsoutenance FROM " . self::$table . " WHERE idprof = :idprof AND numconvention = :numconvention");
+        $sql->execute([
+            'idprof' => $idprof,
+            'numconvention' => $numConvention
+        ]);
+        $result = $sql->fetch();
+        if ($result == null)
+            return false;
+        else
+            return true;
+    }
+
+    public static function getIfImTheTuteurProf(int $idprof, int $numConvention): bool{
+        $sql = Database::get_conn()->prepare("SELECT idsoutenance FROM " . self::$table . " WHERE idtuteurprof = :idprof AND numconvention = :numconvention");
+        $sql->execute([
+            'idprof' => $idprof,
+            'numconvention' => $numConvention
+        ]);
+        $result = $sql->fetch();
+        if ($result == null)
+            return false;
+        else
+            return true;
     }
 
     protected function getNomColonnes(): array

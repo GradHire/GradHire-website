@@ -2,11 +2,13 @@
 /** @var $conventions ConventionRepository */
 
 use app\src\core\components\Table;
+use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\repository\ConventionRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\OffresRepository;
+use app\src\model\repository\SoutenanceRepository;
 
 $this->title = 'Conventions';
 
@@ -41,16 +43,30 @@ $this->title = 'Conventions';
                 Table::button("/validateConventionPedagogiquement/" . $convention->getNumConvention(), "Valider");
             else if ($convention->getConvetionValideePedagogiquement() == "1" && $convention->getConventionValide() == "0")
                 Table::button("/unvalidateConventionPedagogiquement/" . $convention->getNumConvention(), "Invalider");
-            else if ($convention->getConventionValide() == "1" && $convention->getConvetionValideePedagogiquement() == "1")
+            else if ($convention->getConventionValide() == "1" && $convention->getConvetionValideePedagogiquement() == "1" && !SoutenanceRepository::getIfSoutenanceExist($convention->getNumConvention()))
                 Table::button("/createSoutenance/" . $convention->getNumConvention(), "Creer soutenance");
             else
-                Table::cell("");
+                Table::button("/voirSoutenance/" . $convention->getNumConvention(), "Voir soutenance");
         } else if (Auth::has_role(Roles::Enterprise)) {
             if ($convention->getConventionValide() == "0" && $convention->getConvetionValideePedagogiquement() == "1")
                 Table::button("/validateConvention/" . $convention->getNumConvention(), "Valider");
             else
                 Table::cell("");
 //                Table::button("/unvalidateConvention/" . $convention->getNumConvention(), "Invalider");
+        } else if(Auth::has_role(Roles::TutorTeacher, Roles::Teacher) && !SoutenanceRepository::getIfJuryExist(Application::getUser()->id(), $convention->getNumConvention()) && $convention->getConventionValide() == "1" && $convention->getConvetionValideePedagogiquement() == "1") {
+            if (!SoutenanceRepository::getIfImTheTuteurProf(Application::getUser()->id(), $convention->getNumConvention())){
+                Table::button("/seProposerJury/" . $convention->getNumConvention(), "Etre jury");
+            } else {
+                Table::cell("Deja TuteurProf");
+            }
+        } else if (Auth::has_role(Roles::TutorTeacher) && (SoutenanceRepository::imTheJury(Application::getUser()->id(), $convention->getNumConvention()) || SoutenanceRepository::imTheTuteurProf(Application::getUser()->id(), $convention->getNumConvention()))) {
+            Table::button("/voirSoutenance/" . $convention->getNumConvention(), "Voir soutenance");
+        } else if (Auth::has_role(Roles::Tutor) && SoutenanceRepository::imTheTuteurEntreprise(Application::getUser()->id(), $convention->getNumConvention())) {
+            Table::button("/voirSoutenance/" . $convention->getNumConvention(), "Voir soutenance");
+        } else if (Auth::has_role(Roles::Student) && SoutenanceRepository::imTheEtudiant(Application::getUser()->id(), $convention->getNumConvention())) {
+            Table::button("/voirSoutenance/" . $convention->getNumConvention(), "Voir soutenance");
+        } else {
+            Table::cell("");
         }
 		Table::button("/conventions/" . $convention->getNumConvention());
 	});
