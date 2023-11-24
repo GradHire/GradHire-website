@@ -18,6 +18,7 @@ use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\PostulerRepository;
+use app\src\model\repository\SoutenanceRepository;
 use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\repository\TuteurRepository;
@@ -176,18 +177,29 @@ class DashboardController extends AbstractController
     public function calendar(): string
     {
         $events = [];
-        if (Auth::has_role(Roles::Student))
+        if (Auth::has_role(Roles::Student)) {
             $visites = VisiteRepository::getAllByStudentId(Application::getUser()->id());
-        else if (Auth::has_role(Roles::Tutor))
+            $soutenances = SoutenanceRepository::getAllSoutenancesByIdEtudiant(Application::getUser()->id());
+        }
+        else if (Auth::has_role(Roles::Tutor)) {
             $visites = VisiteRepository::getAllByEnterpriseTutorId(Application::getUser()->id());
-        else if (Auth::has_role(Roles::TutorTeacher))
+            $soutenances = SoutenanceRepository::getAllSoutenancesByIdTuteurEntreprise(Application::getUser()->id());
+        }
+        else if (Auth::has_role(Roles::TutorTeacher)) {
             $visites = VisiteRepository::getAllByUniversityTutorId(Application::getUser()->id());
+            $soutenances = SoutenanceRepository::getAllSoutenancesByIdTuteurProf(Application::getUser()->id());
+        }
+        else if (Auth::has_role(Roles::Teacher))
+            $soutenances = SoutenanceRepository::getAllSoutenances();
         else
             throw new ForbiddenException();
-        $visitesModal = new FormModal();
 
+        $visitesModal = new FormModal();
+        $soutenancesModal = new FormModal();
         foreach ($visites as $visite)
             $events[] = new Event("Visite de stage", "Visite", $visite->getDebutVisite(), $visite->getFinVisite(), "#1c4ed8", $visitesModal);
-        return $this->render('calendar', ['events' => $events, "visiteModal" => $visitesModal]);
+        foreach ($soutenances as $soutenance)
+            $events[] = new Event("Soutenance", "Soutenance", $soutenance->getDebutSoutenance(), $soutenance->getFinSoutenance(), "#1c4ed8", $soutenancesModal);
+        return $this->render('calendar', ['events' => $events, "visiteModal" => $visitesModal, "soutenanceModal" => $soutenancesModal]);
     }
 }

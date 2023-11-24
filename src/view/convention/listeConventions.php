@@ -39,13 +39,15 @@ $this->title = 'Conventions';
 		} if (Auth::has_role(Roles::Manager, Roles::Staff)) {
             if ($convention->getConvetionValideePedagogiquement() == "0")
                 Table::button("/validateConventionPedagogiquement/" . $convention->getNumConvention(), "Valider");
-            else
+            else if ($convention->getConvetionValideePedagogiquement() == "1" && $convention->getConventionValide() == "0")
                 Table::button("/unvalidateConventionPedagogiquement/" . $convention->getNumConvention(), "Invalider");
+            else Table::cell("");
         } else if (Auth::has_role(Roles::Enterprise)) {
             if ($convention->getConventionValide() == "0" && $convention->getConvetionValideePedagogiquement() == "1")
                 Table::button("/validateConvention/" . $convention->getNumConvention(), "Valider");
             else
-                Table::button("/unvalidateConvention/" . $convention->getNumConvention(), "Invalider");
+                Table::cell("");
+//                Table::button("/unvalidateConvention/" . $convention->getNumConvention(), "Invalider");
         }
 		Table::button("/conventions/" . $convention->getNumConvention());
 	});

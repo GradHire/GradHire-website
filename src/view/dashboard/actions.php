@@ -14,6 +14,7 @@ $linkTuteurs = new Lien('/ListeTuteurPro', 'Tuteurs');
 $linkImport = new Lien('/importer', 'Import');
 $linkConventions = new Lien('/conventions', 'Conventions');
 $linkExplicationSimu = new Lien('/explicationSimu', 'Simulateur');
+$linkCalendar = new Lien('/calendar', 'Calendrier');
 
 
 if (!Application::isGuest()) {
@@ -21,6 +22,7 @@ if (!Application::isGuest()) {
     else echo $linkUtilisateurs->render();
     if (!Auth::has_role(Roles::Enterprise, Roles::Tutor, Roles::ChefDepartment)) echo $linkEntreprises->render();
     if (Auth::has_role(Roles::Student, Roles::Teacher, Roles::Tutor, Roles::TutorTeacher, Roles::Enterprise)) echo $linkCandidatures->render();
+    if (Auth::has_role(Roles::Teacher, Roles::Tutor, Roles::TutorTeacher, Roles::Student)) echo $linkCalendar->render();
     if (Auth::has_role(Roles::Enterprise)) {
         echo $linkCreate->render();
         echo $linkTuteurs->render();
