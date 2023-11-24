@@ -97,7 +97,7 @@ class Calendar
         echo <<<HTML
             <div class="flex flex-col calendar-week $hidden">
             <div class="flex justify-between border-b-[1px] border-zinc-200 pb-4 px-4">            
-                <p>$start - $end</p>
+                <p>Semaine du $start au $end</p>
             </div>
         HTML;
         $lastDay = null;
@@ -148,10 +148,11 @@ class Calendar
     private static function renderEvent(Event $event): void
     {
         echo <<<HTML
-            <div class="flex cursor-pointer hover:bg-zinc-100 p-2 gap-2 border-b-[1px] border-zinc-200">
+            <div class="flex cursor-pointer items-center hover:bg-zinc-100 p-2 gap-2 border-b-[1px] border-zinc-200" {$event->getModal()->show()}>
                 <div class="min-w-[100px]">
                     {$event->getStart()->format('H:i')} - {$event->getEnd()->format('H:i')}
                 </div>
+                <div class="rounded-full h-[10px] w-[10px]" style="background: {$event->getColor()}"></div>
                 {$event->getTitle()}
             </div>
         HTML;

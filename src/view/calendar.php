@@ -1,12 +1,20 @@
 <?php
 
-/** @var $events Event[] */
+/** @var $events Event[]
+ * @var $visiteModal FormModal
+ * */
 
 use app\src\core\components\Calendar\Calendar;
 use app\src\core\components\Calendar\Event;
 use app\src\core\components\FormModal;
 
-$modal = new FormModal("<h3>1feur</h3>");
+$newEventModal = new FormModal("<h3>Ajouter un événement</h3>");
 
-Calendar::addModal("Ajouter un événement", $modal);
-Calendar::render($events);
+$visiteModal->render("Visite");
+?>
+<div class="mt-12 w-full">
+    <?php
+    Calendar::addModal("Ajouter un événement", $newEventModal);
+    Calendar::render($events);
+    ?>
+</div>

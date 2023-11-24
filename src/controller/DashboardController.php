@@ -3,6 +3,7 @@
 namespace app\src\controller;
 
 use app\src\core\components\Calendar\Event;
+use app\src\core\components\FormModal;
 use app\src\core\components\Notification;
 use app\src\core\exception\ForbiddenException;
 use app\src\core\exception\NotFoundException;
@@ -174,7 +175,6 @@ class DashboardController extends AbstractController
      */
     public function calendar(): string
     {
-        $visites = [];
         $events = [];
         if (Auth::has_role(Roles::Student))
             $visites = VisiteRepository::getAllByStudentId(Application::getUser()->id());
@@ -184,9 +184,10 @@ class DashboardController extends AbstractController
             $visites = VisiteRepository::getAllByUniversityTutorId(Application::getUser()->id());
         else
             throw new ForbiddenException();
+        $visitesModal = new FormModal();
 
         foreach ($visites as $visite)
-            $events[] = new Event("Visite", "Visite", $visite->getDebutVisite(), $visite->getFinVisite());
-        return $this->render('calendar', ['events' => $events]);
+            $events[] = new Event("Visite de stage", "Visite", $visite->getDebutVisite(), $visite->getFinVisite(), "#1c4ed8", $visitesModal);
+        return $this->render('calendar', ['events' => $events, "visiteModal" => $visitesModal]);
     }
 }
