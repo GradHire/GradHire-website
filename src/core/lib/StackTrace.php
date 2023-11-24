@@ -29,6 +29,7 @@ HTML;
 <th class="border px-4 py-2 text-left">Function</th>
 <th class="border px-4 py-2 text-left">Line</th>
 <th class="border px-4 py-2 text-left">File</th>
+<th class="border px-4 py-2 text-left">Args</th>
 </tr></thead>';
         echo '<tbody>';
         $i = 0;
@@ -56,6 +57,12 @@ HTML;
 
             echo '<td class="border px-4 py-2">';
             echo htmlspecialchars($item['file']);
+            echo '</td>';
+
+            echo '<td class="border px-4 py-2">';
+            if (isset($item['args'])) {
+                print_r($item['args']);
+            }
             echo '</td>';
 
             echo '</tr>';
