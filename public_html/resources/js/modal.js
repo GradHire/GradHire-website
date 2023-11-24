@@ -1,5 +1,13 @@
 const bg = document.getElementById("blur-background");
 
+let currentModal = null;
+
+bg.addEventListener("click", () => {
+    bg.classList.add("hidden");
+    if (currentModal !== null)
+        closeModal(currentModal);
+});
+
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     modal.classList.add("hidden");
@@ -8,6 +16,9 @@ function closeModal(modalId) {
 }
 
 function showModal(modalId, action) {
+    if (currentModal !== null)
+        closeModal(currentModal);
+    currentModal = modalId;
     const modal = document.getElementById(modalId);
     modal.classList.remove("hidden");
     modal.classList.add("block");

@@ -35,8 +35,6 @@ $app->router->get('/', 'home');
 $app->router->get('/about', 'about');
 
 
-$app->router->get('/calendar', 'calendar');
-
 // AuthController
 
 $app->router->get('/register', [AuthController::class, 'register']);
@@ -128,8 +126,7 @@ $app->router->post('/utilisateurs/{id}', [DashboardController::class, 'utilisate
 $app->router->get('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPro']);
 $app->router->post('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPro']);
 
-$app->router->get('/importer', [PstageController::class, 'importercsv']);
-$app->router->post('/importer', [PstageController::class, 'importercsv']);
+$app->router->get('/calendar', [DashboardController::class, 'calendar']);
 
 $app->router->get('/page1', [TestController::class, 'page1']);
 $app->router->post('/page1', [TestController::class, 'page1']);
@@ -139,6 +136,11 @@ $app->router->post('/page2', [TestController::class, 'page2']);
 
 $app->router->get('/page3', [TestController::class, 'page3']);
 $app->router->post('/page3', [TestController::class, 'page3']);
+
+// PSTAGE
+
+$app->router->get('/importer', [PstageController::class, 'importercsv']);
+$app->router->post('/importer', [PstageController::class, 'importercsv']);
 
 $app->router->get('/explicationSimu', [PstageController::class, 'explicationSimu']);
 

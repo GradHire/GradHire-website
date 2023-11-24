@@ -26,8 +26,9 @@ class Calendar
      */
     public static function render(array $events): void
     {
+        $padding = count($events) == 0 ? 'pb-4' : 'mb-12 ';
         echo <<<HTML
-            <div class="w-full mb-12 gap-2 pt-4 border-x-[1px] border-t-[1px] border-zinc-200 rounded flex flex-col relative">
+            <div class="w-full $padding gap-2 pt-4 border-x-[1px] border-t-[1px] border-zinc-200 rounded flex flex-col relative">
                 <div class="absolute top-4 right-4 flex gap-2">
                     <div class="calendar-arrow disabled bg-blue-700 hover:bg-blue-800 rounded-lg" id="calendar-prev" onclick="calendarPrev()">
                         <i class="fa-solid fa-chevron-left"></i>
@@ -38,24 +39,32 @@ class Calendar
                 </div>
         HTML;
 
-        usort($events, function (Event $event1, Event $event2) {
-            return $event1->getStart() <=> $event2->getStart();
-        });
-        $lastWeek = null;
-        $first = true;
-        $week = [];
-        foreach ($events as $event) {
-            if ($lastWeek == null || $lastWeek != $event->getStart()->format('W')) {
-                if ($lastWeek != null) {
-                    self::renderWeek($week, $first);
-                    $first = false;
+        if (count($events) == 0) {
+            echo <<<HTML
+                <div class="flex justify-center items-center h-full">
+                    <p class="text-gray-400">Aucun événement</p>
+                </div>
+            HTML;
+        } else {
+            usort($events, function (Event $event1, Event $event2) {
+                return $event1->getStart() <=> $event2->getStart();
+            });
+            $lastWeek = null;
+            $first = true;
+            $week = [];
+            foreach ($events as $event) {
+                if ($lastWeek == null || $lastWeek != $event->getStart()->format('W')) {
+                    if ($lastWeek != null) {
+                        self::renderWeek($week, $first);
+                        $first = false;
+                    }
+                    $week = [];
+                    $lastWeek = $event->getStart()->format('W');
                 }
-                $week = [];
-                $lastWeek = $event->getStart()->format('W');
+                $week[] = $event;
             }
-            $week[] = $event;
+            self::renderWeek($week, $first);
         }
-        self::renderWeek($week, $first);
 
         echo <<<HTML
             </div>

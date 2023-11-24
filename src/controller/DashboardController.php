@@ -2,6 +2,7 @@
 
 namespace app\src\controller;
 
+use app\src\core\components\Calendar\Event;
 use app\src\core\components\Notification;
 use app\src\core\exception\ForbiddenException;
 use app\src\core\exception\NotFoundException;
@@ -20,6 +21,7 @@ use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\repository\TuteurRepository;
 use app\src\model\repository\UtilisateurRepository;
+use app\src\model\repository\VisiteRepository;
 use app\src\model\Request;
 
 class DashboardController extends AbstractController
@@ -164,5 +166,27 @@ class DashboardController extends AbstractController
             Application::redirectFromParam('/');
             return '';
         } else throw new ForbiddenException();
+    }
+
+    /**
+     * @throws ServerErrorException
+     * @throws ForbiddenException
+     */
+    public function calendar(): string
+    {
+        $visites = [];
+        $events = [];
+        if (Auth::has_role(Roles::Student))
+            $visites = VisiteRepository::getAllByStudentId(Application::getUser()->id());
+        else if (Auth::has_role(Roles::Tutor))
+            $visites = VisiteRepository::getAllByEnterpriseTutorId(Application::getUser()->id());
+        else if (Auth::has_role(Roles::TutorTeacher))
+            $visites = VisiteRepository::getAllByUniversityTutorId(Application::getUser()->id());
+        else
+            throw new ForbiddenException();
+
+        foreach ($visites as $visite)
+            $events[] = new Event("Visite", "Visite", $visite->getDebutVisite(), $visite->getFinVisite());
+        return $this->render('calendar', ['events' => $events]);
     }
 }
