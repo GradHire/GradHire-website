@@ -4,37 +4,31 @@ namespace app\src\model\repository;
 
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
-use app\src\core\lib\StackTrace;
-use app\src\model\Auth;
-use app\src\model\dataObject\AbstractDataObject;
 use app\src\model\dataObject\Convention;
 
 class ConventionRepository extends AbstractRepository
 {
     protected static string $table = "Convention";
 
-    public static function getByNumConvention(mixed $numConvention): ?array
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getStudentId(int $conventionId): int
     {
         try {
-        $sql = "SELECT numconvention,idtuteurprof,idtuteurentreprise FROM \"conventionValideVue\" WHERE numconvention = :numConvention";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['numConvention' => $numConvention]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetch();
-        if (!$resultat) {
-            return null;
-        } return $resultat;
-        } catch (\Exception $e) {
-            StackTrace::print( $e);
+            $statement = Database::get_conn()->prepare("SELECT idutilisateur FROM convention WHERE numconvention=?");
+            $statement->execute([$conventionId]);
+            $data = $statement->fetch();
+            return $data["idutilisateur"];
+        } catch (\Exception) {
+            throw new ServerErrorException();
         }
-        return null;
     }
-
 
     /**
      * @throws ServerErrorException
      */
-    public function getAll(): ?array
+    public function getAll(): array
     {
         try {
             $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$table);
@@ -46,9 +40,25 @@ class ConventionRepository extends AbstractRepository
             }
             return $conventions;
         } catch (\Exception $e) {
-            StackTrace::print($e);
+            throw new ServerErrorException("Erreur lors de la récupération des conventions", 500, $e);
         }
-        return null;
+    }
+
+    public function construireDepuisTableau(array $dataObjectFormatTableau): Convention
+    {
+        return new Convention(
+            $dataObjectFormatTableau["numconvention"],
+            $dataObjectFormatTableau["origineconvention"],
+            $dataObjectFormatTableau["conventionvalidee"],
+            $dataObjectFormatTableau["conventionvalideepedagogiquement"],
+            $dataObjectFormatTableau["datemodification"],
+            $dataObjectFormatTableau["datecreation"],
+            $dataObjectFormatTableau["idsignataire"],
+            $dataObjectFormatTableau["idinterruption"],
+            $dataObjectFormatTableau["idutilisateur"],
+            $dataObjectFormatTableau["idoffre"],
+            $dataObjectFormatTableau["commentaire"]
+        );
     }
 
     public function getByIdOffreAndIdUser(int $idOffre, int $idUser): ?Convention
@@ -62,27 +72,8 @@ class ConventionRepository extends AbstractRepository
             if (!$data) return null;
             return $this->construireDepuisTableau($data);
         } catch (\Exception $e) {
-            StackTrace::print($e);
+            throw new ServerErrorException("Erreur lors de la récupération de la convention", 500, $e);
         }
-        return null;
-    }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public function getById(int $id): ?Convention
-    {
-        try {
-            $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$table . " WHERE numconvention = :id");
-            $statement->bindParam(":id", $id);
-            $statement->execute();
-            $data = $statement->fetch();
-            if (!$data) return null;
-            return $this->construireDepuisTableau($data);
-        } catch (\Exception $e) {
-            StackTrace::print($e);
-        }
-        return null;
     }
 
     /**
@@ -103,25 +94,25 @@ class ConventionRepository extends AbstractRepository
                 "La convention n°" . $id . " de l'offre " . $offre->getSujet() . " a été validée pédagogiquement par le Staff "
             );
         } catch (\Exception $e) {
-            StackTrace::print($e);
+            throw new ServerErrorException("Erreur lors de la validation pédagogique de la convention", 500, $e);
         }
     }
 
-    public function construireDepuisTableau(array $dataObjectFormatTableau): Convention
+    /**
+     * @throws ServerErrorException
+     */
+    public function getById(int $id): ?Convention
     {
-        return new Convention(
-            $dataObjectFormatTableau["numconvention"],
-            $dataObjectFormatTableau["origineconvention"],
-            $dataObjectFormatTableau["conventionvalidee"],
-            $dataObjectFormatTableau["conventionvalideepedagogiquement"],
-            $dataObjectFormatTableau["datemodification"],
-            $dataObjectFormatTableau["datecreation"],
-            $dataObjectFormatTableau["idsignataire"],
-            $dataObjectFormatTableau["idinterruption"],
-            $dataObjectFormatTableau["idutilisateur"],
-            $dataObjectFormatTableau["idoffre"],
-            $dataObjectFormatTableau["commentaire"]
-        );
+        try {
+            $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$table . " WHERE numconvention = :id");
+            $statement->bindParam(":id", $id);
+            $statement->execute();
+            $data = $statement->fetch();
+            if (!$data) return null;
+            return $this->construireDepuisTableau($data);
+        } catch (\Exception $e) {
+            throw new ServerErrorException("Erreur lors de la récupération de la convention", 500, $e);
+        }
     }
 
     /**

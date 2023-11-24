@@ -39,6 +39,26 @@ class EtudiantRepository extends LdapRepository
         }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getFullNameByID(int $id): string
+    {
+        try {
+            $sql = "SELECT nom, prenom FROM etudiantvue where idutilisateur=?";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([$id]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetch();
+            if (!$resultat) {
+                return "";
+            }
+            return $resultat["prenom"] . " " . $resultat["nom"];
+        } catch (\Exception) {
+            throw new ServerErrorException();
+        }
+    }
+
     public static function subscribeNewsletter(): void
     {
         try {
