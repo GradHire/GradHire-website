@@ -61,7 +61,7 @@ class EtudiantRepository extends LdapRepository
     public function update_year(string $new_year): void
     {
         try {
-            $statement = Database::get_conn()->prepare("UPDATE EtudiantVue SET annee=? WHERE idUtilisateur=?");
+            $statement = Database::get_conn()->prepare("UPDATE etudiant SET annee=? WHERE idUtilisateur=?");
             $statement->execute([$new_year, $this->id]);
         } catch (\Exception) {
             throw new ServerErrorException();

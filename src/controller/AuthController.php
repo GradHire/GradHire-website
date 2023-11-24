@@ -53,24 +53,30 @@ class AuthController extends AbstractController
      */
     public function login(Request $request): string|null
     {
-        if (!Application::isGuest()) header("Location: /");
-        $loginForm = new FormModel([
-            "username" => FormModel::string("Login ldap")->required(),
-            "password" => FormModel::password("Mot de passe")->required(),
-            "remember" => FormModel::switch("Rester connecté")->default(true)
-        ]);
-        if ($request->getMethod() === 'post') {
-            if ($loginForm->validate($request->getBody())) {
-                $dt = $loginForm->getParsedBody();
-                if (LdapRepository::login($dt["username"], $dt["password"], $dt["remember"], $loginForm)) {
-                    Application::redirectFromParam('/');
-                    return null;
+        try {
+
+            if (!Application::isGuest()) header("Location: /");
+            $loginForm = new FormModel([
+                "username" => FormModel::string("Login ldap")->required(),
+                "password" => FormModel::password("Mot de passe")->required(),
+                "remember" => FormModel::switch("Rester connecté")->default(true)
+            ]);
+            if ($request->getMethod() === 'post') {
+                if ($loginForm->validate($request->getBody())) {
+                    $dt = $loginForm->getParsedBody();
+                    if (LdapRepository::login($dt["username"], $dt["password"], $dt["remember"], $loginForm)) {
+                        Application::redirectFromParam('/');
+                        return null;
+                    }
                 }
             }
+            return $this->render('login', [
+                'form' => $loginForm
+            ]);
+        } catch (\Exception $e) {
+            print_r($e);
         }
-        return $this->render('login', [
-            'form' => $loginForm
-        ]);
+        return '';
     }
 
     public function logout(Request $request, Response $response): void
@@ -126,7 +132,7 @@ class AuthController extends AbstractController
     {
         if (!Application::isGuest()) header("Location: /");
         $form = new FormModel([
-            "name" => FormModel::string("Nom entreprise")->required()->min(10)->asterisk(),
+            "name" => FormModel::string("Nom entreprise")->required()->min(1)->asterisk(),
             "email" => FormModel::email("Adresse mail")->required()->asterisk(),
             "siret" => FormModel::string("Siret")->required()->numeric()->asterisk()->length(14),
             "phone" => FormModel::phone("Téléphone")->required()->asterisk(),
