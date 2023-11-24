@@ -37,7 +37,7 @@ class CandidatureController extends AbstractController
         if (Auth::has_role(Roles::Enterprise)) $entrepriseid = $userid;
         if ($candidatures != null && $idOffre != null && $idUtilisateur != null) {
             $offre = (new OffresRepository())->getById($candidatures->getIdoffre());
-            if (Auth::has_role(Roles::Staff, Roles::Manager, Roles::Teacher) || $candidatures->getIdutilisateur() == $userid || $offre->getIdutilisateur() == $entrepriseid) {
+            if (Auth::has_role(Roles::Staff, Roles::Manager, Roles::Teacher,Roles::TutorTeacher,Roles::Tutor) || $candidatures->getIdutilisateur() == $userid || $offre->getIdutilisateur() == $entrepriseid) {
                 return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
             } else throw new ForbiddenException();
         }
