@@ -3,6 +3,7 @@
 namespace app\src\controller;
 
 use app\src\core\exception\ForbiddenException;
+use app\src\core\exception\NotFoundException;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
@@ -17,6 +18,10 @@ use app\src\model\Request;
 class SoutenanceController extends AbstractController
 {
 
+    /**
+     * @throws ServerErrorException
+     * @throws NotFoundException
+     */
     public function createSoutenance(Request $request)
     {
         $numConvention = $request->getRouteParam("numConvention");
@@ -26,6 +31,7 @@ class SoutenanceController extends AbstractController
             ]);
         } else {
             $infosConvention = ConventionRepository::getByNumConvention($numConvention);
+            if (!$infosConvention) throw new NotFoundException();
             $form = new FormModel([
                 'debut_soutenance' => FormModel::Date("Début de la soutenance")->Required()->asterisk()->forget()->withHour(),
                 'fin_soutenance' => FormModel::Date("Fin de la soutenance")->Required()->asterisk()->forget()->withHour()

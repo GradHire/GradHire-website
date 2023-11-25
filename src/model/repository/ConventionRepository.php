@@ -28,6 +28,67 @@ class ConventionRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
+    public static function getAddress(int $conventionId): string|null
+    {
+        try {
+            $statement = Database::get_conn()->prepare("SELECT e.adresse, vi.codepostal, vi.nomville FROM entreprise e JOIN offre o ON o.idutilisateur = e.idutilisateur JOIN convention c ON c.idoffre = o.idoffre JOIN ville vi ON e.idville = vi.idville WHERE c.numconvention=?");
+            $statement->execute([$conventionId]);
+            $data = $statement->fetch();
+            if (!$data) return null;
+            return $data["adresse"] . ", " . $data["codepostal"] . " " . $data["nomville"];
+        } catch (\Exception) {
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getIdByStudent(int $id): int|null
+    {
+        try {
+            $statement = Database::get_conn()->prepare("SELECT numconvention FROM convention WHERE idutilisateur=?");
+            $statement->execute([$id]);
+            $num = $statement->fetch();
+            if (!$num) return null;
+            return $num["numconvention"];
+        } catch (\Exception) {
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public static function exist(int $numConvention): bool
+    {
+        try {
+            $statement = Database::get_conn()->prepare("SELECT numconvention FROM convention WHERE numconvention=?");
+            $statement->execute([$numConvention]);
+            $data = $statement->fetch();
+            return $data !== null;
+        } catch (\Exception) {
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getByNumConvention(int $numConvention): array|null
+    {
+        try {
+            $statement = Database::get_conn()->prepare("SELECT * FROM convention WHERE numconvention=?");
+            $statement->execute([$numConvention]);
+            return $statement->fetch();
+        } catch (\Exception) {
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
     public function getAll(): array
     {
         try {

@@ -4,9 +4,7 @@ namespace app\src\model\dataObject;
 
 class Visite extends AbstractDataObject
 {
-    private int $id_etudiant;
-    private int $id_tuteur_univ;
-    private int $id_tuteur_pro;
+    private int $num_convention;
     private \DateTime $debut_visite;
     private \DateTime $fin_visite;
 
@@ -25,34 +23,14 @@ class Visite extends AbstractDataObject
             }
     }
 
-    public function getIdEtudiant(): int
+    public function getNumConvention(): int
     {
-        return $this->id_etudiant;
+        return $this->num_convention;
     }
 
-    public function setIdEtudiant(int $id_etudiant): void
+    public function setNumConvention(int $num_convention): void
     {
-        $this->id_etudiant = $id_etudiant;
-    }
-
-    public function getIdTuteurUniv(): int
-    {
-        return $this->id_tuteur_univ;
-    }
-
-    public function setIdTuteurUniv(int $id_tuteur_univ): void
-    {
-        $this->id_tuteur_univ = $id_tuteur_univ;
-    }
-
-    public function getIdTuteurPro(): int
-    {
-        return $this->id_tuteur_pro;
-    }
-
-    public function setIdTuteurPro(int $id_tuteur_pro): void
-    {
-        $this->id_tuteur_pro = $id_tuteur_pro;
+        $this->num_convention = $num_convention;
     }
 
     public function getDebutVisite(): \DateTime
@@ -74,6 +52,7 @@ class Visite extends AbstractDataObject
     {
         $this->fin_visite = $fin_visite;
     }
+
 
     protected function getValueColonne(string $nomColonne): string
     {
