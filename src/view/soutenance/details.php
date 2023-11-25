@@ -1,5 +1,7 @@
 <?php
 
+use app\src\model\Auth;
+use app\src\model\dataObject\Roles;
 use app\src\model\dataObject\Soutenance;
 use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
@@ -59,4 +61,15 @@ if ($soutenance->getIdProfesseur() !== null) {
            class="btn btn-primary bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Retour au
             calendrier</a>
     </div>
+    <?php
+    if ($soutenance->getFinSoutenance() > new DateTime() && Auth::has_role(Roles::Staff, Roles::Teacher, Roles::TutorTeacher, Roles::Manager)) {
+        ?>
+        <div class="flex justify-center mt-8">
+            <a href="/noteSoutenance/<?php echo $soutenance->getNumConvention() ?>"
+               class="btn btn-primary bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Noter La
+                soutenance</a>
+        </div>
+        <?php
+    }
+    ?>
 </div>
