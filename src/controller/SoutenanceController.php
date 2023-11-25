@@ -10,6 +10,7 @@ use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 use app\src\model\repository\ConventionRepository;
 use app\src\model\repository\EtudiantRepository;
+use app\src\model\repository\NotesRepository;
 use app\src\model\repository\SoutenanceRepository;
 use app\src\model\Request;
 
@@ -99,7 +100,15 @@ class SoutenanceController extends AbstractController
             'recherche' => FormModel::select("Recherche alternant 2024 *", ["1" => "A déjà recruté un BUT3 cette année", "2" => "A déjà proposé mais pas encore trouvé", "3" => "Maitre Apprentissage à recontacter", "4" => "Pas d'alternant cette année"])->required(),
             'recontact' => FormModel::string("En cas de recontact, rappelez l'email du MA"),
         ]);
-
+        if ($request->getMethod() == "post") {
+            if ($form->validate($request->getBody())) {
+                $values = array_merge($form->getParsedBody(), [
+                    'idsoutenance' => $soutenance->getIdSoutenance(),
+                ]);
+                (new NotesRepository())->create($values);
+                Application::redirectFromParam("/conventions");
+            }
+        }
 
         return $this->render("soutenance/note", [
             "soutenance" => $soutenance, "form" => $form
