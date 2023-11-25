@@ -11,8 +11,8 @@ use app\src\model\Form\FormModel;
 class TuteurEntrepriseRepository extends ProRepository
 {
     protected static string $create_function = "creerTuteur";
-    protected static string $view = "TuteurVue";
-    private string $nomtable = "TuteurVue";
+    protected static string $view = "tuteurvue";
+    private string $nomtable = "tuteurvue";
 
     /**
      * @throws ServerErrorException

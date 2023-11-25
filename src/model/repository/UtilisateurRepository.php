@@ -75,6 +75,22 @@ class UtilisateurRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
+    public static function getIdByEmail(string $email): int|null
+    {
+        try {
+            $statement = Database::get_conn()->prepare("SELECT idutilisateur FROM utilisateur WHERE email = ?");
+            $statement->execute([$email]);
+            $user = $statement->fetch();
+            if (is_null($user)) return null;
+            return $user["idutilisateur"];
+        } catch (\Exception) {
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
     public function getAll(): ?array
     {
         try {

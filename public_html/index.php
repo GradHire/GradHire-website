@@ -56,6 +56,11 @@ $app->router->get('/logout', [AuthController::class, 'logout']);
 $app->router->get('/password', [AuthController::class, 'modifierMdp']);
 $app->router->post('/password', [AuthController::class, 'modifierMdp']);
 
+$app->router->get('/resetPassword', [AuthController::class, 'resetPassword']);
+$app->router->post('/resetPassword', [AuthController::class, 'resetPassword']);
+$app->router->get('/forgetPassword/{token}', [AuthController::class, 'forgetPassword']);
+$app->router->post('/forgetPassword/{token}', [AuthController::class, 'forgetPassword']);
+
 // UserController
 
 $app->router->get('/profile', [UserController::class, 'profile']);

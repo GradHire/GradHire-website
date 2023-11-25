@@ -2,7 +2,6 @@
 
 /** @var $form FormModel */
 
-use app\src\core\db\Database;
 use app\src\model\Form\FormModel;
 
 $this->title = 'Login';
@@ -22,7 +21,7 @@ $this->title = 'Login';
         ?>
     </div>
     <?php $form->end(); ?>
-    <div class="text-center my-4">
+    <div class="text-center mt-8 mb-4">
         <hr class="border-t-1 border-zinc-300 w-full mx-auto">
         <span class="bg-white px-2 relative" style="top: -0.75rem;">ou</span>
     </div>
