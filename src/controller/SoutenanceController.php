@@ -112,7 +112,7 @@ class SoutenanceController extends AbstractController
                     'idsoutenance' => $soutenance->getIdSoutenance(),
                 ]);
                 (new NotesRepository())->create($values);
-                Application::redirectFromParam("/conventions");
+                header("Location: /voirSoutenance/$numConvention");
             }
         }
 

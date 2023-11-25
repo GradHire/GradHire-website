@@ -5,23 +5,23 @@ namespace app\src\model\dataObject;
 class Notes extends AbstractDataObject
 {
     private int $idnote;
-    private int $etudiant;
-    private int $presenttuteur;
-    private int $renduretard;
-    private int $noterapport;
-    private string $commentairerapport;
-    private int $noteoral;
-    private string $commentaireoral;
-    private int $noterelation;
-    private string $langage;
-    private string $nouveau;
-    private string $difficulte;
-    private int $notedemarche;
-    private int $noteresultat;
-    private string $commentaireresultat;
-    private string $recherche;
-    private string $recontact;
-    private int $idsoutenance;
+    private ?string $etudiant;
+    private ?string $presenttuteur;
+    private ?string $renduretard;
+    private ?int $noterapport;
+    private ?string $commentairerapport;
+    private ?int $noteoral;
+    private ?string $commentaireoral;
+    private ?int $noterelation;
+    private ?string $langage;
+    private ?string $nouveau;
+    private ?string $difficulte;
+    private ?int $notedemarche;
+    private ?int $noteresultat;
+    private ?string $commentaireresultat;
+    private ?string $recherche;
+    private ?string $recontact;
+    private ?int $idsoutenance;
 
     /**
      * @throws \Exception

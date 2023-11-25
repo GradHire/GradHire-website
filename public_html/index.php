@@ -225,6 +225,7 @@ $app->router->get('/voirSoutenance/{numConvention}', [SoutenanceController::clas
 $app->router->get('/seProposerJury/{numConvention}', [SoutenanceController::class, 'etreJury']);
 $app->router->post('/createSoutenance/{numConvention}', [SoutenanceController::class, 'createSoutenance']);
 $app->router->get('/noteSoutenance/{numConvention}', [SoutenanceController::class, 'noteSoutenance']);
+$app->router->post('/noteSoutenance/{numConvention}', [SoutenanceController::class, 'noteSoutenance']);
 
 //Visite Controller
 

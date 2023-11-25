@@ -3,6 +3,7 @@
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\dataObject\Soutenance;
+use app\src\model\repository\NotesRepository;
 use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 
@@ -54,21 +55,38 @@ if ($soutenance->getIdProfesseur() !== null) {
         <div class="text-center mt-8 text-red-500">
             <?php echo "Aucun professeur n'a été désigné pour cette soutenance pour le moment" ?>
         </div>
-    <?php } ?>
+    <?php }
+    if ($soutenance->getFinSoutenance() < new DateTime() && Auth::has_role(Roles::Staff, Roles::Teacher, Roles::TutorTeacher, Roles::Manager, Roles::Student)) {
+        $existnote = (new NotesRepository([]))->getById($soutenance->getIdSoutenance());
+        if ($existnote === null && !Auth::has_role(Roles::Student)) {
+            ?>
+            <div class="flex justify-center mt-8">
+                <a href="/noteSoutenance/<?php echo $soutenance->getNumConvention() ?>"
+                   class="btn btn-primary bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Noter La
+                    soutenance</a>
+            </div>
+            <?php
+        } else {
+            ?>
+            <h3 class="font-bold text-center mt-5">Les notes de la soutenances sont :</h3>
+            <div class="w-full flex justify-center mt-2">
+                <ul class=" list-disc ml-6 ">
+                    <li><?php echo $existnote->getNotedemarche() ?> pour la démarche</li>
+                    <li><?php echo $existnote->getNoterapport() ?> pour le rapport</li>
+                    <li><?php echo $existnote->getNoteoral() ?> pour l'oral</li>
+                    <li><?php echo $existnote->getNoterelation() ?> pour les relations interpersonnelles</li>
+                    <li><?php echo $existnote->getNoteresultat() ?> pour le résultat</li>
+                </ul>
+            </div>
+            <?php
+        }
+        ?>
+        <?php
+    }
+    ?>
     <div class="flex justify-center mt-8">
         <a href="/calendar"
            class="btn btn-primary bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Retour au
             calendrier</a>
     </div>
-    <?php
-    if ($soutenance->getFinSoutenance() > new DateTime() && Auth::has_role(Roles::Staff, Roles::Teacher, Roles::TutorTeacher, Roles::Manager)) {
-        ?>
-        <div class="flex justify-center mt-8">
-            <a href="/noteSoutenance/<?php echo $soutenance->getNumConvention() ?>"
-               class="btn btn-primary bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Noter La
-                soutenance</a>
-        </div>
-        <?php
-    }
-    ?>
 </div>
