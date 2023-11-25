@@ -10,6 +10,7 @@ use app\src\controller\PstageController;
 use app\src\controller\SoutenanceController;
 use app\src\controller\TestController;
 use app\src\controller\UserController;
+use app\src\controller\VisiteController;
 use app\src\core\exception\ServerErrorException;
 use app\src\core\lib\Psr4AutoloaderClass;
 use app\src\model\Application;
@@ -224,6 +225,11 @@ $app->router->get('/voirSoutenance/{numConvention}', [SoutenanceController::clas
 $app->router->get('/seProposerJury/{numConvention}', [SoutenanceController::class, 'etreJury']);
 $app->router->post('/createSoutenance/{numConvention}', [SoutenanceController::class, 'createSoutenance']);
 $app->router->get('/noteSoutenance/{numConvention}', [SoutenanceController::class, 'noteSoutenance']);
+
+//Visite Controller
+
+$app->router->get('/visite/{id:\d+}', [VisiteController::class, 'visite']);
+$app->router->post('/visite/{id:\d+}', [VisiteController::class, 'visite']);
 
 
 $app->run();

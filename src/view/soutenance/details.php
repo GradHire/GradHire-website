@@ -5,7 +5,6 @@ use app\src\model\dataObject\Roles;
 use app\src\model\dataObject\Soutenance;
 use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
-use app\src\model\repository\TuteurRepository;
 
 /** @var $soutenance Soutenance */
 $tuteurProf = $soutenance->getIdTuteurProf();

@@ -4,7 +4,6 @@
 
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
-use app\src\model\repository\ConventionRepository;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\OffresRepository;
 
@@ -109,5 +108,12 @@ Non valide
                     ?></dd>
             </div>
         </dl>
+
+        <div class="flex justify-center mt-8">
+            <a href="/visite/<?php echo $convention->getNumConvention() ?>"
+               class="btn btn-primary bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Voir la
+                date de
+                visite</a>
+        </div>
     </div>
 </div>

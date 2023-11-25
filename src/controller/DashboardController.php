@@ -19,6 +19,7 @@ use app\src\model\repository\OffresRepository;
 use app\src\model\repository\PostulerRepository;
 use app\src\model\repository\SoutenanceRepository;
 use app\src\model\repository\StaffRepository;
+use app\src\model\repository\SuperviseRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\repository\TuteurRepository;
 use app\src\model\repository\UtilisateurRepository;
@@ -178,7 +179,9 @@ class DashboardController extends AbstractController
         $events = [];
         $visites = [];
         if (Auth::has_role(Roles::Student)) {
-            $visites = VisiteRepository::getAllByStudentId(Application::getUser()->id());
+            $visite = VisiteRepository::getByStudentId(Application::getUser()->id());
+            if (!$visite)
+                $visites[] = $visite;
             $soutenances = SoutenanceRepository::getAllSoutenancesByIdEtudiant(Application::getUser()->id());
         } else if (Auth::has_role(Roles::Tutor)) {
             $visites = VisiteRepository::getAllByEnterpriseTutorId(Application::getUser()->id());
@@ -195,12 +198,13 @@ class DashboardController extends AbstractController
         foreach ($visites as $visite) {
             $title = "Visite de stage";
             if (!Auth::has_role(Roles::Student)) {
-                $name = EtudiantRepository::getFullNameByID($visite->getIdEtudiant());
+                $supervise = SuperviseRepository::getByConvention($visite->getNumConvention());
+                $name = EtudiantRepository::getFullNameByID($supervise->getIdStudent());
                 $title .= " de " . $name;
             }
             $e = new Event($title, $visite->getDebutVisite(), $visite->getFinVisite(), "#1c4ed8");
             if (Auth::has_role(Roles::TutorTeacher))
-                $e->setButton("Voir plus", "/feur");
+                $e->setButton("Voir plus", "/visite/" . $visite->getNumConvention());
             $events[] = $e;
         }
         foreach ($soutenances as $soutenance) {
