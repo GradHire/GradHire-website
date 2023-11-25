@@ -12,7 +12,7 @@ use PDOException;
 
 class EntrepriseRepository extends ProRepository
 {
-    protected static string $view = "EntrepriseVue";
+    protected static string $view = "entreprisevue";
     protected static string $create_function = "creerEntreprise";
     protected static string $update_function = "updateEntreprise";
 

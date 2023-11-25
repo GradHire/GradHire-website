@@ -5,6 +5,7 @@ namespace app\src\controller;
 use app\src\core\components\Notification;
 use app\src\core\db\Database;
 use app\src\core\exception\ForbiddenException;
+use app\src\core\exception\NotFoundException;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
@@ -70,6 +71,57 @@ class AuthController extends AbstractController
         }
         return $this->render('login', [
             'form' => $loginForm
+        ]);
+    }
+
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
+    public function resetPassword(Request $req, Response $res): string
+    {
+        if (!Application::isGuest()) throw new ForbiddenException();
+        $form = new FormModel([
+            "email" => FormModel::email("Email")->required()->asterisk(),
+        ]);
+        if ($req->getMethod() == "post") {
+            if ($form->validate($req->getBody())) {
+                $body = $form->getParsedBody();
+                ProRepository::forgetPassword($body["email"]);
+                $form->setSuccess("Un email vous à été envoyé pour réinitialiser votre mot de passe");
+            }
+        }
+        return $this->render('resetPassword/form', [
+            'form' => $form
+        ]);
+    }
+
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     * @throws NotFoundException
+     */
+    public function forgetPassword(Request $req, Response $res): string
+    {
+        if (!Application::isGuest()) throw new ForbiddenException();
+        $token = $req->getRouteParam("token");
+        $infos = ProRepository::checkForgetToken($token);
+        if (!$infos) throw new NotFoundException();
+        $form = new FormModel([
+            "password" => FormModel::password("Nouveau mot de passe")->min(8)->required()->asterisk(),
+            "password2" => FormModel::password("Répéter mot de passe")->match("password")->min(8)->required()->asterisk()
+        ]);
+        if ($req->getMethod() == "post") {
+            if ($form->validate($req->getBody())) {
+                $body = $form->getParsedBody();
+                ProRepository::setNewPassword($body["password"], $infos["idutilisateur"]);
+                ProRepository::deleteForgetToken($infos["idutilisateur"]);
+                Notification::createNotification("Mot de passe modifié !");
+                $res->redirect('/pro_login');
+            }
+        }
+        return $this->render('resetPassword/forgetPassword', [
+            'form' => $form
         ]);
     }
 
@@ -147,6 +199,10 @@ class AuthController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
     public function modifierMdp(Request $req): string
     {
         if (Application::isGuest() || !Auth::has_role(Roles::Enterprise, Roles::Tutor)) throw new ForbiddenException();

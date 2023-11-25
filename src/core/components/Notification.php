@@ -4,13 +4,13 @@ namespace app\src\core\components;
 
 class Notification
 {
-	public static function show()
-	{
-		if (isset($_SESSION['notification']) && $_SERVER['REQUEST_METHOD'] != 'POST') {
-			$notification = $_SESSION['notification'];
-			$message = $notification['message'];
-			if ($notification['type'] == 'success') {
-				echo <<<HTML
+    public static function show()
+    {
+        if (isset($_SESSION['notification']) && $_SERVER['REQUEST_METHOD'] != 'POST') {
+            $notification = $_SESSION['notification'];
+            $message = $notification['message'];
+            if ($notification['type'] == 'success') {
+                echo <<<HTML
 <div id="toast" class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 absolute bottom-2 right-2 border-2 border-gray-300" role="alert" style="z-index: 1000">
     <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -28,8 +28,8 @@ class Notification
 </div>
 HTML;
 
-			} else {
-				echo <<<HTML
+            } else {
+                echo <<<HTML
 <div id="toast" class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 absolute bottom-2 right-2 border-2 border-gray-300" role="alert" style="z-index: 1000">
     <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -46,9 +46,9 @@ HTML;
     </button>
 </div>
 HTML;
-			}
+            }
 
-			echo <<<HTML
+            echo <<<HTML
 <script>
     setTimeout(function () {
         document.getElementById('toast').remove();
@@ -56,15 +56,15 @@ HTML;
 </script>
 HTML;
 
-			unset($_SESSION['notification']);
-		}
-	}
+            unset($_SESSION['notification']);
+        }
+    }
 
-	public static function createNotification($message, $success = true)
-	{
-		$_SESSION['notification'] = [
-			'message' => $message,
-			'type' => $success ? 'success' : 'danger'
-		];
-	}
+    public static function createNotification($message, $success = true): void
+    {
+        $_SESSION['notification'] = [
+            'message' => $message,
+            'type' => $success ? 'success' : 'danger'
+        ];
+    }
 }
