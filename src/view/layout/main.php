@@ -1,7 +1,15 @@
 <?php
 
+use app\src\core\components\Lien;
 use app\src\core\components\Notification;
+use app\src\core\components\Separator;
 use app\src\model\Application;
+
+/** @var Lien $lienAccueil
+ * @var Lien $lienOffres
+ */
+
+require __DIR__ . '/liens.php';
 
 ?>
 
@@ -31,106 +39,127 @@ use app\src\model\Application;
 </head>
 <body class="font-sans">
 
-<nav aria-label="Top"
-     class="fixed z-20 w-full border-b border-gray-200">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 top-0 z-50">
-        <div class="flex h-16 gap-4 items-center">
-            <?php if (!Application::isGuest()): ?>
-                <button id="burger-btn" type="button" class="relative rounded-md bg-white p-2 text-zinc-400 lg:hidden">
-                    <span class="absolute -inset-0.5"></span>
-                    <span class="sr-only">Open menu</span>
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                         aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
-                    </svg>
-                </button>
-            <?php endif; ?>
-            <div class="flex lg:ml-0">
-                <a href="/">
-                    <span class="sr-only">GradHire</span>
-                    <img class="h-8 w-auto" src="/resources/images/logo.png" alt="">
-                </a>
-            </div>
-
-            <div class="hidden lg:ml-8 lg:block lg:self-stretch">
-                <div class="flex h-full space-x-8">
-                    <?php if (!Application::isGuest()): ?>
-                        <a href="/"
-                           class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Accueil</a>
-                        <a href="/dashboard"
-                           class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Dashboard</a>
-                        <a href="/about"
-                           class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">A
-                            propos</a>
-                    <?php endif; ?>
-
-
-                </div>
-            </div>
-
-            <div class="ml-auto flex items-center">
-                <?php if (Application::isGuest()): ?>
-                    <div class="flex flex-1 lg:items-center justify-end space-x-6">
-                        <a href="/login" class="text-sm font-medium text-zinc-700 hover:text-zinc-800">Se connecter</a>
-                        <span class="h-6 w-px bg-zinc-400" aria-hidden="true"></span>
-                        <a href="/register" class="text-sm font-medium text-zinc-700 hover:text-zinc-800">S'inscrire</a>
-                    </div>
-                <?php else: ?>
-                    <div class="flex flex-1 lg:items-center justify-end space-x-6">
-                        <a class="flex flex-row gap-4 items-center justify-center text-sm font-medium text-zinc-700 hover:text-zinc-800"
-                           href="/profile">
-                            <span class="max-lg:hidden">
-                                <?= Application::getUser()->full_name() ?>
-                            </span>
-                            <div class="rounded-full overflow-hidden h-7 w-7">
-                                <img src="<?= Application::getUser()->get_picture() ?>" alt="Photo de profil"
-                                     class="w-full h-full object-cover rounded-full aspect-square">
-                            </div>
-                        </a>
-
-                        <span class="h-6 w-px bg-zinc-200 max-lg:hidden"
-                              aria-hidden="true"></span>
-                        <a href="/logout"
-                           class="text-sm font-medium text-zinc-700 hover:text-zinc-800 <?php if (!Application::isGuest()): ?>max-lg:hidden<?php endif; ?>">Se
-                            déconnecter</a>
-
-                    </div>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
-</nav>
 <div id="nav-container"
-     class="hidden fixed top-0 left-0 w-full h-screen bg-white bg-opacity-90 backdrop-blur-xl backdrop-filter z-50  mt-[65px]">
+     class="hidden fixed top-0 left-0 w-full h-screen bg-white bg-opacity-90 backdrop-blur-xl backdrop-filter z-50 mt-[65px]">
     <div class="flex flex-col justify-center items-center space-y-8 uppercase mt-[50px]">
-        <?php if (!Application::isGuest()): ?>
-            <a href="/"
-               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Accueil</a>
-            <a href="/dashboard"
-               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Dashboard</a>
-            <a href="/about"
-               class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">A propos</a>
-        <?php endif; ?>
+        <a href="/"
+           class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Accueil</a>
+        <a href="/dashboard"
+           class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Dashboard</a>
+        <a href="/about"
+           class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">A propos</a>
     </div>
 </div>
 <div id="blur-background" class="hidden w-screen h-screen fixed z-50 top-0 left-0 backdrop-blur-md"></div>
-<div class="w-full flex flex-col justify-center items-center">
-    <div class="max-w-7xl w-full px-4 sm:px-6 lg:px-8 flex flex-col justify-center mt-[65px] items-center">
-        <?php
-        Notification::show();
-        ?>
-        {{content}}
-        <footer aria-labelledby="footer-heading" class="bg-white w-full">
-            <h2 id="footer-heading" class="sr-only">Footer</h2>
-            <div class="mx-auto max-w-7xl ">
-                <div class="border-t border-zinc-200 py-10">
-                    <p class="text-sm text-zinc-500">Copyright &copy; 2023 -
-                        <span class="text-zinc-900">GradHire</span>
-                    </p>
+<div class="w-full flex  justify-start items-start flex-row ">
+    <div class="relative text-[14px] w-full md:max-w-[275px] m-0 bg-white isolate justify-around border-r text-[#1A2421] backdrop-blur-xl p-4 [ shadow-black/5 shadow-2xl ] fixed top-0 left-0 z-40 w-64 h-screen ">
+        <div class="h-full justify-between items-start w-full flex gap-8 flex-col ">
+            <div class="flex flex-row w-full justify-between">
+                <a href="/">
+                    <span class="sr-only">GradHire</span>
+                    <img class="h-7 pl-4 w-auto" src="/resources/images/logo.png" alt="">
+                </a>
+                <div class="h-7 w-7 justify-center items-center flex hover:-translate-x-0.5 duration-150 cursor-pointer group">
+                    <label for="sidebar-icon"></label><input class="absolute w-5 h-5 peer opacity-0 cursor-pointer"
+                                                             name="sidebar-icon" id="sidebar-icon" type="checkbox">
+                    <svg width="23" height="20" viewBox="0 0 23 20" fill="none" xmlns="http://www.w3.org/2000/svg"
+                         class="duration-300 stroke-zinc-500 group-hover:stroke-zinc-800 w-5 h-5">
+                        <path d="M19 19L4 19C3.20435 19 2.44129 18.7629 1.87868 18.341C1.31607 17.919 1 17.3467 1 16.75L1 3.25C1 2.65326 1.31607 2.08097 1.87868 1.65901C2.44129 1.23705 3.20435 1 4 1L19 1M19 19C19.7957 19 20.5587 18.7629 21.1213 18.341C21.6839 17.919 22 17.3467 22 16.75L22 3.25C22 2.65326 21.6839 2.08097 21.1213 1.65901C20.5587 1.23705 19.7957 1 19 1M19 19L9 19C8.20435 19 7.44129 18.7629 6.87868 18.341C6.31607 17.919 6 17.3467 6 16.75L6 3.25C6 2.65326 6.31607 2.08097 6.87868 1.65901C7.44129 1.23705 8.20435 1 9 1L19 1"
+                              stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="sidebar-path-to-spin" d="M15.75 13.5L12 9.75L15.75 6" stroke-width="1.5"
+                              stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <style>
+                    #sidebar-icon:checked + svg .sidebar-path-to-spin {
+                        rotate: 180deg;
+                        transform: translate(-28px, -20px);
+                    }
+
+                    #sidebar-icon:not(:checked) + svg .sidebar-path-to-spin {
+                        rotate: 0deg;
+                        transform: translate(0, 0);
+                    }
+                </style>
+            </div>
+            <div class="h-full overflow-y-auto flex gap-2 flex-col w-full ">
+                <div class="w-full flex flex-row justify-between items-center">
+                    <span class="uppercase text-zinc-400 font-semibold">Sections</span>
+                    <button>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                             class="w-5 h-5 hover:fill-zinc-800 fill-zinc-400 duration-300">
+                            <path d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"/>
+                        </svg>
+                    </button>
+                </div>
+                <?php
+                $lienAccueil->render();
+                $lienOffres->render();
+                new Separator([]);
+                ?>
+                <div class="w-full flex flex-row justify-between items-center">
+                    <span class="uppercase text-zinc-400 font-semibold">Actions</span>
+                    <button>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                             class="w-5 h-5 hover:fill-zinc-800 fill-zinc-400 duration-300">
+                            <path d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
-        </footer>
+            <div class="flex items-start justify-start flex-col gap-4 w-full">
+                <?php new Separator([]); ?>
+                <div class="w-full flex flex-row justify-between items-st1">
+                    <a class="flex flex-row gap-4 items-center justify-center text-sm font-medium text-zinc-600 hover:text-zinc-800"
+                       href="/profile">
+                        <div class="rounded-full overflow-hidden h-8 w-8 border">
+                            <img src="<?= Application::getUser()->get_picture() ?>" alt="Photo de profil"
+                                 class="w-full h-full object-cover rounded-full aspect-square">
+                        </div>
+                        <div class="flex flex-col justify-start items-start">
+                            <span><?= Application::getUser()->full_name() ?></span>
+                            <span class="whitespace-nowrap rounded-full bg-zinc-100 px-2 text-center flex justify-center items-center text-xs text-zinc-500">
+                                    <?= Application::getUser()->role()->value ?>
+                                    </span></div>
+                    </a>
+                    <div class="flex flex-row gap-4 items-center justify-center text-sm font-medium text-zinc-700 hover:text-zinc-800 group relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor"
+                             class="w-6 h-6 stroke-zinc-600 group-hover:stroke-zinc-800 cursor-pointer">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/>
+                        </svg>
+                        <div class="opacity-0 group-hover:visible invisible group-hover:opacity-100 flex flex-col items-center justify-around duration-300 transition-all transform translate-x-16 -translate-y-6 group-hover:-translate-y-12 absolute top-0 right-0 w-32 h-14 bg-white drop-shadow border rounded-[8px]">
+                            <a href="/profile"
+                               class="text-sm font-medium text-zinc-600 hover:text-zinc-800 hover:underline">Modifier le
+                                profil</a>
+                            <a href="/logout"
+                               class="text-sm text-zinc-600 hover:text-zinc-800 font-medium hover:underline ">Se
+                                déconnecter</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="w-full flex flex-col justify-start items-start p-4 gap-12">
+        <?php Notification::show(); ?>
+        <div class="w-full border rounded-2xl flex flex-row max-h-[65px] min-h-[65px] bg-white items-center justify-between px-6">
+            <h2 class="text-xl font-semibold"><?= $this->title ?></h2>
+            <div class="max-w-[55%] h-[30px] w-full border rounded-[8px] bg-zinc-100"></div>
+            <button class=" p-[0.8px] duration-300 group relative">
+                <span class="w-2.5 h-2.5 bg-blue-400 absolute top-0 right-0 rounded-full animate-ping "></span>
+                <span class="w-2.5 h-2.5 bg-blue-400 absolute top-0 right-0 rounded-full border"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                     class="w-6 h-6 group-hover:fill-zinc-800 fill-zinc-600">
+                    <path fill-rule="evenodd"
+                          d="M5.25 9a6.75 6.75 0 0113.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 01-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 11-7.48 0 24.585 24.585 0 01-4.831-1.244.75.75 0 01-.298-1.205A8.217 8.217 0 005.25 9.75V9zm4.502 8.9a2.25 2.25 0 104.496 0 25.057 25.057 0 01-4.496 0z"
+                          clip-rule="evenodd"/>
+                </svg>
+
+            </button>
+        </div>
+        {{content}}
     </div>
 </div>
 <script>

@@ -12,7 +12,7 @@ class Separator implements ComponentInterface
 
     public function __construct(array $params)
     {
-        $this->color = $params['color'] ?? 'zinc-300';
+        $this->color = $params['color'] ?? 'zinc-200';
         $this->orientation = $params['orientation'] ?? 'horizontal';
 
 

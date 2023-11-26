@@ -112,4 +112,10 @@ class Application
     {
         $this->eventListeners[$eventName][] = $callback;
     }
+
+    public function getView(): View
+    {
+        return $this->view;
+    }
+
 }

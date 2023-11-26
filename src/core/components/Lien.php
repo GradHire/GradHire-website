@@ -2,21 +2,33 @@
 
 namespace app\src\core\components;
 
-class Lien
+use app\src\model\Application;
+use app\src\model\View;
+
+class Lien implements ComponentInterface
 {
     private string $href;
     private string $nom;
+    private string $svg;
 
-    public function __construct(string $href, string $nom)
+    public function __construct(array $params)
     {
-        $this->href = $href;
-        $this->nom = $nom;
+        $this->href = $params['href'] ?? '';
+        $this->nom = $params['nom'] ?? '';
+        $this->svg = $params['svg'] ?? '';
     }
 
-    public function render(): string
+    public function render(): void
     {
-        return <<<HTML
-        <a href="$this->href" class="flex items-center text-2xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800 border rounded-[8px] bg-white hover:bg-zinc-50 text-center w-full hover:underline p-4">$this->nom</a>
-HTML;
+        echo <<<EOT
+            <a href="$this->href" class="py-2.5 px-4 rounded-[8px] duration-300 ease-out w-full flex flex-row items-center justify-start gap-2 text-left hover:bg-zinc-100
+        EOT;
+        if (View::getCurrentSection() === $this->nom) echo ' bg-zinc-100 text-black '; else echo ' bg-white text-zinc-400 ';
+        echo <<<EOT
+             ">
+            $this->svg
+            $this->nom
+            </a>
+        EOT;
     }
 }

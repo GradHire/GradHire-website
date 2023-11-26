@@ -5,6 +5,7 @@ namespace app\src\model;
 class View
 {
     public string $title = '';
+    public static string $currentSection = '';
 
     public function renderView($view, array $params)
     {
@@ -27,5 +28,15 @@ class View
         ob_start();
         include_once Application::$ROOT_DIR."/src/view/$view.php";
         return ob_get_clean();
+    }
+
+    public static function getCurrentSection(): string
+    {
+        return self::$currentSection;
+    }
+
+    public static function setCurrentSection(string $currentSection): void
+    {
+        self::$currentSection = $currentSection;
     }
 }

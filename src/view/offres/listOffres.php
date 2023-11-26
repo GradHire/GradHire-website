@@ -9,10 +9,11 @@ use app\src\model\Auth;
 use app\src\model\dataObject\Offre;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
+use app\src\model\View;
 
 
 $this->title = 'Offres';
-
+View::setCurrentSection('Offres');
 
 if (Auth::has_role(Roles::Staff, Roles::Manager)) {
     $modal = new Modal("Êtes-vous sûr de vouloir archiver cette offre ?", "Oui, archiver", '
