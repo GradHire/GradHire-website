@@ -236,6 +236,8 @@ $app->router->post('/noteSoutenance/{numConvention}', [SoutenanceController::cla
 
 $app->router->get('/visite/{id:\d+}', [VisiteController::class, 'visite']);
 $app->router->post('/visite/{id:\d+}', [VisiteController::class, 'visite']);
+$app->router->get('/compteRendu/{numconvention}', [VisiteController::class, 'compteRendu']);
+$app->router->post('/compteRendu/{numconvention}', [VisiteController::class, 'compteRendu']);
 
 
 $app->run();

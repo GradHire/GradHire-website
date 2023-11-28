@@ -8,6 +8,7 @@ use app\src\model\Form\FormModel;
  * @var FormModel $form
  * @var string $name
  * @var string $addresse
+ * @var array $commentaires
  */
 ?>
 
@@ -24,7 +25,15 @@ use app\src\model\Form\FormModel;
             class="w-full h-[300px] mb-10"
             src="https://maps.google.com/maps?q=<?= $addresse ?>&t=&z=13&ie=UTF8&iwloc=&output=embed">
     </iframe>
+    <p class="mb-2"><span class="font-bold">Commentaire sur la visite :</p>
     <?php
+    foreach($commentaires as $commentaire) {
+        echo <<<HTML
+            <div class="flex flex-col gap-2 mb-4">
+                <p>{$commentaire['commentaire']}</p>
+            </div>
+        HTML;
+    }
     if (isset($form)) {
         $form->start();
         ?>

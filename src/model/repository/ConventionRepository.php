@@ -238,6 +238,29 @@ class ConventionRepository extends AbstractRepository
         }
     }
 
+    public static function getIfIdTuteurs(int $numconvention, int $idtuteur): bool
+    {
+        $statement = Database::get_conn()->prepare("SELECT idtuteurprof, idtuteurentreprise FROM \"conventionValideVue\" WHERE numconvention = :numconvention");
+        $statement->execute([
+            'numconvention' => $numconvention
+        ]);
+        $data = $statement->fetch();
+        if ($data["idtuteurprof"] == $idtuteur || $data["idtuteurentreprise"] == $idtuteur)
+            return true;
+        else
+            return false;
+    }
+
+    public static function getInformationByNumConvention(int $numconvention): array
+    {
+        $statement = Database::get_conn()->prepare("SELECT * FROM \"conventionValideVue\" WHERE numconvention = :numconvention");
+        $statement->execute([
+            'numconvention' => $numconvention
+        ]);
+        $data = $statement->fetch();
+        return $data;
+    }
+
 
     /**
      * @throws ServerErrorException
