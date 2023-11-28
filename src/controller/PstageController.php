@@ -107,7 +107,6 @@ class PstageController extends AbstractController
             $id = Application::getUser()->getId();
             $etudiant = (new EtudiantRepository([]))->getByIdFull($id);
             $formData = $_SESSION['simulateurEtu'] ?? [];
-
             $form = new FormModel([
                 "numEtudiant" => FormModel::string("Numéro étudiant *")->required()->min(8)->max(8)->default($formData['numEtudiant'] ?? $etudiant->getNumEtudiant()),
                 "nom" => FormModel::string("Nom *")->required()->default($formData['nom'] ?? $etudiant->getNomutilisateur()),
@@ -126,7 +125,7 @@ class PstageController extends AbstractController
             if ($request->getMethod() === 'post') {
                 if ($form->validate($request->getBody())) {
                     $_SESSION['simulateurEtu'] = $form->getParsedBody();
-                    (new EtudiantRepository([]))->updateEtu($form->getParsedBody()['numEtudiant'], $form->getParsedBody()['nom'], $form->getParsedBody()['prenom'], $form->getParsedBody()['telephone'], $form->getParsedBody()['emailPerso'], $form->getParsedBody()['emailUniv'], $form->getParsedBody()['adresse'], $form->getParsedBody()['codePostal'], $form->getParsedBody()['ville'], "France");
+                    (new EtudiantRepository([]))->updateEtu($form->getParsedBody()['numEtudiant'], $form->getParsedBody()['nom'], $form->getParsedBody()['prenom'], $form->getParsedBody()['telephone'], $form->getParsedBody()['emailPerso'], $form->getParsedBody()['emailUniv'], $form->getParsedBody()['adresse'], $form->getParsedBody()['codePostal'], $form->getParsedBody()['ville'], "France", "");
                     return $this->render('simulateurP/General', ['vueChemin' => "previewetu.php", 'form' => $form]);
                 }
             }

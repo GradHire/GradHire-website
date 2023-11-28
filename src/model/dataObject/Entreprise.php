@@ -14,7 +14,7 @@ class Entreprise extends Utilisateur
     private ?string $codeNaf;
     private ?string $fax;
     private ?string $siteWeb;
-    private int $siret;
+    private string $siret;
     private ?string $adresse;
     private ?string $codePostal;
     private ?string $ville;
@@ -40,7 +40,7 @@ class Entreprise extends Utilisateur
      * @param string|null $pays
      */
 
-    public function __construct(int $idutilisateur, ?string $statutjuridique, ?string $bio, ?string $typestructure, ?string $effectif, ?string $codenaf, ?string $fax, ?string $siteweb, int $siret, string $emailutilisateur, string $nomutilisateur, string $numtelutilisateur, ?string $adresse, ?string $codePostal, ?string $ville, ?string $pays)
+    public function __construct(int $idutilisateur, ?string $statutjuridique, ?string $bio, ?string $typestructure, ?string $effectif, ?string $codenaf, ?string $fax, ?string $siteweb, ?string $siret, string $emailutilisateur, string $nomutilisateur, string $numtelutilisateur, ?string $adresse, ?string $codePostal, ?string $ville, ?string $pays)
     {
         parent::__construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur, $bio);
         $this->idUtilisateur = $idutilisateur;
