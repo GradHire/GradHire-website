@@ -80,6 +80,9 @@ class NotesRepository extends AbstractRepository
         $stmt = Database::get_conn()->prepare($sql);
         $stmt->execute([$getSoutenance]);
         $dataObjectFormatTableau = $stmt->fetch();
+        if ($dataObjectFormatTableau === false) {
+            return null;
+        }
         return $this->construireDepuisTableau($dataObjectFormatTableau);
     }
 
