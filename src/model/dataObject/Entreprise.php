@@ -127,7 +127,7 @@ class Entreprise extends Utilisateur
         $this->siteWeb = $siteweb;
     }
 
-    public function getSiret(): int
+    public function getSiret(): ?string
     {
         return $this->siret;
     }
