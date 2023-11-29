@@ -15,6 +15,7 @@ use app\src\core\exception\ServerErrorException;
 use app\src\core\lib\Psr4AutoloaderClass;
 use app\src\model\Application;
 
+$start_time = microtime(true);
 
 require_once __DIR__ . '/../src/core/lib/Psr4AutoloaderClass.php';
 require_once __DIR__ . '/../src/config.php';
@@ -241,3 +242,10 @@ $app->router->post('/compteRendu/{numconvention}', [VisiteController::class, 'co
 
 
 $app->run();
+
+$end_time = microtime(true);
+
+// Calculate script execution time
+$execution_time = ($end_time - $start_time);
+
+echo " Execution time of script = " . $execution_time . " sec";
