@@ -203,9 +203,7 @@ class DashboardController extends AbstractController
                 $title .= " de " . $name;
             }
             $e = new Event($title, $visite->getDebutVisite(), $visite->getFinVisite(), "#1c4ed8");
-            print_r($visite->getDebutVisite());
-            print_r(new \DateTime('now'));
-            if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor,Roles::Manager,Roles::ManagerAlternance,Roles::ManagerStage))
+            if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage))
                 $e->setButton("Voir plus", "/visite/" . $visite->getNumConvention());
             if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor) && $visite->getDebutVisite() < new \DateTime('now') && ConventionRepository::getIfIdTuteurs($visite->getNumConvention(), Application::getUser()->id()) && !VisiteRepository::checkIfAlreadyCompteRendu(Application::getUser()->id(), SuperviseRepository::getByConvention($visite->getNumConvention())->getIdStudent(), $visite->getNumConvention()))
                 $e->setButton("deposer compte rendu", "/compteRendu/" . $visite->getNumConvention());
