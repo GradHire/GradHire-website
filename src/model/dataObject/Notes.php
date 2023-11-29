@@ -154,7 +154,7 @@ class Notes extends AbstractDataObject
         $this->difficulte = $difficulte;
     }
 
-    public function getNotedemarche(): int
+    public function getNotedemarche(): ?int
     {
         return $this->notedemarche;
     }
