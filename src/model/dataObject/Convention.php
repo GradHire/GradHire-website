@@ -145,37 +145,6 @@ class Convention extends AbstractDataObject
         $this->Commentaire = $Commentaire;
     }
 
-    /**
-     * @throws ServerErrorException
-     */
-    public function validerPedagogiquement(mixed $id)
-    {
-        (new ConventionRepository())->validerPedagogiquement($id);
-    }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public function unvalidatePedagogiquement(mixed $id)
-    {
-        (new ConventionRepository())->unvalidatePedagogiquement($id);
-    }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public function unvalidate(mixed $id)
-    {
-        (new ConventionRepository())->unvalidate($id);
-    }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public function valider(mixed $id)
-    {
-        (new ConventionRepository())->valider($id);
-    }
 
 
     protected function getValueColonne(string $nomColonne): string
