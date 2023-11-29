@@ -86,6 +86,16 @@ class ConventionRepository extends AbstractRepository
         }
     }
 
+    public static function getConventionXOffreById(mixed $id)
+    {
+        $statement = Database::get_conn()->prepare("SELECT c.idoffre, o.idutilisateur, o.sujet FROM convention c JOIN Offre o ON c.idoffre = o.idoffre WHERE numconvention = :id");
+        $statement->execute([
+            'id' => $id
+        ]);
+        $data = $statement->fetch();
+        return $data;
+    }
+
     /**
      * @throws ServerErrorException
      */
@@ -140,14 +150,12 @@ class ConventionRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public static function validerPedagogiquement(int $id): array
+    public static function validerPedagogiquement(int $id): void
     {
         try {
             $statement = Database::get_conn()->prepare("UPDATE " . static::$table . " SET conventionvalideepedagogiquement = 1 WHERE numconvention = :id");
             $statement->bindParam(":id", $id);
             $statement->execute();
-            $resultat = $statement->fetchAll();
-            return $resultat;
         } catch (\Exception $e) {
             throw new ServerErrorException("Erreur lors de la validation pédagogique de la convention", 500, $e);
         }
@@ -190,14 +198,12 @@ class ConventionRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public static function unvalidatePedagogiquement(mixed $id): array
+    public static function unvalidatePedagogiquement(mixed $id): void
     {
         try {
             $statement = Database::get_conn()->prepare("UPDATE " . static::$table . " SET conventionvalideepedagogiquement = 0 WHERE numconvention = :id");
             $statement->bindParam(":id", $id);
             $statement->execute();
-            $resultat = $statement->fetchAll();
-            return $resultat;
         } catch (\Exception $e) {
             throw new ServerErrorException("Erreur lors de l'archivage pédagogique de la convention", 500, $e);
         }
@@ -206,14 +212,12 @@ class ConventionRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public static function unvalidate(mixed $id): array
+    public static function unvalidate(mixed $id): void
     {
         try {
             $statement = Database::get_conn()->prepare("UPDATE " . static::$table . " SET conventionvalidee = 0 WHERE numconvention = :id");
             $statement->bindParam(":id", $id);
             $statement->execute();
-            $resultat = $statement->fetchAll();
-            return $resultat;
         } catch (\Exception $e) {
             throw new ServerErrorException("Erreur lors de l'archivage de la convention", 500, $e);
         }
@@ -246,14 +250,12 @@ class ConventionRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public static function validate(mixed $id): array
+    public static function validate(mixed $id): void
     {
         try {
             $statement = Database::get_conn()->prepare("UPDATE " . static::$table . " SET conventionvalidee = 1 WHERE numconvention = :id");
             $statement->bindParam(":id", $id);
             $statement->execute();
-            $resultat = $statement->fetchAll();
-            return $resultat;
         } catch (\Exception $e) {
             throw new ServerErrorException("Erreur lors de la validation de la convention", 500, $e);
         }

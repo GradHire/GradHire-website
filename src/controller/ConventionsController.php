@@ -44,14 +44,15 @@ class ConventionsController extends AbstractController {
      */
     public function validateConventionPedagogiquement(Request $request): void {
         $id = $request->getRouteParams()["id"];
-        $array = ConventionRepository::validerPedagogiquement($id);
+        ConventionRepository::validerPedagogiquement($id);
+        $array = ConventionRepository::getConventionXOffreById($id);
+        print_r($array);
         $mail = new MailRepository();
-        $offre = (new OffresRepository())->getById($array["idoffre"]);
-        $entreprise = (new EntrepriseRepository([]))->getByIdFull($offre->getIdUtilisateur());
+        $entreprise = EntrepriseRepository::getEmailById($array['idutilisateur']);
         $mail->send_Mail(
-            [$entreprise->getEmailutilisateur()],
+            [$entreprise['email']],
             "Convention validée pédagogiquement",
-            "La convention n°" . $id . " de l'offre " . $offre->getSujet() . " a été validée pédagogiquement par le Staff "
+            "La convention n°" . $id . " de l'offre " . $array['sujet'] . " a été validée pédagogiquement par le Staff "
         );
         Application::redirectFromParam("/conventions");
     }
@@ -61,14 +62,16 @@ class ConventionsController extends AbstractController {
      */
     public function unvalidateConventionPedagogiquement(Request $request): void {
         $id = $request->getRouteParams()["id"];
-        $array = ConventionRepository::unvalidatePedagogiquement($id);
+        ConventionRepository::unvalidatePedagogiquement($id);
+        $array = ConventionRepository::getConventionXOffreById($id);
         $mail = new MailRepository();
-        $offre = (new OffresRepository())->getById($array["idoffre"]);
-        $entreprise = (new EntrepriseRepository([]))->getByIdFull($offre->getIdUtilisateur());
+        $entreprise = EntrepriseRepository::getEmailById($array['idutilisateur']);
+        echo "Email : ";
+        print_r($entreprise);
         $mail->send_Mail(
-            [$entreprise->getEmailutilisateur()],
+            [$entreprise['email']],
             "Convention non validée pédagogiquement",
-            "La convention n°" . $id . " de l'offre " . $offre->getSujet() . " n'a pas été validée pédagogiquement par le Staff "
+            "La convention n°" . $id . " de l'offre " . $array['sujet'] . " n'a pas été validée pédagogiquement par le Staff "
         );
         Application::redirectFromParam("/conventions");
     }
@@ -78,15 +81,15 @@ class ConventionsController extends AbstractController {
      */
     public function unvalidateConvention(Request $request): void {
         $id = $request->getRouteParams()["id"];
-        $array = ConventionRepository::unvalidate($id);
+        ConventionRepository::unvalidate($id);
+        $array = ConventionRepository::getConventionXOffreById($id);
         $mail = new MailRepository();
-        $offre = (new OffresRepository())->getById($array["idoffre"]);
-        $entreprise = (new EntrepriseRepository([]))->getByIdFull($offre->getIdUtilisateur());
-        $etudiant = (new EtudiantRepository([]))->getByIdFull($array["idutilisateur"]);
+        $entreprise = (new EntrepriseRepository([]))->getByIdFull($array['idoffre']);
+        $etudiant = EtudiantRepository::getEmailById($array["idutilisateur"]);
         $mail->send_Mail(
-            [$etudiant->getEmailutilisateur()],
+            [$etudiant['email']],
             "Convention non validée par l'enreprise " . $entreprise->getNomutilisateur(),
-            "La convention n°" . $id . " de l'offre " . $offre->getSujet() . " n'a pas été validée par l'entreprise " . $entreprise->getNomutilisateur()
+            "La convention n°" . $id . " de l'offre " . $array['sujet'] . " n'a pas été validée par l'entreprise " . $entreprise->getNomutilisateur()
         );
         Application::redirectFromParam("/conventions");
     }
@@ -96,15 +99,15 @@ class ConventionsController extends AbstractController {
      */
     public function validateConvention(Request $request): void {
         $id = $request->getRouteParams()["id"];
-        $array = ConventionRepository::validate($id);
+        ConventionRepository::validate($id);
+        $array = ConventionRepository::getConventionXOffreById($id);
         $mail = new MailRepository();
-        $offre = (new OffresRepository())->getById($array["idoffre"]);
-        $entreprise = (new EntrepriseRepository([]))->getByIdFull($offre->getIdUtilisateur());
-        $etudiant = (new EtudiantRepository([]))->getByIdFull($array["idutilisateur"]);
+        $entreprise = (new EntrepriseRepository([]))->getByIdFull($array['idoffre']);
+        $etudiant = EtudiantRepository::getEmailById($array["idutilisateur"]);
         $mail->send_Mail(
-            [$etudiant->getEmailutilisateur()],
+            [$etudiant['email']],
             "Convention validée par l'enreprise " . $entreprise->getNomutilisateur(),
-            "La convention n°" . $id . " de l'offre " . $offre->getSujet() . " a été validée par l'entreprise " . $entreprise->getNomutilisateur()
+            "La convention n°" . $id . " de l'offre " . $array['sujet'] . " a été validée par l'entreprise " . $entreprise->getNomutilisateur()
         );
         Application::redirectFromParam("/conventions");
     }

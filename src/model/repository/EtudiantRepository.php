@@ -164,6 +164,26 @@ class EtudiantRepository extends LdapRepository
         }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getEmailById(mixed $idutilisateur)
+    {
+        try {
+            $sql = "SELECT email FROM " . self::$view . " WHERE idUtilisateur = :idUtilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idUtilisateur' => $idutilisateur]);
+            $resultat = $requete->fetch();
+            if (!$resultat) {
+                return null;
+            }
+            return $resultat;
+        } catch
+        (PDOException) {
+            throw new ServerErrorException();
+        }
+    }
+
     protected
     function getNomColonnes(): array
     {
