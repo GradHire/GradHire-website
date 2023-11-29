@@ -203,7 +203,6 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
             });
         });
     });
-    let currentModal = null;
 </script>
 
 
