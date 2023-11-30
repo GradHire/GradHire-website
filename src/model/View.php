@@ -2,6 +2,8 @@
 
 namespace app\src\model;
 
+use app\src\controller\AbstractController;
+
 class View
 {
     public string $title = '';
@@ -11,7 +13,7 @@ class View
     {
         $layoutName = Application::$app->layout;
         if (Application::$app->controller) {
-            $layoutName = Application::$app->controller->layout;
+            Application::isGuest() ? $layoutName = 'guest' : $layoutName = 'main';
         }
         $viewContent = $this->renderViewOnly($view, $params);
         ob_start();

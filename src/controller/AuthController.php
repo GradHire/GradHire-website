@@ -170,4 +170,13 @@ class AuthController extends AbstractController
             'form' => $form
         ]);
     }
+
+    public function home(Request $request): string
+    {
+        if (Application::isGuest()) {
+            return $this->render('home');
+        }
+        Application::$app->response->redirect('/dashboard');
+        return '';
+    }
 }

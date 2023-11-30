@@ -7,7 +7,7 @@ use app\src\model\Application;
 
 abstract class AbstractController
 {
-    public string $layout = 'main';
+    public string $layout = 'guest';
     public string $action = '';
 
     protected array $middlewares = [];

@@ -31,7 +31,7 @@ try {
     exit();
 }
 
-$app->router->get('/', 'home');
+$app->router->get('/', [AuthController::class, 'home']);
 $app->router->get('/about', 'about');
 
 
