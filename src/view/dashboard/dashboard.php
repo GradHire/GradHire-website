@@ -17,14 +17,9 @@ use app\src\model\View;
  * @var string $currentTab
  */
 
-if ($currentTab === 'tab1') $this->title = 'Statistiques';
-elseif ($currentTab === 'tab2') $this->title = 'Actions';
-elseif ($currentTab === 'tab3') $this->title = 'Favoris';
+$this->title = 'Dashboard';
 
 View::setCurrentSection('Accueil');
-//echo '<pre>';
-//print_r($data);
-//echo '</pre>';
 
 //import js
 echo '<script type="text/javascript" src="/resources/js/animate-counter.js"></script>';

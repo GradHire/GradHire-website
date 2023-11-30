@@ -44,12 +44,14 @@ document.addEventListener('DOMContentLoaded', async (event) => {
             sideButtonFlash1.classList.replace('group-hover:translate-x-0.5', 'group-hover:-translate-x-0.5');
             sideButtonFlash2.classList.replace('group-hover:-rotate-[15deg]', 'group-hover:rotate-[15deg]');
             sideButtonFlash2.classList.replace('group-hover:translate-x-0.5', 'group-hover:-translate-x-0.5');
-            for (let i = 0; i < sectionTexts.length; i++) sectionTexts[i].classList.replace("text-[12px]", "text-[8px]")
+            for (let i = 0; i < sectionTexts.length; i++) {
+                sectionTexts[i].classList.replace("text-[12px]", "text-[8px]")
+                sectionAdds[i].style.display = 'none';
+            }
             for (let i = 0; i < lienNoms.length; i++) {
                 lienNoms[i].classList.add('hidden');
                 lienBlocks[i].classList.replace("w-full", "w-9");
                 lienTooltips[i].classList.replace("hidden", "flex");
-                sectionAdds[i].style.display = 'none';
             }
         } else {
             sidebarContainer.classList.replace("max-w-[75px]", "max-w-[275px]");
@@ -59,12 +61,14 @@ document.addEventListener('DOMContentLoaded', async (event) => {
             sideButtonFlash1.classList.replace('group-hover:-translate-x-0.5', 'group-hover:translate-x-0.5');
             sideButtonFlash2.classList.replace('group-hover:rotate-[15deg]', 'group-hover:-rotate-[15deg]');
             sideButtonFlash2.classList.replace('group-hover:-translate-x-0.5', 'group-hover:translate-x-0.5');
-            for (let i = 0; i < sectionTexts.length; i++) sectionTexts[i].classList.replace("text-[8px]", "text-[12px]")
+            for (let i = 0; i < sectionTexts.length; i++) {
+                sectionTexts[i].classList.replace("text-[8px]", "text-[12px]")
+                sectionAdds[i].style.display = 'block';
+            }
             for (let i = 0; i < lienNoms.length; i++) {
                 lienNoms[i].classList.remove('hidden');
                 lienBlocks[i].classList.replace("w-9", 'w-full');
                 lienTooltips[i].classList.replace('flex', 'hidden');
-                sectionAdds[i].style.display = 'block';
             }
 
         }
