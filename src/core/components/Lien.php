@@ -29,7 +29,7 @@ class Lien implements ComponentInterface
         echo "<span> $this->svg </span> <span class=\" lienNom ";
         if (!$this->isOpen) echo " hidden\">"; else echo " \">";
         echo "$this->nom </span>";
-        echo "<div class=\" lienTooltip opacity-0 text-black z-50 group-hover:visible invisible group-hover:opacity-100 flex flex-col items-center justify-around duration-300 transition-all transform translate-x-16 group-hover:translate-x-20 absolute right-0 w-16 h-8 bg-white drop-shadow border rounded-[8px]\"> $this->nom </div>";
+        echo "<div class=\" lienTooltip opacity-0 text-white z-50 group-hover:visible invisible group-hover:opacity-100 flex flex-col items-center justify-around duration-300 transition-all transform translate-x-16 group-hover:translate-x-20 absolute right-0 w-16 h-8 bg-zinc-800 drop-shadow border rounded-[8px]\"> $this->nom </div>";
         echo "</a>";
     }
 }

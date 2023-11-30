@@ -5,13 +5,14 @@ document.addEventListener('DOMContentLoaded', async (event) => {
         document.cookie = `${name}=${value}; expires=${expires}; path=${path}`
     }
 
-    const sidebarPathToSpin = document.querySelector('.sidebar-path-to-spin');
     const lienNoms = document.querySelectorAll('.lienNom');
     const lienBlocks = document.querySelectorAll('.lienBlock');
     const lienTooltips = document.querySelectorAll('.lienTooltip');
     const sectionAdds = document.querySelectorAll('.sectionAdd');
     const sectionTexts = document.querySelectorAll('.sectionText');
     const sidebarContainer = document.getElementById('sidebar-container');
+    const sideButtonFlash1 = document.getElementById('sideButtonFlash1');
+    const sideButtonFlash2 = document.getElementById('sideButtonFlash2');
     const logoBig = document.getElementById('logo-big');
     const logoSmall = document.getElementById('logo-small');
     const sidebarButton = document.getElementById('sidebar-button');
@@ -36,11 +37,13 @@ document.addEventListener('DOMContentLoaded', async (event) => {
     async function updateSideMenu() {
         if (sidebarOpen === 'false') {
             sidebarContainer.classList.remove('max-w-[275px]');
-            sidebarContainer.classList.add('max-w-[100px]');
-            sidebarPathToSpin.style.rotate = '180deg';
-            sidebarPathToSpin.style.transform = 'translate(-28px, -20px)';
+            sidebarContainer.classList.add('max-w-[75px]');
             logoBig.style.display = 'none';
             logoSmall.style.display = 'block';
+            sideButtonFlash1.classList.replace('group-hover:rotate-[15deg]', 'group-hover:-rotate-[15deg]');
+            sideButtonFlash1.classList.replace('group-hover:translate-x-0.5', 'group-hover:-translate-x-0.5');
+            sideButtonFlash2.classList.replace('group-hover:-rotate-[15deg]', 'group-hover:rotate-[15deg]');
+            sideButtonFlash2.classList.replace('group-hover:translate-x-0.5', 'group-hover:-translate-x-0.5');
             for (let i = 0; i < sectionTexts.length; i++) sectionTexts[i].classList.replace("text-[12px]", "text-[8px]")
             for (let i = 0; i < lienNoms.length; i++) {
                 lienNoms[i].classList.add('hidden');
@@ -49,11 +52,13 @@ document.addEventListener('DOMContentLoaded', async (event) => {
                 sectionAdds[i].style.display = 'none';
             }
         } else {
-            sidebarContainer.classList.replace("max-w-[100px]", "max-w-[275px]");
-            sidebarPathToSpin.style.rotate = '0deg';
-            sidebarPathToSpin.style.transform = 'translate(0, 0)';
+            sidebarContainer.classList.replace("max-w-[75px]", "max-w-[275px]");
             logoBig.style.display = 'block';
             logoSmall.style.display = 'none';
+            sideButtonFlash1.classList.replace('group-hover:-rotate-[15deg]', 'group-hover:rotate-[15deg]');
+            sideButtonFlash1.classList.replace('group-hover:-translate-x-0.5', 'group-hover:translate-x-0.5');
+            sideButtonFlash2.classList.replace('group-hover:rotate-[15deg]', 'group-hover:-rotate-[15deg]');
+            sideButtonFlash2.classList.replace('group-hover:-translate-x-0.5', 'group-hover:translate-x-0.5');
             for (let i = 0; i < sectionTexts.length; i++) sectionTexts[i].classList.replace("text-[8px]", "text-[12px]")
             for (let i = 0; i < lienNoms.length; i++) {
                 lienNoms[i].classList.remove('hidden');
