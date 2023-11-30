@@ -61,8 +61,7 @@ class OffresRepository extends AbstractRepository
 	/**
 	 * @throws ServerErrorException
 	 */
-	public
-	function getById($idOffre): ?Offre
+	public function getById($idOffre): ?Offre
 	{
 		try {
 			$sql = "SELECT * FROM $this->nomTable WHERE idoffre = :idoffre";

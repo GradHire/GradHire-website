@@ -12,6 +12,7 @@ class MailRepository
             . 'From: ' . SMTP_USERNAME . "\r\n";
 
         foreach ($email as $to) {
+            if(is_null($to) || $to === "") continue;
             try { 
             $smtpConn = fsockopen(SMTP_SERVER, SMTP_PORT, $errno, $errstr, 5);
 

@@ -29,14 +29,14 @@ class Database
                 $options = [
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_PERSISTENT => true
                 ];
                 self::$connexion = new PDO($dsn, DB_LOGIN, DB_PASSWORD, $options);
                 self::$connexion->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
             } catch (PDOException) {
-                //throw new ServerErrorException();
+                throw new ServerErrorException();
             }
         }
-
         return self::$connexion;
     }
 

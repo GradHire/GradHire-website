@@ -105,9 +105,9 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                     if ($offres != null) {
                         foreach ($offres as $offre) {
                             if ($offre["statut"] === "valider") {
-                                if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher)) {
+                                if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher, Roles::TutorTeacher)) {
                                     require __DIR__ . '/offre.php';
-                                } else if (!Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Teacher, Roles::Tutor) && $offre["statut"] !== "archiver") {
+                                } else if (!Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Teacher, Roles::Tutor, Roles::TutorTeacher) && $offre["statut"] !== "archiver") {
                                     if (Application::getUser()->attributes()["annee"] == 3 && $offre["anneevisee"] == 2) {
                                         continue;
                                     } else {
@@ -203,7 +203,6 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
             });
         });
     });
-    let currentModal = null;
 </script>
 
 

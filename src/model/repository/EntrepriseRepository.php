@@ -8,6 +8,7 @@ use app\src\model\Auth;
 use app\src\model\dataObject\Entreprise;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
+use Couchbase\IndexFailureException;
 use PDOException;
 
 class EntrepriseRepository extends ProRepository
@@ -121,6 +122,24 @@ class EntrepriseRepository extends ProRepository
         } catch
         (PDOException) {
             throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getEmailById($id): ?array
+    {
+        try {
+            $sql = "SELECT email FROM hirchytsd.entreprisevue WHERE idutilisateur = :idutilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idutilisateur' => $id]);
+            $resultat = $requete->fetch();
+
+            return $resultat;
+        } catch
+        (PDOException) {
+            throw new ServerErrorException("Erreur lors de la récupération de l'email de l'entreprise");
         }
     }
 
