@@ -29,9 +29,9 @@ View::setCurrentSection('Accueil');
 //import js
 echo '<script type="text/javascript" src="/resources/js/animate-counter.js"></script>';
 echo '<script type="text/javascript" src="/resources/js/animate-barChartHorizontal.js"></script>';
-echo '<script type="text/javascript" src="/resources/js/animate-pieChart.js"></script>';
+//echo '<script type="text/javascript" src="/resources/js/animate-pieChart.js"></script>';
 echo '<script type="text/javascript" src="/resources/js/animate-barChartVertical.js"></script>';
-echo '<script type="text/javascript" src="/resources/js/animate-lineChart.js"></script>';
+//echo '<script type="text/javascript" src="/resources/js/animate-lineChart.js"></script>';
 
 function OffreCard($offre)
 {
