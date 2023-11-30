@@ -28,7 +28,7 @@ use app\src\model\Form\FormModel;
     <p class="mb-2"><span class="font-bold">Commentaire sur la visite :</p>
     <?php
     foreach ($commentaires as $commentaire) {
-        if (!isset($commentaire['commentaire'])) {
+        if (!isset($commentaire['commentaireprof'])) {
             echo <<<HTML
             <div class="flex flex-col gap-2 mb-4">
                 <p> Aucun commentaire a été posté pour le moment </p>
@@ -38,7 +38,7 @@ use app\src\model\Form\FormModel;
         }
         echo <<<HTML
             <div class="flex flex-col gap-2 mb-4">
-                <p>{$commentaire['commentaire']}</p>
+                <p>{$commentaire['commentaireprof']}</p>
             </div>
         HTML;
     }
