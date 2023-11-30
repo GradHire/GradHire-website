@@ -30,11 +30,7 @@ class DashboardController extends AbstractController
      */
     public function showDashboard(): string
     {
-        $currentTab = $_COOKIE['currentTab'] ?? 'tab1';
-
         $data = [];
-
-        if ($currentTab === 'tab1') {
             $data['percentageBlockData1'] = (new ConventionRepository())->getPourcentageEtudiantsConventionCetteAnnee();
             $data['numBlockData1'] = (new OffresRepository())->getStatsDensembleStageEtAlternance();
             $data['barChartHorizontalData1'] = (new OffresRepository())->getTop5DomainesPlusDemandes();
@@ -42,13 +38,7 @@ class DashboardController extends AbstractController
             $data['barChartVerticalData1'] = (new OffresRepository())->getMoyenneCandidaturesParOffreParDomaine();
             $data['lineChartData1'] = (new PostulerRepository())->getStatsCandidaturesParMois();
             $data['lastActionsData1'] = (new OffresRepository())->getOffresDernierSemaine();
-        } elseif ($currentTab === 'tab2') {
-            $data = [];
-        } elseif ($currentTab === 'tab3') {
-            $data = [];
-        }
         return $this->render('dashboard/dashboard', [
-            'currentTab' => $currentTab,
             'data' => $data
         ]);
     }

@@ -120,7 +120,7 @@ if (!isset($_COOKIE['sidebar_open']) || ($_COOKIE['sidebar_open'] == 'true')) $i
             </div>
         </button>
     </div>
-    <div class="w-full flex flex-col justify-start items-start p-4 gap-12">
+    <div class="w-full flex flex-col justify-start items-start p-4 gap-4">
         <?php Notification::show(); ?>
         <div class="flex items-start justify-between flex-row gap-4 w-full">
             <div class="w-full border rounded-2xl flex flex-row bg-white items-center justify-between h-[40px] px-4">
@@ -150,8 +150,6 @@ if (!isset($_COOKIE['sidebar_open']) || ($_COOKIE['sidebar_open'] == 'true')) $i
                                     </span></div>
             </a>
         </div>
-
-
         {{content}}
     </div>
 </div>

@@ -36,6 +36,14 @@ class VerticalBarChartBlock implements ComponentInterface
 
     public function render(): void
     {
+        $count = count($this->data);
+        if ($count === 0) {
+            echo "<div class=\"w-full h-full flex items-center justify-center\"><span class=\"text-gray-400\">No data</span></div>";
+            return;
+        } else if ($count === 1) {
+            echo "<div class=\"w-full h-full flex items-center justify-center\"><span class=\"text-gray-400\">Not enough data</span></div>";
+            return;
+        } 
         $barWidth = ($this->width - $this->padding - 1) / count($this->data);
         $increment = $this->height / $this->maxValue;
 

@@ -37,6 +37,14 @@ class LineChartBlock implements ComponentInterface
 
     public function render(): void
     {
+        $count = count($this->data);
+        if ($count === 0) {
+            echo "<div class=\"w-full h-full flex items-center justify-center\"><span class=\"text-gray-400\">No data</span></div>";
+            return;
+        } else if ($count === 1) {
+            echo "<div class=\"w-full h-full flex items-center justify-center\"><span class=\"text-gray-400\">Not enough data</span></div>";
+            return;
+        }
         echo <<<EOT
             <div class="border rounded-[8px] shadow w-full  bg-white p-4 relative">
             <button class="w-5 h-5 border hover:scale-105 duration-75 bg-green-500 backdrop-blur-md shadow absolute top-0 right-0 rounded-full translate-x-2 -translate-y-2 flex items-center justify-center"><span class="text-white text-xl">+</span></button>
