@@ -3,7 +3,6 @@
 namespace app\src\controller;
 
 use app\src\core\components\Notification;
-use app\src\core\db\Database;
 use app\src\core\exception\ForbiddenException;
 use app\src\core\exception\NotFoundException;
 use app\src\core\exception\ServerErrorException;
@@ -17,6 +16,7 @@ use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
+use app\src\model\repository\PostulerRepository;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\Request;
 
@@ -65,8 +65,8 @@ class OffreController extends AbstractController
 
         if ($request->getMethod() === 'get') {
             (new OffresRepository())->updateToApproved($id);
-            (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmailutilisateur()], "Validation de votre offre", "Votre offre a été validée");
-            (new MailRepository())->send_mail(EtudiantRepository::getNewsletterEmails(), "Nouvelle offre pour vous", "Une nouvelle offre a été publiée. Vous pouvez la consulter au lien suivant : " . HOST . "/offres/$id");
+            (new MailRepository())->send_mail([UtilisateurRepository::getEmail($offre->getIdutilisateur())], "Validation de votre offre", "Votre offre a été validée");
+            (new MailRepository())->send_mail(EtudiantRepository::getNewsletterEmails($offre->getIdoffre()), "Nouvelle offre pour vous", "Une nouvelle offre a été publiée. Vous pouvez la consulter au lien suivant : " . HOST . "/offres/$id");
             header("Location: /offres/" . $id);
             return '';
         }
@@ -81,13 +81,23 @@ class OffreController extends AbstractController
     public function subscribeNewsletter(Request $req): void
     {
         if (!Auth::has_role(Roles::Student)) throw new ForbiddenException();
-        if ($req->getMethod() === 'get') {
-            EtudiantRepository::subscribeNewsletter();
+        $form = new FormModel([
+            "type" => FormModel::checkbox("", ["stage" => "Stage", "alternance" => "Alternance"]),
+            "year" => FormModel::select("", ["all" => "Toutes", "2" => "BUT2", "3" => "BUT3"])->default("all"),
+            "theme" => FormModel::checkbox("", ["Réseaux" => "Réseaux", "secu" => "Securite", "BDD" => "Base de Donnée", "DevWeb" => "Développement Web", "DevApp" => "Développement d'application"]),
+        ]);
+        if ($form->validate($req->getBody())) {
+            $body = $form->getParsedBody();
+            EtudiantRepository::subscribeNewsletter([
+                "type" => (count($body["type"]) != 1) ? "all" : $body["type"][0],
+                "year" => $body["year"],
+                "theme" => $body["theme"]
+            ]);
             Notification::createNotification("Vous êtes maintenant inscrit à la newsletter");
-            header("Location: /offres");
-            return;
+            header("Location: /offres?" . parse_url($_SERVER["REQUEST_URI"], PHP_URL_QUERY));
+        } else {
+            throw new NotFoundException();
         }
-        throw new NotFoundException();
     }
 
     /**
@@ -271,13 +281,7 @@ class OffreController extends AbstractController
                     $form->setError("Impossible de télécharger tous les fichiers");
                     return '';
                 }
-                $stmt = Database::get_conn()->prepare("INSERT INTO `Postuler`(`idoffre`, `idUtilisateur`, `dates`) VALUES (?,?,?)");
-                $values = [
-                    $id,
-                    Application::getUser()->id(),
-                    date("Y-m-d H:i:s")
-                ];
-                $stmt->execute($values);
+                PostulerRepository::postuler($id);
                 Application::$app->response->redirect('/offres');
             }
         }

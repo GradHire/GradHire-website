@@ -10,12 +10,12 @@ class Database
 {
     private static PDO $connexion;
 
-    /**
-     * @throws ServerErrorException
-     */
-    public function prepare($sql): \PDOStatement
+    public static function convertArrayToPostgres($phpArray)
     {
-        return self::get_conn()->prepare($sql);
+        $escapedArray = array_map(function ($value) {
+            return self::get_conn()->quote($value);
+        }, $phpArray);
+        return '{' . implode(',', $escapedArray) . '}';
     }
 
     /**
@@ -40,4 +40,11 @@ class Database
         return self::$connexion;
     }
 
+    /**
+     * @throws ServerErrorException
+     */
+    public function prepare($sql): \PDOStatement
+    {
+        return self::get_conn()->prepare($sql);
+    }
 }

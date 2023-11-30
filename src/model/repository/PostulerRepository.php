@@ -4,9 +4,8 @@ namespace app\src\model\repository;
 
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
-use app\src\model\dataObject\AbstractDataObject;
+use app\src\model\Application;
 use app\src\model\dataObject\Postuler;
-use PDO;
 use PDOException;
 
 class PostulerRepository extends AbstractRepository
@@ -16,6 +15,24 @@ class PostulerRepository extends AbstractRepository
      * @throws ServerErrorException
      */
     private string $nomTable = "PostulerVue";
+
+    /**
+     * @throws ServerErrorException
+     */
+    public static function postuler($id): void
+    {
+        try {
+            $stmt = Database::get_conn()->prepare("INSERT INTO Postuler(idoffre, idUtilisateur, dates) VALUES (?,?,?)");
+            $values = [
+                $id,
+                Application::getUser()->id(),
+                date("Y-m-d H:i:s")
+            ];
+            $stmt->execute($values);
+        } catch (\Exception) {
+            throw new ServerErrorException();
+        }
+    }
 
     /**
      * @throws ServerErrorException
@@ -122,7 +139,7 @@ class PostulerRepository extends AbstractRepository
             if (!$resultat) return null;
             return $resultat;
         } catch (PDOException) {
-            throw new ServerErrorException( 'erreurs getAll');
+            throw new ServerErrorException('erreurs getAll');
         }
     }
 
@@ -296,7 +313,7 @@ class PostulerRepository extends AbstractRepository
             } catch (\Exception) {
                 throw new ServerErrorException('erreurs getByStatementTuteurValidee');
             }
-        } else if ($string == 'refusee'){
+        } else if ($string == 'refusee') {
             try {
                 $sql = "SELECT nom,sujet,dates,p.idOffre, p.idUtilisateur, su.idUtilisateur as idTuteur,idEntreprise,p.statut FROM $this->nomTable p JOIN Supervise su ON su.idOffre=p.idOffre WHERE su.idUtilisateur = :idutilisateur AND CAST(p.statut AS TEXT) != CAST(su.statut AS TEXT) AND su.statut::text = 'refusee'";
                 $requete = Database::get_conn()->prepare($sql);
@@ -334,7 +351,7 @@ class PostulerRepository extends AbstractRepository
         }
     }
 
-    public function getIfValideeInArray(?array $candidatures):bool
+    public function getIfValideeInArray(?array $candidatures): bool
     {
         foreach ($candidatures as $candidature) {
             if ($candidature['statut'] == 'validee') return true;

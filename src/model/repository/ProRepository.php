@@ -133,22 +133,7 @@ class ProRepository extends UtilisateurRepository
             throw new ServerErrorException();
         }
     }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public static function getEmail(int $id): string
-    {
-        try {
-            $sql = "SELECT email FROM utilisateur WHERE idutilisateur=?";
-            $stmt = Database::get_conn()->prepare($sql);
-            $stmt->execute([$id]);
-            return $stmt->fetch()["email"];
-        } catch (\Exception) {
-            throw new ServerErrorException();
-        }
-    }
-
+    
     public static function changePassword(string $password, string $new, FormModel $form): bool
     {
         try {

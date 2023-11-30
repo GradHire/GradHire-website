@@ -4,6 +4,7 @@ namespace app\src\model\repository;
 
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
+use app\src\core\lib\StackTrace;
 use app\src\model\Application;
 use app\src\model\dataObject\Etudiant;
 use app\src\model\dataObject\Roles;
@@ -18,23 +19,38 @@ class EtudiantRepository extends LdapRepository
     /**
      * @throws ServerErrorException
      */
-    public static function getNewsletterEmails(): array
+    public static function getNewsletterEmails($idOffre): array
     {
         try {
-            $sql = "SELECT e.email FROM Newsletter n JOIN EtudiantVue e ON n.idUtilisateur = e.idUtilisateur";
+            $offre = OffresRepository::getInfosForNewsletter($idOffre);
+            if (!$offre) return [];
+            $estStage = !is_null($offre["est_stage"]);
+            $estAlternance = !is_null($offre["est_alternance"]);
+            $type = 'all';
+            if ($estStage != $estAlternance)
+                $type = $estStage ? "stage" : "alternance";
+            $annee = $offre["anneevisee"] > 0 ? strval($offre["anneevisee"]) : "all";
+
+            $sql = "SELECT e.email FROM Newsletter n
+    JOIN EtudiantVue e ON n.idUtilisateur = e.idUtilisateur
+    WHERE (n.annee = 'all' OR n.annee=?)
+    AND (n.thematiques = '' OR n.thematiques LIKE ?)
+    AND (n.offre_type = 'all' OR n.offre_type=?)";
+
             $requete = Database::get_conn()->prepare($sql);
-            $requete->execute();
+            $requete->execute([$annee, "%" . $offre["thematique"] . "%", $type]);
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetchAll();
-            if (!$resultat) {
+            if (!$resultat)
                 return [];
-            }
             $emails = [];
             foreach ($resultat as $email) {
                 $emails[] = $email["email"];
             }
             return $emails;
-        } catch (PDOException) {
+        } catch (PDOException $e) {
+
+            StackTrace::print($e);
             throw new ServerErrorException();
         }
     }
@@ -59,16 +75,31 @@ class EtudiantRepository extends LdapRepository
         }
     }
 
-    public static function subscribeNewsletter(): void
+    /**
+     * @throws ServerErrorException
+     */
+    public static function subscribeNewsletter($parameters): void
     {
         try {
-            $sql = "INSERT INTO Newsletter (idUtilisateur) VALUES (:idUtilisateur)";
+            $sql = "
+            INSERT INTO Newsletter (idUtilisateur, offre_type, annee, thematiques)
+            VALUES (?, ?, ?, ?)
+            ON CONFLICT (idUtilisateur) DO UPDATE
+            SET offre_type = excluded.offre_type,
+                annee = excluded.annee,
+                thematiques = excluded.thematiques";
             $requete = Database::get_conn()->prepare($sql);
-            $requete->execute(['idUtilisateur' => Application::getUser()->id]);
+            $requete->execute([
+                Application::getUser()->id,
+                $parameters["type"],
+                $parameters["year"],
+                implode(",", $parameters["theme"])
+            ]);
         } catch (PDOException) {
-
+            throw new ServerErrorException();
         }
     }
+
 
     public function role(): Roles
     {
