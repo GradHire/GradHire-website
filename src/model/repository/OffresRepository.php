@@ -8,6 +8,7 @@ use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Offre;
 use app\src\model\dataObject\Roles;
+use PDO;
 use PDOException;
 
 
