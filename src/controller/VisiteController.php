@@ -81,31 +81,4 @@ class VisiteController extends AbstractController
         ]);
     }
 
-    public function compteRendu(Request $resquest): string
-    {
-        if (Auth::has_role(Roles::Tutor, Roles::TutorTeacher)) {
-            $numConvention = $resquest->getRouteParam("numconvention");
-            $informations = ConventionRepository::getInformationByNumConvention($numConvention);
-            $form = new FormModel([
-                "idTuteur" => Application::getUser()->id(),
-                "idEtudiant" => $informations['idetudiant'],
-                "numConvention" => $numConvention,
-                'compteRendu' => FormModel::string("Compte rendu")->required(),
-            ]);
-            if ($resquest->getMethod() == "post") {
-                if ($form->validate($resquest->getBody())) {
-                    $data = $form->getParsedBody();
-                    print_r($data);
-                    VisiteRepository::createCompteRendu(Application::getUser()->id(), $informations['idetudiant'], $informations['numconvention'], $data['compteRendu']);
-                    Application::redirectFromParam("/visite/" . $numConvention);
-                }
-            }
-            return $this->render("visite/compteRendu", [
-                'title' => "Compte rendu",
-                'form' => $form,
-            ]);
-        }
-        Application::redirectFromParam("/visite");
-        return "";
-    }
 }

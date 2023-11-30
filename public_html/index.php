@@ -2,6 +2,7 @@
 
 use app\src\controller\AuthController;
 use app\src\controller\CandidatureController;
+use app\src\controller\CompteRenduController;
 use app\src\controller\ConventionsController;
 use app\src\controller\DashboardController;
 use app\src\controller\OffreController;
@@ -236,8 +237,11 @@ $app->router->post('/noteSoutenance/{numConvention}', [SoutenanceController::cla
 
 $app->router->get('/visite/{id:\d+}', [VisiteController::class, 'visite']);
 $app->router->post('/visite/{id:\d+}', [VisiteController::class, 'visite']);
-$app->router->get('/compteRendu/{numconvention}', [VisiteController::class, 'compteRendu']);
-$app->router->post('/compteRendu/{numconvention}', [VisiteController::class, 'compteRendu']);
+
+//compte rendu controller
+
+$app->router->get('/compteRendu/{numconvention}', [CompteRenduController::class, 'compteRendu']);
+$app->router->post('/compteRendu/{numconvention}', [CompteRenduController::class, 'compteRendu']);
 
 
 $app->run();

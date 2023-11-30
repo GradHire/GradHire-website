@@ -117,47 +117,6 @@ class VisiteRepository extends AbstractRepository
         }
     }
 
-    public static function createCompteRendu(int $idTuteur, int $idEtudiant, int $numConvention, string $compteRendu)
-    {
-        $sql = "INSERT INTO compterendus (idtuteur, idetudiant, numconvention, commentaire) VALUES (:idtuteur, :idetudiant, :numconvention, :commentaire)";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute([
-            'idtuteur' => $idTuteur,
-            'idetudiant' => $idEtudiant,
-            'numconvention' => $numConvention,
-            'commentaire' => $compteRendu
-        ]);
-    }
-
-    public static function checkIfAlreadyCompteRendu(int $idtuteur, int $idetudiant, int $numconvention): bool
-    {
-        $sql = "SELECT idcompterendu FROM compterendus WHERE idtuteur = :idtuteur AND idetudiant = :idetudiant AND numconvention = :numconvention";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute([
-            'idtuteur' => $idtuteur,
-            'idetudiant' => $idetudiant,
-            'numconvention' => $numconvention
-        ]);
-        $result = $requete->fetch();
-        if ($result) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public static function getCommentaires(mixed $numConvention, int $studentId)
-    {
-        $sql = "SELECT * FROM compterendus WHERE numconvention = :numconvention AND idetudiant = :idetudiant";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute([
-            'numconvention' => $numConvention,
-            'idetudiant' => $studentId
-        ]);
-        $result = $requete->fetchAll();
-        return $result;
-    }
-
     /**
      * @throws ServerErrorException
      */
