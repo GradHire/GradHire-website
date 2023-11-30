@@ -10,7 +10,6 @@ use app\src\model\dataObject\Offre;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 
-
 $this->title = 'Offres';
 
 
@@ -88,7 +87,8 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                 $form->reset("Réinitialiser", true);
                 if (Auth::has_role(Roles::Student)) {
                     ?>
-                    <a href="/subscribe" class="text-center"><i class="fa-regular fa-bell"></i> S'abonner à la
+                    <a href="/subscribe?<?= parse_url($_SERVER["REQUEST_URI"], PHP_URL_QUERY) ?>" class="text-center"><i
+                                class="fa-regular fa-bell"></i> S'abonner à la
                         newsletter</a>
                 <?php } ?>
             </div>
