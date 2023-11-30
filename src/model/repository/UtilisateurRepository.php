@@ -30,6 +30,22 @@ class UtilisateurRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
+    public static function getEmail($id): string|null
+    {
+        try {
+            $statement = Database::get_conn()->prepare("SELECT email FROM utilisateur WHERE idutilisateur = ?");
+            $statement->execute([$id]);
+            $user = $statement->fetch();
+            if (is_null($user)) return null;
+            return $user["email"];
+        } catch (\Exception) {
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
     public static function find_by_attribute(string $value): null|static
     {
         $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE " . static::$id_attributes . " = ?");
