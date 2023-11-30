@@ -50,7 +50,7 @@ class CompteRenduController extends AbstractController
                     } else
                         if (Auth::has_role(Roles::TutorTeacher)) CompteRenduRepository::createCompteRenduAsProf($informations['idtuteurprof'], $informations['idtuteurentreprise'], $informations['idetudiant'], $informations['numconvention'], $data['compteRendu']);
                         else CompteRenduRepository::createCompteRenduAsEntreprise($informations['idtuteurprof'], $informations['idtuteurentreprise'], $informations['idetudiant'], $informations['numconvention'], $data['compteRendu']);
-                        Application::redirectFromParam("/visite/" . $numConvention);
+                    Application::redirectFromParam("/visite/" . $numConvention);
                 }
             }
             return $this->render("visite/compteRendu", [
@@ -62,4 +62,38 @@ class CompteRenduController extends AbstractController
         return "";
     }
 
+    /**
+     * @throws ServerErrorException
+     */
+    public function compteRenduSoutenance(Request $request)
+    {
+        if (Auth::has_role(Roles::Tutor, Roles::TutorTeacher)) {
+            $numConvention = $request->getRouteParam("numconvention");
+            $informations = ConventionRepository::getInformationByNumConvention($numConvention);
+            $form = new FormModel([
+                "idTuteurProf" => Application::getUser()->id(),
+                "idEtudiant" => $informations['idetudiant'],
+                "numConvention" => $numConvention,
+                'compteRenduSoutenance' => FormModel::string("Compte rendu de la Soutenance du tuteur professeure")->required(),
+            ]);
+            if ($request->getMethod() == "post") {
+                if ($form->validate($request->getBody())) {
+                    $data = $form->getParsedBody();
+                    if (CompteRenduRepository::checkIfCompteRenduExist($informations['numconvention'])) {
+                        if (Auth::has_role(Roles::TutorTeacher))
+                            CompteRenduRepository::updateCompteRenduSoutenanceProf($informations['numconvention'], $data['compteRenduSoutenance']);
+                        else
+                            CompteRenduRepository::updateCompteRenduSoutenanceEntreprise($informations['numconvention'], $data['compteRenduSoutenance']);
+                    }
+                    Application::redirectFromParam("/visite/" . $numConvention);
+                }
+            }
+            return $this->render("visite/compteRendu", [
+                'title' => "Compte rendu",
+                'form' => $form,
+            ]);
+        }
+        Application::redirectFromParam("/visite");
+        return "";
+    }
 }

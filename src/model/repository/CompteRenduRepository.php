@@ -158,6 +158,97 @@ class CompteRenduRepository extends AbstractRepository
         }
     }
 
+    public static function checkIfCompteRenduSoutenanceProfExist(int $getNumConvention)
+    {
+        $sql = "SELECT commentairesoutenanceprof FROM compterendus WHERE numconvention = :numconvention";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute([
+            'numconvention' => $getNumConvention
+        ]);
+        $result = $requete->fetch();
+        if ($result['commentairesoutenanceprof'] != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static function checkIfCompteRenduSoutenanceEntrepriseExist(int $getNumConvention)
+    {
+        $sql = "SELECT commentairesoutenanceentreprise FROM compterendus WHERE numconvention = :numconvention";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute([
+            'numconvention' => $getNumConvention
+        ]);
+        $result = $requete->fetch();
+        if ($result['commentairesoutenanceentreprise'] != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static function checkIfCompteRenduSoutenanceExist(mixed $numconvention)
+    {
+        $sql = "SELECT commentairesoutenanceprof, commentairesoutenanceentreprise FROM compterendus WHERE numconvention = :numconvention";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute([
+            'numconvention' => $numconvention
+        ]);
+        $result = $requete->fetch();
+        if ($result['commentairesoutenanceprof'] != null && $result['commentairesoutenanceentreprise'] != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static function updateCompteRenduSoutenanceProf(mixed $numconvention, mixed $compteRenduSoutenance)
+    {
+        $sql = "UPDATE compterendus SET commentairesoutenanceprof = :commentairesoutenanceprof WHERE numconvention = :numconvention";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute([
+            'numconvention' => $numconvention,
+            'commentairesoutenanceprof' => $compteRenduSoutenance
+        ]);
+    }
+
+    public static function createCompteRenduSoutenanceAsProf(mixed $idtuteurprof, mixed $idtuteurentreprise, mixed $idetudiant, mixed $numconvention, mixed $compteRenduSoutenance)
+    {
+        $sql = "INSERT INTO compterendus (idtuteurprof, idtuteurentreprise, idetudiant, numconvention, commentairesoutenanceprof) VALUES (:idtuteurprof, :idtuteurentreprise, :idetudiant, :numconvention, :commentairesoutenanceprof)";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute([
+            'idtuteurprof' => $idtuteurprof,
+            'idtuteurentreprise' => $idtuteurentreprise,
+            'idetudiant' => $idetudiant,
+            'numconvention' => $numconvention,
+            'commentairesoutenanceprof' => $compteRenduSoutenance
+        ]);
+    }
+
+    public static function updateCompteRenduSoutenanceEntreprise(mixed $numconvention, mixed $compteRenduSoutenance)
+    {
+        $sql = "UPDATE compterendus SET commentairesoutenanceentreprise = :commentairesoutenanceentreprise WHERE numconvention = :numconvention";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute([
+            'numconvention' => $numconvention,
+            'commentairesoutenanceentreprise' => $compteRenduSoutenance
+        ]);
+    }
+
+    public static function createCompteRenduSoutenanceAsEntreprise(mixed $idtuteurprof, mixed $idtuteurentreprise, mixed $idetudiant, mixed $numconvention, mixed $compteRenduSoutenance)
+    {
+        $sql = "INSERT INTO compterendus (idtuteurprof, idtuteurentreprise, idetudiant, numconvention, commentairesoutenanceentreprise) VALUES (:idtuteurprof, :idtuteurentreprise, :idetudiant, :numconvention, :commentairesoutenanceentreprise)";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute([
+            'idtuteurprof' => $idtuteurprof,
+            'idtuteurentreprise' => $idtuteurentreprise,
+            'idetudiant' => $idetudiant,
+            'numconvention' => $numconvention,
+            'commentairesoutenanceentreprise' => $compteRenduSoutenance
+        ]);
+    }
+
     /**
      * @throws \Exception
      */

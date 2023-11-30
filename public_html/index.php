@@ -241,6 +241,7 @@ $app->router->post('/visite/{id:\d+}', [VisiteController::class, 'visite']);
 
 $app->router->get('/compteRendu/{numconvention}', [CompteRenduController::class, 'compteRendu']);
 $app->router->post('/compteRendu/{numconvention}', [CompteRenduController::class, 'compteRendu']);
-
+$app->router->get('/compteRenduSoutenance/{numconvention}', [CompteRenduController::class, 'compteRenduSoutenance']);
+$app->router->post('/compteRenduSoutenance/{numconvention}', [CompteRenduController::class, 'compteRenduSoutenance']);
 
 $app->run();

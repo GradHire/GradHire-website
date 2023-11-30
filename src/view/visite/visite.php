@@ -26,20 +26,34 @@ use app\src\model\Form\FormModel;
                 class="w-full h-[300px] mb-10"
                 src="https://maps.google.com/maps?q=<?= $addresse ?>&t=&z=13&ie=UTF8&iwloc=&output=embed">
         </iframe>
-        <h2 class="font-bold text-2xl ">Commentaire sur la visite : </h2>
+        <h2 class="font-bold text-2xl ">Commentaire : </h2>
         <?php
         foreach ($commentaires as $commentaire) {
             if ($commentaire['commentaireprof'] != null) {
                 echo <<<HTML
             <div class="flex flex-col gap-2 mb-4">
-                 <p class="mb-2"><span class="font-bold">Commentaire du tuteur prof:</span> {$commentaire['commentaireprof']}</p>
+                 <p class="mb-2"><span class="font-bold">Commentaire du tuteur prof sur la visite:</span> {$commentaire['commentaireprof']}</p>
             </div>
             HTML;
             }
             if ($commentaire['commentaireentreprise'] != null) {
                 echo <<<HTML
             <div class="flex flex-col gap-2 mb-4">
-                 <p class="mb-2"><span class="font-bold">Commentaire du tuteur entreprise:</span> {$commentaire['commentaireentreprise']}</p>
+                 <p class="mb-2"><span class="font-bold">Commentaire du tuteur entreprise sur la visite :</span> {$commentaire['commentaireentreprise']}</p>
+            </div>
+            HTML;
+            }
+            if ($commentaire['commentairesoutenanceprof'] != null) {
+                echo <<<HTML
+            <div class="flex flex-col gap-2 mb-4">
+                 <p class="mb-2"><span class="font-bold">Commentaire du tuteur prof sur la soutenance:</span> {$commentaire['commentairesoutenanceprof']}</p>
+            </div>
+            HTML;
+            }
+            if ($commentaire['commentairesoutenanceentreprise'] != null) {
+                echo <<<HTML
+            <div class="flex flex-col gap-2 mb-4">
+                 <p class="mb-2"><span class="font-bold">Commentaire du tuteur entreprise sur la soutenance:</span> {$commentaire['commentairesoutenanceentreprise']}</p>
             </div>
             HTML;
             }

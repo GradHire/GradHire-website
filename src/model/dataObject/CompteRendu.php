@@ -10,12 +10,34 @@ class CompteRendu extends AbstractDataObject
     private string $commentaireprof;
     private int $idtuteurentreprise;
     private string $commentaireentreprise;
+    private string $commentairesoutenanceprof;
+    private string $commentairesoutenanceentreprise;
 
     public function __construct(array $dataObjectFormatTableau)
     {
         foreach ($dataObjectFormatTableau as $key => $value) {
             $this->$key = $value;
         }
+    }
+
+    public function getCommentairesoutenanceprof(): string
+    {
+        return $this->commentairesoutenanceprof;
+    }
+
+    public function setCommentairesoutenanceprof(string $commentairesoutenanceprof): void
+    {
+        $this->commentairesoutenanceprof = $commentairesoutenanceprof;
+    }
+
+    public function getCommentairesoutenanceentreprise(): string
+    {
+        return $this->commentairesoutenanceentreprise;
+    }
+
+    public function setCommentairesoutenanceentreprise(string $commentairesoutenanceentreprise): void
+    {
+        $this->commentairesoutenanceentreprise = $commentairesoutenanceentreprise;
     }
 
     public function getNumconvention(): int
