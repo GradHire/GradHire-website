@@ -197,27 +197,28 @@ class DashboardController extends AbstractController
             throw new ForbiddenException();
 
         foreach ($visites as $visite) {
-            $title = "Visite de stage";
-            if (!Auth::has_role(Roles::Student)) {
-                $supervise = SuperviseRepository::getByConvention($visite->getNumConvention());
-                $name = EtudiantRepository::getFullNameByID($supervise->getIdStudent());
-                $title .= " de " . $name;
-            }
-            $e = new Event($title, $visite->getDebutVisite(), $visite->getFinVisite(), "#1c4ed8");
-            if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage))
-                $e->setButton("Voir plus", "/visite/" . $visite->getNumConvention());
-            if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor) && $visite->getDebutVisite() < new \DateTime('now') && ConventionRepository::getIfIdTuteurs($visite->getNumConvention(), Application::getUser()->id())){
-                if(!CompteRenduRepository::checkIfCompteRenduProfExist($visite->getNumConvention())) {
-                    print_r("caillou");
-                    $e->setButton("deposer compte rendu prof", "/compteRendu/" . $visite->getNumConvention());
+            if ($visite == null) continue;
+                $title = "Visite de stage";
+                if (!Auth::has_role(Roles::Student)) {
+                    $supervise = SuperviseRepository::getByConvention($visite->getNumConvention());
+                    $name = EtudiantRepository::getFullNameByID($supervise->getIdStudent());
+                    $title .= " de " . $name;
                 }
-                else if(!CompteRenduRepository::checkIfCompteRenduEntrepriseExist($visite->getNumConvention())) {
-                    $e->setButton("deposer compte rendu entreprise", "/compteRendu/" . $visite->getNumConvention());
+                $e = new Event($title, $visite->getDebutVisite(), $visite->getFinVisite(), "#1c4ed8");
+                if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage))
+                    $e->setButton("Voir plus", "/visite/" . $visite->getNumConvention());
+                if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor) && $visite->getDebutVisite() < new \DateTime('now') && ConventionRepository::getIfIdTuteurs($visite->getNumConvention(), Application::getUser()->id())) {
+                    if (!CompteRenduRepository::checkIfCompteRenduProfExist($visite->getNumConvention())) {
+                        print_r("caillou");
+                        $e->setButton("deposer compte rendu prof", "/compteRendu/" . $visite->getNumConvention());
+                    } else if (!CompteRenduRepository::checkIfCompteRenduEntrepriseExist($visite->getNumConvention())) {
+                        $e->setButton("deposer compte rendu entreprise", "/compteRendu/" . $visite->getNumConvention());
+                    }
                 }
-            }
-            $events[] = $e;
+                $events[] = $e;
         }
         foreach ($soutenances as $soutenance) {
+            if ($soutenance == null) continue;
             $title = "Soutenance";
             if (!Auth::has_role(Roles::Student)) {
                 $userId = ConventionRepository::getStudentId($soutenance->getNumConvention());
