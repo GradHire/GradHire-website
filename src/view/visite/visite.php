@@ -27,7 +27,15 @@ use app\src\model\Form\FormModel;
     </iframe>
     <p class="mb-2"><span class="font-bold">Commentaire sur la visite :</p>
     <?php
-    foreach($commentaires as $commentaire) {
+    foreach ($commentaires as $commentaire) {
+        if (!isset($commentaire['commentaire'])) {
+            echo <<<HTML
+            <div class="flex flex-col gap-2 mb-4">
+                <p> Aucun commentaire a été posté pour le moment </p>
+            </div>
+        HTML;
+            continue;
+        }
         echo <<<HTML
             <div class="flex flex-col gap-2 mb-4">
                 <p>{$commentaire['commentaire']}</p>
