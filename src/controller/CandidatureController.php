@@ -37,7 +37,7 @@ class CandidatureController extends AbstractController
         if (Auth::has_role(Roles::Enterprise)) $entrepriseid = $userid;
         if ($candidatures != null && $idOffre != null && $idUtilisateur != null) {
             $offre = (new OffresRepository())->getById($candidatures->getIdoffre());
-            if (Auth::has_role(Roles::Staff, Roles::Manager, Roles::Teacher) || $candidatures->getIdutilisateur() == $userid || $offre->getIdutilisateur() == $entrepriseid) {
+            if (Auth::has_role(Roles::Staff, Roles::Manager, Roles::Teacher,Roles::TutorTeacher,Roles::Tutor) || $candidatures->getIdutilisateur() == $userid || $offre->getIdutilisateur() == $entrepriseid) {
                 return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
             } else throw new ForbiddenException();
         }
@@ -54,20 +54,18 @@ class CandidatureController extends AbstractController
         }
         if (Auth::has_role(Roles::Enterprise)) {
             $array = ['candidaturesAttente' => (new PostulerRepository())->getCandidaturesAttenteEntreprise($entrepriseid),
-                'candidaturesAutres' => array_merge((new PostulerRepository())->getByIdEntreprise($entrepriseid, 'validee'), (new PostulerRepository())->getByIdEntreprise($entrepriseid, 'refusee'))
+                'candidaturesAutres' => (new PostulerRepository())->getByIdEntreprise($entrepriseid)
             ];
         } else if (Auth::has_role(Roles::Manager, Roles::Staff)) {
             $array = ['candidaturesAttente' => (new PostulerRepository())->getByStatementAttente(),
-                'candidaturesAutres' => array_merge((new PostulerRepository())->getByStatement('validee'), (new PostulerRepository())->getByStatement('refusee'))
+                'candidaturesAutres' => (new PostulerRepository())->getByStatementValideeOrRefusee()
             ];
-            if (isset($error)) $array['error'] = $error;
-            if (isset($success)) $array['success'] = $success;
         } else if (Auth::has_role(Roles::Teacher,Roles::Tutor, Roles::TutorTeacher)) {
             $array = ['candidaturesAttente' => (new PostulerRepository())->getByStatementAttenteTuteur()];
             $array['candidaturesAutres'] = array_merge((new PostulerRepository())->getByStatementTuteur(Auth::get_user()->id(), 'validee'), (new PostulerRepository())->getByStatementTuteur(Auth::get_user()->id(), 'refusee'));
         } else if (Auth::has_role(Roles::Student)) {
             $array = ['candidaturesAttente' => (new PostulerRepository())->getCandidaturesAttenteEtudiant($userid),
-                'candidaturesAutres' => array_merge((new PostulerRepository())->getByIdEtudiant($userid, 'validee'), (new PostulerRepository())->getByIdEtudiant($userid, 'refusee'))
+                'candidaturesAutres' => (new PostulerRepository())->getByIdEtudiant($userid)
             ];
         } else throw new ForbiddenException();
         return $this->render(

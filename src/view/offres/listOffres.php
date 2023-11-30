@@ -11,7 +11,6 @@ use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 use app\src\model\View;
 
-
 $this->title = 'Offres';
 View::setCurrentSection('Offres');
 
@@ -89,7 +88,8 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                 $form->reset("Réinitialiser", true);
                 if (Auth::has_role(Roles::Student)) {
                     ?>
-                    <a href="/subscribe" class="text-center"><i class="fa-regular fa-bell"></i> S'abonner à la
+                    <a href="/subscribe?<?= parse_url($_SERVER["REQUEST_URI"], PHP_URL_QUERY) ?>" class="text-center"><i
+                                class="fa-regular fa-bell"></i> S'abonner à la
                         newsletter</a>
                 <?php } ?>
             </div>
@@ -106,9 +106,9 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                     if ($offres != null) {
                         foreach ($offres as $offre) {
                             if ($offre["statut"] === "valider") {
-                                if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher)) {
+                                if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher, Roles::TutorTeacher)) {
                                     require __DIR__ . '/offre.php';
-                                } else if (!Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Teacher, Roles::Tutor) && $offre["statut"] !== "archiver") {
+                                } else if (!Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Teacher, Roles::Tutor, Roles::TutorTeacher) && $offre["statut"] !== "archiver") {
                                     if (Application::getUser()->attributes()["annee"] == 3 && $offre["anneevisee"] == 2) {
                                         continue;
                                     } else {
@@ -204,7 +204,6 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
             });
         });
     });
-    let currentModal = null;
 </script>
 
 

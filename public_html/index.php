@@ -2,17 +2,19 @@
 
 use app\src\controller\AuthController;
 use app\src\controller\CandidatureController;
+use app\src\controller\CompteRenduController;
 use app\src\controller\ConventionsController;
 use app\src\controller\DashboardController;
 use app\src\controller\OffreController;
 use app\src\controller\PostulerController;
 use app\src\controller\PstageController;
+use app\src\controller\SoutenanceController;
 use app\src\controller\TestController;
 use app\src\controller\UserController;
+use app\src\controller\VisiteController;
 use app\src\core\exception\ServerErrorException;
 use app\src\core\lib\Psr4AutoloaderClass;
 use app\src\model\Application;
-
 
 require_once __DIR__ . '/../src/core/lib/Psr4AutoloaderClass.php';
 require_once __DIR__ . '/../src/config.php';
@@ -35,8 +37,6 @@ $app->router->get('/', [AuthController::class, 'home']);
 $app->router->get('/about', 'about');
 
 
-$app->router->get('/calendar', 'calendar');
-
 // AuthController
 
 $app->router->get('/register', [AuthController::class, 'register']);
@@ -55,6 +55,11 @@ $app->router->get('/logout', [AuthController::class, 'logout']);
 
 $app->router->get('/password', [AuthController::class, 'modifierMdp']);
 $app->router->post('/password', [AuthController::class, 'modifierMdp']);
+
+$app->router->get('/resetPassword', [AuthController::class, 'resetPassword']);
+$app->router->post('/resetPassword', [AuthController::class, 'resetPassword']);
+$app->router->get('/forgetPassword/{token}', [AuthController::class, 'forgetPassword']);
+$app->router->post('/forgetPassword/{token}', [AuthController::class, 'forgetPassword']);
 
 // UserController
 
@@ -128,8 +133,10 @@ $app->router->post('/utilisateurs/{id}', [DashboardController::class, 'utilisate
 $app->router->get('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPro']);
 $app->router->post('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPro']);
 
-$app->router->get('/importer', [PstageController::class, 'importercsv']);
-$app->router->post('/importer', [PstageController::class, 'importercsv']);
+$app->router->get('/calendar', [DashboardController::class, 'calendar']);
+
+$app->router->get('/importerStudea', [PstageController::class, 'importerStudea']);
+$app->router->post('/importerStudea', [PstageController::class, 'importerStudea']);
 
 $app->router->get('/page1', [TestController::class, 'page1']);
 $app->router->post('/page1', [TestController::class, 'page1']);
@@ -139,6 +146,11 @@ $app->router->post('/page2', [TestController::class, 'page2']);
 
 $app->router->get('/page3', [TestController::class, 'page3']);
 $app->router->post('/page3', [TestController::class, 'page3']);
+
+// PSTAGE
+
+$app->router->get('/importer', [PstageController::class, 'importercsv']);
+$app->router->post('/importer', [PstageController::class, 'importercsv']);
 
 $app->router->get('/explicationSimu', [PstageController::class, 'explicationSimu']);
 
@@ -211,5 +223,25 @@ $app->router->get('/postuler/listeTuteur/{idOffre}/{idUser}', [PostulerControlle
 $app->router->get('/postuler/accepter_as_tuteur/{idUser}/{idOffre}/{idEtu}', [PostulerController::class, 'accepterAsTuteur']);
 $app->router->get('/postuler/unaccepte_as_tuteur/{idUser}/{idOffre}/{idEtu}', [PostulerController::class, 'annulerAsTuteur']);
 $app->router->post('/postuler/assignerCommeTuteur/{idOffre}/{idUser}/{idEtu}', [PostulerController::class, 'assignerTuteurEntreprise']);
+
+// SoutenanceController
+$app->router->get('/createSoutenance/{numConvention}', [SoutenanceController::class, 'createSoutenance']);
+$app->router->get('/voirSoutenance/{numConvention}', [SoutenanceController::class, 'voirSoutenance']);
+$app->router->get('/seProposerJury/{numConvention}', [SoutenanceController::class, 'etreJury']);
+$app->router->post('/createSoutenance/{numConvention}', [SoutenanceController::class, 'createSoutenance']);
+$app->router->get('/noteSoutenance/{numConvention}', [SoutenanceController::class, 'noteSoutenance']);
+$app->router->post('/noteSoutenance/{numConvention}', [SoutenanceController::class, 'noteSoutenance']);
+
+//Visite Controller
+
+$app->router->get('/visite/{id:\d+}', [VisiteController::class, 'visite']);
+$app->router->post('/visite/{id:\d+}', [VisiteController::class, 'visite']);
+
+//compte rendu controller
+
+$app->router->get('/compteRendu/{numconvention}', [CompteRenduController::class, 'compteRendu']);
+$app->router->post('/compteRendu/{numconvention}', [CompteRenduController::class, 'compteRendu']);
+$app->router->get('/compteRenduSoutenance/{numconvention}', [CompteRenduController::class, 'compteRenduSoutenance']);
+$app->router->post('/compteRenduSoutenance/{numconvention}', [CompteRenduController::class, 'compteRenduSoutenance']);
 
 $app->run();

@@ -11,7 +11,13 @@ class FormModal
     /**
      * @throws ServerErrorException
      */
-    public function __construct(callable|string $body)
+    public function __construct(callable|string $body = null)
+    {
+        if ($body)
+            $this->render($body);
+    }
+
+    public function render(callable|string $body)
     {
         echo '<script src="/resources/js/modal.js"></script>';
         try {

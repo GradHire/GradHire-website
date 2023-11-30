@@ -12,9 +12,15 @@ class OffreForm extends Model
 {
     public static function creerOffre(Offre $offre, ?string $typeStage, ?string $typeAlternance, ?float $distanciel)
     {
-        $sql = "INSERT INTO Offre VALUES (null ,:dureeTag, :thematiqueTag, :sujetTag, :nbJourTravailHebdoTag, :nbHeureTravailHebdoTag, :gratificationTag, :avantageNatureTag, :dateDebutTag, :dateFinTag, :statutTag, :pourvueTag, :anneeViseeTag, :idAnneeTag, :idUtilisateurTag, :dateCreationTag, :descriptionTag)";
+        $sql = "SELECT idoffre FROM Offre WHERE idoffre = (SELECT MAX(idoffre) FROM Offre)";
+        $stmt = Database::get_conn()->prepare($sql);
+        $stmt->execute();
+        $id = $stmt->fetch();
+        $id = $id["idoffre"];
+        $sql = "INSERT INTO Offre VALUES (:id,:dureeTag, :thematiqueTag, :sujetTag, :nbJourTravailHebdoTag, :nbHeureTravailHebdoTag, :gratificationTag, :avantageNatureTag, :dateDebutTag, :dateFinTag, :statutTag, :pourvueTag, :anneeViseeTag, :idAnneeTag, :idUtilisateurTag, :dateCreationTag, :descriptionTag)";
         $pdoStatement = Database::get_conn()->prepare($sql);
         $values = array(
+            "id" => $id + 1,
             "dureeTag" => $offre->getDuree(),
             "thematiqueTag" => $offre->getThematique(),
             "sujetTag" => $offre->getSujet(),
@@ -34,7 +40,6 @@ class OffreForm extends Model
         );
 
         $pdoStatement->execute($values);
-        $id = Database::get_conn()->lastInsertId();
 
         if ($offre->getStatut() == "en attente") {
             $emails = (new StaffRepository([]))->getManagersEmail();
@@ -77,12 +82,11 @@ class OffreForm extends Model
             "nbJourTravailHebdoTag" => $offre->getNbjourtravailhebdo(),
             "nbHeureTravailHebdoTag" => $offre->getNbHeureTravailHebdo(),
             "gratificationTag" => $offre->getGratification(),
-            "unitegratificationTag" => $offre->getUnitegratification(),
             "avantageNatureTag" => $offre->getAvantageNature(),
             "dateDebutTag" => $offre->getDateDebut(),
             "dateFinTag" => $offre->getDateFin(),
             "anneeViseeTag" => $offre->getAnneeVisee(),
-            "idAnneeTag" => $offre->getIdAnnee(),
+            "idAnneeTag" => $offre->getAnnee(),
             "idUtilisateurTag" => $offre->getIdutilisateur(),
             "descriptionTag" => $offre->getDescription(),
             "statutTag" => $offre->getStatut(),

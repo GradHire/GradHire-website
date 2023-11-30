@@ -73,8 +73,11 @@ class Auth
     public
     static function logout(): void
     {
-        unset($_COOKIE["token"]);
-        setcookie('token', '', -1);
+        $cookies = $_COOKIE;
+        foreach ($cookies as $nomCookie => $valeurCookie) {
+            setcookie($nomCookie, '', -1);
+            unset($_COOKIE[$nomCookie]);
+        }
         session_destroy();
     }
 

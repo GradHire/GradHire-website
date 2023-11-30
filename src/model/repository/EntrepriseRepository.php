@@ -8,11 +8,12 @@ use app\src\model\Auth;
 use app\src\model\dataObject\Entreprise;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
+use Couchbase\IndexFailureException;
 use PDOException;
 
 class EntrepriseRepository extends ProRepository
 {
-    protected static string $view = "EntrepriseVue";
+    protected static string $view = "entreprisevue";
     protected static string $create_function = "creerEntreprise";
     protected static string $update_function = "updateEntreprise";
 
@@ -121,6 +122,24 @@ class EntrepriseRepository extends ProRepository
         } catch
         (PDOException) {
             throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getEmailById($id): ?array
+    {
+        try {
+            $sql = "SELECT email FROM hirchytsd.entreprisevue WHERE idutilisateur = :idutilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idutilisateur' => $id]);
+            $resultat = $requete->fetch();
+
+            return $resultat;
+        } catch
+        (PDOException) {
+            throw new ServerErrorException("Erreur lors de la récupération de l'email de l'entreprise");
         }
     }
 
@@ -287,7 +306,7 @@ class EntrepriseRepository extends ProRepository
 
     public function create(mixed $nomEnt, mixed $email, mixed $tel, string $string, mixed $type, mixed $effectif, mixed $codeNaf, mixed $fax, mixed $web, mixed $voie, mixed $cedex, mixed $residence, mixed $codePostal, mixed $pays, mixed $ville, mixed $siret)
     {
-        $sql = "SELECT * from creerEntImp(:nomEnt, :email, :tel, :string, :type, :effectif, :codeNaf, :fax, :web, :voie, :cedex, :residence, :codePostal, :pays, :ville, :siret);";
+        $sql = "SELECT creerEntImp(:nomEnt, :email, :tel, :string, :type, :effectif, :codeNaf, :fax, :web, :voie, :cedex, :residence, :codePostal, :pays, :ville, :siret) ";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['nomEnt' => $nomEnt, 'email' => $email, 'tel' => $tel, 'string' => $string, 'type' => $type, 'effectif' => $effectif, 'codeNaf' => $codeNaf, 'fax' => $fax, 'web' => $web, 'voie' => $voie, 'cedex' => $cedex, 'residence' => $residence, 'codePostal' => $codePostal, 'pays' => $pays, 'nomville' => $ville, 'siret' => $siret]);
     }

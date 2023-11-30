@@ -11,8 +11,8 @@ use app\src\model\Form\FormModel;
 class TuteurEntrepriseRepository extends ProRepository
 {
     protected static string $create_function = "creerTuteur";
-    protected static string $view = "TuteurVue";
-    private string $nomtable = "TuteurVue";
+    protected static string $view = "tuteurvue";
+    private string $nomtable = "tuteurvue";
 
     /**
      * @throws ServerErrorException
@@ -97,7 +97,7 @@ class TuteurEntrepriseRepository extends ProRepository
             }
             return $resultat;
         } catch (\Exception) {
-            throw new ServerErrorException();
+            throw new ServerErrorException('erreur getAllTuteursByIdEntreprise');
         }
 
     }
@@ -112,6 +112,7 @@ class TuteurEntrepriseRepository extends ProRepository
             $tuteurData['email'] ?? "",
             $tuteurData['nom'] ?? "",
             $tuteurData['numtelephone'] ?? "",
+
         );
     }
 
@@ -162,7 +163,7 @@ class TuteurEntrepriseRepository extends ProRepository
 
     public function create(mixed $nom, mixed $prenom, mixed $fonction, mixed $tel, mixed $email, mixed $idEntreprise)
     {
-        $sql = "SELECT * from creerTuteur(:prenom, :nom, :email, :fonction, :idEntreprise, :hash, :tel);";
+        $sql = "SELECT creerTuteur(:prenom, :nom, :email, :fonction, :idEntreprise, :hash, :tel)  ";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute([
             'prenom' => $prenom,

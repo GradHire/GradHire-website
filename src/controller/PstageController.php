@@ -2,6 +2,7 @@
 
 namespace app\src\controller;
 
+use app\src\core\components\Notification;
 use app\src\core\exception\ForbiddenException;
 use app\src\core\middlewares\PSatgeMiddleware;
 use app\src\model\Application;
@@ -9,7 +10,8 @@ use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\dataObject\ServiceAccueil;
 use app\src\model\Form\FormModel;
-use app\src\model\ImportPstage;
+use app\src\model\Import;
+use app\src\model\ImportStudea;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\ServiceAccueilRepository;
@@ -40,7 +42,7 @@ class PstageController extends AbstractController
                 }
                 $path = fopen("Import/file.csv", "r");
                 $i = 0;
-                $importer = new ImportPstage();
+                $importer = new Import();
                 while (($data = fgetcsv($path, 100000, ";")) !== FALSE) {
 
                     $num = count($data);
@@ -50,13 +52,44 @@ class PstageController extends AbstractController
                     }
                     $importer->importerligne($data);
                 }
-                ?>
-                <div>
-                    <h1 class="text-3xl text-center">Importation réussi</h1>
-                </div>
-                <?php
+                Notification::createNotification("Importation réussi");
             }
             return $this->render('Import', [
+                'form' => $form
+            ]);
+        } else throw new ForbiddenException();
+    }
+
+    public function importerStudea(Request $request)
+    {
+        if (Auth::has_role(Roles::Staff, Roles::Manager)) {
+            $form = new FormModel([
+                "file" => FormModel::file("File")->required()
+            ]);
+            $form->useFile();
+            if ($request->getMethod() === 'post') {
+                if ($form->validate($request->getBody())) {
+                    $path = "ImportStudea/";
+                    if (!$form->getFile("file")->save($path, "file")) {
+                        $form->setError("Impossible de télécharger tous les fichiers");
+                        return '';
+                    }
+                }
+                $path = fopen("ImportStudea/file.csv", "r");
+                $i = 0;
+                $importer = new Import();
+                while (($data = fgetcsv($path, 100000, ";")) !== FALSE) {
+
+                    $num = count($data);
+                    if ($i == 0) {
+                        $i++;
+                        continue;
+                    }
+                    $importer->importerligneStudea($data);
+                }
+                Notification::createNotification("Importation réussi");
+            }
+            return $this->render('ImportStudea', [
                 'form' => $form
             ]);
         } else throw new ForbiddenException();
@@ -74,7 +107,6 @@ class PstageController extends AbstractController
             $id = Application::getUser()->getId();
             $etudiant = (new EtudiantRepository([]))->getByIdFull($id);
             $formData = $_SESSION['simulateurEtu'] ?? [];
-
             $form = new FormModel([
                 "numEtudiant" => FormModel::string("Numéro étudiant *")->required()->min(8)->max(8)->default($formData['numEtudiant'] ?? $etudiant->getNumEtudiant()),
                 "nom" => FormModel::string("Nom *")->required()->default($formData['nom'] ?? $etudiant->getNomutilisateur()),
@@ -93,7 +125,7 @@ class PstageController extends AbstractController
             if ($request->getMethod() === 'post') {
                 if ($form->validate($request->getBody())) {
                     $_SESSION['simulateurEtu'] = $form->getParsedBody();
-                    (new EtudiantRepository([]))->updateEtu($form->getParsedBody()['numEtudiant'], $form->getParsedBody()['nom'], $form->getParsedBody()['prenom'], $form->getParsedBody()['telephone'], $form->getParsedBody()['emailPerso'], $form->getParsedBody()['emailUniv'], $form->getParsedBody()['adresse'], $form->getParsedBody()['codePostal'], $form->getParsedBody()['ville'], "France");
+                    (new EtudiantRepository([]))->updateEtu($form->getParsedBody()['numEtudiant'], $form->getParsedBody()['nom'], $form->getParsedBody()['prenom'], $form->getParsedBody()['telephone'], $form->getParsedBody()['emailPerso'], $form->getParsedBody()['emailUniv'], $form->getParsedBody()['adresse'], $form->getParsedBody()['codePostal'], $form->getParsedBody()['ville'], "France", "");
                     return $this->render('simulateurP/General', ['vueChemin' => "previewetu.php", 'form' => $form]);
                 }
             }

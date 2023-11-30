@@ -11,16 +11,19 @@ $linkEntreprises = new Lien('/entreprises', 'Entreprises');
 $linkCandidatures = new Lien('/candidatures', 'Candidatures');
 $linkCreate = new Lien('/offres/create', 'Créer une offre');
 $linkTuteurs = new Lien('/ListeTuteurPro', 'Tuteurs');
-$linkImport = new Lien('/importer', 'Import');
+$linkImport = new Lien('/importer', 'Import Pstage');
+$linkImportStudeants = new Lien('/importerStudea', 'Import Studea');
 $linkConventions = new Lien('/conventions', 'Conventions');
 $linkExplicationSimu = new Lien('/explicationSimu', 'Simulateur');
+$linkCalendar = new Lien('/calendar', 'Calendrier');
 
 
 if (!Application::isGuest()) {
     if (!Auth::has_role(Roles::ChefDepartment)) echo $linkOffres->render();
     else echo $linkUtilisateurs->render();
     if (!Auth::has_role(Roles::Enterprise, Roles::Tutor, Roles::ChefDepartment)) echo $linkEntreprises->render();
-    if (Auth::has_role(Roles::Student, Roles::Teacher, Roles::Tutor, Roles::Enterprise)) echo $linkCandidatures->render();
+    if (Auth::has_role(Roles::Student, Roles::Teacher, Roles::Tutor, Roles::TutorTeacher, Roles::Enterprise)) echo $linkCandidatures->render();
+    if (Auth::has_role(Roles::Teacher, Roles::Tutor, Roles::TutorTeacher, Roles::Student, Roles::Manager, Roles::Staff, Roles::ManagerAlternance, Roles::ManagerStage)) echo $linkCalendar->render();
     if (Auth::has_role(Roles::Enterprise)) {
         echo $linkCreate->render();
         echo $linkTuteurs->render();
@@ -30,9 +33,10 @@ if (!Application::isGuest()) {
         echo $linkCandidatures->render();
         echo $linkTuteurs->render();
         echo $linkImport->render();
+        echo $linkImportStudeants->render();
     }
     if (Auth::has_role(Roles::Student)) echo $linkExplicationSimu->render();
-    if (Auth::has_role(Roles::Enterprise, Roles::Student, Roles::Manager, Roles::Staff)) echo $linkConventions->render();
+    if (Auth::has_role(Roles::Enterprise, Roles::Student, Roles::Manager, Roles::Staff, Roles::ManagerStage, Roles::ManagerAlternance, Roles::Teacher,Roles::TutorTeacher,Roles::Tutor)) echo $linkConventions->render();
 }
 
 ?>

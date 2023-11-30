@@ -7,57 +7,30 @@ use app\src\model\dataObject\Utilisateur;
 class Etudiant extends Utilisateur
 {
     private static int $convId = 0;
-    private int $idUtilisateur;
+    private int $idutilisateur;
     private string $prenom;
     private ?string $loginLDAP;
-    private ?string $numEtudiant;
+    private ?string $numetudiant;
     private ?string $adresse;
     private ?string $dateNaissance;
-    private ?string $emailPerso;
+    private ?string $emailperso;
     private ?string $codeSexe;
     private ?int $idgroupe;
-    private ?string $nomVille;
-    private ?int $codePostal;
+    private ?string $nomville;
+    private ?int $codepostal;
     private ?string $pays;
     private ?bool $archiver;
     private ?int $annee;
 
     public function __construct(
-        int     $idUtilisateur,
-        string  $email,
-        string  $nom,
-        ?string $numTelephone,
-        ?string $bio,
-        ?bool   $archiver,
-        ?string $nomVille,
-        ?int    $codePostal,
-        ?string $pays,
-        ?string $adresse,
-        ?string $emailPerso,
-        ?string $numEtudiant,
-        ?string $codeSexe,
-        ?int    $idgroupe,
-        ?int    $annee,
-        ?string $dateNaissance,
-        ?string $loginLDAP,
-        string  $prenom,
+        array $attributes
     )
     {
-        parent::__construct($idUtilisateur, $email, $nom, $numTelephone, $bio);
-        $this->idUtilisateur = $idUtilisateur;
-        $this->prenom = $prenom;
-        $this->loginLDAP = $loginLDAP;
-        $this->numEtudiant = $numEtudiant;
-        $this->adresse = $adresse;
-        $this->dateNaissance = $dateNaissance;
-        $this->emailPerso = $emailPerso;
-        $this->codeSexe = $codeSexe;
-        $this->idgroupe = $idgroupe;
-        $this->nomVille = $nomVille;
-        $this->codePostal = $codePostal;
-        $this->pays = $pays;
-        $this->archiver = $archiver;
-        $this->annee = $annee;
+        parent::__construct($attributes['idutilisateur'], $attributes['email'], $attributes['nom'], $attributes['numtelephone'], $attributes['bio']);
+        foreach ($attributes as $key => $value)
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
     }
 
     public static function getConvId(): int
@@ -72,12 +45,12 @@ class Etudiant extends Utilisateur
 
     public function getIdUtilisateur(): int
     {
-        return $this->idUtilisateur;
+        return $this->idutilisateur;
     }
 
     public function setIdUtilisateur(int $idUtilisateur): void
     {
-        $this->idUtilisateur = $idUtilisateur;
+        $this->idutilisateur = $idUtilisateur;
     }
 
     public function getPrenom(): string
@@ -102,12 +75,12 @@ class Etudiant extends Utilisateur
 
     public function getNumEtudiant(): ?string
     {
-        return $this->numEtudiant;
+        return $this->numetudiant;
     }
 
     public function setNumEtudiant(?string $numEtudiant): void
     {
-        $this->numEtudiant = $numEtudiant;
+        $this->nueEtudiant = $numEtudiant;
     }
 
     public function getAdresse(): ?string
@@ -132,12 +105,12 @@ class Etudiant extends Utilisateur
 
     public function getEmailPerso(): ?string
     {
-        return $this->emailPerso;
+        return $this->emailperso;
     }
 
     public function setEmailPerso(?string $emailPerso): void
     {
-        $this->emailPerso = $emailPerso;
+        $this->emailperso = $emailPerso;
     }
 
     public function getCodeSexe(): ?string
@@ -162,22 +135,22 @@ class Etudiant extends Utilisateur
 
     public function getNomVille(): ?string
     {
-        return $this->nomVille;
+        return $this->nomville;
     }
 
     public function setNomVille(?string $nomVille): void
     {
-        $this->nomVille = $nomVille;
+        $this->nomville = $nomVille;
     }
 
     public function getCodePostal(): ?int
     {
-        return $this->codePostal;
+        return $this->codepostal;
     }
 
     public function setCodePostal(?int $codePostal): void
     {
-        $this->codePostal = $codePostal;
+        $this->codepostal = $codePostal;
     }
 
     public function getPays(): ?string

@@ -30,6 +30,22 @@ class UtilisateurRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
+    public static function getEmail($id): string|null
+    {
+        try {
+            $statement = Database::get_conn()->prepare("SELECT email FROM utilisateur WHERE idutilisateur = ?");
+            $statement->execute([$id]);
+            $user = $statement->fetch();
+            if (is_null($user)) return null;
+            return $user["email"];
+        } catch (\Exception) {
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
     public static function find_by_attribute(string $value): null|static
     {
         $statement = Database::get_conn()->prepare("SELECT * FROM " . static::$view . " WHERE " . static::$id_attributes . " = ?");
@@ -47,7 +63,7 @@ class UtilisateurRepository extends AbstractRepository
     static function save(array $values): static
     {
         try {
-            $statement = Database::get_conn()->prepare("SELECT * from " . static::$create_function . "(" . ltrim(str_repeat(",?", count($values)), ",") . ");");
+            $statement = Database::get_conn()->prepare("SELECT " . static::$create_function . "(" . ltrim(str_repeat(",?", count($values)), ",") . ") ");
             $statement->execute($values);
             return static::find_by_id(intval($statement->fetchColumn()));
         } catch (\Exception) {
@@ -67,6 +83,22 @@ class UtilisateurRepository extends AbstractRepository
             $user = $statement->fetch();
             if (is_null($user) || $user === false) return null;
             return new static($user);
+        } catch (\Exception) {
+            throw new ServerErrorException();
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getIdByEmail(string $email): int|null
+    {
+        try {
+            $statement = Database::get_conn()->prepare("SELECT idutilisateur FROM utilisateur WHERE email = ?");
+            $statement->execute([$email]);
+            $user = $statement->fetch();
+            if (is_null($user)) return null;
+            return $user["idutilisateur"];
         } catch (\Exception) {
             throw new ServerErrorException();
         }
@@ -227,7 +259,6 @@ class UtilisateurRepository extends AbstractRepository
         if (file_exists("./pictures/" . $this->id . ".jpg")) return "/pictures/" . $this->id . ".jpg";
         return "https://as2.ftcdn.net/v2/jpg/00/64/67/63/1000_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg";
     }
-
 
     public function full_name(): string
     {

@@ -81,16 +81,7 @@ class UserController extends AbstractController
                     "studentnum" => FormModel::string("Numéro Etudiant")->default($user->attributes()["numetudiant"]),
                 ]);
                 break;
-            case Roles::Teacher:
-            case Roles::Manager:
-            case Roles::Staff:
-                $attr = array_merge($attr, [
-                    "role" => FormModel::select("Role", [
-                        "responsable" => "Responsable",
-                        "enseignant" => "Enseignant",
-                        "secretariat" => "Secretariat"
-                    ])->required()->default($user->attributes()["role"]),
-                ]);
+            default:
                 break;
         }
         $attr = array_merge(
@@ -121,7 +112,8 @@ class UserController extends AbstractController
      * @throws ForbiddenException
      * @throws ServerErrorException
      */
-    public function entreprises(Request $request): string
+    public
+    function entreprises(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
         $entreprise = null;

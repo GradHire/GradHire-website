@@ -30,7 +30,7 @@ class LdapRepository extends UtilisateurRepository
             CURLOPT_POSTFIELDS => array("login" => $username, "password" => $password),
             CURLOPT_SSL_VERIFYPEER => false,
         ));
-
+        
         $response = curl_exec($curl);
         curl_close($curl);
         if ($response !== false) {

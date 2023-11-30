@@ -2,6 +2,7 @@
 
 namespace app\src\controller;
 
+use app\src\core\components\Calendar\Event;
 use app\src\core\components\Notification;
 use app\src\core\exception\ForbiddenException;
 use app\src\core\exception\NotFoundException;
@@ -10,16 +11,20 @@ use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
+use app\src\model\repository\CompteRenduRepository;
 use app\src\model\repository\ConventionRepository;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\PostulerRepository;
+use app\src\model\repository\SoutenanceRepository;
 use app\src\model\repository\StaffRepository;
+use app\src\model\repository\SuperviseRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\repository\TuteurRepository;
 use app\src\model\repository\UtilisateurRepository;
+use app\src\model\repository\VisiteRepository;
 use app\src\model\Request;
 
 class DashboardController extends AbstractController
@@ -154,5 +159,73 @@ class DashboardController extends AbstractController
             Application::redirectFromParam('/');
             return '';
         } else throw new ForbiddenException();
+    }
+
+    /**
+     * @throws ServerErrorException
+     * @throws ForbiddenException
+     */
+    public function calendar(): string
+    {
+        $events = [];
+        $visites = [];
+        if (Auth::has_role(Roles::Student)) {
+            $visite = VisiteRepository::getByStudentId(Application::getUser()->id());
+            if (!$visite)
+                $visites[] = $visite;
+            $soutenances = SoutenanceRepository::getAllSoutenancesByIdEtudiant(Application::getUser()->id());
+        } else if (Auth::has_role(Roles::Tutor)) {
+            $visites = VisiteRepository::getAllByEnterpriseTutorId(Application::getUser()->id());
+            $soutenances = SoutenanceRepository::getAllSoutenancesByIdTuteurEntreprise(Application::getUser()->id());
+        } else if (Auth::has_role(Roles::TutorTeacher)) {
+            $visites = VisiteRepository::getAllByUniversityTutorId(Application::getUser()->id());
+            $soutenances = SoutenanceRepository::getAllSoutenancesByIdTuteurProf(Application::getUser()->id());
+        } else if (Auth::has_role(Roles::Teacher, Roles::Manager, Roles::ManagerStage, Roles::ManagerAlternance)) {
+            $soutenances = SoutenanceRepository::getAllSoutenances();
+            $visites = VisiteRepository::getAllVisites();
+        } else
+            throw new ForbiddenException();
+
+        foreach ($visites as $visite) {
+            if ($visite == null) continue;
+                $title = "Visite de stage";
+                if (!Auth::has_role(Roles::Student)) {
+                    $supervise = SuperviseRepository::getByConvention($visite->getNumConvention());
+                    $name = EtudiantRepository::getFullNameByID($supervise->getIdStudent());
+                    $title .= " de " . $name;
+                }
+                $e = new Event($title, $visite->getDebutVisite(), $visite->getFinVisite(), "#1c4ed8");
+                if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage))
+                    $e->setButton("Voir plus", "/visite/" . $visite->getNumConvention());
+                if ($visite->getFinVisite() < new \DateTime('now') && ConventionRepository::getIfIdTuteurs($visite->getNumConvention(), Application::getUser()->id())) {
+                    if (!CompteRenduRepository::checkIfCompteRenduProfExist($visite->getNumConvention()) && Auth::has_role(Roles::TutorTeacher)) {
+                        print_r("caillou");
+                        $e->setButton("deposer compte rendu prof", "/compteRendu/" . $visite->getNumConvention());
+                    } else if (!CompteRenduRepository::checkIfCompteRenduEntrepriseExist($visite->getNumConvention()) && Auth::has_role(Roles::Tutor)) {
+                        $e->setButton("deposer compte rendu entreprise", "/compteRendu/" . $visite->getNumConvention());
+                    }
+                }
+                $events[] = $e;
+        }
+        foreach ($soutenances as $soutenance) {
+            if ($soutenance == null) continue;
+            $title = "Soutenance";
+            if (!Auth::has_role(Roles::Student)) {
+                $userId = ConventionRepository::getStudentId($soutenance->getNumConvention());
+                $name = EtudiantRepository::getFullNameByID($userId);
+                $title .= " de " . $name;
+            }
+            $e = new Event($title, $soutenance->getDebutSoutenance(), $soutenance->getFinSoutenance(), "#1c4ed8");
+            if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage)) $e->setButton("Voir plus", "/voirSoutenance/" . $soutenance->getNumConvention());
+            if ($soutenance->getFinSoutenance() < new \DateTime('now') && ConventionRepository::getIfIdTuteurs($soutenance->getNumConvention(), Application::getUser()->id())) {
+                if (!CompteRenduRepository::checkIfCompteRenduSoutenanceProfExist($soutenance->getNumConvention()) && Auth::has_role(Roles::TutorTeacher)) {
+                    $e->setButton("deposer compte rendu soutenance prof", "/compteRenduSoutenance/" . $soutenance->getNumConvention());
+                } else if (!CompteRenduRepository::checkIfCompteRenduSoutenanceEntrepriseExist($soutenance->getNumConvention()) && Auth::has_role(Roles::Tutor)) {
+                    $e->setButton("deposer compte rendu soutenance entreprise", "/compteRenduSoutenance/" . $soutenance->getNumConvention());
+                }
+            }
+            $events[] = $e;
+        }
+        return $this->render('calendar', ['events' => $events]);
     }
 }

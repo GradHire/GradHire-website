@@ -1,208 +1,170 @@
 <?php
+
 namespace app\src\model\dataObject;
+
 use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\AbstractDataObject;
 use app\src\model\repository\ConventionRepository;
 
 class Convention extends AbstractDataObject
 {
-    private int $numConvention;
-    private string $origineConvention;
-    private int $conventionValide;
-    private int $convetionValideePedagogiquement;
-    private string $dateModification;
-    private string $dateCreation;
-    private int $idSignataire;
-    private ?int $idInterruption;
-    private int $idUtilisateur;
-    private int $idOffre;
-    private ?string $Commentaire;
+    private int $numconvention;
+    private string $origineconvention;
+    private int $conventionvalidee;
+    private int $conventionvalideepedagogiquement;
+    private string $datemodification;
+    private string $datecreation;
+    private int $idsignataire;
+    private ?int $idinterruption;
+    private int $idutilisateur;
+    private int $idoffre;
+    private ?string $commentaire;
 
-    public function __construct(int $numConvention, string $origineCovention, int $conventionValide, int $convetionValideePedagogiquement, string $dateModification, string $dateCreation, int $idSignataire, ?int $idInterruption, int $idUtilisateur, int $idOffre, ?string $Commentaire)
+    public function __construct(array $array)
     {
-        $this->numConvention = $numConvention;
-        $this->origineConvention = $origineCovention;
-        $this->conventionValide = $conventionValide;
-        $this->convetionValideePedagogiquement = $convetionValideePedagogiquement;
-        $this->dateModification = $dateModification;
-        $this->dateCreation = $dateCreation;
-        $this->idSignataire = $idSignataire;
-        $this->idInterruption = $idInterruption;
-        $this->idUtilisateur = $idUtilisateur;
-        $this->idOffre = $idOffre;
-        $this->Commentaire = $Commentaire;
+        foreach ($array as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
     }
 
-    public function getNumConvention(): int
+    public function getNumconvention(): int
     {
-        return $this->numConvention;
+        return $this->numconvention;
     }
 
-    public function setNumConvention(int $numConvention): void
+    public function setNumconvention(int $numconvention): void
     {
-        $this->numConvention = $numConvention;
+        $this->numconvention = $numconvention;
     }
 
-    public function getOrigineConvention(): string
+    public function getOrigineconvention(): string
     {
-        return $this->origineConvention;
+        return $this->origineconvention;
     }
 
-    public function setOrigineConvention(string $origineCovention): void
+    public function setOrigineconvention(string $origineconvention): void
     {
-        $this->origineCovention = $origineCovention;
+        $this->origineconvention = $origineconvention;
     }
 
-    public function getConventionValide(): int
+    public function getConventionvalidee(): int
     {
-        return $this->conventionValide;
+        return $this->conventionvalidee;
     }
 
-    public function setConventionValide(int $conventionValide): void
+    public function setConventionvalidee(int $conventionvalidee): void
     {
-        $this->conventionValide = $conventionValide;
-    }
-
-    public function getConvetionValideePedagogiquement(): int
-    {
-        return $this->convetionValideePedagogiquement;
-    }
-
-    public function setConvetionValideePedagogiquement(int $convetionValideePedagogiquement): void
-    {
-        $this->convetionValideePedagogiquement = $convetionValideePedagogiquement;
-    }
-
-    public function getDateModification(): string
-    {
-        return $this->dateModification;
-    }
-
-    public function setDateModification(string $dateModification): void
-    {
-        $this->dateModification = $dateModification;
-    }
-
-    public function getDateCreation(): string
-    {
-        return $this->dateCreation;
-    }
-
-    public function setDateCreation(string $dateCreation): void
-    {
-        $this->dateCreation = $dateCreation;
-    }
-
-    public function getIdSignataire(): int
-    {
-        return $this->idSignataire;
-    }
-
-    public function setIdSignataire(int $idSignataire): void
-    {
-        $this->idSignataire = $idSignataire;
+        $this->conventionvalidee = $conventionvalidee;
     }
 
 
-
-    public function getIdInterruption(): ?int
+    public function getConvetionvalideepedagogiquement(): int
     {
-        return $this->idInterruption;
+        return $this->conventionvalideepedagogiquement;
     }
 
-    public function setIdInterruption(?int $idInterruption): void
+    public function setConvetionvalideepedagogiquement(int $convetionvalideepedagogiquement): void
     {
-        $this->idInterruption = $idInterruption;
+        $this->conventionvalideepedagogiquement = $convetionvalideepedagogiquement;
     }
 
-    public function getIdUtilisateur(): int
+    public function getDatemodification(): string
     {
-        return $this->idUtilisateur;
+        return $this->datemodification;
     }
 
-    public function setIdUtilisateur(int $idUtilisateur): void
+    public function setDatemodification(string $datemodification): void
     {
-        $this->idUtilisateur = $idUtilisateur;
+        $this->datemodification = $datemodification;
     }
 
-    public function getIdOffre(): int
+    public function getDatecreation(): string
     {
-        return $this->idOffre;
+        return $this->datecreation;
     }
 
-    public function setIdOffre(int $idOffre): void
+    public function setDatecreation(string $datecreation): void
     {
-        $this->idOffre = $idOffre;
+        $this->datecreation = $datecreation;
+    }
+
+    public function getIdsignataire(): int
+    {
+        return $this->idsignataire;
+    }
+
+    public function setIdsignataire(int $idsignataire): void
+    {
+        $this->idsignataire = $idsignataire;
+    }
+
+    public function getIdinterruption(): ?int
+    {
+        return $this->idinterruption;
+    }
+
+    public function setIdinterruption(?int $idinterruption): void
+    {
+        $this->idinterruption = $idinterruption;
+    }
+
+    public function getIdutilisateur(): int
+    {
+        return $this->idutilisateur;
+    }
+
+    public function setIdutilisateur(int $idutilisateur): void
+    {
+        $this->idutilisateur = $idutilisateur;
+    }
+
+    public function getIdoffre(): int
+    {
+        return $this->idoffre;
+    }
+
+    public function setIdoffre(int $idoffre): void
+    {
+        $this->idoffre = $idoffre;
     }
 
     public function getCommentaire(): ?string
     {
-        return $this->Commentaire;
+        return $this->commentaire;
     }
 
-    public function setCommentaire(?string $Commentaire): void
+    public function setCommentaire(?string $commentaire): void
     {
-        $this->Commentaire = $Commentaire;
+        $this->commentaire = $commentaire;
     }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public function validerPedagogiquement(mixed $id)
-    {
-        (new ConventionRepository())->validerPedagogiquement($id);
-    }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public function unvalidatePedagogiquement(mixed $id)
-    {
-        (new ConventionRepository())->unvalidatePedagogiquement($id);
-    }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public function unvalidate(mixed $id)
-    {
-        (new ConventionRepository())->unvalidate($id);
-    }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public function valider(mixed $id)
-    {
-        (new ConventionRepository())->valider($id);
-    }
-
 
     protected function getValueColonne(string $nomColonne): string
     {
         switch ($nomColonne) {
             case "numConvention":
-                return $this->numConvention;
+                return $this->numconvention;
             case "origineCovention":
-                return $this->origineCovention;
+                return $this->originecovention;
             case "conventionValide":
-                return $this->conventionValide;
+                return $this->conventionvalide;
             case "convetionValideePedagogiquement":
-                return $this->convetionValideePedagogiquement;
+                return $this->convetionvalideepedagogiquement;
             case "dateModification":
-                return $this->dateModification;
+                return $this->datemodification;
             case "dateCreation":
-                return $this->dateCreation;
+                return $this->datecreation;
             case "idSignataire":
-                return $this->idCreation;
+                return $this->idcreation;
             case "idInterruption":
-                return $this->idInterruption;
+                return $this->idinterruption;
             case "idUtilisateur":
-                return $this->idUtilisateur;
+                return $this->idutilisateur;
             case "idOffre":
-                return $this->idOffre;
+                return $this->idoffre;
             case "Commentaire":
-                return $this->Commentaire;
+                return $this->commentaire;
             default:
                 return "";
         }
