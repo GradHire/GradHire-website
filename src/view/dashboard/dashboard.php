@@ -15,7 +15,7 @@ use app\src\model\View;
 
 $this->title = 'Dashboard';
 
-View::setCurrentSection('Accueil');
+View::setCurrentSection('Dashboard');
 
 //import js
 echo '<script type="text/javascript" src="/resources/js/animate-counter.js"></script>';
