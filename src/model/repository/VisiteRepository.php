@@ -117,6 +117,7 @@ class VisiteRepository extends AbstractRepository
         }
     }
 
+
     /**
      * @throws ServerErrorException
      */

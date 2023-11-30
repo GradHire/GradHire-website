@@ -118,17 +118,7 @@ class ConventionRepository extends AbstractRepository
     public function construireDepuisTableau(array $dataObjectFormatTableau): Convention
     {
         return new Convention(
-            $dataObjectFormatTableau["numconvention"],
-            $dataObjectFormatTableau["origineconvention"],
-            $dataObjectFormatTableau["conventionvalidee"],
-            $dataObjectFormatTableau["conventionvalideepedagogiquement"],
-            $dataObjectFormatTableau["datemodification"],
-            $dataObjectFormatTableau["datecreation"],
-            $dataObjectFormatTableau["idsignataire"],
-            $dataObjectFormatTableau["idinterruption"],
-            $dataObjectFormatTableau["idutilisateur"],
-            $dataObjectFormatTableau["idoffre"],
-            $dataObjectFormatTableau["commentaire"]
+           $dataObjectFormatTableau
         );
     }
 

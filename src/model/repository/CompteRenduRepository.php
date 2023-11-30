@@ -6,6 +6,7 @@ use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\core\lib\StackTrace;
 use app\src\model\dataObject\AbstractDataObject;
+use app\src\model\dataObject\CompteRendu;
 
 class CompteRenduRepository extends AbstractRepository
 {
@@ -150,7 +151,7 @@ class CompteRenduRepository extends AbstractRepository
             'numconvention' => $getNumConvention
         ]);
         $result = $requete->fetch();
-        if ($result) {
+        if($result['commentaireentreprise'] != null) {
             return true;
         } else {
             return false;

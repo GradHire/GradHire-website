@@ -84,7 +84,7 @@ class SoutenanceController extends AbstractController
         $numConvention = $request->getRouteParam("numConvention");
         $soutenance = SoutenanceRepository::getSoutenanceByNumConvention($numConvention);
         $convention = $soutenance->getNumConvention();
-        $convention = (new ConventionRepository([]))->getById($convention);
+        $convention = ConventionRepository::getById($convention);
         $etudiant = $convention->getIdUtilisateur();
         $etudiant = (new EtudiantRepository([]))->getByIdFull($etudiant);
 

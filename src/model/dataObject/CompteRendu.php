@@ -2,7 +2,7 @@
 
 namespace app\src\model\dataObject;
 
-class CompteRendu
+class CompteRendu extends AbstractDataObject
 {
     private int $numconvention;
     private int $idtuteurprof;
@@ -79,4 +79,8 @@ class CompteRendu
     }
 
 
+    protected function getValueColonne(string $nomColonne): string
+    {
+        return ($$nomColonne);
+    }
 }

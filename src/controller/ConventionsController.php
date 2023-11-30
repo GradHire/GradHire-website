@@ -21,6 +21,9 @@ use app\src\model\Response;
 
 class ConventionsController extends AbstractController {
 
+    /**
+     * @throws ServerErrorException
+     */
     public function afficherListeConventions(Request $request): string {
         $conventions = (new ConventionRepository())->getAll();
         return $this->render('convention/listeConventions', [
@@ -33,7 +36,7 @@ class ConventionsController extends AbstractController {
      */
     public function detailConvention(Request $request): string {
         $id = $request->getRouteParams()["id"];
-        $convention = (new ConventionRepository())->getById($id);
+        $convention = ConventionRepository::getById($id);
         return $this->render('convention/detailConvention', [
             'convention' => $convention
         ]);

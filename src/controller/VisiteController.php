@@ -9,6 +9,7 @@ use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
+use app\src\model\repository\CompteRenduRepository;
 use app\src\model\repository\ConventionRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\SuperviseRepository;
@@ -25,29 +26,29 @@ class VisiteController extends AbstractController
     public function visite(Request $req): string
     {
         if ($req->getMethod() == "get") {
-            if (!Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Student, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage)) throw new ForbiddenException();
+            if (!Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Student, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage)) throw new ForbiddenException("Vous n'avez pas le droit de modifier les visites");
         } else {
-            if (!Auth::has_role(Roles::TutorTeacher)) throw new ForbiddenException();
+            if (!Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager)) throw new ForbiddenException("Vous n'avez pas le droit de modifier les visites");
         }
 
         $numConvention = $req->getRouteParam("id");
-        if (!ConventionRepository::exist($numConvention)) throw new NotFoundException();
+        if (!ConventionRepository::exist($numConvention)) throw new NotFoundException("La convention n'existe pas");
 
         $studentId = ConventionRepository::getStudentId($numConvention);
         if (Auth::has_role(Roles::Student) && Application::getUser()->id() !== $studentId) throw new ForbiddenException();
 
         $visite = VisiteRepository::getByStudentId($studentId);
 
-        $commentaires = VisiteRepository::getCommentaires($numConvention, $studentId);
+        $commentaires = CompteRenduRepository::getCommentaires($numConvention, $studentId);
 
-        if (!$visite && !Auth::has_role(Roles::TutorTeacher)) throw new NotFoundException();
+        if (!$visite && !Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager)) throw new NotFoundException();
 
         $supervise = SuperviseRepository::getByConvention($numConvention);
         if (!$supervise) throw new NotFoundException();
         if (Auth::has_role(Roles::Tutor) && Application::getUser()->id() !== $supervise->getIdTutor()) throw new ForbiddenException();
         if (Auth::has_role(Roles::TutorTeacher) && Application::getUser()->id() !== $supervise->getIdTeacher()) throw new ForbiddenException();
 
-        if (Auth::has_role(Roles::TutorTeacher)) {
+        if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager)) {
             $form = new FormModel([
                 "start" => FormModel::date("Début de la visite")->withHour()->default($visite ? $visite->getDebutVisite()->format('Y-m-d H:i:s') : (new \DateTime())->format('Y-m-d H:i:s'))->required(),
                 "end" => FormModel::date("Fin de la visite")->withHour()->default($visite ? $visite->getFinVisite()->format('Y-m-d H:i:s') : (new \DateTime())->format('Y-m-d H:i:s'))->required(),
