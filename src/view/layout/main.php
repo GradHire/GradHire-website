@@ -149,19 +149,18 @@ if (!isset($_COOKIE['sidebar_open']) || ($_COOKIE['sidebar_open'] == 'true')) $i
             </div>
         </button>
     </div>
-    <div class="w-full flex flex-col justify-start items-start p-4 gap-4">
-        <?php Notification::show(); ?>
-        <div class="flex items-start justify-between flex-row gap-4 w-full">
-            <div class="w-full border rounded-2xl flex flex-row bg-white items-center justify-between h-[40px] px-4">
-                <span class="text-xl tracking-widest font-bold uppercase first-letter:text-2xl first-letter:font-extrabold ">
+    <div class="flex-col flex w-full">
+        <div class="sticky top-0 z-10 flex items-start justify-between flex-row gap-4 w-full py-2 border-b bg-white">
+            <div class="w-full flex flex-row items-center justify-between h-[40px] px-4">
+                <span class="text-lg tracking-widest font-bold uppercase first-letter:text-2xl first-letter:font-extrabold ">
                 <?= $this->title ?>
                 </span>
             </div>
-            <div class="h-[40px] max-w-[40px] w-full rounded-full border bg-white flex relative items-center group justify-center cursor-pointer">
-                <div class="w-2 h-2 absolute top-0 right-0 bg-orange-500 rounded-full border"></div>
-                <div class="w-2 h-2 absolute top-0 right-0 bg-orange-500 rounded-full animate-ping "></div>
+            <div class="h-[40px] max-w-[40px] w-full bg-white flex relative items-center group justify-center cursor-pointer">
+                <div class="w-2 h-2 absolute top-1 right-1 bg-orange-500 rounded-full border"></div>
+                <div class="w-2 h-2 absolute top-1 right-1 bg-orange-500 rounded-full animate-ping "></div>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                     class="w-4 h-4 fill-zinc-600 group-hover:fill-orange-600 duration-150 ">
+                     class="w-6 h-6 fill-zinc-600 group-hover:fill-orange-600 duration-150 ">
                     <path fill-rule="evenodd"
                           d="M10 2a6 6 0 00-6 6c0 1.887-.454 3.665-1.257 5.234a.75.75 0 00.515 1.076 32.91 32.91 0 003.256.508 3.5 3.5 0 006.972 0 32.903 32.903 0 003.256-.508.75.75 0 00.515-1.076A11.448 11.448 0 0116 8a6 6 0 00-6-6zM8.05 14.943a33.54 33.54 0 003.9 0 2 2 0 01-3.9 0z"
                           clip-rule="evenodd"/>
@@ -182,7 +181,10 @@ if (!isset($_COOKIE['sidebar_open']) || ($_COOKIE['sidebar_open'] == 'true')) $i
                                     </span></div>
             </a>
         </div>
-        {{content}}
+        <div class="w-full flex flex-col justify-start items-start p-4 gap-4">
+            <?php Notification::show(); ?>
+            {{content}}
+        </div>
     </div>
 </div>
 </body>
