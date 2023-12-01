@@ -70,7 +70,7 @@ if (!isset($_COOKIE['sidebar_open']) || ($_COOKIE['sidebar_open'] == 'true')) $i
 <div id="blur-background" class="hidden w-screen h-screen fixed z-50 top-0 left-0 backdrop-blur-md"></div>
 <div class="w-full flex justify-start items-start bg-zinc-50 flex-row duration-300">
     <div id="sidebar-container"
-         class="duration-300 ease-out relative text-[14px] w-full <?= $isOpen ? " max-w-[275px] " : " max-w-[75px] " ?> m-0 bg-white justify-around border-r text-[#1A2421] backdrop-blur-xl p-4 [ shadow-black/5 shadow-2xl ] fixed top-0 left-0 z-40 h-screen ">
+         class="duration-300 ease-out relative text-[14px] w-full <?= $isOpen ? " max-w-[275px] " : " max-w-[75px] " ?> m-0 bg-white justify-around border-r text-[#1A2421] backdrop-blur-xl p-4 [ shadow-black/5 shadow-2xl ] sticky top-0 left-0 z-40 h-screen ">
         <div class="h-full justify-between items-start w-full flex gap-8 flex-col relative ">
             <div class="flex flex-row w-full items-center justify-center ">
                 <a class="w-full " href="/">
