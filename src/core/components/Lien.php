@@ -22,7 +22,7 @@ class Lien implements ComponentInterface
 
     public function render(): void
     {
-        echo "<a href=\"$this->href\" class=\"lienBlock py-2 rounded-[8px] duration-200 ease-out flex flex-row items-center justify-start gap-2 text-left hover:bg-zinc-100 group relative";
+        echo "<a href=\"/$this->href\" class=\"lienBlock py-2 rounded-[8px] duration-200 ease-out flex flex-row items-center justify-start gap-2 text-left hover:bg-zinc-100 group relative";
         if (View::getCurrentSection() === $this->nom) echo " bg-zinc-100 text-black hover:text-blue-600";
         else {
             if ($this->href == 'logout') echo "bg-white text-red-500";
@@ -38,7 +38,7 @@ class Lien implements ComponentInterface
                 <div  class=\" h-3 w-1 rounded-full duration-150 bg-zinc-800 rotate-[20deg] -translate-x-0.5  translate-y-0.5\"></div>
                 <div  class=\" h-3 w-1 rounded-full duration-150 bg-zinc-800 -rotate-[20deg] -translate-x-0.5 -translate-y-0.5\"></div>
             </div>
-</div>";
+            </div>";
         echo "</a>";
     }
 }
