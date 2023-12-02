@@ -12,30 +12,29 @@ class Postuler extends AbstractDataObject
     private ?string $sujet;
     private ?string $nom;
     private ?string $dates;
-    private ?int $idOffre;
-    private ?int $idUtilisateur;
-    private ?int $idEntreprise;
+    private ?int $idoffre;
+    private ?int $idutilisateur;
+    private ?int $identreprise;
     private ?string $statut;
 
-    public function __construct(?string $sujet, ?string $nom, ?string $dates, ?int $idOffre, ?int $idUtilisateur,?int $idEntreprise, ?string $statut = null)
+    public function __construct(
+        array $attributes
+    )
     {
-        $this->sujet = $sujet;
-        $this->nom = $nom;
-        $this->dates = $dates;
-        $this->idOffre = $idOffre;
-        $this->idUtilisateur = $idUtilisateur;
-        $this->idEntreprise = $idEntreprise;
-        $this->statut = $statut;
+        foreach ($attributes as $key => $value)
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
     }
 
     public function getIdEntreprise(): ?int
     {
-        return $this->idEntreprise;
+        return $this->identreprise;
     }
 
     public function setIdEntreprise(?int $idEntreprise): void
     {
-        $this->idEntreprise = $idEntreprise;
+        $this->identreprise = $idEntreprise;
     }
 
     public function getStatut(): ?string
@@ -46,16 +45,6 @@ class Postuler extends AbstractDataObject
     public function setStatut(?string $statut): void
     {
         $this->statut = $statut;
-    }
-
-    public function getIdUtilisateur(): ?int
-    {
-        return $this->idUtilisateur;
-    }
-
-    public function setIdUtilisateur(?int $idUtilisateur): void
-    {
-        $this->idUtilisateur = $idUtilisateur;
     }
 
     public function getSujet(): ?string
@@ -88,32 +77,43 @@ class Postuler extends AbstractDataObject
         $this->dates = $dates;
     }
 
-    public function getIdOffre(): ?int
-    {
-        return $this->idOffre;
-    }
-
-    public function setIdOffre(?int $idOffre): void
-    {
-        $this->idOffre = $idOffre;
-    }
-
     public function setStatutPostuler(string $etat): void
     {
         (new PostulerRepository())->setStatutPostuler($this->getIdUtilisateur(), $this->getIdOffre(), $etat);
     }
 
-    protected function getValueColonne(string $nomColonne): string
+    public function getIdUtilisateur(): ?int
     {
-        return $this->$nomColonne;
+        return $this->idutilisateur;
+    }
+
+    public function setIdUtilisateur(?int $idUtilisateur): void
+    {
+        $this->idutilisateur = $idUtilisateur;
+    }
+
+    public function getIdOffre(): ?int
+    {
+        return $this->idoffre;
+    }
+
+    public function setIdOffre(?int $idOffre): void
+    {
+        $this->idoffre = $idOffre;
     }
 
     public function getIfSuivi(int $idUtilisateur): bool
     {
-        return (new PostulerRepository())->getIfSuivi($idUtilisateur, $this->getIdUtilisateur(),$this->getIdOffre());
+        return (new PostulerRepository())->getIfSuivi($idUtilisateur, $this->getIdUtilisateur(), $this->getIdOffre());
     }
 
-    public function getSiTuteurPostuler(): bool {
-        return (new PostulerRepository())->getSiTuteurPostuler($this->getIdUtilisateur(),$this->getIdOffre());
+    public function getSiTuteurPostuler(): bool
+    {
+        return (new PostulerRepository())->getSiTuteurPostuler($this->getIdUtilisateur(), $this->getIdOffre());
+    }
+
+    protected function getValueColonne(string $nomColonne): string
+    {
+        return $this->$nomColonne;
     }
 }

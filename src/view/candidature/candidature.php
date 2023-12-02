@@ -38,9 +38,9 @@ use app\src\model\repository\UtilisateurRepository;
                         print "l'etat de la candidature ne permet pas de voir plus d'information";
                         return;
                     }
-                    Table::cell($entreprise->getNomutilisateur());
+                    Table::cell($entreprise->getNom());
                     Table::cell($offre->getSujet());
-                    Table::cell($etudiant->getEmailutilisateur());
+                    Table::cell($etudiant->getEmail());
                     Table::cell($candidature['dates']);
                     if ($candidature['statut'] == 'en attente entreprise') {
                         Table::chip("En attente entreprise", "yellow");
@@ -67,10 +67,10 @@ use app\src\model\repository\UtilisateurRepository;
                             if (!empty($tuteursEntreprise)) {
                                 $options = "";
                                 foreach ($tuteursEntreprise as $tuteur) {
-                                    $options .= "<option value=".$tuteur->getIdutilisateur().">".$tuteur->getPrenom()."</option>";
+                                    $options .= "<option value=" . $tuteur->getIdutilisateur() . ">" . $tuteur->getPrenom() . "</option>";
                                 }
                                 Table::cell('
-                               <form action="/postuler/assignerCommeTuteur/' . $candidature['idoffre'] . "/" . $tuteurProf['idutilisateur'] . '/' . $candidature['idutilisateur'].'"
+                               <form action="/postuler/assignerCommeTuteur/' . $candidature['idoffre'] . "/" . $tuteurProf['idutilisateur'] . '/' . $candidature['idutilisateur'] . '"
                 method="post">
             <select name="idtuteur" id="idtuteur"
                     class="border-gray-600 border-2 text-zinc-700 rounded-lg sm:text-sm px-2 py-1 cursor-pointer">
@@ -89,16 +89,16 @@ use app\src\model\repository\UtilisateurRepository;
                     }
                     if (Auth::has_role(Roles::Student)) {
                         if ($candidature['statut'] == "en attente etudiant") {
-                            Table::button("/candidatures/validerEtudiant/" . $candidature['idutilisateur'] . "/" .$candidature['idoffre'], "Accpeté");
+                            Table::button("/candidatures/validerEtudiant/" . $candidature['idutilisateur'] . "/" . $candidature['idoffre'], "Accpeté");
                             Table::button("/candidatures/refuser/" . $candidature['idutilisateur'] . "/" . $candidature['idoffre'], "Refuser");
                         }
                     } else if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::ManagerStage, Roles::ManagerAlternance) && $candidature['statut'] == 'en attente responsable' && (new PostulerRepository())->getSiTuteurPostuler($candidature['idutilisateur'], $candidature['idoffre'])) {
                         Table::button("/postuler/listeTuteur/" . $candidature['idoffre'] . "/" . $candidature['idutilisateur'], "Voir Liste Tuteur");
                     } else if (Auth::has_role(Roles::Teacher, Roles::Tutor, Roles::TutorTeacher) && (new StaffRepository([]))->getCountPostulationTuteur(Auth::get_user()->id()) < 10) {
-                        if (!(new PostulerRepository())->getIfSuivi(Auth::get_user()->id(),$etudiant->getIdutilisateur(), $candidature['idoffre'])) {
-                            Table::button("/postuler/seProposer/" . $candidature['idoffre'] . "/" .$candidature['idutilisateur'], "Se proposer comme tuteur");
+                        if (!(new PostulerRepository())->getIfSuivi(Auth::get_user()->id(), $etudiant->getIdutilisateur(), $candidature['idoffre'])) {
+                            Table::button("/postuler/seProposer/" . $candidature['idoffre'] . "/" . $candidature['idutilisateur'], "Se proposer comme tuteur");
                         } else if ($candidature['statut'] == 'en attente responsable' || $candidature['statut'] == 'en attente tuteur entreprise') {
-                            Table::button("/postuler/seDeproposer/" .$candidature['idoffre'], "X");
+                            Table::button("/postuler/seDeproposer/" . $candidature['idoffre'], "X");
                         } else {
                             if (!Auth::has_role(Roles::Tutor, Roles::Teacher, Roles::TutorTeacher)) {
                                 $tuteur = (new TuteurRepository([]))->getNomTuteurByIdEtudiantAndIdOffre($candidature['idutilisateur'], $candidature['idoffre']);

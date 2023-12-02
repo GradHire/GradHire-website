@@ -12,11 +12,10 @@ class Supervise extends AbstractDataObject
 
     public function __construct(array $attributes)
     {
-        $this->idStudent = $attributes["idetudiant"];
-        $this->idOffre = $attributes["idoffre"];
-        $this->idTutor = $attributes["idtuteurentreprise"];
-        $this->idTeacher = $attributes["idutilisateur"];
-        $this->statut = $attributes["statut"];
+        foreach ($attributes as $key => $value)
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
     }
 
     public function getIdStudent(): int

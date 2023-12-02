@@ -142,31 +142,6 @@ class Convention extends AbstractDataObject
 
     protected function getValueColonne(string $nomColonne): string
     {
-        switch ($nomColonne) {
-            case "numConvention":
-                return $this->numconvention;
-            case "origineCovention":
-                return $this->originecovention;
-            case "conventionValide":
-                return $this->conventionvalide;
-            case "convetionValideePedagogiquement":
-                return $this->convetionvalideepedagogiquement;
-            case "dateModification":
-                return $this->datemodification;
-            case "dateCreation":
-                return $this->datecreation;
-            case "idSignataire":
-                return $this->idcreation;
-            case "idInterruption":
-                return $this->idinterruption;
-            case "idUtilisateur":
-                return $this->idutilisateur;
-            case "idOffre":
-                return $this->idoffre;
-            case "Commentaire":
-                return $this->commentaire;
-            default:
-                return "";
-        }
+        return strval($$nomColonne);
     }
 }

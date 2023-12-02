@@ -6,20 +6,20 @@ class Staff extends Utilisateur
 {
     private int $idutilisateur;
     private ?string $role;
-    private string $loginLdap;
+    private string $loginldap;
     private string $prenom;
     private ?int $archiver;
     private ?int $idtuteurentreprise;
 
-    public function __construct($idutilisateur, $email, $nom, $numtelephone, $bio, $archiver, $loginLdap, $prenom, $role, ?int $idtuteurentreprise)
+    public function __construct(
+        array $attributes
+    )
     {
-        parent::__construct($idutilisateur, $email, $nom, $numtelephone, $bio);
-        $this->idutilisateur = $idutilisateur;
-        $this->role = $role;
-        $this->loginLdap = $loginLdap;
-        $this->prenom = $prenom;
-        $this->archiver = $archiver;
-        $this->idtuteurentreprise = $idtuteurentreprise;
+        parent::__construct($attributes);
+        foreach ($attributes as $key => $value)
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
     }
 
     public function getIdtuteurentreprise(): ?int
@@ -38,7 +38,7 @@ class Staff extends Utilisateur
         return $this->idutilisateur;
     }
 
-    public function setIdutilisateur(int $idutilisateur): void
+    public function setIdutilisateur(?int $idutilisateur): void
     {
         $this->idutilisateur = $idutilisateur;
     }
@@ -55,12 +55,12 @@ class Staff extends Utilisateur
 
     public function getLoginLdap(): string
     {
-        return $this->loginLdap;
+        return $this->loginldap;
     }
 
     public function setLoginLdap(string $loginLdap): void
     {
-        $this->loginLdap = $loginLdap;
+        $this->loginldap = $loginLdap;
     }
 
     public function getPrenom(): string

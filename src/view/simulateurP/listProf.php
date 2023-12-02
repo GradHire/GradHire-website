@@ -33,7 +33,7 @@ if ($listProf == null) {
                 <tr class="odd:bg-zinc-50">
                     <td class="whitespace-nowrap px-4 py-2 font-medium text-zinc-900">
                         <?php
-                        if ($prof->getNomutilisateur() !== null) echo $prof->getNomutilisateur();
+                        if ($prof->getNom() !== null) echo $prof->getNom();
                         else echo("Non renseigné");
                         ?>
                     </td>
@@ -46,13 +46,13 @@ if ($listProf == null) {
                     </td>
                     <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                         <?php
-                        if ($prof->getNumtelutilisateur() == null) echo("Non renseigné");
-                        else echo $prof->getNumtelutilisateur(); ?>
+                        if ($prof->getNumtelephone() == null) echo("Non renseigné");
+                        else echo $prof->getNumtelephone(); ?>
                     </td>
                     <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                         <?php
-                        if ($prof->getEmailutilisateur() == null) echo("Non renseigné");
-                        else echo $prof->getEmailutilisateur();
+                        if ($prof->getEmail() == null) echo("Non renseigné");
+                        else echo $prof->getEmail();
                         ?>
                     </td>
                     <td class="whitespace-nowrap px-4 py-2">

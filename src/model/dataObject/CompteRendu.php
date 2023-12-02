@@ -103,6 +103,6 @@ class CompteRendu extends AbstractDataObject
 
     protected function getValueColonne(string $nomColonne): string
     {
-        return ($$nomColonne);
+        return strval($$nomColonne);
     }
 }

@@ -13,7 +13,7 @@ use app\src\model\dataObject\Roles;
 <div class="w-full pt-12 pb-24">
     <div class="w-full flex md:flex-row flex-col  justify-between items-start">
         <div class="px-4 sm:px-0">
-            <h3 class="text-lg font-semibold leading-7 text-zinc-900"><?= $entreprise->getNomutilisateur() ?></h3>
+            <h3 class="text-lg font-semibold leading-7 text-zinc-900"><?= $entreprise->getNom() ?></h3>
             <p class="mt-1 max-w-2xl text-sm leading-6 text-zinc-500"><?= $entreprise->getTypestructure() ?></p>
         </div>
     </div>
@@ -59,7 +59,7 @@ use app\src\model\dataObject\Roles;
                 <dt class="text-sm font-medium leading-6 text-zinc-900">Numéro de téléphone</dt>
                 <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                     <?php
-                    $numTel = $entreprise->getNumtelutilisateur();
+                    $numTel = $entreprise->getNumtelephone();
                     if ($numTel != null) echo $numTel;
                     else echo("Non renseigné");
                     ?></dd>
@@ -68,7 +68,7 @@ use app\src\model\dataObject\Roles;
                 <dt class="text-sm font-medium leading-6 text-zinc-900">Email</dt>
                 <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                     <?php
-                    $email = $entreprise->getEmailutilisateur();
+                    $email = $entreprise->getEmail();
                     if ($email != null) echo "<a href=\"mailto:" . $email . "\">" . $email . "</a>";
                     else echo("Non renseigné");
                     ?></dd>

@@ -26,7 +26,7 @@ class Etudiant extends Utilisateur
         array $attributes
     )
     {
-        parent::__construct($attributes['idutilisateur'], $attributes['email'], $attributes['nom'], $attributes['numtelephone'], $attributes['bio']);
+        parent::__construct($attributes);
         foreach ($attributes as $key => $value)
             if (property_exists($this, $key)) {
                 $this->$key = $value;
@@ -48,7 +48,7 @@ class Etudiant extends Utilisateur
         return $this->idutilisateur;
     }
 
-    public function setIdUtilisateur(int $idUtilisateur): void
+    public function setIdUtilisateur(?int $idUtilisateur): void
     {
         $this->idutilisateur = $idUtilisateur;
     }
@@ -186,7 +186,7 @@ class Etudiant extends Utilisateur
 
     protected function getValueColonne(string $nomColonne): string
     {
-        return $this->$nomColonne;
+        return $this->strval($$nomColonne);
     }
 
 

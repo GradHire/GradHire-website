@@ -51,7 +51,7 @@ use app\src\model\repository\UtilisateurRepository;
             <dt class="text-sm font-medium leading-6 text-zinc-900">Nom</dt>
             <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="nom">
                 <?php
-                $nom = $utilisateur->getNomutilisateur();
+                $nom = $utilisateur->getNom();
                 if ($nom != null) echo $nom;
                 else echo("Non renseigné");
                 ?></dd>
@@ -60,7 +60,7 @@ use app\src\model\repository\UtilisateurRepository;
             <dt class="text-sm font-medium leading-6 text-zinc-900">Email</dt>
             <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="email">
                 <?php
-                $email = $utilisateur->getEmailutilisateur();
+                $email = $utilisateur->getEmail();
                 if ($email != null) echo $email;
                 else echo("Non renseigné");
                 ?></dd>
@@ -69,7 +69,7 @@ use app\src\model\repository\UtilisateurRepository;
             <dt class="text-sm font-medium leading-6 text-zinc-900">Numéro de téléphone</dt>
             <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
                 <?php
-                $tel = $utilisateur->getNumtelutilisateur();
+                $tel = $utilisateur->getNumtelephone();
                 if ($tel != null) echo $tel;
                 else echo("Non renseigné");
                 ?></dd>

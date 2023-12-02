@@ -89,7 +89,7 @@ class SoutenanceController extends AbstractController
         $etudiant = (new EtudiantRepository([]))->getByIdFull($etudiant);
 
         $form = new FormModel([
-            'etudiant' => FormModel::string("Etudiant *")->Required()->default($etudiant->getPrenom() . " " . $etudiant->getNomutilisateur()),
+            'etudiant' => FormModel::string("Etudiant *")->Required()->default($etudiant->getPrenom() . " " . $etudiant->getNom()),
             'presenttuteur' => FormModel::select("Présence du tuteur d'entreprise *", ["presentiel" => "Présentiel", "visio" => "Visio", "pas" => "Pas du tout"])->Required()->default("presentiel"),
             'renduretard' => FormModel::select("Rendu du rapport *", ["alheure" => "Le 25 avant minuit", "retard" => "En retard"])->required()->default("alheure"),
             'noterapport' => FormModel::int("Note proposée pour le rapport (hors retard éventuel) *")->required(),

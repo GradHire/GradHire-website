@@ -4,110 +4,84 @@ namespace app\src\model\dataObject;
 
 class Signataire extends AbstractDataObject
 {
-    private int $idSignataire;
-    private ?string $nomSignataire;
-    private ?string $prenomSignataire;
-    private ?string $fonctionSignataire;
-    private ?string $mailSignataire;
-    private ?string $idEntreprise;
+    private int $idsignataire;
+    private ?string $nomsignataire;
+    private ?string $prenomsignataire;
+    private ?string $fonctionsignataire;
+    private ?string $mailsignataire;
+    private ?string $identreprise;
 
-    /**
-     * Signataire constructor.
-     *
-     * @param int $idsignataire
-     * @param string|null $nomsignataire
-     * @param string|null $prenomsignataire
-     * @param string|null $fonctionsignataire
-     * @param string|null $mailsignataire
-     * @param string|null $identreprise
-     */
-    public function __construct(int $idsignataire, ?string $nomsignataire, ?string $prenomsignataire, ?string $fonctionsignataire, ?string $mailsignataire, ?string $identreprise)
+    public function __construct(array $attributes
+    )
     {
-        $this->idSignataire = $idsignataire;
-        $this->nomSignataire = $nomsignataire;
-        $this->prenomSignataire = $prenomsignataire;
-        $this->fonctionSignataire = $fonctionsignataire;
-        $this->mailSignataire = $mailsignataire;
-        $this->idEntreprise = $identreprise;
-    }
-
-    protected function getValueColonne(string $nomColonne): string
-    {
-        switch ($nomColonne) {
-            case "idSignataire":
-                return $this->getIdSignataire();
-            case "nomSignataire":
-                return $this->getNomSignataire();
-            case "prenomSignataire":
-                return $this->getPrenomSignataire();
-            case "fonctionSignataire":
-                return $this->getFonctionSignataire();
-            case "mailSignataire":
-                return $this->getMailSignataire();
-            case "idEntreprise":
-                return $this->getIdEntreprise();
-            default:
-                return "";
-        }
+        foreach ($attributes as $key => $value)
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
     }
 
     public function getIdSignataire(): int
     {
-        return $this->idSignataire;
+        return $this->idsignataire;
     }
 
     public function setIdSignataire(int $idSignataire): void
     {
-        $this->idSignataire = $idSignataire;
+        $this->idsignataire = $idSignataire;
     }
 
     public function getNomSignataire(): ?string
     {
-        return $this->nomSignataire;
+        return $this->nomsignataire;
     }
 
     public function setNomSignataire(?string $nomSignataire): void
     {
-        $this->nomSignataire = $nomSignataire;
+        $this->nomsignataire = $nomSignataire;
     }
 
     public function getPrenomSignataire(): ?string
     {
-        return $this->prenomSignataire;
+        return $this->prenomsignataire;
     }
 
     public function setPrenomSignataire(?string $prenomSignataire): void
     {
-        $this->prenomSignataire = $prenomSignataire;
+        $this->prenomsignataire = $prenomSignataire;
     }
 
     public function getFonctionSignataire(): ?string
     {
-        return $this->fonctionSignataire;
+        return $this->fonctionsignataire;
     }
 
     public function setFonctionSignataire(?string $fonctionSignataire): void
     {
-        $this->fonctionSignataire = $fonctionSignataire;
+        $this->fonctionsignataire = $fonctionSignataire;
     }
 
     public function getMailSignataire(): ?string
     {
-        return $this->mailSignataire;
+        return $this->mailsignataire;
     }
 
     public function setMailSignataire(?string $mailSignataire): void
     {
-        $this->mailSignataire = $mailSignataire;
+        $this->mailsignataire = $mailSignataire;
     }
 
     public function getIdEntreprise(): ?string
     {
-        return $this->idEntreprise;
+        return $this->identreprise;
     }
 
     public function setIdEntreprise(?string $idEntreprise): void
     {
-        $this->idEntreprise = $idEntreprise;
+        $this->identreprise = $idEntreprise;
+    }
+
+    protected function getValueColonne(string $nomColonne): string
+    {
+        return strval($$nomColonne);
     }
 }

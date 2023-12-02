@@ -13,31 +13,32 @@ use app\src\model\repository\SoutenanceRepository;
 $this->title = 'Conventions';
 ?>
 <div class="overflow-x-auto w-full pt-12 pb-24">
-	<?php
-	$filteredConventions = [];
-	foreach ($conventions as $convention) {
-		if (Auth::get_user()->role() == Roles::Enterprise && (new OffresRepository())->getById($convention->getIdOffre())->getIdutilisateur() != Auth::get_user()->id) continue;
-		elseif (Auth::get_user()->role() == Roles::Student && $convention->getIdUtilisateur() != Auth::get_user()->id) continue;
-		else {
-			$filteredConventions[] = $convention;
-		}
-	}
+    <?php
+    $filteredConventions = [];
+    foreach ($conventions as $convention) {
+        if (Auth::get_user()->role() == Roles::Enterprise && (new OffresRepository())->getById($convention->getIdOffre())->getIdutilisateur() != Auth::get_user()->id) continue;
+        elseif (Auth::get_user()->role() == Roles::Student && $convention->getIdUtilisateur() != Auth::get_user()->id) continue;
+        else {
+            $filteredConventions[] = $convention;
+        }
+    }
 
 
-	Table::createTable($filteredConventions, ["Origine Convention", "Etudiant", "IdOffre", "Validité Entreprise", "Validité Pédagogique"], function ($convention) {
-		Table::cell($convention->getOrigineConvention());
-		Table::cell((new EtudiantRepository([]))->getByIdFull($convention->getIdUtilisateur())->getPrenom() . " " . (new EtudiantRepository([]))->getByIdFull($convention->getIdUtilisateur())->getNomutilisateur());
-		Table::cell((new OffresRepository())->getById($convention->getIdOffre())->getSujet());
-		if ($convention->getConventionValidee() == "0") {
-			Table::chip("Non valide", "yellow");
-		} else if ($convention->getConventionValidee() == "1") {
-			Table::chip("Validée", "green");
-		}
-		if ($convention->getConvetionValideePedagogiquement() == "0") {
-			Table::chip("Non valide", "yellow");
-		} else if ($convention->getConvetionValideePedagogiquement() == "1") {
-			Table::chip("Validée", "green");
-		} if (Auth::has_role(Roles::Manager, Roles::Staff)) {
+    Table::createTable($filteredConventions, ["Origine Convention", "Etudiant", "IdOffre", "Validité Entreprise", "Validité Pédagogique"], function ($convention) {
+        Table::cell($convention->getOrigineConvention());
+        Table::cell((new EtudiantRepository([]))->getByIdFull($convention->getIdUtilisateur())->getPrenom() . " " . (new EtudiantRepository([]))->getByIdFull($convention->getIdUtilisateur())->getNom());
+        Table::cell((new OffresRepository())->getById($convention->getIdOffre())->getSujet());
+        if ($convention->getConventionValidee() == "0") {
+            Table::chip("Non valide", "yellow");
+        } else if ($convention->getConventionValidee() == "1") {
+            Table::chip("Validée", "green");
+        }
+        if ($convention->getConvetionValideePedagogiquement() == "0") {
+            Table::chip("Non valide", "yellow");
+        } else if ($convention->getConvetionValideePedagogiquement() == "1") {
+            Table::chip("Validée", "green");
+        }
+        if (Auth::has_role(Roles::Manager, Roles::Staff)) {
             if ($convention->getConvetionValideePedagogiquement() == "0")
                 Table::button("/validateConventionPedagogiquement/" . $convention->getNumConvention(), "Valider");
             else if ($convention->getConvetionValideePedagogiquement() == "1" && $convention->getConventionValidee() == "0")
@@ -52,8 +53,8 @@ $this->title = 'Conventions';
             else
                 Table::cell("");
 //                Table::button("/unvalidateConvention/" . $convention->getNumConvention(), "Invalider");
-        } else if(Auth::has_role(Roles::TutorTeacher, Roles::Teacher) && !SoutenanceRepository::getIfJuryExist(Application::getUser()->id(), $convention->getNumConvention()) && $convention->getConventionValide() == "1" && $convention->getConvetionValideePedagogiquement() == "1") {
-            if (!SoutenanceRepository::getIfImTheTuteurProf(Application::getUser()->id(), $convention->getNumConvention())){
+        } else if (Auth::has_role(Roles::TutorTeacher, Roles::Teacher) && !SoutenanceRepository::getIfJuryExist(Application::getUser()->id(), $convention->getNumConvention()) && $convention->getConventionValide() == "1" && $convention->getConvetionValideePedagogiquement() == "1") {
+            if (!SoutenanceRepository::getIfImTheTuteurProf(Application::getUser()->id(), $convention->getNumConvention())) {
                 Table::button("/seProposerJury/" . $convention->getNumConvention(), "Etre jury");
             } else {
                 Table::cell("Deja TuteurProf");
@@ -67,7 +68,7 @@ $this->title = 'Conventions';
         } else {
             Table::cell("");
         }
-		Table::button("/conventions/" . $convention->getNumConvention());
-	});
-	?>
+        Table::button("/conventions/" . $convention->getNumConvention());
+    });
+    ?>
 </div>

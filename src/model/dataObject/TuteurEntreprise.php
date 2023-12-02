@@ -9,13 +9,15 @@ class TuteurEntreprise extends Utilisateur
     private ?string $fonction;
     private int $identreprise;
 
-    public function __construct(int $idutilisateur, string $prenom, string $fonction, int $identreprise, string $emailutilisateur, string $nomutilisateur, string $numtelutilisateur)
+    public function __construct(
+        array $attributes
+    )
     {
-        parent::__construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur, "");
-        $this->idutilisateur = $idutilisateur;
-        $this->prenom = $prenom;
-        $this->fonction = $fonction;
-        $this->identreprise = $identreprise;
+        parent::__construct($attributes);
+        foreach ($attributes as $key => $value)
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
     }
 
     public function getIdutilisateur(): int
@@ -23,7 +25,7 @@ class TuteurEntreprise extends Utilisateur
         return $this->idutilisateur;
     }
 
-    public function setIdutilisateur(int $idutilisateur): void
+    public function setIdutilisateur(?int $idutilisateur): void
     {
         $this->idutilisateur = $idutilisateur;
     }
@@ -57,7 +59,6 @@ class TuteurEntreprise extends Utilisateur
     {
         $this->identreprise = $identreprise;
     }
-
 
 
     protected function getValueColonne(string $nomColonne): string

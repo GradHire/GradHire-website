@@ -105,14 +105,7 @@ class TuteurEntrepriseRepository extends ProRepository
     public function construireTuteurProDepuisTableau(array $tuteurData): ?TuteurEntreprise
     {
         return new TuteurEntreprise(
-            $tuteurData['idutilisateur'],
-            $tuteurData['prenom'] ?? "",
-            $tuteurData['fonction'] ?? "",
-            $tuteurData['identreprise'],
-            $tuteurData['email'] ?? "",
-            $tuteurData['nom'] ?? "",
-            $tuteurData['numtelephone'] ?? "",
-
+            $tuteurData
         );
     }
 

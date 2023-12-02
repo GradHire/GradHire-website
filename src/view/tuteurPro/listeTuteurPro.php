@@ -44,10 +44,10 @@ $modal = new Modal("Voulez vous vraiment supprimer ce tuteur ?", "Supprimer", ""
     else {
         Table::createTable($tuteurs, ["nom", "prénom", "email", "numtelephone", "fonction"], function ($tuteur) {
             $tuteur = (new TuteurEntrepriseRepository([]))->construireTuteurProDepuisTableau($tuteur);
-            Table::cell($tuteur->getNomutilisateur());
+            Table::cell($tuteur->getNom());
             Table::cell($tuteur->getPrenom());
-            Table::cell($tuteur->getEmailutilisateur());
-            Table::cell($tuteur->getNumtelutilisateur());
+            Table::cell($tuteur->getEmail());
+            Table::cell($tuteur->getNumtelephone());
             Table::cell($tuteur->getFonction());
             if (Auth::has_role(Roles::Manager, Roles::Staff)) {
                 Table::button("/utilisateurs/" . $tuteur->getIdutilisateur());
@@ -80,10 +80,10 @@ if (Auth::has_role(Roles::Manager, Roles::Staff)) {
         echo "<p>Aucun tuteur Universitaire trouvé</p>";
     } else {
         Table::createTable($tuteurs, ["nom", "prénom", "email", "numtelephone", "bio", "role", "tuteur entreprsie"], function ($tuteur) {
-            Table::cell($tuteur->getNomutilisateur());
+            Table::cell($tuteur->getNom());
             Table::cell($tuteur->getPrenom());
-            Table::cell($tuteur->getEmailutilisateur());
-            Table::cell($tuteur->getNumtelutilisateur());
+            Table::cell($tuteur->getEmail());
+            Table::cell($tuteur->getNumtelephone());
             Table::cell($tuteur->getBio());
             Table::cell($tuteur->getRole());
             Table::cell($tuteur->getIdtuteurentreprise());

@@ -83,23 +83,7 @@ class OffresRepository extends AbstractRepository
     function construireDepuisTableau(array $dataObjectFormatTableau): Offre
     {
         return new Offre(
-            $dataObjectFormatTableau['idoffre'],
-            $dataObjectFormatTableau['duree'],
-            $dataObjectFormatTableau['thematique'],
-            $dataObjectFormatTableau['sujet'],
-            $dataObjectFormatTableau['nbjourtravailhebdo'],
-            $dataObjectFormatTableau['nbheuretravailhebdo'],
-            $dataObjectFormatTableau['gratification'],
-            $dataObjectFormatTableau['avantagesnature'],
-            $dataObjectFormatTableau['datedebut'],
-            $dataObjectFormatTableau['datefin'],
-            $dataObjectFormatTableau['statut'],
-            $dataObjectFormatTableau['pourvue'],
-            $dataObjectFormatTableau['anneevisee'],
-            $dataObjectFormatTableau['annee'],
-            $dataObjectFormatTableau['idutilisateur'],
-            $dataObjectFormatTableau['datecreation'],
-            $dataObjectFormatTableau['description']
+            $dataObjectFormatTableau
         );
     }
 

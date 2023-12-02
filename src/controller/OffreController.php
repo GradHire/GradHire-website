@@ -127,7 +127,7 @@ class OffreController extends AbstractController
                 "description" => FormModel::string("Description")->default($offre->getDescription()),
             ]);
             $form = new FormModel($attr);
-            (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmailutilisateur()], "Modification de votre offre", "Votre offre a été modifiée");
+            (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmail()], "Modification de votre offre", "Votre offre a été modifiée");
             return $this->render('/offres/edit', ['offre' => $offre, 'form' => $form]);
         }
     }
@@ -148,12 +148,12 @@ class OffreController extends AbstractController
 
             if ($request->getMethod() === 'post') {
                 (new OffresRepository())->updateToArchiver($id);
-                (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmailutilisateur()], "Archivage de votre offre", "Votre offre a été archivée");
+                (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmail()], "Archivage de votre offre", "Votre offre a été archivée");
                 $offre = (new OffresRepository())->getByIdWithUser($id);
                 header("Location: /offres/" . $id);
             } elseif ($request->getMethod() === 'get') {
                 (new OffresRepository())->updateToArchiver($id);
-                (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmailutilisateur()], "Archivage de votre offre", "Votre offre a été archivée");
+                (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmail()], "Archivage de votre offre", "Votre offre a été archivée");
                 Application::redirectFromParam("/offres");
             }
             return $this->render('offres/detailOffre', ['offre' => $offre]);
@@ -226,8 +226,7 @@ class OffreController extends AbstractController
                 }
                 $anneeVisee = $duree == 1 ? "2" : "3";
                 $idUtilisateur = Auth::has_role(Roles::Enterprise) ? Application::getUser()->id() : $_POST['identreprise'];
-                $o = new Offre($id, $duree, $body["theme"], $body["sujet"], $body["nbjourtravailhebdo"], $body["nbheureparjour"], $body["gratification"], $body["avantage"], $body["datedebut"], $body["datefin"], $statut, 0, $anneeVisee, $annee, $idUtilisateur, date("Y-m-d H:i:s"), $body["description"]);
-
+                $o = new Offre(["idoffre" => $id, "duree" => $duree, "thematique" => $body["theme"], "sujet" => $body["sujet"], "nbjourtravailhebdo" => $body["nbjourtravailhebdo"], "nbheuretravailhebdo" => $body["nbheureparjour"], "gratification" => $body["gratification"], "avantagesnature" => $body["avantage"], "datedebut" => $body["datedebut"], "datefin" => $body["datefin"], "datecreation" => date("Y-m-d H:i:s"), "statut" => $statut, "pourvue" => 0, "anneevisee" => $anneeVisee, "annee" => $annee, "idutilisateur" => $idUtilisateur, "description" => $body["description"]]);
                 $typeStage = in_array("stage", $body["typeStage"]) ? "stage" : null;
                 $typeAlternance = in_array("alternance", $body["typeStage"]) ? "alternance" : null;
                 $distanciel = $_POST['distanciel'] ?? null;

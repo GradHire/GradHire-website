@@ -41,12 +41,7 @@ class SignataireRepository extends AbstractRepository
     protected function construireDepuisTableau(array $dataObjectFormatTableau): AbstractDataObject
     {
         return new Signataire(
-            $dataObjectFormatTableau['idsignataire'],
-            $dataObjectFormatTableau['nomsignataire'],
-            $dataObjectFormatTableau['prenomsignataire'],
-            $dataObjectFormatTableau['fonctionsignataire'],
-            $dataObjectFormatTableau['mailsignataire'],
-            $dataObjectFormatTableau['identreprise']);
+            $dataObjectFormatTableau);
     }
 
     public function create(mixed $nomSignataire, mixed $prenomSignataire, mixed $fonctionSignataire, mixed $mailSignataire, mixed $idEntreprise)

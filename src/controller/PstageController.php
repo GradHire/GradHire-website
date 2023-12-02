@@ -109,14 +109,14 @@ class PstageController extends AbstractController
             $formData = $_SESSION['simulateurEtu'] ?? [];
             $form = new FormModel([
                 "numEtudiant" => FormModel::string("Numéro étudiant *")->required()->min(8)->max(8)->default($formData['numEtudiant'] ?? $etudiant->getNumEtudiant()),
-                "nom" => FormModel::string("Nom *")->required()->default($formData['nom'] ?? $etudiant->getNomutilisateur()),
+                "nom" => FormModel::string("Nom *")->required()->default($formData['nom'] ?? $etudiant->getNom()),
                 "prenom" => FormModel::string("Prénom *")->required()->default($formData['prenom'] ?? $etudiant->getPrenom()),
                 "adresse" => FormModel::string("Adresse *")->required()->default($formData['adresse'] ?? $etudiant->getAdresse()),
                 "codePostal" => FormModel::string("Code postal *")->required()->length(5)->default($formData['codePostal'] ?? $etudiant->getCodePostal()),
                 "ville" => FormModel::string("Ville *")->required()->default($formData['ville'] ?? $etudiant->getNomVille()),
-                "telephone" => FormModel::phone("Téléphone *")->default($formData['telephone'] ?? $etudiant->getNumtelutilisateur()),
+                "telephone" => FormModel::phone("Téléphone *")->default($formData['telephone'] ?? $etudiant->getNumtelephone()),
                 "emailPerso" => FormModel::email("Email perso *")->required()->default($formData['emailPerso'] ?? $etudiant->getEmailPerso()),
-                "emailUniv" => FormModel::email("Email universitaire *")->required()->default($formData['emailUniv'] ?? $etudiant->getEmailutilisateur()),
+                "emailUniv" => FormModel::email("Email universitaire *")->required()->default($formData['emailUniv'] ?? $etudiant->getEmail()),
                 "CPAM" => FormModel::string("CPAM et Adresse postal *")->required()->default($formData['CPAM'] ?? ""),
                 "anneeUni" => FormModel::select("Année universitaire *", ["2023-2024" => "2023-2024", "2024-2025" => "2024-2025", "2025-2026" => "2025-2026"])->required()->default($formData['anneeUni'] ?? null),
                 "nbHeure" => FormModel::int("Nombre d'heure *")->required()->default($formData['nbHeure'] ?? 1)->min(1)

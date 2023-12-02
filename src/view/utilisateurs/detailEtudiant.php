@@ -9,7 +9,7 @@ use app\src\model\repository\UtilisateurRepository;
 <div class="w-full pt-12 pb-24">
     <div class="w-full flex md:flex-row flex-col justify-between items-start">
         <div class="px-4 sm:px-0">
-            <h3 class="text-lg font-semibold leading-7 text-zinc-900"><?= $utilisateur->getNomutilisateur() ?></h3>
+            <h3 class="text-lg font-semibold leading-7 text-zinc-900"><?= $utilisateur->getNom() ?></h3>
         </div>
         <div class="flex flex-row gap-4">
             <?php
@@ -42,7 +42,7 @@ use app\src\model\repository\UtilisateurRepository;
             <dt class="text-sm font-medium leading-6 text-zinc-900">Nom d'utilisateur</dt>
             <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="nom">
                 <?php
-                $nom = $utilisateur->getNomutilisateur();
+                $nom = $utilisateur->getNom();
                 if ($nom != null) echo $nom;
                 else echo("Non renseigné");
                 ?></dd>
@@ -69,7 +69,7 @@ use app\src\model\repository\UtilisateurRepository;
             <dt class="text-sm font-medium leading-6 text-zinc-900">Email</dt>
             <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
                 <?php
-                $email = $utilisateur->getEmailUtilisateur();
+                $email = $utilisateur->getEmail();
                 if ($email != null) echo $email;
                 else echo("Non renseigné");
                 ?></dd>
@@ -78,7 +78,7 @@ use app\src\model\repository\UtilisateurRepository;
             <dt class="text-sm font-medium leading-6 text-zinc-900">Numéro de téléphone</dt>
             <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
                 <?php
-                $tel = $utilisateur->getNumtelutilisateur();
+                $tel = $utilisateur->getNumtelephone();
                 if ($tel != null) echo $tel;
                 else echo("Non renseigné");
                 ?></dd>

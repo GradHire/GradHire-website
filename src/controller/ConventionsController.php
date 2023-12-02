@@ -19,12 +19,14 @@ use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\Request;
 use app\src\model\Response;
 
-class ConventionsController extends AbstractController {
+class ConventionsController extends AbstractController
+{
 
     /**
      * @throws ServerErrorException
      */
-    public function afficherListeConventions(Request $request): string {
+    public function afficherListeConventions(Request $request): string
+    {
         $conventions = (new ConventionRepository())->getAll();
         return $this->render('convention/listeConventions', [
             'conventions' => $conventions
@@ -34,7 +36,8 @@ class ConventionsController extends AbstractController {
     /**
      * @throws ServerErrorException
      */
-    public function detailConvention(Request $request): string {
+    public function detailConvention(Request $request): string
+    {
         $id = $request->getRouteParams()["id"];
         $convention = ConventionRepository::getById($id);
         return $this->render('convention/detailConvention', [
@@ -45,7 +48,8 @@ class ConventionsController extends AbstractController {
     /**
      * @throws ServerErrorException
      */
-    public function validateConventionPedagogiquement(Request $request): void {
+    public function validateConventionPedagogiquement(Request $request): void
+    {
         $id = $request->getRouteParams()["id"];
         ConventionRepository::validerPedagogiquement($id);
         $array = ConventionRepository::getConventionXOffreById($id);
@@ -63,7 +67,8 @@ class ConventionsController extends AbstractController {
     /**
      * @throws ServerErrorException
      */
-    public function unvalidateConventionPedagogiquement(Request $request): void {
+    public function unvalidateConventionPedagogiquement(Request $request): void
+    {
         $id = $request->getRouteParams()["id"];
         ConventionRepository::unvalidatePedagogiquement($id);
         $array = ConventionRepository::getConventionXOffreById($id);
@@ -82,7 +87,8 @@ class ConventionsController extends AbstractController {
     /**
      * @throws ServerErrorException
      */
-    public function unvalidateConvention(Request $request): void {
+    public function unvalidateConvention(Request $request): void
+    {
         $id = $request->getRouteParams()["id"];
         ConventionRepository::unvalidate($id);
         $array = ConventionRepository::getConventionXOffreById($id);
@@ -91,8 +97,8 @@ class ConventionsController extends AbstractController {
         $etudiant = EtudiantRepository::getEmailById($array["idutilisateur"]);
         $mail->send_Mail(
             [$etudiant['email']],
-            "Convention non validée par l'enreprise " . $entreprise->getNomutilisateur(),
-            "La convention n°" . $id . " de l'offre " . $array['sujet'] . " n'a pas été validée par l'entreprise " . $entreprise->getNomutilisateur()
+            "Convention non validée par l'enreprise " . $entreprise->getNom(),
+            "La convention n°" . $id . " de l'offre " . $array['sujet'] . " n'a pas été validée par l'entreprise " . $entreprise->getNom()
         );
         Application::redirectFromParam("/conventions");
     }
@@ -100,7 +106,8 @@ class ConventionsController extends AbstractController {
     /**
      * @throws ServerErrorException
      */
-    public function validateConvention(Request $request): void {
+    public function validateConvention(Request $request): void
+    {
         $id = $request->getRouteParams()["id"];
         ConventionRepository::validate($id);
         $array = ConventionRepository::getConventionXOffreById($id);
@@ -109,8 +116,8 @@ class ConventionsController extends AbstractController {
         $etudiant = EtudiantRepository::getEmailById($array["idutilisateur"]);
         $mail->send_Mail(
             [$etudiant['email']],
-            "Convention validée par l'enreprise " . $entreprise->getNomutilisateur(),
-            "La convention n°" . $id . " de l'offre " . $array['sujet'] . " a été validée par l'entreprise " . $entreprise->getNomutilisateur()
+            "Convention validée par l'enreprise " . $entreprise->getNom(),
+            "La convention n°" . $id . " de l'offre " . $array['sujet'] . " a été validée par l'entreprise " . $entreprise->getNom()
         );
         Application::redirectFromParam("/conventions");
     }

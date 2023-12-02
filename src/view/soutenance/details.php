@@ -32,7 +32,7 @@ if ($soutenance->getIdProfesseur() !== null) {
             sera
         </div>
         <div class="text-center mt-2">
-            <?php echo $tuteurProf->getPrenom() . " " . $tuteurProf->getNomutilisateur() ?>
+            <?php echo $tuteurProf->getPrenom() . " " . $tuteurProf->getNom() ?>
         </div>
     </div>
     <div class="my-8">
@@ -40,7 +40,7 @@ if ($soutenance->getIdProfesseur() !== null) {
             sera
         </div>
         <div class="text-center mt-2">
-            <?php echo $tuteurEntreprise->getPrenom() . " " . $tuteurEntreprise->getNomutilisateur() ?>
+            <?php echo $tuteurEntreprise->getPrenom() . " " . $tuteurEntreprise->getNom() ?>
         </div>
     </div>
     <?php if ($soutenance->getIdProfesseur() !== null) { ?>
@@ -48,7 +48,7 @@ if ($soutenance->getIdProfesseur() !== null) {
             <div class="font-bold text-2xl text-center ">Le professeur qui supervisera la soutenance sera
             </div>
             <div class="text-center mt-2">
-                <?php echo $prof->getPrenom() . " " . $prof->getNomutilisateur() ?>
+                <?php echo $prof->getPrenom() . " " . $prof->getNom() ?>
             </div>
         </div>
     <?php } else { ?>

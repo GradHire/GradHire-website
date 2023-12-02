@@ -36,13 +36,13 @@ class DashboardController extends AbstractController
     public function showDashboard(): string
     {
         $data = [];
-            $data['percentageBlockData1'] = (new ConventionRepository())->getPourcentageEtudiantsConventionCetteAnnee();
-            $data['numBlockData1'] = (new OffresRepository())->getStatsDensembleStageEtAlternance();
-            $data['barChartHorizontalData1'] = (new OffresRepository())->getTop5DomainesPlusDemandes();
-            $data['pieChartData1'] = (new OffresRepository())->getStatsDistributionDomaine();
-            $data['barChartVerticalData1'] = (new OffresRepository())->getMoyenneCandidaturesParOffreParDomaine();
-            $data['lineChartData1'] = (new PostulerRepository())->getStatsCandidaturesParMois();
-            $data['lastActionsData1'] = (new OffresRepository())->getOffresDernierSemaine();
+        $data['percentageBlockData1'] = (new ConventionRepository())->getPourcentageEtudiantsConventionCetteAnnee();
+        $data['numBlockData1'] = (new OffresRepository())->getStatsDensembleStageEtAlternance();
+        $data['barChartHorizontalData1'] = (new OffresRepository())->getTop5DomainesPlusDemandes();
+        $data['pieChartData1'] = (new OffresRepository())->getStatsDistributionDomaine();
+        $data['barChartVerticalData1'] = (new OffresRepository())->getMoyenneCandidaturesParOffreParDomaine();
+        $data['lineChartData1'] = (new PostulerRepository())->getStatsCandidaturesParMois();
+        $data['lastActionsData1'] = (new OffresRepository())->getOffresDernierSemaine();
         return $this->render('dashboard/dashboard', [
             'data' => $data
         ]);
@@ -149,10 +149,10 @@ class DashboardController extends AbstractController
             if ($user == null) throw new NotFoundException();
             if (!(new UtilisateurRepository([]))->isArchived($user)) {
                 (new UtilisateurRepository([]))->setUserToArchived($user, true);
-                (new MailRepository())->send_mail([$user->getEmailutilisateur()], "Archivage de votre compte", "Votre compte a été archivé");
+                (new MailRepository())->send_mail([$user->getEmail()], "Archivage de votre compte", "Votre compte a été archivé");
             } else if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::ManagerStage, Roles::ManagerAlternance)) {
                 (new UtilisateurRepository([]))->setUserToArchived($user, false);
-                (new MailRepository())->send_mail([$user->getEmailutilisateur()], "Désarchivage de votre compte", "Votre compte a été désarchivé");
+                (new MailRepository())->send_mail([$user->getEmail()], "Désarchivage de votre compte", "Votre compte a été désarchivé");
             }
             if ((string)Application::getUser()->id() === $id)
                 Auth::logout();
@@ -188,24 +188,24 @@ class DashboardController extends AbstractController
 
         foreach ($visites as $visite) {
             if ($visite == null) continue;
-                $title = "Visite de stage";
-                if (!Auth::has_role(Roles::Student)) {
-                    $supervise = SuperviseRepository::getByConvention($visite->getNumConvention());
-                    $name = EtudiantRepository::getFullNameByID($supervise->getIdStudent());
-                    $title .= " de " . $name;
+            $title = "Visite de stage";
+            if (!Auth::has_role(Roles::Student)) {
+                $supervise = SuperviseRepository::getByConvention($visite->getNumConvention());
+                $name = EtudiantRepository::getFullNameByID($supervise->getIdStudent());
+                $title .= " de " . $name;
+            }
+            $e = new Event($title, $visite->getDebutVisite(), $visite->getFinVisite(), "#1c4ed8");
+            if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage))
+                $e->setButton("Voir plus", "/visite/" . $visite->getNumConvention());
+            if ($visite->getFinVisite() < new \DateTime('now') && ConventionRepository::getIfIdTuteurs($visite->getNumConvention(), Application::getUser()->id())) {
+                if (!CompteRenduRepository::checkIfCompteRenduProfExist($visite->getNumConvention()) && Auth::has_role(Roles::TutorTeacher)) {
+                    print_r("caillou");
+                    $e->setButton("deposer compte rendu prof", "/compteRendu/" . $visite->getNumConvention());
+                } else if (!CompteRenduRepository::checkIfCompteRenduEntrepriseExist($visite->getNumConvention()) && Auth::has_role(Roles::Tutor)) {
+                    $e->setButton("deposer compte rendu entreprise", "/compteRendu/" . $visite->getNumConvention());
                 }
-                $e = new Event($title, $visite->getDebutVisite(), $visite->getFinVisite(), "#1c4ed8");
-                if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage))
-                    $e->setButton("Voir plus", "/visite/" . $visite->getNumConvention());
-                if ($visite->getFinVisite() < new \DateTime('now') && ConventionRepository::getIfIdTuteurs($visite->getNumConvention(), Application::getUser()->id())) {
-                    if (!CompteRenduRepository::checkIfCompteRenduProfExist($visite->getNumConvention()) && Auth::has_role(Roles::TutorTeacher)) {
-                        print_r("caillou");
-                        $e->setButton("deposer compte rendu prof", "/compteRendu/" . $visite->getNumConvention());
-                    } else if (!CompteRenduRepository::checkIfCompteRenduEntrepriseExist($visite->getNumConvention()) && Auth::has_role(Roles::Tutor)) {
-                        $e->setButton("deposer compte rendu entreprise", "/compteRendu/" . $visite->getNumConvention());
-                    }
-                }
-                $events[] = $e;
+            }
+            $events[] = $e;
         }
         foreach ($soutenances as $soutenance) {
             if ($soutenance == null) continue;

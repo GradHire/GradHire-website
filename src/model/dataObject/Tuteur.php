@@ -5,20 +5,22 @@ namespace app\src\model\dataObject;
 class Tuteur extends Utilisateur
 {
 
-    private int $idUtilisateur;
+    private int $idutilisateur;
     private int $archiver;
     private string $prenom;
     private ?string $fonction;
-    private int $idEntreprise;
+    private int $identreprise;
 
-    public function __construct(int $idUtilisateur, string $emailUtilisateur, string $nomUtilisateur, ?string $numTelUtilisateur, ?string $bio, int $archiver, string $prenomtuteurp, ?string $fonctiontuteurp, int $idEntreprise)
+    public function __construct(
+        array $attributes
+    )
     {
-        parent::__construct($idUtilisateur, $emailUtilisateur, $nomUtilisateur, $numTelUtilisateur, $bio);
-        $this->idUtilisateur = $idUtilisateur;
-        $this->prenom = $prenomtuteurp;
-        $this->archiver = $archiver;
-        $this->fonction = $fonctiontuteurp;
-        $this->idEntreprise = $idEntreprise;
+        parent::__construct($attributes);
+        foreach ($attributes as $key => $value)
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+
     }
 
     public function getArchiver(): int
@@ -33,12 +35,12 @@ class Tuteur extends Utilisateur
 
     public function getIdUtilisateur(): int
     {
-        return $this->idUtilisateur;
+        return $this->idutilisateur;
     }
 
-    public function setIdUtilisateur(int $idUtilisateur): void
+    public function setIdUtilisateur(?int $idUtilisateur): void
     {
-        $this->idUtilisateur = $idUtilisateur;
+        $this->idutilisateur = $idUtilisateur;
     }
 
     public function getPrenom(): ?string
@@ -63,11 +65,11 @@ class Tuteur extends Utilisateur
 
     public function getIdEntreprise(): int
     {
-        return $this->idEntreprise;
+        return $this->identreprise;
     }
 
     public function setIdEntreprise(int $idEntreprise): void
     {
-        $this->idEntreprise = $idEntreprise;
+        $this->identreprise = $idEntreprise;
     }
 }

@@ -27,7 +27,7 @@ use app\src\model\repository\TuteurRepository;
             </div>
             <div>
                 <?php
-                echo "<p>" . $entreprise->getNomutilisateur() . "</p>";
+                echo "<p>" . $entreprise->getNom() . "</p>";
                 echo "<p>" . $entreprise->getTypestructure() . "</p>";
                 echo "<p>" . $entreprise->getEffectif() . "</p>";
                 echo "<p>" . $entreprise->getSiret() . "</p>";

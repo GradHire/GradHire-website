@@ -4,62 +4,38 @@ namespace app\src\model\dataObject;
 
 class SimulationPstage extends AbstractDataObject
 {
-    private int $idSimulation;
-    private ?string $nomFichier;
+    private int $idsimulation;
+    private ?string $nomfichier;
     private ?string $statut;
-    private ?string $idEtudiant;
+    private ?string $idetudiant;
 
-    /**
-     * SimulationPstage constructor.
-     *
-     * @param int $idsimulation
-     * @param string|null $nomfichier
-     * @param string|null $statut
-     * @param string|null $idetudiant
-     */
-    public function __construct(int $idsimulation, ?string $nomfichier, ?string $statut, ?string $idetudiant)
+    public function __construct(array $attributes
+    )
     {
-        $this->idSimulation = $idsimulation;
-        $this->nomFichier = $nomfichier;
-        $this->statut = $statut;
-        $this->idEtudiant = $idetudiant;
-    }
-
-
-    protected function getValueColonne(string $nomColonne): string
-    {
-        switch ($nomColonne) {
-            case "idSimulation":
-                return $this->getIdSimulation();
-            case "nomFichier":
-                return $this->getNomFichier();
-            case "statut":
-                return $this->getStatut();
-            case "idEtudiant":
-                return $this->getIdEtudiant();
-            default:
-                return "";
-        }
+        foreach ($attributes as $key => $value)
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
     }
 
     public function getIdSimulation(): int
     {
-        return $this->idSimulation;
+        return $this->idsimulation;
     }
 
     public function setIdSimulation(int $idSimulation): void
     {
-        $this->idSimulation = $idSimulation;
+        $this->idsimulation = $idSimulation;
     }
 
     public function getNomFichier(): ?string
     {
-        return $this->nomFichier;
+        return $this->nomfichier;
     }
 
     public function setNomFichier(?string $nomFichier): void
     {
-        $this->nomFichier = $nomFichier;
+        $this->nomfichier = $nomFichier;
     }
 
     public function getStatut(): ?string
@@ -74,12 +50,17 @@ class SimulationPstage extends AbstractDataObject
 
     public function getIdEtudiant(): ?string
     {
-        return $this->idEtudiant;
+        return $this->idetudiant;
     }
 
     public function setIdEtudiant(?string $idEtudiant): void
     {
-        $this->idEtudiant = $idEtudiant;
+        $this->idetudiant = $idEtudiant;
+    }
+
+    protected function getValueColonne(string $nomColonne): string
+    {
+        return $this->strval($$nomColonne);
     }
 
 }

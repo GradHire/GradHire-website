@@ -10,9 +10,9 @@ $this->title = 'Utilisateurs';
 
 Table::createTable($utilisateurs, ["nom", "email", "numéro de téléphone"], function ($utilisateur) {
     $staffRoles = [Roles::Staff, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage, Roles::Teacher, Roles::TutorTeacher];
-    Table::cell($utilisateur->getNomutilisateur());
-    Table::cell($utilisateur->getEmailutilisateur());
-    Table::cell($utilisateur->getNumtelutilisateur());
+    Table::cell($utilisateur->getNom());
+    Table::cell($utilisateur->getEmail());
+    Table::cell($utilisateur->getNumtelephone());
     if (Auth::has_role(Roles::ChefDepartment)) {
         $options = "";
         foreach ($staffRoles as $role) {

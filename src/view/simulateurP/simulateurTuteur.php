@@ -37,8 +37,8 @@ if ($listTuteur == null) {
                 <td class="whitespace-nowrap px-4 py-2 font-medium text-zinc-900">
                     <?php
 
-                    if ($tuteur->getNomutilisateur() == null) echo("Non renseigné");
-                    else echo $tuteur->getNomutilisateur()
+                    if ($tuteur->getNom() == null) echo("Non renseigné");
+                    else echo $tuteur->getNom()
                     ?>
                 </td>
                 <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
@@ -54,10 +54,10 @@ if ($listTuteur == null) {
                 </td>
                 <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                     <?php
-                    if ($tuteur->getNumTelUtilisateur() == null) echo("Non renseigné");
-                    else echo("Tel : " . $tuteur->getNumTelUtilisateur());
-                    if ($tuteur->getEmailUtilisateur() == null) echo("Non renseigné");
-                    else echo(" / Mail : " . $tuteur->getEmailUtilisateur());
+                    if ($tuteur->getNumtelephone() == null) echo("Non renseigné");
+                    else echo("Tel : " . $tuteur->getNumtelephone());
+                    if ($tuteur->getEmail() == null) echo("Non renseigné");
+                    else echo(" / Mail : " . $tuteur->getEmail());
                     ?>
 
 

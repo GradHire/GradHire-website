@@ -97,6 +97,24 @@ class EntrepriseRepository extends ProRepository
         }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getEmailById($id): ?array
+    {
+        try {
+            $sql = "SELECT email FROM hirchytsd.entreprisevue WHERE idutilisateur = :idutilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idutilisateur' => $id]);
+            $resultat = $requete->fetch();
+
+            return $resultat;
+        } catch
+        (PDOException) {
+            throw new ServerErrorException("Erreur lors de la récupération de l'email de l'entreprise");
+        }
+    }
+
     public
     function role(): Roles
     {
@@ -125,24 +143,6 @@ class EntrepriseRepository extends ProRepository
         }
     }
 
-    /**
-     * @throws ServerErrorException
-     */
-    public static function getEmailById($id): ?array
-    {
-        try {
-            $sql = "SELECT email FROM hirchytsd.entreprisevue WHERE idutilisateur = :idutilisateur";
-            $requete = Database::get_conn()->prepare($sql);
-            $requete->execute(['idutilisateur' => $id]);
-            $resultat = $requete->fetch();
-
-            return $resultat;
-        } catch
-        (PDOException) {
-            throw new ServerErrorException("Erreur lors de la récupération de l'email de l'entreprise");
-        }
-    }
-
     protected
     function getNomTable(): string
     {
@@ -153,22 +153,7 @@ class EntrepriseRepository extends ProRepository
     function construireDepuisTableau(array $dataObjectFormatTableau): Entreprise
     {
         return new Entreprise(
-            $dataObjectFormatTableau['idutilisateur'],
-            $dataObjectFormatTableau['statutjuridique'] ?? "",
-            $dataObjectFormatTableau['bio'] ?? "",
-            $dataObjectFormatTableau['typestructure'] ?? "",
-            $dataObjectFormatTableau['effectif'] ?? "",
-            $dataObjectFormatTableau['codenaf'] ?? "",
-            $dataObjectFormatTableau['fax'] ?? "",
-            $dataObjectFormatTableau['siteweb'] ?? "",
-            $dataObjectFormatTableau['siret'] ?? 0,
-            $dataObjectFormatTableau['email'] ?? "",
-            $dataObjectFormatTableau['nom'] ?? "",
-            $dataObjectFormatTableau['numtelephone'] ?? "",
-            $dataObjectFormatTableau['adresse'] ?? "",
-            $dataObjectFormatTableau['codepostal'] ?? "",
-            $dataObjectFormatTableau['nomville'] ?? "",
-            $dataObjectFormatTableau['pays'] ?? ""
+            $dataObjectFormatTableau
         );
     }
 

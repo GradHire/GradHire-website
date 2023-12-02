@@ -4,65 +4,70 @@ namespace app\src\model\dataObject;
 
 class Utilisateur extends AbstractDataObject
 {
-    private ?int $idUtilisateur;
-    private ?string $numTelUtilisateur;
-    private string $nomUtilisateur;
-    private string $emailUtilisateur;
+    private ?int $idutilisateur;
+    private ?string $numtelephone;
+    private string $nom;
+    private string $email;
     private ?string $bio;
 
-    /**
-     * @param string|null $numtelutilisateur
-     * @param string $nomutilisateur
-     * @param string $emailutilisateur
-     * @param ?int $idutilisateur
-     */
-    public function __construct($idutilisateur, $emailutilisateur, $nomutilisateur, $numtelutilisateur, $bio)
+
+    public function __construct(array $attributes)
     {
-        $this->idUtilisateur = $idutilisateur;
-        $this->emailUtilisateur = $emailutilisateur;
-        $this->nomUtilisateur = $nomutilisateur;
-        $this->numTelUtilisateur = $numtelutilisateur;
-        $this->bio = $bio;
+        $validAttributes = array_intersect_key(
+            $attributes,
+            array_flip(
+                array_filter(
+                    array_keys(get_class_vars(self::class)),
+                    function ($key) {
+                        return !is_null($key);
+                    }
+                )
+            )
+        );
+
+        foreach ($validAttributes as $key => $value) {
+            $this->$key = $value;
+        }
     }
 
-    public function getNumtelutilisateur(): ?string
+    public function getIdutilisateur(): ?int
     {
-        return $this->numTelUtilisateur;
+        return $this->idutilisateur;
     }
 
-    public function setNumtelutilisateur(?string $numtelutilisateur): void
+    public function setIdutilisateur(?int $idutilisateur): void
     {
-        $this->numTelUtilisateur = $numtelutilisateur;
+        $this->idutilisateur = $idutilisateur;
     }
 
-    public function getNomutilisateur(): string
+    public function getNumtelephone(): ?string
     {
-        return $this->nomUtilisateur;
+        return $this->numtelephone;
     }
 
-    public function setNomutilisateur(string $nomutilisateur): void
+    public function setNumtelephone(?string $numtelephone): void
     {
-        $this->nomUtilisateur = $nomutilisateur;
+        $this->numtelephone = $numtelephone;
     }
 
-    public function getEmailutilisateur(): string
+    public function getNom(): string
     {
-        return $this->emailUtilisateur;
+        return $this->nom;
     }
 
-    public function setEmailutilisateur(string $emailutilisateur): void
+    public function setNom(string $nom): void
     {
-        $this->emailUtilisateur = $emailutilisateur;
+        $this->nom = $nom;
     }
 
-    public function getIdutilisateur(): int
+    public function getEmail(): string
     {
-        return $this->idUtilisateur;
+        return $this->email;
     }
 
-    public function setIdutilisateur(int $idutilisateur): void
+    public function setEmail(string $email): void
     {
-        $this->idUtilisateur = $idutilisateur;
+        $this->email = $email;
     }
 
     public function getBio(): ?string
@@ -74,6 +79,7 @@ class Utilisateur extends AbstractDataObject
     {
         $this->bio = $bio;
     }
+
 
     protected function getValueColonne(string $nomColonne): string
     {

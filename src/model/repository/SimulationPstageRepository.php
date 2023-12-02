@@ -25,10 +25,7 @@ class SimulationPstageRepository extends AbstractRepository
     protected function construireDepuisTableau(array $dataObjectFormatTableau): AbstractDataObject
     {
         return new SimulationPstage(
-            $dataObjectFormatTableau['idsimulation'],
-            $dataObjectFormatTableau['nomfichier'],
-            $dataObjectFormatTableau['statut'],
-            $dataObjectFormatTableau['idetudiant']
+            $dataObjectFormatTableau
         );
     }
 

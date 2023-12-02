@@ -60,13 +60,7 @@ class ServiceAccueilRepository extends AbstractRepository
     protected function construireDepuisTableau(array $dataObjectFormatTableau): ServiceAccueil
     {
         return new ServiceAccueil(
-            $dataObjectFormatTableau['idservice'],
-            $dataObjectFormatTableau['nomservice'],
-            $dataObjectFormatTableau['adresse'],
-            $dataObjectFormatTableau['adressecedex'],
-            $dataObjectFormatTableau['adresseresidence'],
-            $dataObjectFormatTableau['idville'],
-            $dataObjectFormatTableau['identreprise']
+            $dataObjectFormatTableau
         );
     }
 

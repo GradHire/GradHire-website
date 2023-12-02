@@ -6,6 +6,7 @@ use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\OffresRepository;
+
 if (Auth::has_role(Roles::Enterprise) && Auth::get_user()->id() != (new OffresRepository())->getById($convention['idoffre'])->getIdutilisateur()) {
     throw new Exception("Vous n'avez pas le droit d'accéder à cette convention car elle n'appartient pas à votre entreprise.");
 }
@@ -93,7 +94,7 @@ Non valide
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-zinc-900">Etudiant</dt>
                 <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><a
-                            href="/entreprises/<?= $convention['idutilisateur'] ?>"><?= (new EntrepriseRepository([]))->getUserById($convention['idutilisateur'])->getNomutilisateur() ?></a>
+                            href="/entreprises/<?= $convention['idutilisateur'] ?>"><?= (new EntrepriseRepository([]))->getUserById($convention['idutilisateur'])->getNom() ?></a>
             </div>
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-zinc-900">idOffre</dt>
@@ -110,7 +111,7 @@ Non valide
         </dl>
 
         <div class="flex justify-center mt-8">
-            <a href="/visite/<?php echo $convention['numconvention']?>"
+            <a href="/visite/<?php echo $convention['numconvention'] ?>"
                class="btn btn-primary bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Voir la
                 date de
                 visite</a>

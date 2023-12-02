@@ -12,16 +12,16 @@ class Offre extends AbstractDataObject
     private ?string $duree;
     private ?string $thematique;
     private ?string $sujet;
-    private ?int $nbJourTravailHebdo;
-    private ?float $nbHeureTravailHebdo;
+    private ?int $nbjourtravailhebdo;
+    private ?float $nbheuretravailhebdo;
     private ?float $gratification;
-    private ?string $avantageNature;
-    private ?string $dateDebut;
-    private ?string $dateFin;
-    private ?string $dateCreation;
+    private ?string $avantagesnature;
+    private ?string $datedebut;
+    private ?string $datefin;
+    private ?string $datecreation;
     private ?string $statut;
     private ?string $pourvue;
-    private ?string $anneeVisee;
+    private ?string $anneevisee;
     private ?string $annee;
     private int $idutilisateur;
     private ?string $description;
@@ -31,43 +31,13 @@ class Offre extends AbstractDataObject
 //    private ?int $alternance;
     public function __construct
     (
-        $idOffre,
-        $duree,
-        $thematique,
-        $sujet,
-        $nbJourTravailHebdo,
-        $nbHeureTravailHebdo,
-        $gratification,
-        $avantageNature,
-        $dateDebut,
-        $dateFin,
-        $statut,
-        $pourvue,
-        $anneeVisee,
-        $annee,
-        $idUtilisateur,
-        $dateCreation,
-        $description
+        array $attributes
     )
     {
-        $this->idoffre = $idOffre;
-        $this->duree = $duree;
-        $this->thematique = $thematique;
-        $this->sujet = $sujet;
-        $this->nbJourTravailHebdo = $nbJourTravailHebdo;
-        $this->nbHeureTravailHebdo = $nbHeureTravailHebdo;
-        $this->gratification = $gratification;
-        $this->avantageNature = $avantageNature;
-        $this->dateDebut = $dateDebut;
-        $this->dateFin = $dateFin;
-        $this->statut = $statut;
-        $this->pourvue = $pourvue;
-        $this->anneeVisee = $anneeVisee;
-        $this->annee = $annee;
-        $this->idutilisateur = $idUtilisateur;
-        $this->dateCreation = $dateCreation;
-        $this->description = $description;
-
+        foreach ($attributes as $key => $value)
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
         $this->adresse = (new EntrepriseRepository([]))->getByIdFull($this->idutilisateur)->getAdresse();
     }
 
@@ -153,22 +123,22 @@ class Offre extends AbstractDataObject
 
     public function getNbJourTravailHebdo(): ?int
     {
-        return $this->nbJourTravailHebdo;
+        return $this->nbjourtravailhebdo;
     }
 
     public function setNbJourTravailHebdo(?int $nbJourTravailHebdo): void
     {
-        $this->nbJourTravailHebdo = $nbJourTravailHebdo;
+        $this->nbjourtravailhebdo = $nbJourTravailHebdo;
     }
 
     public function getNbHeureTravailHebdo(): ?float
     {
-        return $this->nbHeureTravailHebdo;
+        return $this->nbheuretravailhebdo;
     }
 
     public function setNbHeureTravailHebdo(?float $nbHeureTravailHebdo): void
     {
-        $this->nbHeureTravailHebdo = $nbHeureTravailHebdo;
+        $this->nbheuretravailhebdo = $nbHeureTravailHebdo;
     }
 
     public function getGratification(): ?float
@@ -183,32 +153,32 @@ class Offre extends AbstractDataObject
 
     public function getAvantageNature(): ?string
     {
-        return $this->avantageNature;
+        return $this->avantagesnature;
     }
 
     public function setAvantageNature(?string $avantageNature): void
     {
-        $this->avantageNature = $avantageNature;
+        $this->avantagesnature = $avantageNature;
     }
 
     public function getDateDebut(): ?string
     {
-        return $this->dateDebut;
+        return $this->datedebut;
     }
 
     public function setDateDebut(?string $dateDebut): void
     {
-        $this->dateDebut = $dateDebut;
+        $this->datedebut = $dateDebut;
     }
 
     public function getDateFin(): ?string
     {
-        return $this->dateFin;
+        return $this->datefin;
     }
 
     public function setDateFin(?string $dateFin): void
     {
-        $this->dateFin = $dateFin;
+        $this->datefin = $dateFin;
     }
 
     public function getStatut(): ?string
@@ -233,12 +203,12 @@ class Offre extends AbstractDataObject
 
     public function getAnneeVisee(): ?string
     {
-        return $this->anneeVisee;
+        return $this->anneevisee;
     }
 
     public function setAnneeVisee(?string $anneeVisee): void
     {
-        $this->anneeVisee = $anneeVisee;
+        $this->anneevisee = $anneeVisee;
     }
 
     public function getAnnee(): ?string
@@ -253,12 +223,12 @@ class Offre extends AbstractDataObject
 
     public function getDateCreation(): ?string
     {
-        return $this->dateCreation;
+        return $this->datecreation;
     }
 
     public function setDateCreation(?string $dateCreation): void
     {
-        $this->dateCreation = $dateCreation;
+        $this->datecreation = $dateCreation;
     }
 
     public function getIdutilisateur(): int
@@ -286,14 +256,14 @@ class Offre extends AbstractDataObject
         return (new OffresRepository())->checkIfUserPostuled($this);
     }
 
-    protected function getValueColonne(string $nomColonne): string
-    {
-        return $this->$nomColonne;
-    }
-
     public function getNomEntreprise(): string
     {
-        return (new EntrepriseRepository([]))->getByIdFull($this->idutilisateur)->getNomutilisateur();
+        return (new EntrepriseRepository([]))->getByIdFull($this->idutilisateur)->getNom();
+    }
+
+    protected function getValueColonne(string $nomColonne): string
+    {
+        return $this->strval($$nomColonne);
     }
 
 }

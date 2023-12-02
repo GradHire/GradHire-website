@@ -110,8 +110,8 @@ $signataire = $_SESSION['signataire'];
 
             echo "<p class='mb-2'>" . $accueil->getNomService() . "</p>";
             echo "<p class='mb-2'>" . $accueil->getAdresse() . $accueil->getCodePostal() . $accueil->getCommune() . "</p>";
-            echo "<p class='mb-2'>" . $tuteur->getNomutilisateur() . " " . $tuteur->getPrenom() . "</p>";
-            echo "<p class='mb-2'>" . $tuteur->getEmailutilisateur() . "</p>";
+            echo "<p class='mb-2'>" . $tuteur->getNom() . " " . $tuteur->getPrenom() . "</p>";
+            echo "<p class='mb-2'>" . $tuteur->getEmail() . "</p>";
             echo "<p class='mb-2'>" . $signataire . "</p>";
             ?>
 

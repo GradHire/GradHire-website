@@ -40,7 +40,7 @@ if ($listEntreprise == null) {
                 foreach ($listEntreprise as $entreprise) { ?>
                     <tr class="odd:bg-zinc-50">
                         <td class="whitespace-nowrap px-4 py-2 font-medium text-zinc-900">
-                            <?= $entreprise->getNomutilisateur(); ?>
+                            <?= $entreprise->getNom(); ?>
                         </td>
                         <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                             <?php

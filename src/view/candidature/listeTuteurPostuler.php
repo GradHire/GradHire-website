@@ -33,8 +33,10 @@ use app\src\model\repository\TuteurRepository;
         <tbody class="divide-y divide-zinc-200">
         <?php
         if (!empty($postulations)) {
-        foreach ($postulations as $prof){
-            $professeur = (new StaffRepository([]))->getByIdFull($prof["idutilisateur"]);
+        foreach ($postulations
+
+        as $prof){
+        $professeur = (new StaffRepository([]))->getByIdFull($prof["idutilisateur"]);
         ?>
         <tr class="odd:bg-zinc-50">
             <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
@@ -53,14 +55,14 @@ use app\src\model\repository\TuteurRepository;
             </td>
             <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                 <?php
-                $nom = $professeur->getNomutilisateur();
+                $nom = $professeur->getNom();
                 if ($nom != null) echo $nom;
                 else echo("Non renseigné");
                 ?>
             </td>
             <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
                 <?php
-                $mail = $professeur->getEmailutilisateur();
+                $mail = $professeur->getEmail();
                 if ($mail != null) echo $mail;
                 else echo("Non renseigné");
                 ?>
@@ -72,23 +74,23 @@ use app\src\model\repository\TuteurRepository;
                 ?>
             </td>
             <?php
-                if (!(new TuteurRepository([]))->getIfTuteurAlreadyExist($professeur->getIdutilisateur(), $idOffre, $prof['idetudiant'])) {
-                    ?>
-                    <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
-                        <a href="/postuler/accepter_as_tuteur/<?php echo $professeur->getIdUtilisateur(); ?>/<?php echo $idOffre; ?>/<?php echo $prof['idetudiant']; ?>"
-                           class="flex w-full rounded bg-green-600 px-4 py-2 text-xs font-medium text-white hover:bg-green-700 justify-center">
-                            Accepter comme tuteur </a>
-                    </td>
-                    <?php
-                } elseif ((new TuteurRepository([]))->getIfTuteurAlreadyExist($professeur->getIdutilisateur(), $idOffre, $prof['idetudiant'])){
-                    ?>
-                    <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
-                        <a href="/postuler/unaccepte_as_tuteur/<?php echo $professeur->getIdUtilisateur(); ?>/<?php echo $idOffre; ?>/<?php echo $prof['idetudiant']; ?>"
-                           class="flex w-full rounded bg-orange-600 px-4 py-2 text-xs font-medium text-white hover:bg-orange-700 justify-center">
-                            Annuler Validation </a>
-                    </td>
-                    <?php
-                }
+            if (!(new TuteurRepository([]))->getIfTuteurAlreadyExist($professeur->getIdutilisateur(), $idOffre, $prof['idetudiant'])) {
+                ?>
+                <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
+                    <a href="/postuler/accepter_as_tuteur/<?php echo $professeur->getIdUtilisateur(); ?>/<?php echo $idOffre; ?>/<?php echo $prof['idetudiant']; ?>"
+                       class="flex w-full rounded bg-green-600 px-4 py-2 text-xs font-medium text-white hover:bg-green-700 justify-center">
+                        Accepter comme tuteur </a>
+                </td>
+                <?php
+            } elseif ((new TuteurRepository([]))->getIfTuteurAlreadyExist($professeur->getIdutilisateur(), $idOffre, $prof['idetudiant'])) {
+                ?>
+                <td class="whitespace-nowrap px-4 py-2 text-zinc-700">
+                    <a href="/postuler/unaccepte_as_tuteur/<?php echo $professeur->getIdUtilisateur(); ?>/<?php echo $idOffre; ?>/<?php echo $prof['idetudiant']; ?>"
+                       class="flex w-full rounded bg-orange-600 px-4 py-2 text-xs font-medium text-white hover:bg-orange-700 justify-center">
+                        Annuler Validation </a>
+                </td>
+                <?php
+            }
             ?>
             <?php if (empty($postulations)) {
                 echo "<h2>Ils n'y a aucun tuteurs pour cette postulation.</h2>";

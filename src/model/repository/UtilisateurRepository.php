@@ -127,11 +127,7 @@ class UtilisateurRepository extends AbstractRepository
     protected function construireDepuisTableau(array $dataObjectFormatTableau): Utilisateur
     {
         return new Utilisateur(
-            $dataObjectFormatTableau['idutilisateur'],
-            $dataObjectFormatTableau['email'] ?? "",
-            $dataObjectFormatTableau['nom'] ?? "",
-            $dataObjectFormatTableau['numtelephone'] ?? "",
-            $dataObjectFormatTableau['bio'] ?? "",
+            $dataObjectFormatTableau
         );
     }
 

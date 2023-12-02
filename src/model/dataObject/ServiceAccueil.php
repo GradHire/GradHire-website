@@ -6,95 +6,61 @@ use app\src\model\repository\ServiceAccueilRepository;
 
 class ServiceAccueil extends AbstractDataObject
 {
-    private int $idService;
-    private ?string $nomService;
+    private int $idservice;
+    private ?string $nomservice;
     private ?string $adresse;
-    private ?string $adresseCedex;
-    private ?string $adresseResidence;
-    private ?int $idVille;
-    private ?int $idEntreprise;
+    private ?string $adressecedex;
+    private ?string $adresseresidence;
+    private ?int $idville;
+    private ?int $identreprise;
 
-    /**
-     * ServiceAccueil constructor.
-     *
-     * @param int $idservice
-     * @param string|null $nomservice
-     * @param string|null $adresse
-     * @param string|null $adressecedex
-     * @param string|null $adresseresidence
-     * @param int|null $idville
-     * @param int|null $identreprise
-     */
-    public function __construct(int $idservice, ?string $nomservice, ?string $adresse, ?string $adressecedex, ?string $adresseresidence, ?int $idville, ?int $identreprise)
+
+    public function __construct(
+        array $attributes
+    )
     {
-        $this->idService = $idservice;
-        $this->nomService = $nomservice;
-        $this->adresse = $adresse;
-        $this->adresseCedex = $adressecedex;
-        $this->adresseResidence = $adresseresidence;
-        $this->idVille = $idville;
-        $this->idEntreprise = $identreprise;
+        foreach ($attributes as $key => $value)
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
     }
 
     public function getCommune(): ?string
     {
         $servaccueil = new ServiceAccueilRepository();
-        return $servaccueil->getCommune($this->idEntreprise, $this->nomService);
+        return $servaccueil->getCommune($this->identreprise, $this->nomservice);
     }
 
     public function getCodePostal(): ?string
     {
         $servaccueil = new ServiceAccueilRepository();
-        return $servaccueil->getCodePostal($this->idEntreprise, $this->nomService);
+        return $servaccueil->getCodePostal($this->identreprise, $this->nomservice);
     }
 
     public function getPays(): ?string
     {
         $servaccueil = new ServiceAccueilRepository();
-        return $servaccueil->getPays($this->idEntreprise, $this->nomService);
-    }
-
-    protected function getValueColonne(string $nomColonne): string
-    {
-        switch ($nomColonne) {
-            case "idService":
-                return $this->getIdService();
-            case "nomService":
-                return $this->getNomService();
-            case "adresse":
-                return $this->getAdresse();
-            case "adresseCedex":
-                return $this->getAdresseCedex();
-            case "adresseResidence":
-                return $this->getAdresseResidence();
-            case "idVille":
-                return $this->getIdVille();
-            case "idEntreprise":
-                return $this->getIdEntreprise();
-            default:
-                return "";
-        }
-
+        return $servaccueil->getPays($this->identreprise, $this->nomservice);
     }
 
     public function getIdService(): int
     {
-        return $this->idService;
+        return $this->idservice;
     }
 
     public function setIdService(int $idService): void
     {
-        $this->idService = $idService;
+        $this->idservice = $idService;
     }
 
     public function getNomService(): ?string
     {
-        return $this->nomService;
+        return $this->nomservice;
     }
 
     public function setNomService(?string $nomService): void
     {
-        $this->nomService = $nomService;
+        $this->nomservice = $nomService;
     }
 
     public function getAdresse(): ?string
@@ -109,41 +75,46 @@ class ServiceAccueil extends AbstractDataObject
 
     public function getAdresseCedex(): ?string
     {
-        return $this->adresseCedex;
+        return $this->adressecedex;
     }
 
     public function setAdresseCedex(?string $adresseCedex): void
     {
-        $this->adresseCedex = $adresseCedex;
+        $this->adressecedex = $adresseCedex;
     }
 
     public function getAdresseResidence(): ?string
     {
-        return $this->adresseResidence;
+        return $this->adresseresidence;
     }
 
     public function setAdresseResidence(?string $adresseResidence): void
     {
-        $this->adresseResidence = $adresseResidence;
+        $this->adresseresidence = $adresseResidence;
     }
 
     public function getIdVille(): ?int
     {
-        return $this->idVille;
+        return $this->idville;
     }
 
     public function setIdVille(?int $idVille): void
     {
-        $this->idVille = $idVille;
+        $this->idville = $idVille;
     }
 
     public function getIdEntreprise(): ?int
     {
-        return $this->idEntreprise;
+        return $this->identreprise;
     }
 
     public function setIdEntreprise(?int $idEntreprise): void
     {
-        $this->idEntreprise = $idEntreprise;
+        $this->identreprise = $idEntreprise;
+    }
+
+    protected function getValueColonne(string $nomColonne): string
+    {
+        return strval($$nomColonne);
     }
 }

@@ -58,31 +58,8 @@ class StaffRepository extends LdapRepository
     protected
     function construireDepuisTableau(array $dataObjectFormatTableau): Staff
     {
-        if (isset($dataObjectFormatTableau["idtuteurentreprise"])) {
-            return new Staff(
-                $dataObjectFormatTableau["idutilisateur"],
-                $dataObjectFormatTableau["email"],
-                $dataObjectFormatTableau["nom"],
-                $dataObjectFormatTableau["numtelephone"],
-                $dataObjectFormatTableau["bio"],
-                $dataObjectFormatTableau["archiver"],
-                $dataObjectFormatTableau["loginldap"],
-                $dataObjectFormatTableau["prenom"],
-                $dataObjectFormatTableau["role"],
-                $dataObjectFormatTableau["idtuteurentreprise"]
-            );
-        } else
         return new Staff(
-            $dataObjectFormatTableau["idutilisateur"],
-            $dataObjectFormatTableau["email"],
-            $dataObjectFormatTableau["nom"],
-            $dataObjectFormatTableau["numtelephone"],
-            $dataObjectFormatTableau["bio"],
-            $dataObjectFormatTableau["archiver"],
-            $dataObjectFormatTableau["loginldap"],
-            $dataObjectFormatTableau["prenom"],
-            $dataObjectFormatTableau["role"],
-            null
+            $dataObjectFormatTableau
         );
     }
 
@@ -180,19 +157,7 @@ class StaffRepository extends LdapRepository
     protected
     function getNomColonnes(): array
     {
-        return [
-            "idutilisateur",
-            "role",
-            "email",
-            "loginldap",
-            "prenom",
-            "email",
-            "nom",
-            "numtelephone",
-            "mailuni",
-            "bio",
-            "archiver"
-        ];
+        return ["idutilisateur", "role", "loginLdap", "prenom", "archiver", "idtuteurentreprise"];
     }
 
     protected

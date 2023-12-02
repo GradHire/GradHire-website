@@ -51,13 +51,7 @@ class PostulerRepository extends AbstractRepository
     protected function construireDepuisTableau(array $dataObjectFormatTableau): Postuler
     {
         return new Postuler(
-            $dataObjectFormatTableau['sujet'],
-            $dataObjectFormatTableau['nom'],
-            $dataObjectFormatTableau['dates'],
-            $dataObjectFormatTableau['idoffre'],
-            $dataObjectFormatTableau['idutilisateur'],
-            $dataObjectFormatTableau['identreprise'],
-            $dataObjectFormatTableau['statut']
+            $dataObjectFormatTableau
         );
     }
 
