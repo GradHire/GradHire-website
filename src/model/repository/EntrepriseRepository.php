@@ -289,12 +289,13 @@ class EntrepriseRepository extends ProRepository
         return $resultat['pays'];
     }
 
-    public function create(mixed $nomEnt, mixed $email, mixed $tel, string $string, mixed $type, mixed $effectif, mixed $codeNaf, mixed $fax, mixed $web, mixed $voie, mixed $cedex, mixed $residence, mixed $codePostal, mixed $pays, mixed $ville, mixed $siret)
+    public function create(mixed $nomEnt, mixed $email, mixed $tel, string $string, mixed $type, mixed $effectif, mixed $codeNaf, mixed $fax, mixed $web, mixed $voie, mixed $cedex, mixed $residence, mixed $codePostal, mixed $pays, mixed $nomville, mixed $siret)
     {
-        $sql = "SELECT creerEntImp(:nomEnt, :email, :tel, :string, :type, :effectif, :codeNaf, :fax, :web, :voie, :cedex, :residence, :codePostal, :pays, :ville, :siret) ";
+        $sql = "SELECT creerentimp(:nomEnt, :email, :tel, :string, :type, :effectif, :codeNaf, :fax, :web, :voie, :cedex, :residence, :codePostal, :pays, :nomville, :siret) ";
         $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['nomEnt' => $nomEnt, 'email' => $email, 'tel' => $tel, 'string' => $string, 'type' => $type, 'effectif' => $effectif, 'codeNaf' => $codeNaf, 'fax' => $fax, 'web' => $web, 'voie' => $voie, 'cedex' => $cedex, 'residence' => $residence, 'codePostal' => $codePostal, 'pays' => $pays, 'nomville' => $ville, 'siret' => $siret]);
+        $requete->execute(['nomEnt' => $nomEnt, 'email' => $email, 'tel' => $tel, 'string' => $string, 'type' => $type, 'effectif' => $effectif, 'codeNaf' => $codeNaf, 'fax' => $fax, 'web' => $web, 'voie' => $voie, 'cedex' => $cedex, 'residence' => $residence, 'codePostal' => $codePostal, 'pays' => $pays, 'nomville' => $nomville, 'siret' => $siret]);
     }
+
 
     protected
     function getNomColonnes(): array

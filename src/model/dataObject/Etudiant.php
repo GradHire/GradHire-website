@@ -8,7 +8,7 @@ class Etudiant extends Utilisateur
 {
     private static int $convId = 0;
     private int $idutilisateur;
-    private string $prenom;
+    private ?string $prenom;
     private ?string $loginLDAP;
     private ?string $numetudiant;
     private ?string $adresse;
