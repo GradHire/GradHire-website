@@ -150,7 +150,7 @@ if (!isset($_COOKIE['sidebar_open']) || ($_COOKIE['sidebar_open'] == 'true')) $i
         </button>
     </div>
     <div class="flex-col flex w-full">
-        <div class="sticky top-0 z-10 flex items-start justify-between flex-row gap-4 w-full py-2 border-b bg-white">
+        <div class="sticky top-0 z-10 flex items-start justify-between flex-row gap-4 w-full py-2 border-b bg-white pr-4">
             <div class="w-full flex flex-row items-center justify-between h-[40px] px-4">
                 <span class="text-lg tracking-widest font-bold uppercase first-letter:text-2xl first-letter:font-extrabold ">
                 <?= $this->title ?>
