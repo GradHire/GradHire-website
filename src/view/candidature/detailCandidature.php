@@ -14,7 +14,7 @@ $offre = (new OffresRepository())->getById($candidatures->getIdoffre());
 
 ?>
 
-<div class="mt-6 border-zinc-100 pt-12 pb-24">
+<div class="mt-6 border-zinc-100 pt-12 pb-24 mx-auto max-w-md">
     <?php
     echo '<h2 class="font-bold text-lg">Candidature de 
 ' . $etudiant->getPrenom() . " " . $etudiant->getNom() . '
@@ -107,7 +107,7 @@ if ($candidatures->getStatut() == "en attente" && Auth::has_role(Roles::Enterpri
 }
 
 if (Auth::has_role(Roles::Student)) {
-    echo '<a href="/candidatures/contacter/' . $offre->getIdoffre() . '" class="inline-block rounded bg-zinc-600 px-4 py-2 text-md mb-4 font-medium text-white hover:bg-zinc-700">Contacter l\'entreprise</a>';
+    echo '<a href="/candidatures/contacter/' . $offre->getIdoffre() . '" class="inline-block rounded bg-zinc-600 px-4 py-2 text-md mb-4 font-medium text-white hover:bg-zinc-700 mx-auto max-w-md">Contacter l\'entreprise</a>';
 }
 ?>
 
