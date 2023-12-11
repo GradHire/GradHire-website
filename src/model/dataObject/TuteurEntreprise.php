@@ -60,10 +60,13 @@ class TuteurEntreprise extends Utilisateur
         $this->identreprise = $identreprise;
     }
 
+    public function getRole(): ?string
+    {
+        return "tuteurEntreprise";
+    }
 
     protected function getValueColonne(string $nomColonne): string
     {
         return $this->$nomColonne;
     }
-
 }

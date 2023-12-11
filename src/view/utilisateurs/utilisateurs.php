@@ -1,18 +1,22 @@
 <?php
-/** @var $utilisateurs \app\src\model\dataObject\Utilisateur */
+/** @var $utilisateurs */
 
 use app\src\core\components\Table;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
+use app\src\model\repository\EntrepriseRepository;
+use app\src\model\repository\EtudiantRepository;
+use app\src\model\repository\StaffRepository;
+use app\src\model\repository\TuteurRepository;
 
 $this->title = 'Utilisateurs';
 
-
-Table::createTable($utilisateurs, ["nom", "email", "numéro de téléphone"], function ($utilisateur) {
+Table::createTable($utilisateurs, ["nom", "email", "numéro de téléphone", "Role"], function ($utilisateur) {
     $staffRoles = [Roles::Staff, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage, Roles::Teacher, Roles::TutorTeacher];
     Table::cell($utilisateur->getNom());
     Table::cell($utilisateur->getEmail());
     Table::cell($utilisateur->getNumtelephone());
+    Table::cell($utilisateur->getRole());
     if (Auth::has_role(Roles::ChefDepartment)) {
         $options = "";
         foreach ($staffRoles as $role) {

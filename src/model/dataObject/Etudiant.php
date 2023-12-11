@@ -183,11 +183,13 @@ class Etudiant extends Utilisateur
         $this->annee = $annee;
     }
 
+    public function getRole(): ?string
+    {
+        return "Etudiant";
+    }
 
     protected function getValueColonne(string $nomColonne): string
     {
         return $this->strval($$nomColonne);
     }
-
-
 }

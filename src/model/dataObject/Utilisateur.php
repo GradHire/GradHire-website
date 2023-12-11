@@ -80,6 +80,10 @@ class Utilisateur extends AbstractDataObject
         $this->bio = $bio;
     }
 
+    public function getRole(): ?string
+    {
+        return "utilisateur";
+    }
 
     protected function getValueColonne(string $nomColonne): string
     {
