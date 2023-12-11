@@ -133,52 +133,6 @@ class PstageController extends AbstractController
         } else throw new ForbiddenException();
     }
 
-
-    public function simulateurOffre(Request $request): string
-    {
-        if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"])) {
-            $form2 = $this->getModel();
-            if ($request->getMethod() === 'post') {
-                $listEntreprise = [];
-                $formData = $request->getBody();
-                $typeRecherche = $formData['typeRecherche'];
-                $ent = new EntrepriseRepository([]);
-                if ($typeRecherche == "nomEnt") {
-                    $listEntreprise = $ent->getByName($formData['nomEnt'], $formData['pays'], $formData['department']);
-                } else if ($typeRecherche == "numsiret") {
-                    $listEntreprise = $ent->getBySiret($formData['siret'], $formData['siren']);
-                } else if ($typeRecherche == "numTel") {
-                    $listEntreprise = $ent->getByTel($formData['tel'], $formData['fax']);
-                } else if ($typeRecherche == "adresse") {
-                    $listEntreprise = $ent->getByAdresse($formData['adresse'], $formData['codePostal'], $formData['pays']);
-                }
-                return $this->render('simulateurP/General', ['form' => $form2, 'listEntreprise' => $listEntreprise, 'vueChemin' => "listEntreprise.php"]);
-            }
-
-            return $this->render('simulateurP/General', ['form2' => $form2, 'vueChemin' => "simulateurOffre.php"]);
-        } else throw new ForbiddenException();
-    }
-
-    /**
-     * @return FormModel
-     */
-    public function getModel(): FormModel
-    {
-        $form2 = new FormModel([
-            "typeRecherche" => FormModel::select("Type de recherche", ["nomEnt" => "Nom de l'entreprise", "numsiret" => "Numéro Siret", "numTel" => "Tèl/Fax", "adresse" => "adresse"])->required()->default("nomEnt"),
-            "nomEnt" => FormModel::string("Nom de l'entreprise")->default("")->required(),
-            "pays" => FormModel::select("Pays", ["France" => "France", "Allemagne" => "Allemagne", "Angleterre" => "Angleterre", "Espagne" => "Espagne", "Italie" => "Italie", "Portugal" => "Portugal", "Suisse" => "Suisse", "Autre" => "Autre"])->required(),
-            "department" => FormModel::string("Département")->default("")->length(2)->required(),
-            "siret" => FormModel::string("Numéro Siret")->default("")->length(14),
-            "siren" => FormModel::string("Numéro Siren")->default("")->length(9),
-            "tel" => FormModel::phone("Téléphone")->default(""),
-            "fax" => FormModel::phone("Fax")->default(""),
-            "adresse" => FormModel::string("Adresse")->default(""),
-            "codePostal" => FormModel::string("Code postal")->default("")->length(5)
-        ]);
-        return $form2;
-    }
-
     public function previewOffre(Request $request): string
     {
         if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"])) {
@@ -186,6 +140,11 @@ class PstageController extends AbstractController
             $_SESSION["idEntreprise"] = $id;
             return $this->render('simulateurP/General', ['id' => $id, 'vueChemin' => "previewOffre.php"]);
         } else throw new ForbiddenException();
+    }
+
+    public function listEntreprise(Request $request)
+    {
+        return $this->render('simulateurP/General', ['vueChemin' => "listEntreprise.php"]);
     }
 
     public function creerEntreprise(Request $request): string
@@ -216,11 +175,31 @@ class PstageController extends AbstractController
                     $ent = new EntrepriseRepository([]);
                     $ent->create($formData['nomEnt'], $formData['email'], $formData['tel'], "", $formData['type'], $formData['effectif'], $formData['codeNaf'], $formData['fax'], $formData['web'], $formData['voie'], $formData['cedex'], $formData['residence'], $formData['codePostal'], $formData['pays'], $formData['ville'], $formData['siret']);
                     $form2 = $this->getModel();
-                    return $this->render('simulateurP/General', ['form2' => $form2, 'vueChemin' => "simulateurOffre.php"]);
+                    return $this->render('simulateurP/General', ['form2' => $form2, 'vueChemin' => "listEntreprise.php"]);
                 }
             }
             return $this->render('simulateurP/General', ['form' => $form, 'vueChemin' => "creerEntreprise.php"]);
         } else throw new ForbiddenException();
+    }
+
+    /**
+     * @return FormModel
+     */
+    public function getModel(): FormModel
+    {
+        $form2 = new FormModel([
+            "typeRecherche" => FormModel::select("Type de recherche", ["nomEnt" => "Nom de l'entreprise", "numsiret" => "Numéro Siret", "numTel" => "Tèl/Fax", "adresse" => "adresse"])->required()->default("nomEnt"),
+            "nomEnt" => FormModel::string("Nom de l'entreprise")->default("")->required(),
+            "pays" => FormModel::select("Pays", ["France" => "France", "Allemagne" => "Allemagne", "Angleterre" => "Angleterre", "Espagne" => "Espagne", "Italie" => "Italie", "Portugal" => "Portugal", "Suisse" => "Suisse", "Autre" => "Autre"])->required(),
+            "department" => FormModel::string("Département")->default("")->length(2)->required(),
+            "siret" => FormModel::string("Numéro Siret")->default("")->length(14),
+            "siren" => FormModel::string("Numéro Siren")->default("")->length(9),
+            "tel" => FormModel::phone("Téléphone")->default(""),
+            "fax" => FormModel::phone("Fax")->default(""),
+            "adresse" => FormModel::string("Adresse")->default(""),
+            "codePostal" => FormModel::string("Code postal")->default("")->length(5)
+        ]);
+        return $form2;
     }
 
     public function simulateurServiceAccueil(Request $request)

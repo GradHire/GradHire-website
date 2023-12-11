@@ -54,6 +54,6 @@ use app\src\model\repository\EntrepriseRepository;
     </script>
     <script>
         document.getElementById('modifyButton').addEventListener('click', function () {
-            window.location.href = 'simulateurOffre';
+            window.location.href = 'listEntreprise';
         });
     </script>

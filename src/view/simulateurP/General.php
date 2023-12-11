@@ -42,13 +42,13 @@
         </div>
         <div class="ml-5">
             <?php
-            if ($vueChemin == "simulateurOffre.php" || $vueChemin == "previewOffre.php" || $vueChemin == "creerEntreprise.php" || $vueChemin == "listEntreprise.php") {
+            if ($vueChemin == "listEntreprise.php" || $vueChemin == "previewOffre.php" || $vueChemin == "creerEntreprise.php" || $vueChemin == "listEntreprise.php") {
                 ?>
                 <p class="text-blue-500">Entreprise</p>
                 <?php
             } else if (isset($_SESSION["idEntreprise"])) {
                 ?>
-                <a href="simulateurOffre">Entreprise</a>
+                <a href="listEntreprise">Entreprise</a>
                 <?php
             } else {
                 ?>

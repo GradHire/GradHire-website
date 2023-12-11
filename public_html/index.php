@@ -158,8 +158,8 @@ $app->router->get('/explicationSimu', [PstageController::class, 'explicationSimu
 $app->router->get('/simulateur', [PstageController::class, 'simulateur']);
 $app->router->post('/simulateur', [PstageController::class, 'simulateur']);
 
-$app->router->get('/simulateurOffre', [PstageController::class, 'simulateurOffre']);
-$app->router->post('/simulateurOffre', [PstageController::class, 'simulateurOffre']);
+$app->router->get('/listEntreprise', [PstageController::class, 'listEntreprise']);
+$app->router->post('/listEntreprise', [PstageController::class, 'listEntreprise']);
 
 $app->router->get('/previewOffre', [PstageController::class, 'previewOffre']);
 

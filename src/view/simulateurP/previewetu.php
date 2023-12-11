@@ -28,7 +28,7 @@ use app\src\model\Form\FormModel;
     </div>
     <script>
         document.getElementById('confirmButton').addEventListener('click', function () {
-            window.location.href = 'simulateurOffre';
+            window.location.href = 'listEntreprise';
         });
     </script>
     <script>
