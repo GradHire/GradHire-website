@@ -16,12 +16,12 @@ class ConventionRepository extends AbstractRepository
     public static function getStudentId(int $conventionId): int
     {
         try {
-            $statement = Database::get_conn()->prepare("SELECT idutilisateur FROM conventionVueValie WHERE numconvention=?");
+            $statement = Database::get_conn()->prepare("SELECT idetudiant FROM hirchytsd.\"conventionValideVue\" WHERE numconvention=?");
             $statement->execute([$conventionId]);
             $data = $statement->fetch();
-            return $data["idutilisateur"];
-        } catch (\Exception) {
-            throw new ServerErrorException();
+            return $data["idetudiant"];
+        } catch (\Exception $e) {
+            throw new ServerErrorException("Erreur lors de la récupération de l'id de l'étudiant", 500, $e);
         }
     }
 
