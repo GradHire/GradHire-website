@@ -9,6 +9,7 @@ use app\src\core\exception\NotFoundException;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
+use app\src\model\dataObject\Entreprise;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 use app\src\model\repository\CompteRenduRepository;
@@ -77,8 +78,14 @@ class DashboardController extends AbstractController
             $utilisateur = array_filter($utilisateur, function ($user) {
                 return $user->getRole() !== Roles::ChefDepartment->value;
             });
-        } else
-            $utilisateur = (new UtilisateurRepository([]))->getAll();
+        } else {
+            $utilisateur = [];
+            $entreprises = (new EntrepriseRepository([]))->getAll();
+            $etudiants = (new EtudiantRepository([]))->getAll();
+            $tuteurs = (new TuteurRepository([]))->getAll();
+            $staffs = (new StaffRepository([]))->getAll();
+            $utilisateur = array_merge($utilisateur, $entreprises, $etudiants, $tuteurs, $staffs);
+        }
 
         return $this->render('utilisateurs/utilisateurs', ['utilisateurs' => $utilisateur]);
     }

@@ -72,4 +72,9 @@ class Tuteur extends Utilisateur
     {
         $this->identreprise = $idEntreprise;
     }
+
+    public function getRole(): ?string
+    {
+        return "tuteur";
+    }
 }

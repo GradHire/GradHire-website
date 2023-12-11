@@ -136,10 +136,14 @@ class Entreprise extends Utilisateur
         $this->idutilisateur = $idutilisateur;
     }
 
+    public function getRole(): ?string
+    {
+        return "Entreprise";
+    }
+
     protected function getValueColonne(string $nomColonne): string
     {
         return $this->strval($$nomColonne);
     }
-
 
 }
