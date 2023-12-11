@@ -214,7 +214,6 @@ class DashboardController extends AbstractController
                 $name = EtudiantRepository::getFullNameByID($userId);
                 $title .= " de " . $name;
             }
-            print_r($soutenance);
             $e = new Event($title, $soutenance->getDebutSoutenance(), $soutenance->getFinSoutenance(), "#1c4ed8");
             if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage)) $e->setButton("Voir plus", "/voirSoutenance/" . $soutenance->getNumConvention());
             if (Auth::has_role(Roles::Student) && Auth::get_user()->id() == ConventionRepository::getStudentId($soutenance->getNumConvention())) $e->setButton("Voir plus", "/voirSoutenance/" . $soutenance->getNumConvention());
