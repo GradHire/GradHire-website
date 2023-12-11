@@ -8,6 +8,7 @@ use app\src\core\lib\StackTrace;
 use app\src\model\Application;
 use app\src\model\dataObject\Etudiant;
 use app\src\model\dataObject\Roles;
+use app\src\model\Request;
 use PDOException;
 
 class EtudiantRepository extends LdapRepository
@@ -55,6 +56,54 @@ class EtudiantRepository extends LdapRepository
         }
     }
 
+    public static function getEtuSansConv()
+    {
+        $sql = "SELECT idUtilisateur FROM EtudiantVue WHERE idUtilisateur NOT IN (SELECT idUtilisateur FROM Convention)";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute();
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetchAll();
+        if (!$resultat) {
+            return null;
+        }
+        foreach ($resultat as $etu) {
+            $etudiant = new EtudiantRepository([]);
+            $etudiant = $etudiant->getByIdFull($etu["idutilisateur"]);
+            $etudiants[] = $etudiant;
+        }
+        return $etudiants;
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public
+    function getByIdFull($idutilisateur): ?Etudiant
+    {
+        try {
+            $sql = "SELECT * FROM " . self::$view . " WHERE idUtilisateur = :idUtilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idUtilisateur' => $idutilisateur]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetch();
+            if (!$resultat) {
+                return null;
+            }
+            return $this->construireDepuisTableau($resultat);
+        } catch
+        (PDOException) {
+            throw new ServerErrorException();
+        }
+    }
+
+    protected
+    function construireDepuisTableau(array $dataObjectFormatTableau): Etudiant
+    {
+        return new Etudiant(
+            $dataObjectFormatTableau
+        );
+    }
+
     /**
      * @throws ServerErrorException
      */
@@ -100,6 +149,25 @@ class EtudiantRepository extends LdapRepository
         }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getEmailById(mixed $idutilisateur)
+    {
+        try {
+            $sql = "SELECT email FROM " . self::$view . " WHERE idUtilisateur = :idUtilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idUtilisateur' => $idutilisateur]);
+            $resultat = $requete->fetch();
+            if (!$resultat) {
+                return null;
+            }
+            return $resultat;
+        } catch
+        (PDOException) {
+            throw new ServerErrorException();
+        }
+    }
 
     public function role(): Roles
     {
@@ -140,14 +208,6 @@ class EtudiantRepository extends LdapRepository
         }
     }
 
-    protected
-    function construireDepuisTableau(array $dataObjectFormatTableau): Etudiant
-    {
-        return new Etudiant(
-            $dataObjectFormatTableau
-        );
-    }
-
     public function getByNumEtudiantFull($numEtudiant): ?Etudiant
     {
         try {
@@ -171,48 +231,6 @@ class EtudiantRepository extends LdapRepository
         $statement = Database::get_conn()->prepare("Call updateetuimp(?,?,?,?,?,?,?,?,?,?,?,?)");
         $statement->execute([$numEtu, $nom, $prenom, $tel, $mailPerso, $mailUniv, null, $adresse, $codePostal, $pays, $ville, $groupe]);
 
-    }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public
-    function getByIdFull($idutilisateur): ?Etudiant
-    {
-        try {
-            $sql = "SELECT * FROM " . self::$view . " WHERE idUtilisateur = :idUtilisateur";
-            $requete = Database::get_conn()->prepare($sql);
-            $requete->execute(['idUtilisateur' => $idutilisateur]);
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
-            $resultat = $requete->fetch();
-            if (!$resultat) {
-                return null;
-            }
-            return $this->construireDepuisTableau($resultat);
-        } catch
-        (PDOException) {
-            throw new ServerErrorException();
-        }
-    }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public static function getEmailById(mixed $idutilisateur)
-    {
-        try {
-            $sql = "SELECT email FROM " . self::$view . " WHERE idUtilisateur = :idUtilisateur";
-            $requete = Database::get_conn()->prepare($sql);
-            $requete->execute(['idUtilisateur' => $idutilisateur]);
-            $resultat = $requete->fetch();
-            if (!$resultat) {
-                return null;
-            }
-            return $resultat;
-        } catch
-        (PDOException) {
-            throw new ServerErrorException();
-        }
     }
 
     protected

@@ -244,4 +244,9 @@ $app->router->post('/compteRendu/{numconvention}', [CompteRenduController::class
 $app->router->get('/compteRenduSoutenance/{numconvention}', [CompteRenduController::class, 'compteRenduSoutenance']);
 $app->router->post('/compteRenduSoutenance/{numconvention}', [CompteRenduController::class, 'compteRenduSoutenance']);
 
+//bouton harceler
+$app->router->get('/harceler', [CandidatureController::class, 'harceler']);
+$app->router->get('/harceler/{idUtilisateur}', [CandidatureController::class, 'harceler']);
+
+
 $app->run();

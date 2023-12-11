@@ -11,6 +11,7 @@ use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 use app\src\model\repository\EntrepriseRepository;
+use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\PostulerRepository;
@@ -138,4 +139,33 @@ class CandidatureController extends AbstractController
             Application::redirectFromParam("/candidatures");
         }
     }
+
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
+    public function harceler(Request $request)
+    {
+        if (Auth::has_role(Roles::ChefDepartment, Roles::Manager, Roles::Staff)) {
+            if (isset($_GET["idUtilisateur"])) {
+                $idUtilisateur = $_GET["idUtilisateur"];
+                $etudiant = (new EtudiantRepository([]))->getByIdFull($idUtilisateur);
+                $mail = new MailRepository();
+                $mail->send_mail([$etudiant->getEmail()], "Vous n'avez pas encore de convention", "Bonjour,\nVous n'avez pas encore de convention de stage, il serait temps de s'en occuper !");
+                Application::redirectFromParam("/harceler");
+            }
+            if (isset($_GET["isAdmin"])) {
+                $etudiants = (new EtudiantRepository([]))->getAll();
+                foreach ($etudiants as $etudiant) {
+                    $mail = new MailRepository();
+                    $mail->send_mail([$etudiant->getEmail()], "Vous n'avez pas encore de convention", "Bonjour,\nVous n'avez pas encore de convention de stage, il serait temps de s'en occuper !");
+                }
+                print_r($etudiants);
+                Application::redirectFromParam("/harceler");
+            }
+            $etudiants = (new EtudiantRepository([]))->getEtuSansConv();
+            return $this->render('candidature/harceler', ['etudiants' => $etudiants]);
+        } else throw new ForbiddenException();
+    }
+
 }

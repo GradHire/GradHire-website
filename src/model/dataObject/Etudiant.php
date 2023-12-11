@@ -17,7 +17,7 @@ class Etudiant extends Utilisateur
     private ?string $codeSexe;
     private ?int $idgroupe;
     private ?string $nomville;
-    private ?int $codepostal;
+    private ?string $codepostal;
     private ?string $pays;
     private ?bool $archiver;
     private ?int $annee;
@@ -53,7 +53,7 @@ class Etudiant extends Utilisateur
         $this->idutilisateur = $idUtilisateur;
     }
 
-    public function getPrenom(): string
+    public function getPrenom(): ?string
     {
         return $this->prenom;
     }
