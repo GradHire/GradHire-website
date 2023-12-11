@@ -14,7 +14,7 @@ $offre = (new OffresRepository())->getById($candidatures->getIdoffre());
 
 ?>
 
-<div class="mt-6 border-zinc-100 pt-12 pb-24 mx-auto max-w-md">
+<div class="mt-6 border-zinc-100 gap-4 mx-auto max-w-md">
     <?php
     echo '<h2 class="font-bold text-lg">Candidature de 
 ' . $etudiant->getPrenom() . " " . $etudiant->getNom() . '

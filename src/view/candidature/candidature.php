@@ -15,7 +15,7 @@ use app\src\model\repository\TuteurRepository;
 use app\src\model\repository\UtilisateurRepository;
 
 ?>
-<div class="flex flex-col gap-1 w-full pt-12 pb-24">
+<div class="flex flex-col gap-1 w-full gap-4 mx-auto">
     <h2 class="font-bold text-lg"><?php echo $titre ?></h2>
     <div class=" gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
         <div class="overflow-x-auto w-full">

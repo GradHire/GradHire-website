@@ -32,7 +32,7 @@ use app\src\model\Form\FormModel;
         </div>
     </div>
     <?php $form->start(); ?>
-    <div class="w-full max-w-md gap-4 flex flex-col pt-12 pb-24 ">
+    <div class="w-full max-w-md gap-4 flex flex-col gap-4 mx-auto ">
         <div class="w-full gap-4 flex flex-col" id="step1">
             <?php
             $form->print_fields(["etudiant", "presenttuteur"]);
@@ -61,7 +61,7 @@ use app\src\model\Form\FormModel;
             sur
             celui-ci lors du rendu final, il faut pénaliser.</p>
     </div>
-    <div class="w-full max-w-md gap-4 flex flex-col pt-12 pb-24 ">
+    <div class="w-full max-w-md gap-4 flex flex-col gap-4 mx-auto ">
         <div class="w-full gap-4 flex flex-col">
             <?php
             $form->print_fields(["renduretard", "noterapport", "commentairerapport"]);
@@ -84,7 +84,7 @@ use app\src\model\Form\FormModel;
             </ul>
         </div>
     </div>
-    <div class="w-full max-w-md gap-4 flex flex-col pt-12 pb-24 ">
+    <div class="w-full max-w-md gap-4 flex flex-col gap-4 mx-auto ">
         <div class="w-full gap-4 flex flex-col">
             <?php
             $form->print_fields(["noteoral", "commentaireoral"]);
@@ -110,7 +110,7 @@ use app\src\model\Form\FormModel;
         </div>
         <p class="mb-4">Cette note est celle du tuteur. Si le tuteur est complètement satisfait, on peut aller à 16</p>
     </div>
-    <div class="w-full max-w-md gap-4 flex flex-col pt-12 pb-24 ">
+    <div class="w-full max-w-md gap-4 flex flex-col gap-4 mx-auto ">
         <div class="w-full gap-4 flex flex-col">
             <?php
             $form->print_fields(["noterelation"]);
@@ -136,7 +136,7 @@ use app\src\model\Form\FormModel;
             </ul>
         </div>
     </div>
-    <div class="w-full max-w-md gap-4 flex flex-col pt-12 pb-24 ">
+    <div class="w-full max-w-md gap-4 flex flex-col gap-4 mx-auto ">
         <div class="w-full gap-4 flex flex-col">
             <?php
             $form->print_fields(["langage", "nouveau", "difficulte", "notedemarche"]);
@@ -163,7 +163,7 @@ use app\src\model\Form\FormModel;
             </ul>
         </div>
     </div>
-    <div class="w-full max-w-md gap-4 flex flex-col pt-12 pb-24 ">
+    <div class="w-full max-w-md gap-4 flex flex-col gap-4 mx-auto ">
         <div class="w-full gap-4 flex flex-col">
             <?php
             $form->print_fields(["noteresultat", "commentaireresultat"]);
@@ -179,7 +179,7 @@ use app\src\model\Form\FormModel;
         <p class="mb-4">Faire la pub sur le BUT3
             https://drive.google.com/drive/folders/1yR-CptCQv-Bd9IfI4fzp9B0NsaCN3qpJ</p>
     </div>
-    <div class="w-full max-w-md gap-4 flex flex-col pt-12 pb-24 ">
+    <div class="w-full max-w-md gap-4 flex flex-col gap-4 mx-auto ">
         <div class="w-full gap-4 flex flex-col">
             <?php
             $form->print_fields(["recherche", "recontact"]);

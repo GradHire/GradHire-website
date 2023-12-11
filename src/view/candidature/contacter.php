@@ -5,7 +5,7 @@
 use app\src\model\Form\FormModel;
 
 ?>
-<div class="w-full max-w-md pt-12 pb-24 gap-2 flex flex-col">
+<div class="w-full max-w-md gap-4 mx-auto gap-2 flex flex-col">
 	<h3 class="text-lg leading-6 font-medium text-gray-900">
 		Contacter l'entreprise
 	</h3>

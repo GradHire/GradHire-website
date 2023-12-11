@@ -9,7 +9,7 @@ if ($listEntreprise == null) {
     echo "<button type='button' id='revenir' class='text-center text-2xl'>Revenir à la recherche (ou créer l'entreprise)</button>";
 } else {
     ?>
-    <div class="overflow-x-auto w-full pt-12 pb-24">
+    <div class="overflow-x-auto w-full gap-4 mx-auto">
         <table class="min-w-full divide-y-2 divide-zinc-200 bg-white text-sm">
             <thead class="ltr:text-left rtl:text-right">
             <tr>

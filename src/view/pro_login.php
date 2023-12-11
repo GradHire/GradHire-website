@@ -8,7 +8,7 @@ $this->title = 'Login';
 ?>
 
 
-<div class="w-full max-w-md pt-12 pb-24 gap-2 flex flex-col">
+<div class="w-full max-w-md gap-4 mx-auto gap-2 flex flex-col">
     <h2 class="text-3xl">Connexion Pro</h2>
     <span class="text-zinc-600 mb-5">Pas encore de compte ? <a href="/register"
                                                                class="underline">Créer un compte</a></span>

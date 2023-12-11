@@ -8,7 +8,7 @@ use app\src\model\Form\FormModel;
 
 ?>
 
-<div class="w-full pt-12 pb-24 gap-2 flex flex-col">
+<div class="w-full gap-4 mx-auto gap-2 flex flex-col">
     <h2 class="text-3xl">Modifier mon mot de passe</h2>
     <span class="text-zinc-600 mb-5">Veuillez renseigner l'adresse mail de votre compte.</span>
     <?php

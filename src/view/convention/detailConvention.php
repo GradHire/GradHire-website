@@ -13,7 +13,7 @@ if (Auth::has_role(Roles::Enterprise) && Auth::get_user()->id() != (new OffresRe
 
 ?>
 
-<div class="w-full pt-12 pb-24">
+<div class="w-full gap-4 mx-auto">
     <div class="w-full flex md:flex-row flex-col justify-between items-start">
         <div class="px-4 sm:px-0">
             <h3 class="text-lg font-semibold leading-7 text-zinc-900">Convention numero

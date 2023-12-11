@@ -8,7 +8,7 @@ $this->title = 'Login';
 
 ?>
 
-<div class="w-full max-w-md pt-12 pb-24 gap-2 flex flex-col">
+<div class="w-full max-w-md gap-4 mx-auto gap-2 flex flex-col">
 
     <h2 class="text-3xl">Modifier mot de passe</h2>
     <?php $form->start(); ?>
