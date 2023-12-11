@@ -9,8 +9,8 @@
 </head>
 <body>
 <nav>
-    <div class="flex w-full mt-3">
-        <div>
+    <div class="flex w-full mt-3 ">
+        <div class="">
             <?php
             if ($vueChemin == "explicationSimu.php") {
                 ?>
