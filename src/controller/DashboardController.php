@@ -195,8 +195,8 @@ class DashboardController extends AbstractController
                 $title .= " de " . $name;
             }
             $e = new Event($title, $visite->getDebutVisite(), $visite->getFinVisite(), "#1c4ed8");
-            if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage))
-                $e->setButton("Voir plus", "/visite/" . $visite->getNumConvention());
+            if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage)) $e->setButton("Voir plus", "/visite/" . $visite->getNumConvention());
+            if  (Auth::has_role(Roles::Student) && Auth::get_user()->id() == ConventionRepository::getStudentId($visite->getNumConvention())) $e->setButton("Voir plus", "/visite/" . $visite->getNumConvention());
             if ($visite->getFinVisite() < new \DateTime('now') && ConventionRepository::getIfIdTuteurs($visite->getNumConvention(), Application::getUser()->id())) {
                 if (!CompteRenduRepository::checkIfCompteRenduProfExist($visite->getNumConvention()) && Auth::has_role(Roles::TutorTeacher)) {
                     print_r("caillou");
@@ -217,6 +217,7 @@ class DashboardController extends AbstractController
             }
             $e = new Event($title, $soutenance->getDebutSoutenance(), $soutenance->getFinSoutenance(), "#1c4ed8");
             if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage)) $e->setButton("Voir plus", "/voirSoutenance/" . $soutenance->getNumConvention());
+            if (Auth::has_role(Roles::Student) && Auth::get_user()->id() == ConventionRepository::getStudentId($soutenance->getNumConvention())) $e->setButton("Voir plus", "/voirSoutenance/" . $soutenance->getNumConvention());
             if ($soutenance->getFinSoutenance() < new \DateTime('now') && ConventionRepository::getIfIdTuteurs($soutenance->getNumConvention(), Application::getUser()->id())) {
                 if (!CompteRenduRepository::checkIfCompteRenduSoutenanceProfExist($soutenance->getNumConvention()) && Auth::has_role(Roles::TutorTeacher)) {
                     $e->setButton("deposer compte rendu soutenance prof", "/compteRenduSoutenance/" . $soutenance->getNumConvention());

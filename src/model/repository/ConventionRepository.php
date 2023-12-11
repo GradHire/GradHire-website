@@ -16,7 +16,7 @@ class ConventionRepository extends AbstractRepository
     public static function getStudentId(int $conventionId): int
     {
         try {
-            $statement = Database::get_conn()->prepare("SELECT idutilisateur FROM convention WHERE numconvention=?");
+            $statement = Database::get_conn()->prepare("SELECT idutilisateur FROM conventionVueValie WHERE numconvention=?");
             $statement->execute([$conventionId]);
             $data = $statement->fetch();
             return $data["idutilisateur"];
