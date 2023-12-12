@@ -2,92 +2,85 @@
 
 namespace app\src\model\repository;
 
-use app\src\core\db\Database;
-use app\src\model\dataObject\AbstractDataObject;
+use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\Notes;
+use Exception;
 
 class NotesRepository extends AbstractRepository
 {
-    public function create(array $dataObject): void
-    {
-        $sql = "SELECT idnote FROM Notes WHERE idnote = (SELECT MAX(idnote) FROM Notes)";
-        $stmt = Database::get_conn()->prepare($sql);
-        $stmt->execute();
-        $id = $stmt->fetch();
-        $id = $id["idnote"] + 1;
-        $dataObject["idnote"] = $id;
-        $sql = "INSERT INTO " . $this->getNomTable() . " (" . implode(", ", $this->getNomColonnes()) . ") VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
-        $stmt = Database::get_conn()->prepare($sql);
-        $stmt->execute([
-            $dataObject["idnote"],
-            $dataObject["etudiant"],
-            $dataObject["presenttuteur"],
-            $dataObject["renduretard"],
-            $dataObject["noterapport"],
-            $dataObject["commentairerapport"],
-            $dataObject["noteoral"],
-            $dataObject["commentaireoral"],
-            $dataObject["noterelation"],
-            $dataObject["langage"],
-            $dataObject["nouveau"],
-            $dataObject["difficulte"],
-            $dataObject["notedemarche"],
-            $dataObject["noteresultat"],
-            $dataObject["commentaireresultat"],
-            $dataObject["recherche"],
-            $dataObject["recontact"],
-            $dataObject["idsoutenance"],
-        ]);
-    }
+	/**
+	 * @throws ServerErrorException
+	 */
+	public function create(array $dataObject): void
+	{
+		$id = self::Fetch("SELECT idnote FROM Notes WHERE idnote = (SELECT MAX(idnote) FROM Notes)");
+		$id = $id["idnote"] + 1;
+		$dataObject["idnote"] = $id;
+		self::Execute("INSERT INTO " . $this->getNomTable() . " (" . implode(", ", $this->getNomColonnes()) . ") VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)", [
+			$dataObject["idnote"],
+			$dataObject["etudiant"],
+			$dataObject["presenttuteur"],
+			$dataObject["renduretard"],
+			$dataObject["noterapport"],
+			$dataObject["commentairerapport"],
+			$dataObject["noteoral"],
+			$dataObject["commentaireoral"],
+			$dataObject["noterelation"],
+			$dataObject["langage"],
+			$dataObject["nouveau"],
+			$dataObject["difficulte"],
+			$dataObject["notedemarche"],
+			$dataObject["noteresultat"],
+			$dataObject["commentaireresultat"],
+			$dataObject["recherche"],
+			$dataObject["recontact"],
+			$dataObject["idsoutenance"],
+		]);
+	}
 
-    protected function getNomTable(): string
-    {
-        return "Notes";
-    }
+	protected function getNomTable(): string
+	{
+		return "Notes";
+	}
 
-    protected function getNomColonnes(): array
-    {
-        return [
-            "idnote",
-            "etudiant",
-            "presenttuteur",
-            "renduretard",
-            "noterapport",
-            "commentairerapport",
-            "noteoral",
-            "commentaireoral",
-            "noterelation",
-            "langage",
-            "nouveau",
-            "difficulte",
-            "notedemarche",
-            "noteresultat",
-            "commentaireresultat",
-            "recherche",
-            "recontact",
-            "idsoutenance",
-        ];
-    }
+	protected function getNomColonnes(): array
+	{
+		return [
+			"idnote",
+			"etudiant",
+			"presenttuteur",
+			"renduretard",
+			"noterapport",
+			"commentairerapport",
+			"noteoral",
+			"commentaireoral",
+			"noterelation",
+			"langage",
+			"nouveau",
+			"difficulte",
+			"notedemarche",
+			"noteresultat",
+			"commentaireresultat",
+			"recherche",
+			"recontact",
+			"idsoutenance",
+		];
+	}
 
-    public function getAll(): ?array
-    {
-        parent::getAll();
-    }
+	/**
+	 * @throws ServerErrorException
+	 */
+	public function getById(int $getSoutenance): ?Notes
+	{
+		$dataObjectFormatTableau = self::Fetch("SELECT * FROM " . $this->getNomTable() . " WHERE idsoutenance = ?", [$getSoutenance]);
+		return $dataObjectFormatTableau ? $this->construireDepuisTableau($dataObjectFormatTableau) : null;
+	}
 
-    public function getById(int $getSoutenance): ?Notes
-    {
-        $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE idsoutenance = ?";
-        $stmt = Database::get_conn()->prepare($sql);
-        $stmt->execute([$getSoutenance]);
-        $dataObjectFormatTableau = $stmt->fetch();
-        if ($dataObjectFormatTableau === false) {
-            return null;
-        }
-        return $this->construireDepuisTableau($dataObjectFormatTableau);
-    }
-
-    protected function construireDepuisTableau(array $dataObjectFormatTableau): Notes
-    {
-        return new Notes($dataObjectFormatTableau);
-    }
+	/**
+	 * @throws Exception
+	 */
+	protected function construireDepuisTableau(array $dataObjectFormatTableau): Notes
+	{
+		return new Notes($dataObjectFormatTableau);
+	}
 }
