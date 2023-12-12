@@ -19,9 +19,9 @@ $this->title = 'Entreprises';
         Table::phone($entreprise->getNumtelephone());
         Table::link($entreprise->getSiteWeb());
         Table::button("/entreprises/" . $entreprise->getIdutilisateur());
-        if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor,Roles::Manager,Roles::ManagerAlternance,Roles::ManagerStage) && AvisRepository::checkIfAvisPosted($entreprise->getIdutilisateur(), Application::getUser()->id())) {
+        if (Auth::has_role(Roles::TutorTeacher, Roles::Teacher,Roles::Manager,Roles::ManagerAlternance,Roles::ManagerStage) && AvisRepository::checkIfAvisPosted($entreprise->getIdutilisateur(), Application::getUser()->id())) {
             Table::button("/entreprises/" . $entreprise->getIdutilisateur() . "/modifierAvis", "Modifier l'avis");
-        } else if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor)) {
+        } else if (Auth::has_role(Roles::TutorTeacher, Roles::Teacher,Roles::Manager,Roles::ManagerAlternance,Roles::ManagerStage)){
             Table::button("/entreprises/" . $entreprise->getIdutilisateur() . "/posterAvis", "Poster un avis");
         }
     });
