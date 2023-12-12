@@ -2,97 +2,80 @@
 
 namespace app\src\model\repository;
 
-use app\src\core\db\Database;
+use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\AbstractDataObject;
 use app\src\model\dataObject\SimulationPstage;
 
 class SimulationPstageRepository extends AbstractRepository
 {
-    public function getFullByNomFichier(string $nomFichier): ?AbstractDataObject
-    {
-        $sql = "SELECT * FROM SimulationPstage WHERE nomFichier = :nomFichier";
-        $stmt = Database::get_conn()->prepare($sql);
-        $stmt->bindValue(":nomFichier", $nomFichier);
-        $stmt->execute();
-        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
-        $result = $stmt->fetchAll();
-        if (!$result) {
-            return null;
-        }
-        return $this->construireDepuisTableau($result[0]);
-    }
+	/**
+	 * @throws ServerErrorException
+	 */
+	public function getFullByNomFichier(string $nomFichier): ?AbstractDataObject
+	{
+		$result = self::FetchAllAssoc("SELECT * FROM SimulationPstage WHERE nomFichier = :nomFichier", [":nomFichier" => $nomFichier]);
+		return $result ? $this->construireDepuisTableau($result[0]) : null;
+	}
 
-    protected function construireDepuisTableau(array $dataObjectFormatTableau): AbstractDataObject
-    {
-        return new SimulationPstage(
-            $dataObjectFormatTableau
-        );
-    }
+	protected function construireDepuisTableau(array $dataObjectFormatTableau): AbstractDataObject
+	{
+		return new SimulationPstage(
+			$dataObjectFormatTableau
+		);
+	}
 
-    public function create(mixed $nomFichier, mixed $idEtudiant, mixed $statut)
-    {
-        $sql = "INSERT INTO SimulationPstage(nomFichier,statut ,idEtudiant) VALUES (:nomFichier,:statut ,:idEtudiant)";
-        $stmt = Database::get_conn()->prepare($sql);
-        $stmt->bindValue(":nomFichier", $nomFichier);
-        $stmt->bindValue(":idEtudiant", $idEtudiant);
-        $stmt->bindValue(":statut", $statut);
-        $stmt->execute();
-    }
+	/**
+	 * @throws ServerErrorException
+	 */
+	public function create(mixed $nomFichier, mixed $idEtudiant, mixed $statut): void
+	{
+		self::Execute("INSERT INTO SimulationPstage(nomFichier,statut ,idEtudiant) VALUES (:nomFichier,:statut ,:idEtudiant)", [
+			":nomFichier" => $nomFichier, ":idEtudiant" => $idEtudiant, ":statut" => $statut]);
+	}
 
-    public function getAll(): ?array
-    {
-        $sql = "Select * from SimulationPstage";
-        $stmt = Database::get_conn()->prepare($sql);
-        $stmt->execute();
-        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
-        $result = $stmt->fetchAll();
-        if (!$result) {
-            return null;
-        }
-        $dataObjects = [];
-        foreach ($result as $dataObjectFormatTableau) $dataObjects[] = $this->construireDepuisTableau($dataObjectFormatTableau);
-        return $dataObjects;
-    }
+	public function getAll(): ?array
+	{
+		$result = self::FetchAllAssoc("SELECT * FROM SimulationPstage");
+		if (!$result)
+			return null;
+		$dataObjects = [];
+		foreach ($result as $dataObjectFormatTableau) $dataObjects[] = $this->construireDepuisTableau($dataObjectFormatTableau);
+		return $dataObjects;
+	}
 
-    public function updatevalide(mixed $id)
-    {
-        $sql = "UPDATE SimulationPstage SET statut = 'Validee' WHERE idSimulation = :id";
-        $stmt = Database::get_conn()->prepare($sql);
-        $stmt->bindValue(":id", $id);
-        $stmt->execute();
-    }
+	/**
+	 * @throws ServerErrorException
+	 */
+	public function updatevalide(mixed $id): void
+	{
+		self::Execute("UPDATE SimulationPstage SET statut = 'Validee' WHERE idSimulation = :id", [":id" => $id]);
+	}
 
-    public function updaterefuse(mixed $id)
-    {
-        $sql = "UPDATE SimulationPstage SET statut = 'Refusee' WHERE idSimulation = :id";
-        $stmt = Database::get_conn()->prepare($sql);
-        $stmt->bindValue(":id", $id);
-        $stmt->execute();
-    }
+	/**
+	 * @throws ServerErrorException
+	 */
+	public function updaterefuse(mixed $id): void
+	{
+		self::Execute("UPDATE SimulationPstage SET statut = 'Refusee' WHERE idSimulation = :id", [":id" => $id]);
+	}
 
-    public function getByIdEtudiant(int $id)
-    {
-        $sql = "SELECT * FROM SimulationPstage WHERE idEtudiant = :id";
-        $stmt = Database::get_conn()->prepare($sql);
-        $stmt->bindValue(":id", $id);
-        $stmt->execute();
-        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
-        $result = $stmt->fetchAll();
-        if (!$result) {
-            return null;
-        }
-        $dataObjects = [];
-        foreach ($result as $dataObjectFormatTableau) $dataObjects[] = $this->construireDepuisTableau($dataObjectFormatTableau);
-        return $dataObjects;
-    }
+	public function getByIdEtudiant(int $id)
+	{
+		$result = self::FetchAllAssoc("SELECT * FROM SimulationPstage WHERE idEtudiant = :id", [":id" => $id]);
+		if (!$result)
+			return null;
+		$dataObjects = [];
+		foreach ($result as $dataObjectFormatTableau) $dataObjects[] = $this->construireDepuisTableau($dataObjectFormatTableau);
+		return $dataObjects;
+	}
 
-    protected function getNomTable(): string
-    {
-        return "SimulationPstage";
-    }
+	protected function getNomTable(): string
+	{
+		return "SimulationPstage";
+	}
 
-    protected function getNomColonnes(): array
-    {
-        return ["idsimulation", "nomfichier", "statut", "idetudiant"];
-    }
+	protected function getNomColonnes(): array
+	{
+		return ["idsimulation", "nomfichier", "statut", "idetudiant"];
+	}
 }
