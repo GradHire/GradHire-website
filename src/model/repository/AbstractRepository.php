@@ -12,11 +12,11 @@ abstract class AbstractRepository
 	/**
 	 * @throws ServerErrorException
 	 */
-	protected static function FetchAll(string $sql, array $params = []): array|null
+	protected static function FetchAllAssoc(string $sql, array $params = []): array|null
 	{
 		$statement = Database::get_conn()->prepare($sql);
 		$statement->execute($params);
-		$data = $statement->fetchAll();
+		$data = $statement->fetchAll(\PDO::FETCH_ASSOC);
 		if (!$data) return null;
 		return $data;
 	}
@@ -33,6 +33,30 @@ abstract class AbstractRepository
 	/**
 	 * @throws ServerErrorException
 	 */
+	protected static function FetchAll(string $sql, array $params = []): array|null
+	{
+		$statement = Database::get_conn()->prepare($sql);
+		$statement->execute($params);
+		$data = $statement->fetchAll();
+		if (!$data) return null;
+		return $data;
+	}
+
+	/**
+	 * @throws ServerErrorException
+	 */
+	protected static function FetchAssoc(string $sql, array $params = []): array|null
+	{
+		$statement = Database::get_conn()->prepare($sql);
+		$statement->execute($params);
+		$data = $statement->fetch(\PDO::FETCH_ASSOC);
+		if (!$data) return null;
+		return $data;
+	}
+
+	/**
+	 * @throws ServerErrorException
+	 */
 	protected static function Fetch(string $sql, array $params = []): array|null
 	{
 		$statement = Database::get_conn()->prepare($sql);
@@ -40,6 +64,24 @@ abstract class AbstractRepository
 		$data = $statement->fetch();
 		if (!$data) return null;
 		return $data;
+	}
+
+	/**
+	 * @throws ServerErrorException
+	 */
+	protected static function CheckExist(string $sql, array $params = []): bool
+	{
+		return self::RowCount($sql, $params) > 0;
+	}
+
+	/**
+	 * @throws ServerErrorException
+	 */
+	protected static function RowCount(string $sql, array $params = []): int
+	{
+		$statement = Database::get_conn()->prepare($sql);
+		$statement->execute($params);
+		return $statement->rowCount();
 	}
 
 	/**
