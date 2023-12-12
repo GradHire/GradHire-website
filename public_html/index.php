@@ -1,6 +1,7 @@
 <?php
 
 use app\src\controller\AuthController;
+use app\src\controller\AvisController;
 use app\src\controller\CandidatureController;
 use app\src\controller\CompteRenduController;
 use app\src\controller\ConventionsController;
@@ -73,7 +74,6 @@ $app->router->post('/edit_profile/{id}', [UserController::class, 'edit_profile']
 
 $app->router->get('/entreprises', [UserController::class, 'entreprises']);
 $app->router->get('/entreprises/{id:\d+}', [UserController::class, 'entreprises']);
-
 // OffreController
 
 $app->router->get('/subscribe', [OffreController::class, 'subscribeNewsletter']);
@@ -248,5 +248,10 @@ $app->router->post('/compteRenduSoutenance/{numconvention}', [CompteRenduControl
 $app->router->get('/harceler', [CandidatureController::class, 'harceler']);
 $app->router->get('/harceler/{idUtilisateur}', [CandidatureController::class, 'harceler']);
 
+//AvisController
+$app->router->get('/entreprises/{id:\d+}/posterAvis', [AvisController::class, 'posterAvis']);
+$app->router->post('/entreprises/{id:\d+}/posterAvis', [AvisController::class, 'posterAvis']);
+$app->router->get('/entreprises/{id:\d+}/modifierAvis', [AvisController::class, 'modifierAvis']);
+$app->router->post('/entreprises/{id:\d+}/modifierAvis', [AvisController::class, 'modifierAvis']);
 
 $app->run();
