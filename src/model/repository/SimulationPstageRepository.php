@@ -8,6 +8,20 @@ use app\src\model\dataObject\SimulationPstage;
 
 class SimulationPstageRepository extends AbstractRepository
 {
+    public function getNomById(int $id): ?string
+    {
+        $sql = "SELECT nomFichier FROM SimulationPstage WHERE idSimulation = :id";
+        $stmt = Database::get_conn()->prepare($sql);
+        $stmt->bindValue(":id", $id);
+        $stmt->execute();
+        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll();
+        if (!$result) {
+            return null;
+        }
+        return $result[0]["nomfichier"];
+    }
+
     public function getFullByNomFichier(string $nomFichier): ?AbstractDataObject
     {
         $sql = "SELECT * FROM SimulationPstage WHERE nomFichier = :nomFichier";
@@ -84,6 +98,29 @@ class SimulationPstageRepository extends AbstractRepository
         $dataObjects = [];
         foreach ($result as $dataObjectFormatTableau) $dataObjects[] = $this->construireDepuisTableau($dataObjectFormatTableau);
         return $dataObjects;
+    }
+
+    public function updateMotif(mixed $id, mixed $motif)
+    {
+        $sql = "UPDATE SimulationPstage SET motif = :motif WHERE idSimulation = :id";
+        $stmt = Database::get_conn()->prepare($sql);
+        $stmt->bindValue(":id", $id);
+        $stmt->bindValue(":motif", $motif);
+        $stmt->execute();
+    }
+
+    public function getMotifById(mixed $id)
+    {
+        $sql = "SELECT motif FROM SimulationPstage WHERE idSimulation = :id";
+        $stmt = Database::get_conn()->prepare($sql);
+        $stmt->bindValue(":id", $id);
+        $stmt->execute();
+        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll();
+        if (!$result) {
+            return null;
+        }
+        return $result[0]["motif"];
     }
 
     protected function getNomTable(): string

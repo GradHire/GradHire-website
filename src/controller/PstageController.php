@@ -4,6 +4,8 @@ namespace app\src\controller;
 
 use app\src\core\components\Notification;
 use app\src\core\exception\ForbiddenException;
+use app\src\core\exception\ServerErrorException;
+use app\src\core\FPDF\FPDF;
 use app\src\core\middlewares\PSatgeMiddleware;
 use app\src\model\Application;
 use app\src\model\Auth;
@@ -20,6 +22,7 @@ use app\src\model\repository\SimulationPstageRepository;
 use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\Request;
+use Imagick;
 
 
 class PstageController extends AbstractController
@@ -465,16 +468,48 @@ class PstageController extends AbstractController
         } else throw new ForbiddenException();
     }
 
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     * @throws \ImagickException
+     */
     public function gererSimulPstagerefuse(Request $request)
     {
         if (Auth::has_role(Roles::Staff, Roles::Manager)) {
             $id = $request->getRouteParams()['id'] ?? null;
             if ($id != null) {
-                $simul = (new SimulationPstageRepository([]));
-                $simul->updaterefuse($id);
-                Application::$app->response->redirect("/gererSimulPstage");
+                $form = new FormModel([
+                    "motif" => FormModel::string("Motif du refus")->required()
+                ]);
+                if ($request->getMethod() === 'post') {
+                    if ($form->validate($request->getBody())) {
+                        $formData = $form->getParsedBody();
+                        $simul = (new SimulationPstageRepository([]));
+                        $simulationnom = $simul->getNomById($id);
+                        $simul->updaterefuse($id);
+                        $simul->updateMotif($id, $formData['motif']);
+                        Application::$app->response->redirect("/gererSimulPstage");
+                    }
+                }
+                return $this->render('pstageConv/refusepage', ['form' => $form]);
             }
             return $this->render('pstageConv/gererSimulPstage');
         } else throw new ForbiddenException();
     }
+
+    public function motifRefus(Request $request)
+    {
+        if (Auth::has_role(Roles::Staff, Roles::Manager, Roles::Student)) {
+            $id = $request->getRouteParams()['id'] ?? null;
+            if ($id != null) {
+                $simul = (new SimulationPstageRepository([]));
+                $motif = $simul->getMotifById($id);
+                return $this->render('pstageConv/motifRefus', ['motif' => $motif]);
+            }
+            return $this->render('pstageConv/gererSimulPstage');
+        } else throw new ForbiddenException();
+    }
+
 }
+
+

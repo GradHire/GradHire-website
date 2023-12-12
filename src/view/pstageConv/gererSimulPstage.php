@@ -1,5 +1,6 @@
 <?php
 
+use app\src\core\components\Modal;
 use app\src\core\components\Table;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
@@ -29,6 +30,7 @@ if ($files == null) {
             Table::chip("Validé", "green");
         } else if ($file->getStatut() == "Refusee") {
             Table::chip("Refusé", "red");
+            Table::button("/gererSimulPstage/motif/" . $file->getIdSimulation(), "Motif");
         }
         if (!Auth::has_role(Roles::Student)) {
             if ($file->getStatut() != "Validee") {
@@ -36,6 +38,7 @@ if ($files == null) {
             }
             if ($file->getStatut() != "Refusee") {
                 Table::button("/gererSimulPstage/refuse/" . $file->getIdSimulation(), "Refuser", "red");
+
             }
         }
     });

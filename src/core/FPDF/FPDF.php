@@ -1,7 +1,7 @@
 <?php
 namespace app\src\core\FPDF;
 
-use app\src\core\Exception;
+use Exception;
 use const app\src\core\FPDF\font;
 
 /*******************************************************************************

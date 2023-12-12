@@ -8,6 +8,7 @@ class SimulationPstage extends AbstractDataObject
     private ?string $nomfichier;
     private ?string $statut;
     private ?string $idetudiant;
+    private ?string $motif;
 
     public function __construct(array $attributes
     )
@@ -56,6 +57,16 @@ class SimulationPstage extends AbstractDataObject
     public function setIdEtudiant(?string $idEtudiant): void
     {
         $this->idetudiant = $idEtudiant;
+    }
+
+    public function getMotif(): ?string
+    {
+        return $this->motif;
+    }
+
+    public function setMotif(?string $motif): void
+    {
+        $this->motif = $motif;
     }
 
     protected function getValueColonne(string $nomColonne): string

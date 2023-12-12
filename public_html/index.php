@@ -248,5 +248,10 @@ $app->router->post('/compteRenduSoutenance/{numconvention}', [CompteRenduControl
 $app->router->get('/harceler', [CandidatureController::class, 'harceler']);
 $app->router->get('/harceler/{idUtilisateur}', [CandidatureController::class, 'harceler']);
 
+//refuse justificatif
+$app->router->get('/gererSimulPstage/refuse/{id}', [PstageController::class, 'gererSimulPstagerefuse']);
+$app->router->post('/gererSimulPstage/refuse/{id}', [PstageController::class, 'gererSimulPstagerefuse']);
+
+$app->router->get('gererSimulPstage/motif/{id}', [PstageController::class, 'motifRefus']);
 
 $app->run();
