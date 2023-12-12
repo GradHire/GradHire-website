@@ -49,12 +49,12 @@ class Convention extends AbstractDataObject
         $this->origineconvention = $origineconvention;
     }
 
-    public function getConventionvalidee(): int
+    public function getConventionValidee(): int
     {
         return $this->conventionvalidee;
     }
 
-    public function setConventionvalidee(int $conventionvalidee): void
+    public function setConventionValidee(int $conventionvalidee): void
     {
         $this->conventionvalidee = $conventionvalidee;
     }
