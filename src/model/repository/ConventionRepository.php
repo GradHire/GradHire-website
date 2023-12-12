@@ -163,7 +163,7 @@ class ConventionRepository extends AbstractRepository
 	 */
 	public function getPourcentageEtudiantsConventionCetteAnnee(): false|array
 	{
-		return self::Fetch("SELECT * FROM pourcentage_etudiants_convention_cette_annee;");
+		return self::Fetch("SELECT * FROM pourcentage_etudiants_convention_cette_annee_cache;");
 	}
 
 
