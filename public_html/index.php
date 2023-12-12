@@ -21,17 +21,17 @@ require_once __DIR__ . '/../src/core/lib/Psr4AutoloaderClass.php';
 require_once __DIR__ . '/../src/config.php';
 
 if (session_status() == PHP_SESSION_NONE)
-    session_start();
+	session_start();
 
 $loader = new Psr4AutoloaderClass();
 $loader->register();
 $loader->addNamespace('app', __DIR__ . '/../');
 
 try {
-    $app = new Application(dirname(__DIR__));
+	$app = new Application(dirname(__DIR__));
 } catch (ServerErrorException $e) {
-    echo $e->getMessage();
-    exit();
+	echo $e->getMessage();
+	exit();
 }
 
 $app->router->get('/', [AuthController::class, 'home']);
@@ -135,9 +135,6 @@ $app->router->get('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPr
 $app->router->post('/ListeTuteurPro', [DashboardController::class, 'ListeTuteurPro']);
 
 $app->router->get('/calendar', [DashboardController::class, 'calendar']);
-
-$app->router->get('/importerStudea', [PstageController::class, 'importerStudea']);
-$app->router->post('/importerStudea', [PstageController::class, 'importerStudea']);
 
 $app->router->get('/page1', [TestController::class, 'page1']);
 $app->router->post('/page1', [TestController::class, 'page1']);
