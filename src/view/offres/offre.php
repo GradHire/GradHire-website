@@ -4,9 +4,9 @@
  * @var $currentFilterURL string
  */
 
-/** @var $modal Modal */
+/** @var $modal \app\src\core\components\layout\Modal */
 
-use app\src\core\components\Modal;
+use app\src\core\components\layout\Modal;
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;

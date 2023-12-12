@@ -1,5 +1,6 @@
 <?php
 
+use app\src\core\components\layout\Modal;
 use app\src\core\components\Lien;
 use app\src\core\components\Notification;
 use app\src\core\components\Separator;
@@ -24,8 +25,8 @@ use app\src\model\dataObject\Roles;
 require __DIR__ . '/liens.php';
 
 if (!isset($_COOKIE['sidebar_open']) || ($_COOKIE['sidebar_open'] == 'true')) $isOpen = true; else $isOpen = false;
-?>
 
+?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -66,8 +67,19 @@ if (!isset($_COOKIE['sidebar_open']) || ($_COOKIE['sidebar_open'] == 'true')) $i
 <!--           class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">A propos</a>-->
 <!--    </div>-->
 <!--</div>-->
+<div id="blur-background"
+     class="hidden w-screen h-screen fixed z-50 top-0 left-0 bg-white/50 backdrop-blur-[4px]"></div>
+<?php
 
-<div id="blur-background" class="hidden w-screen h-screen fixed z-50 top-0 left-0 backdrop-blur-md"></div>
+$modalAddSection = new Modal("Êtes-vous sûr de vouloir archiver cette offre ?", "Oui, archiver", '
+ <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                 stroke="currentColor"
+                 class="text-zinc-400 dark:text-zinc-500 w-11 h-11 mb-3.5 mx-auto">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
+            </svg>');
+?>
+
 <div class="w-full flex justify-start items-start bg-zinc-50 flex-row duration-300">
     <div id="sidebar-container"
          class="duration-300 ease-out relative text-[14px] w-full <?= $isOpen ? " max-w-[275px] " : " max-w-[75px] " ?> m-0 bg-white justify-around border-r text-[#1A2421] backdrop-blur-xl p-4 [ shadow-black/5 shadow-2xl ] sticky top-0 left-0 z-40 h-screen ">
@@ -90,7 +102,8 @@ if (!isset($_COOKIE['sidebar_open']) || ($_COOKIE['sidebar_open'] == 'true')) $i
             <div class="h-full w-full z-40 flex gap-2 flex-col relative items-start">
                 <div class="w-full flex flex-row justify-between items-center">
                     <span class="uppercase text-zinc-400 font-light text-[8px] duration-300 tracking-widest sectionText <?= $isOpen ? " text-[12px] " : " text-[8px] " ?>">Sections</span>
-                    <button>
+                    <button <?= $modalAddSection ? $modalAddSection->Show("/offres/" . "/archive?" . Application::getRedirect()) : "" ?>
+                            class="flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                              class="w-5 h-5 hover:fill-zinc-800 fill-zinc-400 duration-300 sectionAdd"
                              style="display: <?= $isOpen ? "block" : "none" ?>">

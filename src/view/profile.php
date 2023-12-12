@@ -3,7 +3,7 @@
 
 /** @var $form FormModel */
 
-use app\src\core\components\Modal;
+use app\src\core\components\layout\Modal;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;

@@ -1,4 +1,4 @@
-const bg = document.getElementById("blur-background");
+let bg = document.getElementById("blur-background");
 
 let currentModal = null;
 

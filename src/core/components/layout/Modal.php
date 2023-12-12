@@ -1,6 +1,6 @@
 <?php
 
-namespace app\src\core\components;
+namespace app\src\core\components\layout;
 
 use app\src\core\exception\ServerErrorException;
 
@@ -19,7 +19,7 @@ class Modal
 			echo <<<HTML
     <div id="$this->id" tabindex="-1" aria-hidden="true"
          class="fixed hidden z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md">
-        <div class="relative p-10 text-center bg-white rounded-lg border-2 border-zinc-100 dark:bg-zinc-800 sm:p-10">
+        <div class="relative p-10 text-center bg-white rounded-lg border dark:bg-zinc-800 sm:p-10 shadow-xl">
             <button type="button"
                     onclick="closeModal('$this->id')"
                     class="close-modal-btn text-zinc-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-zinc-200 hover:text-zinc-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-zinc-600 dark:hover:text-white"
