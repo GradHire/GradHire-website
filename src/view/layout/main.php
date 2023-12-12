@@ -5,8 +5,7 @@ use app\src\core\components\Lien;
 use app\src\core\components\Notification;
 use app\src\core\components\Separator;
 use app\src\model\Application;
-use app\src\model\Auth;
-use app\src\model\dataObject\Roles;
+use app\src\view\resources\icons\I_Dashboard;
 
 /** @var Lien $lienAccueil
  * @var Lien $lienOffres
@@ -112,26 +111,11 @@ $modalAddSection = new Modal("Êtes-vous sûr de vouloir archiver cette offre ?"
                     </button>
                 </div>
                 <?php
-                $lienAccueil->render();
+                Lien::render([
+                    'href' => 'dashboard',
+                    'nom' => 'Dashboard',
+                    'svg' => I_Dashboard::render('w-4 h-4')]);
 
-                if (!Application::isGuest()) {
-                    if (!Auth::has_role(Roles::ChefDepartment)) $lienOffres->render();
-                    else $lienUtilisateurs->render();
-                    if (!Auth::has_role(Roles::Enterprise, Roles::Tutor, Roles::ChefDepartment)) $lienEntreprises->render();
-                    if (Auth::has_role(Roles::Student, Roles::Teacher, Roles::Tutor, Roles::Enterprise)) $lienCandidatures->render();
-                    if (Auth::has_role(Roles::Enterprise)) {
-                        $lienCreate->render();
-                        $lienTuteurs->render();
-                    }
-                    if (Auth::has_role(Roles::Manager, Roles::Staff)) {
-                        $lienUtilisateurs->render();
-                        $lienCandidatures->render();
-                        $lienTuteurs->render();
-                        $lienImport->render();
-                    }
-                    if (Auth::has_role(Roles::Student)) $lienExplicationSimu->render();
-                    if (Auth::has_role(Roles::Enterprise, Roles::Student, Roles::Manager, Roles::Staff)) $lienConventions->render();
-                }
                 new Separator([]);
                 ?>
                 <div class="w-full flex flex-row justify-between items-center">
@@ -148,7 +132,7 @@ $modalAddSection = new Modal("Êtes-vous sûr de vouloir archiver cette offre ?"
             <div class="flex items-start justify-start flex-col gap-4 w-full">
                 <?php new Separator([]); ?>
                 <div class="w-full flex flex-row justify-between items-st1">
-                    <?php $logout->render(); ?>
+<!--                    --><?php //$logout->render(); ?>
                 </div>
             </div>
         </div>
