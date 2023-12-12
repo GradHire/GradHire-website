@@ -2,143 +2,117 @@
 
 namespace app\src\model\repository;
 
-use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\ServiceAccueil;
 
 class ServiceAccueilRepository extends AbstractRepository
 {
 
-    /**
-     * @throws ServerErrorException
-     */
-    public function getFullByEntreprise(int $identreprise): ?array
-    {
-        $sql = "SELECT * FROM ServiceAccueil WHERE idEntreprise = :idEntreprise";
-        $stmt = Database::get_conn()->prepare($sql);
-        $stmt->bindValue(":idEntreprise", $identreprise);
-        $stmt->execute();
-        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
-        $result = $stmt->fetchAll();
-        $serviceAccueil = [];
-        foreach ($result as $row) {
-            $serviceAccueil[$row['nomservice']] = $row['nomservice'];
-        }
-        return $serviceAccueil;
-    }
+	/**
+	 * @throws ServerErrorException
+	 */
+	public function getFullByEntreprise(int $identreprise): ?array
+	{
+		$result = self::FetchAllAssoc("SELECT * FROM ServiceAccueil WHERE idEntreprise = :idEntreprise", [":idEntreprise" => $identreprise]);
+		$serviceAccueil = [];
+		foreach ($result as $row)
+			$serviceAccueil[$row['nomservice']] = $row['nomservice'];
+		return $serviceAccueil;
+	}
 
-    public function create(mixed $nomService, mixed $idEntreprise, mixed $voie, mixed $residence, mixed $cp, mixed $ville, mixed $pays)
-    {
-        $sql = "CALL creerServiceAccueil(:nomService,:residence, :voie,:cedex, :cp, :ville, :pays,:idEntreprise)";
-        $stmt = Database::get_conn()->prepare($sql);
-        $stmt->bindValue(":nomService", $nomService);
-        $stmt->bindValue(":idEntreprise", $idEntreprise);
-        $stmt->bindValue(":voie", $voie);
-        $stmt->bindValue(":residence", $residence);
-        $stmt->bindValue(":cp", $cp);
-        $stmt->bindValue(":ville", $ville);
-        $stmt->bindValue(":pays", $pays);
-        $stmt->bindValue(":cedex", "");
-        $stmt->execute();
-    }
+	/**
+	 * @throws ServerErrorException
+	 */
+	public function create(mixed $nomService, mixed $idEntreprise, mixed $voie, mixed $residence, mixed $cp, mixed $ville, mixed $pays): void
+	{
+		self::Execute("CALL creerServiceAccueil(:nomService,:residence, :voie,:cedex, :cp, :ville, :pays,:idEntreprise)", [
+			"nomService" => $nomService,
+			"idEntreprise" => $idEntreprise,
+			"voie" => $voie,
+			"residence" => $residence,
+			"cp" => $cp,
+			"ville" => $ville,
+			"pays" => $pays,
+			"cedex" => ""
+		]);
+	}
 
-    public function getFullByEntrepriseNom(int $identreprise, string $nomService): ?ServiceAccueil
-    {
-        $sql = "SELECT * FROM ServiceAccueil WHERE idEntreprise = :idEntreprise AND nomService = :nomService";
-        $stmt = Database::get_conn()->prepare($sql);
-        $stmt->bindValue(":idEntreprise", $identreprise);
-        $stmt->bindValue(":nomService", $nomService);
-        $stmt->execute();
-        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
-        $result = $stmt->fetch();
-        if (!$result) {
-            return null;
-        }
-        return $this->construireDepuisTableau($result);
-    }
+	/**
+	 * @throws ServerErrorException
+	 */
+	public function getFullByEntrepriseNom(int $identreprise, string $nomService): ?ServiceAccueil
+	{
+		$result = self::FetchAssoc("SELECT * FROM ServiceAccueil WHERE idEntreprise = :idEntreprise AND nomService = :nomService", [
+			":idEntreprise" => $identreprise,
+			":nomService" => $nomService
+		]);
+		return $result ? $this->construireDepuisTableau($result) : null;
+	}
 
-    protected function construireDepuisTableau(array $dataObjectFormatTableau): ServiceAccueil
-    {
-        return new ServiceAccueil(
-            $dataObjectFormatTableau
-        );
-    }
+	protected function construireDepuisTableau(array $dataObjectFormatTableau): ServiceAccueil
+	{
+		return new ServiceAccueil(
+			$dataObjectFormatTableau
+		);
+	}
 
-    public function getCodePostal(int $idEntreprise, string $nomService): ?string
-    {
-        $idVille = $this->idVille($idEntreprise, $nomService);
-        $sql = "SELECT codePostal FROM Ville WHERE idVille = :idVille";
-        $stmt = Database::get_conn()->prepare($sql);
-        $stmt->bindValue(":idVille", $idVille);
-        $stmt->execute();
-        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
-        $result = $stmt->fetch();
-        if (!$result) {
-            return null;
-        }
-        return $result['codepostal'];
-    }
+	/**
+	 * @throws ServerErrorException
+	 */
+	public function getCodePostal(int $idEntreprise, string $nomService): ?string
+	{
+		$idVille = $this->idVille($idEntreprise, $nomService);
+		$result = self::FetchAssoc("SELECT codePostal FROM Ville WHERE idVille = :idVille", [":idVille" => $idVille]);
+		return $result ? $result['codepostal'] : null;
+	}
 
-    public function idVille(int $idEntreprise, string $nomService): ?string
-    {
-        $sql = "SELECT idVille FROM ServiceAccueil WHERE idEntreprise = :idEntreprise AND nomService = :nomService";
-        $stmt = Database::get_conn()->prepare($sql);
-        $stmt->bindValue(":idEntreprise", $idEntreprise);
-        $stmt->bindValue(":nomService", $nomService);
-        $stmt->execute();
-        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
-        $result = $stmt->fetch();
-        if (!$result) {
-            return null;
-        }
-        return $result['idville'];
-    }
+	/**
+	 * @throws ServerErrorException
+	 */
+	public function idVille(int $idEntreprise, string $nomService): ?string
+	{
+		$result = self::FetchAssoc("SELECT idVille FROM ServiceAccueil WHERE idEntreprise = :idEntreprise AND nomService = :nomService", [
+			":idEntreprise" => $idEntreprise,
+			":nomService" => $nomService
+		]);
+		return $result ? $result['idville'] : null;
+	}
 
-    public function getCommune(int $idEntreprise, string $nomService): ?string
-    {
-        $idVille = $this->idVille($idEntreprise, $nomService);
-        $sql = "SELECT nomVille FROM Ville WHERE idVille = :idVille";
-        $stmt = Database::get_conn()->prepare($sql);
-        $stmt->bindValue(":idVille", $idVille);
-        $stmt->execute();
-        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
-        $result = $stmt->fetch();
-        if (!$result) {
-            return null;
-        }
-        return $result['nomville'];
-    }
+	/**
+	 * @throws ServerErrorException
+	 */
+	public function getCommune(int $idEntreprise, string $nomService): ?string
+	{
+		$idVille = $this->idVille($idEntreprise, $nomService);
+		$result = self::FetchAssoc("SELECT nomVille FROM Ville WHERE idVille = :idVille", [":idVille" => $idVille]);
+		return $result ? $result['nomville'] : null;
+	}
 
-    public function getPays(int $idEntreprise, string $nomService): ?string
-    {
-        $idVille = $this->idVille($idEntreprise, $nomService);
-        $sql = "SELECT pays FROM Ville WHERE idVille = :idVille";
-        $stmt = Database::get_conn()->prepare($sql);
-        $stmt->bindValue(":idVille", $idVille);
-        $stmt->execute();
-        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
-        $result = $stmt->fetch();
-        if (!$result) {
-            return null;
-        }
-        return $result['pays'];
-    }
+	/**
+	 * @throws ServerErrorException
+	 */
+	public function getPays(int $idEntreprise, string $nomService): ?string
+	{
+		$idVille = $this->idVille($idEntreprise, $nomService);
+		$result = self::FetchAssoc("SELECT pays FROM Ville WHERE idVille = :idVille", [":idVille" => $idVille]);
+		return $result ? $result['pays'] : null;
+	}
 
-    protected function getNomTable(): string
-    {
-        return "ServiceAccueil";
-    }
+	protected function getNomTable(): string
+	{
+		return "ServiceAccueil";
+	}
 
-    protected function getNomColonnes(): array
-    {
-        return [
-            "idService",
-            "nomService",
-            "adresse",
-            "adresseCedex",
-            "adresseResidence",
-            "idVille",
-            "idEntreprise"
-        ];
-    }
+	protected function getNomColonnes(): array
+	{
+		return [
+			"idService",
+			"nomService",
+			"adresse",
+			"adresseCedex",
+			"adresseResidence",
+			"idVille",
+			"idEntreprise"
+		];
+	}
 }
