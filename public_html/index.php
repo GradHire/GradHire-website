@@ -1,6 +1,7 @@
 <?php
 
 use app\src\controller\AuthController;
+use app\src\controller\AvisController;
 use app\src\controller\CandidatureController;
 use app\src\controller\CompteRenduController;
 use app\src\controller\ConventionsController;
@@ -253,5 +254,10 @@ $app->router->get('/gererSimulPstage/refuse/{id}', [PstageController::class, 'ge
 $app->router->post('/gererSimulPstage/refuse/{id}', [PstageController::class, 'gererSimulPstagerefuse']);
 
 $app->router->get('gererSimulPstage/motif/{id}', [PstageController::class, 'motifRefus']);
+//AvisController
+$app->router->get('/entreprises/{id:\d+}/posterAvis', [AvisController::class, 'posterAvis']);
+$app->router->post('/entreprises/{id:\d+}/posterAvis', [AvisController::class, 'posterAvis']);
+$app->router->get('/entreprises/{id:\d+}/modifierAvis', [AvisController::class, 'modifierAvis']);
+$app->router->post('/entreprises/{id:\d+}/modifierAvis', [AvisController::class, 'modifierAvis']);
 
 $app->run();

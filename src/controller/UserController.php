@@ -124,7 +124,7 @@ class UserController extends AbstractController
             $offres = (new OffresRepository())->getOffresByIdEntreprise($id);
             return $this->render('entreprise/detailEntreprise', ['entreprise' => $entreprise, 'offres' => $offres]);
         }
-        if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Student, Roles::Teacher)) {
+        if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Student, Roles::Teacher, Roles::Tutor, Roles::TutorTeacher)) {
             $entreprises = (new EntrepriseRepository([]))->getAll();
             return $this->render('entreprise/entreprise', ['entreprises' => $entreprises]);
         } else {

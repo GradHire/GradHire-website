@@ -7,6 +7,7 @@
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
+use app\src\model\repository\AvisRepository;
 
 
 ?>
@@ -91,7 +92,20 @@ use app\src\model\dataObject\Roles;
                     else echo("Non renseigné");
                     ?></dd>
             </div>
-            <?php if ($offres != null) { ?>
+            <?php
+            if (Auth::has_role(Roles::ManagerAlternance, Roles::Manager, Roles::TutorTeacher, Roles::Student, Roles::Teacher, Roles::Staff)) {
+                ?>
+                <div>
+                    <h2>Avis Anonyme sur l'entreprise :</h2>
+                    <?php
+                    $avis = AvisRepository::getAvisEntreprise($entreprise->getIdutilisateur());
+                    foreach ($avis as $avi) {
+                        echo "- " . $avi['avis'] . "<br>";
+                    }
+                    ?>
+                </div>
+            <?php }
+            if ($offres != null) { ?>
                 <div class="px-4 py-6 sm:gap-4 sm:px-0">
                     <div class="w-full">
                         <table class="w-full divide-y-2 divide-zinc-200 bg-white text-sm">

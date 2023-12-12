@@ -296,6 +296,19 @@ class EntrepriseRepository extends ProRepository
         $requete->execute(['nomEnt' => $nomEnt, 'email' => $email, 'tel' => $tel, 'string' => $string, 'type' => $type, 'effectif' => $effectif, 'codeNaf' => $codeNaf, 'fax' => $fax, 'web' => $web, 'voie' => $voie, 'cedex' => $cedex, 'residence' => $residence, 'codePostal' => $codePostal, 'pays' => $pays, 'nomville' => $nomville, 'siret' => $siret]);
     }
 
+    public static function getNomEntrepriseById(int $idUtilisateur): ?string
+    {
+        $sql = "SELECT nom FROM " . self::$view . " WHERE idUtilisateur = :idUtilisateur";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idUtilisateur' => $idUtilisateur]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetch();
+        if (!$resultat) {
+            return null;
+        }
+        return $resultat['nom'];
+    }
+
 
     protected
     function getNomColonnes(): array
