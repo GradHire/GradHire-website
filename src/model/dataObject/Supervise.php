@@ -4,10 +4,10 @@ namespace app\src\model\dataObject;
 
 class Supervise extends AbstractDataObject
 {
-    private int $idStudent;
-    private int $idTeacher;
-    private int $idTutor;
-    private int $idOffre;
+    private int $idetudiant;
+    private int $idutilisateur;
+    private int $idtuteurentreprise;
+    private int $idoffre;
     private string $statut;
 
     public function __construct(array $attributes)
@@ -18,44 +18,44 @@ class Supervise extends AbstractDataObject
             }
     }
 
-    public function getIdStudent(): int
+    public function getIdetudiant(): int
     {
-        return $this->idStudent;
+        return $this->idetudiant;
     }
 
-    public function setIdStudent(int $idStudent): void
+    public function setIdetudiant(int $idetudiant): void
     {
-        $this->idStudent = $idStudent;
+        $this->idetudiant = $idetudiant;
     }
 
-    public function getIdTeacher(): int
+    public function getIdutilisateur(): int
     {
-        return $this->idTeacher;
+        return $this->idutilisateur;
     }
 
-    public function setIdTeacher(int $idTeacher): void
+    public function setIdutilisateur(int $idutilisateur): void
     {
-        $this->idTeacher = $idTeacher;
+        $this->idutilisateur = $idutilisateur;
     }
 
-    public function getIdTutor(): int
+    public function getIdtuteurentreprise(): int
     {
-        return $this->idTutor;
+        return $this->idtuteurentreprise;
     }
 
-    public function setIdTutor(int $idTutor): void
+    public function setIdtuteurentreprise(int $idtuteurentreprise): void
     {
-        $this->idTutor = $idTutor;
+        $this->idtuteurentreprise = $idtuteurentreprise;
     }
 
-    public function getIdOffre(): int
+    public function getIdoffre(): int
     {
-        return $this->idOffre;
+        return $this->idoffre;
     }
 
-    public function setIdOffre(int $idOffre): void
+    public function setIdoffre(int $idoffre): void
     {
-        $this->idOffre = $idOffre;
+        $this->idoffre = $idoffre;
     }
 
     public function getStatut(): string
@@ -67,6 +67,7 @@ class Supervise extends AbstractDataObject
     {
         $this->statut = $statut;
     }
+    
 
     protected function getValueColonne(string $nomColonne): string
     {

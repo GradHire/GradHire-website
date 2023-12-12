@@ -198,7 +198,7 @@ class DashboardController extends AbstractController
             $title = "Visite de stage";
             if (!Auth::has_role(Roles::Student)) {
                 $supervise = SuperviseRepository::getByConvention($visite->getNumConvention());
-                $name = EtudiantRepository::getFullNameByID($supervise->getIdStudent());
+                $name = EtudiantRepository::getFullNameByID($supervise->getIdetudiant());
                 $title .= " de " . $name;
             }
             $e = new Event($title, $visite->getDebutVisite(), $visite->getFinVisite(), "#1c4ed8");
