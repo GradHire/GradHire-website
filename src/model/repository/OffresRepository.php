@@ -240,51 +240,41 @@ class OffresRepository extends AbstractRepository
 	/**
 	 * @throws ServerErrorException
 	 */
-	public function getTop5DomainesPlusDemandes(): false|array
+	public function getTop5DomainesPlusDemandes(): array
 	{
-		$data = self::FetchAll("SELECT * FROM top_5_domaines_plus_demandes_cache;");
-		if (!$data) return false;
-		return $data;
+		return self::FetchAll("SELECT * FROM top_5_domaines_plus_demandes_cache;") ?? [];
 	}
 
 	/**
 	 * @throws ServerErrorException
 	 */
-	public function getMoyenneCandidaturesParOffreParDomaine(): false|array
+	public function getMoyenneCandidaturesParOffreParDomaine(): array
 	{
-		$data = self::FetchAll("SELECT * FROM moyenne_candidatures_par_offre_par_domaine_cache;");
-		if (!$data) return false;
-		return $data;
+		return self::FetchAll("SELECT * FROM moyenne_candidatures_par_offre_par_domaine_cache;") ?? [];
 	}
 
 	/**
 	 * @throws ServerErrorException
 	 */
-	public function getStatsDistributionDomaine(): false|array
+	public function getStatsDistributionDomaine(): array
 	{
-		$data = self::FetchAll("SELECT * FROM distribution_stage_alternance_par_domaine_cache;");
-		if (!$data) return false;
-		return $data;
+		return self::FetchAll("SELECT * FROM distribution_stage_alternance_par_domaine_cache;") ?? [];
 	}
 
 	/**
 	 * @throws ServerErrorException
 	 */
-	public function getStatsDensembleStageEtAlternance(): false|array
+	public function getStatsDensembleStageEtAlternance(): array
 	{
-		$data = self::Fetch("SELECT * FROM obtenir_vue_ensemble_stage_et_alternance_cache;");
-		if (!$data) return false;
-		return $data;
+		return self::Fetch("SELECT * FROM obtenir_vue_ensemble_stage_et_alternance_cache;") ?? [];
 	}
 
 	/**
 	 * @throws ServerErrorException
 	 */
-	public function getOffresDernierSemaine(): false|array
+	public function getOffresDernierSemaine(): array
 	{
-		$data = self::FetchAll("SELECT * FROM obtenir_offres_dernier_semaine_cache;");
-		if (!$data) return false;
-		return $data;
+		return self::FetchAll("SELECT * FROM obtenir_offres_dernier_semaine_cache;") ?? [];
 	}
 
 	protected
