@@ -5,20 +5,9 @@ use app\src\core\components\Lien;
 use app\src\core\components\Notification;
 use app\src\core\components\Separator;
 use app\src\model\Application;
-use app\src\view\resources\icons\I_Dashboard;
 
-/** @var Lien $lienAccueil
- * @var Lien $lienOffres
- * @var Lien $logout
- * @var Lien $lienExplicationSimu
- * @var Lien $lienConventions
- * @var Lien $lienImport
- * @var Lien $lienTuteurs
- * @var Lien $lienCreate
- * @var Lien $lienCandidatures
- * @var Lien $lienEntreprises
- * @var Lien $lienUtilisateurs
- *
+/** @var array $sections
+ * @var array $actions
  */
 
 require __DIR__ . '/liens.php';
@@ -98,7 +87,7 @@ $modalAddSection = new Modal("Êtes-vous sûr de vouloir archiver cette offre ?"
                     </svg>
                 </a>
             </div>
-            <div class="h-full w-full z-40 flex gap-2 flex-col relative items-start">
+            <div class="h-full w-full z-40 flex gap-1.5 flex-col relative items-start">
                 <div class="w-full flex flex-row justify-between items-center">
                     <span class="uppercase text-zinc-400 font-light text-[8px] duration-300 tracking-widest sectionText <?= $isOpen ? " text-[12px] " : " text-[8px] " ?>">Sections</span>
                     <button <?= $modalAddSection ? $modalAddSection->Show("/offres/" . "/archive?" . Application::getRedirect()) : "" ?>
@@ -111,11 +100,10 @@ $modalAddSection = new Modal("Êtes-vous sûr de vouloir archiver cette offre ?"
                     </button>
                 </div>
                 <?php
-                Lien::render([
-                    'href' => 'dashboard',
-                    'nom' => 'Dashboard',
-                    'svg' => I_Dashboard::render('w-4 h-4')]);
-
+                foreach ($sections as $section) {
+                    if ($section['href'] === 'logout') continue;
+                    Lien::render($section);
+                }
                 new Separator([]);
                 ?>
                 <div class="w-full flex flex-row justify-between items-center">
@@ -128,11 +116,14 @@ $modalAddSection = new Modal("Êtes-vous sûr de vouloir archiver cette offre ?"
                         </svg>
                     </button>
                 </div>
+                <?php
+                foreach ($actions as $action) Lien::render($action);
+                ?>
             </div>
             <div class="flex items-start justify-start flex-col gap-4 w-full">
                 <?php new Separator([]); ?>
                 <div class="w-full flex flex-row justify-between items-st1">
-<!--                    --><?php //$logout->render(); ?>
+                    <?php Lien::render($sections['S11']); ?>
                 </div>
             </div>
         </div>
