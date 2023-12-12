@@ -242,7 +242,9 @@ class OffresRepository extends AbstractRepository
 	 */
 	public function getTop5DomainesPlusDemandes(): false|array
 	{
-		return self::FetchAll("SELECT * FROM top_5_domaines_plus_demandes_cache;");
+		$data = self::FetchAll("SELECT * FROM top_5_domaines_plus_demandes_cache;");
+		if (!$data) return false;
+		return $data;
 	}
 
 	/**
@@ -250,7 +252,9 @@ class OffresRepository extends AbstractRepository
 	 */
 	public function getMoyenneCandidaturesParOffreParDomaine(): false|array
 	{
-		return self::FetchAll("SELECT * FROM moyenne_candidatures_par_offre_par_domaine_cache;");
+		$data = self::FetchAll("SELECT * FROM moyenne_candidatures_par_offre_par_domaine_cache;");
+		if (!$data) return false;
+		return $data;
 	}
 
 	/**
@@ -258,7 +262,9 @@ class OffresRepository extends AbstractRepository
 	 */
 	public function getStatsDistributionDomaine(): false|array
 	{
-		return self::FetchAll("SELECT * FROM distribution_stage_alternance_par_domaine_cache;");
+		$data = self::FetchAll("SELECT * FROM distribution_stage_alternance_par_domaine_cache;");
+		if (!$data) return false;
+		return $data;
 	}
 
 	/**
@@ -266,7 +272,9 @@ class OffresRepository extends AbstractRepository
 	 */
 	public function getStatsDensembleStageEtAlternance(): false|array
 	{
-		return self::Fetch("SELECT * FROM obtenir_vue_ensemble_stage_et_alternance_cache;");
+		$data = self::Fetch("SELECT * FROM obtenir_vue_ensemble_stage_et_alternance_cache;");
+		if (!$data) return false;
+		return $data;
 	}
 
 	/**
@@ -274,7 +282,9 @@ class OffresRepository extends AbstractRepository
 	 */
 	public function getOffresDernierSemaine(): false|array
 	{
-		return self::FetchAll("SELECT * FROM obtenir_offres_dernier_semaine_cache;");
+		$data = self::FetchAll("SELECT * FROM obtenir_offres_dernier_semaine_cache;");
+		if (!$data) return false;
+		return $data;
 	}
 
 	protected
