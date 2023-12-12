@@ -53,7 +53,7 @@ $this->title = 'Conventions';
             else
                 Table::cell("");
 //                Table::button("/unvalidateConvention/" . $convention->getNumConvention(), "Invalider");
-        } else if (Auth::has_role(Roles::TutorTeacher, Roles::Teacher) && !SoutenanceRepository::getIfJuryExist(Application::getUser()->id(), $convention->getNumConvention()) && $convention->getConventionValide() == "1" && $convention->getConvetionValideePedagogiquement() == "1") {
+        } else if (Auth::has_role(Roles::TutorTeacher, Roles::Teacher) && !SoutenanceRepository::getIfJuryExist(Application::getUser()->id(), $convention->getNumConvention()) && $convention->getConventionValidee() == "1" && $convention->getConvetionValideePedagogiquement() == "1") {
             if (!SoutenanceRepository::getIfImTheTuteurProf(Application::getUser()->id(), $convention->getNumConvention())) {
                 Table::button("/seProposerJury/" . $convention->getNumConvention(), "Etre jury");
             } else {
