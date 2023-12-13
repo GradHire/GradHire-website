@@ -15,7 +15,6 @@ class Separator implements ComponentInterface
         $this->color = $params['color'] ?? 'zinc-200';
         $this->orientation = $params['orientation'] ?? 'horizontal';
 
-
         if ($this->orientation === 'vertical') {
             $this->width = $params['width'] ?? '[1px]';
             $this->height = $params['height'] ?? 'full';
