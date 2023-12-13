@@ -2,6 +2,7 @@
 /** @var $entreprises Entreprise[] */
 
 use app\src\core\components\Table;
+use app\src\core\exception\ForbiddenException;
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\repository\AvisRepository;
@@ -9,7 +10,9 @@ use app\src\model\dataObject\Entreprise;
 use app\src\model\dataObject\Roles;
 
 $this->title = 'Entreprises';
-
+if (Auth::has_role(Roles::Enterprise)) {
+    throw new ForbiddenException("Vous n'avez pas le droit de voir cette page");
+}
 ?>
 <div class="overflow-x-auto w-full gap-4 mx-auto">
     <?php

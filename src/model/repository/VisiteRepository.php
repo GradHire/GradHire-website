@@ -127,6 +127,26 @@ class VisiteRepository extends AbstractRepository
         }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getAllByEnterpriseId(int $id)
+    {
+        try {
+            $sql = "SELECT v.* FROM convention c JOIN visite v ON v.num_convention = c.numconvention JOIN Offre o ON o.idoffre=c.idoffre WHERE o.idutilisateur=?";
+            $stmt = Database::get_conn()->prepare($sql);
+            $stmt->execute([$id]);
+            $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+            $result = $stmt->fetchAll();
+            $visites = [];
+            foreach ($result as $row)
+                $visites[] = new Visite($row);
+            return $visites;
+        } catch (\Exception $e) {
+            throw new ServerErrorException();
+        }
+    }
+
 
     /**
      * @throws ServerErrorException

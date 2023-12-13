@@ -1,5 +1,5 @@
 <?php
-/** @var $tuteurs TuteurEntreprise */
+/** @var $tuteurs TuteurEntreprise[] */
 
 /** @var $form FormModel */
 
@@ -25,10 +25,12 @@ $modal = new Modal("Voulez vous vraiment supprimer ce tuteur ?", "Supprimer", ""
 
     if (Auth::has_role(Roles::Enterprise)) {
         $form->start();
-        echo '<div class="flex items-end gap-2">';
+        echo '<div class="flex gap-3"><div class="flex items-end gap-2 flex-grow">';
         $form->field('email');
-        $form->submit("Ajouter");
         echo '</div>';
+        echo '<div class="flex items-end">';
+        $form->submit("Ajouter");
+        echo '</div></div>';
         $form->getError();
         $form->getSuccess();
         $form->end();
@@ -42,7 +44,6 @@ $modal = new Modal("Voulez vous vraiment supprimer ce tuteur ?", "Supprimer", ""
         echo "<p>Aucun tuteur</p>";
     else {
         Table::createTable($tuteurs, ["nom", "prénom", "email", "numtelephone", "fonction"], function ($tuteur) {
-            $tuteur = (new TuteurEntrepriseRepository([]))->construireTuteurProDepuisTableau($tuteur);
             Table::cell($tuteur->getNom());
             Table::cell($tuteur->getPrenom());
             Table::cell($tuteur->getEmail());
