@@ -1,9 +1,7 @@
 {
-  "config": {
-    "sections": [
-      "S01"
-    ],
-    "actions": [
-    ]
-  }
+  "sections": [
+    "S01"
+  ],
+  "actions": [
+  ]
 }

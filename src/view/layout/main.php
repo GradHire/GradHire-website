@@ -1,10 +1,11 @@
 <?php
 
-use app\src\core\components\layout\Modal;
+use app\src\core\components\FormModal;
 use app\src\core\components\Lien;
 use app\src\core\components\Notification;
 use app\src\core\components\Separator;
 use app\src\model\Application;
+use app\src\model\Form\FormModel;
 
 /** @var array $allSections
  * @var array $allActions
@@ -18,30 +19,17 @@ require __DIR__ . "/sidebar.php";
 $parametresContent = file_get_contents(__DIR__ . "/data/parametres_default.json");
 $parametres = json_decode($parametresContent, true);
 
-$config = $parametres['config'] ?? null;
-if ($config !== null) {
-    $sections = $config['sections'] ?? [];
-    $actions = $config['actions'] ?? [];
-} else {
-    $sections = [];
-    $actions = [];
-}
+$sections = $parametres['sections'] ?? [];
+$actions = $parametres['actions'] ?? [];
 
 if (isset($_SESSION['parametres']) && $_SESSION['parametres'] !== null) {
     $parametres = $_SESSION['parametres'];
-    $config = $parametres['config'] ?? null;
-    if ($config !== null) {
-        $sections = $config['sections'] ?? [];
-        $actions = $config['actions'] ?? [];
-    } else {
-        $sections = [];
-        $actions = [];
-    }
+    $sections = $parametres['sections'] ?? [];
+    $actions = $parametres['actions'] ?? [];
 }
 
 $filteredSections = [];
 $filteredActions = [];
-
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -86,15 +74,42 @@ $filteredActions = [];
 <div id="blur-background"
      class="hidden w-screen h-screen fixed z-50 top-0 left-0 bg-white/50 backdrop-blur-[4px]"></div>
 <?php
+/**
+ * @throws \app\src\core\exception\ServerErrorException
+ */
+function generateFormCheckboxes($items, $selectedItems, $defaultKey)
+{
+    $checkboxes = [];
 
-$modalAddSection = new Modal("Êtes-vous sûr de vouloir archiver cette offre ?", "Oui, archiver", '
- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                 stroke="currentColor"
-                 class="text-zinc-400 dark:text-zinc-500 w-11 h-11 mb-3.5 mx-auto">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
-            </svg>');
+    foreach ($items as $itemId => $item) {
+        $checkbox = FormModel::checkbox("", [$itemId => $item['nom']]);
+        $checkboxes[$itemId] = $checkbox;
+
+        if (in_array($itemId, $selectedItems)) {
+            $checkbox->default([$itemId]);
+        }
+    }
+
+    return new FormModal(function () use ($checkboxes, $defaultKey) {
+        $form = new FormModel($checkboxes);
+        $form->setAction("/modifierParametres/{$defaultKey}?" . Application::getRedirect());
+        $form->start();
+        echo "<div class='flex flex-col justify-center items-center gap-2 mb-4'>";
+        echo "<span class='text-xl font-bold'>Ajouter une {$defaultKey} dans le menu</span>";
+        foreach ($checkboxes as $itemId => $checkbox) {
+            $form->field($itemId);
+        }
+        echo "</div>";
+        $form->submit("Enregistrer");
+        $form->end();
+    });
+}
+
+$modalAddSection = generateFormCheckboxes($allSections, $sections, "sections");
+$modalAddAction = generateFormCheckboxes($allActions, $actions, "actions");
+
 ?>
+
 
 <div class="w-full flex justify-start items-start bg-zinc-50 flex-row duration-300">
     <div id="sidebar-container"
@@ -118,7 +133,7 @@ $modalAddSection = new Modal("Êtes-vous sûr de vouloir archiver cette offre ?"
             <div class="h-full w-full z-40 flex gap-1.5 flex-col relative items-start">
                 <div class="w-full flex flex-row justify-between items-center">
                     <span class="uppercase text-zinc-400 font-light text-[8px] duration-300 tracking-widest sectionText <?= $isOpen ? " text-[12px] " : " text-[8px] " ?>">Sections</span>
-                    <button <?= $modalAddSection ? $modalAddSection->Show("/offres/" . "/archive?" . Application::getRedirect()) : "" ?>
+                    <button <?= $modalAddSection ? $modalAddSection->Show() : "" ?>
                             class="flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                              class="w-5 h-5 hover:fill-zinc-800 fill-zinc-400 duration-300 sectionAdd"
@@ -140,10 +155,11 @@ $modalAddSection = new Modal("Êtes-vous sûr de vouloir archiver cette offre ?"
                 ?>
                 <div class="w-full flex flex-row justify-between items-center">
                     <span class="uppercase text-zinc-400 font-light text-[8px] duration-300 tracking-widest sectionText <?= $isOpen ? " text-[12px] " : " text-[8px] " ?>">Actions</span>
-                    <button>
+                    <button <?= $modalAddAction ? $modalAddAction->Show() : "" ?>
+                            class="flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                             style="display: <?= $isOpen ? "block" : "none" ?>"
-                             class="w-5 h-5 hover:fill-zinc-800 fill-zinc-400 duration-300 sectionAdd">
+                             class="w-5 h-5 hover:fill-zinc-800 fill-zinc-400 duration-300 sectionAdd"
+                             style="display: <?= $isOpen ? "block" : "none" ?>">
                             <path d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"/>
                         </svg>
                     </button>

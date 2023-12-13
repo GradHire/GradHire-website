@@ -6,17 +6,17 @@ use app\src\core\exception\ServerErrorException;
 
 class Modal
 {
-	private string $id;
+    private string $id;
 
-	/**
-	 * @throws ServerErrorException
-	 */
-	public function __construct(string $body, string $btn, string $svg = "")
-	{
-		echo '<script src="/resources/js/modal.js"></script>';
-		try {
-			$this->id = bin2hex(random_bytes(5));
-			echo <<<HTML
+    /**
+     * @throws ServerErrorException
+     */
+    public function __construct(string $body, string $btn, string $svg = "")
+    {
+        echo '<script src="/resources/js/modal.js"></script>';
+        try {
+            $this->id = bin2hex(random_bytes(5));
+            echo <<<HTML
     <div id="$this->id" tabindex="-1" aria-hidden="true"
          class="fixed hidden z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md">
         <div class="relative p-10 text-center bg-white rounded-lg border dark:bg-zinc-800 sm:p-10 shadow-xl">
@@ -33,7 +33,9 @@ class Modal
                 <span class="sr-only">Close modal</span>
             </button>
             $svg
-            <p class="mb-4 text-zinc-500 dark:text-zinc-300">$body</p>
+HTML;
+            echo "<p class=\"mb-4 text-zinc-500 dark:text-zinc-300\">$body</p>";
+            echo <<<HTML
             <div class="flex justify-center items-center space-x-4">
                 <button data-modal-toggle="deleteModal" type="button"
                         onclick="closeModal('$this->id')"
@@ -52,13 +54,13 @@ class Modal
         </div>
     </div>
 HTML;
-		} catch (\Exception) {
-			throw new ServerErrorException();
-		}
-	}
+        } catch (\Exception) {
+            throw new ServerErrorException();
+        }
+    }
 
-	public function Show(string $action): string
-	{
-		return "onclick='showModal(\"$this->id\", \"$action\");'";
-	}
+    public function Show(string $action): string
+    {
+        return "onclick='showModal(\"$this->id\", \"$action\");'";
+    }
 }
