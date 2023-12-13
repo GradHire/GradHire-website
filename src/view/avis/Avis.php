@@ -3,7 +3,7 @@
 use app\src\model\Form\FormModel;
 ?>
 
-<div class="w-full max-w-md pt-12 pb-24 gap-2 flex flex-col">
+<div class="w-full max-w-md pt-12 pb-24 gap-2 flex flex-col mx-auto max-w-md">
     <h3 class="text-lg leading-6 font-medium text-gray-900">
         Avis sur l'entreprise
     </h3>

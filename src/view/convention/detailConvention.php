@@ -4,8 +4,11 @@
 
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
+use app\src\model\repository\ConventionRepository;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\OffresRepository;
+use app\src\model\repository\SoutenanceRepository;
+use app\src\model\repository\VisiteRepository;
 
 if (Auth::has_role(Roles::Enterprise) && Auth::get_user()->id() != (new OffresRepository())->getById($convention['idoffre'])->getIdutilisateur()) {
     throw new Exception("Vous n'avez pas le droit d'accéder à cette convention car elle n'appartient pas à votre entreprise.");
@@ -111,10 +114,22 @@ Non valide
         </dl>
 
         <div class="flex justify-center mt-8">
-            <a href="/visite/<?php echo $convention['numconvention'] ?>"
-               class="btn btn-primary bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Voir la
-                date de
-                visite</a>
+            <?php
+            if (!VisiteRepository::getIfVisiteExist($convention['numconvention']) && Auth::has_role(Roles::Student, Roles::Enterprise, Roles::TutorTeacher, Roles::Tutor, Roles::Teacher) || (Auth::has_role(Roles::TutorTeacher, Roles::Tutor) && ConventionRepository::imOneOfTheTutor(Auth::get_user()->id(), $convention['numconvention']))) {
+                    ?>
+                    <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt class="text-sm font-medium leading-6 text-zinc-900">En attente de visite</dt>
+                    </div>
+                    <?php
+            } else {
+                ?>
+                <a href="/visite/<?php echo $convention['numconvention'] ?>"
+                   class="btn btn-primary bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Voir la
+                    date de
+                    visite</a>
+                <?php
+            }
+            ?>
         </div>
     </div>
 </div>

@@ -89,7 +89,7 @@ class ConventionRepository extends AbstractRepository
 
 	public static function getConventionXOffreById(mixed $id)
 	{
-		$statement = Database::get_conn()->prepare("SELECT c.idoffre, o.idutilisateur, o.sujet FROM convention c JOIN Offre o ON c.idoffre = o.idoffre WHERE numconvention = :id");
+		$statement = Database::get_conn()->prepare("SELECT c.idutilisateur as idetudiant, c.idoffre, o.idutilisateur, o.sujet FROM convention c JOIN Offre o ON c.idoffre = o.idoffre WHERE numconvention = :id");
 		$statement->execute([
 			'id' => $id
 		]);
@@ -193,7 +193,20 @@ class ConventionRepository extends AbstractRepository
 		}
 	}
 
-	/**
+    public static function imOneOfTheTutor(int $id, $numconvention)
+    {
+        $statement = Database::get_conn()->prepare("SELECT idtuteurprof, idtuteurentreprise FROM \"conventionValideVue\" WHERE numconvention = :numconvention");
+        $statement->execute([
+            'numconvention' => $numconvention
+        ]);
+        $data = $statement->fetch();
+        if ($data["idtuteurprof"] == $id || $data["idtuteurentreprise"] == $id)
+            return true;
+        else
+            return false;
+    }
+
+    /**
 	 * @throws ServerErrorException
 	 */
 	public function getAll(): array

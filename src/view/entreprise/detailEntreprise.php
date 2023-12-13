@@ -95,14 +95,16 @@ use app\src\model\repository\AvisRepository;
             <?php
             if (Auth::has_role(Roles::ManagerAlternance, Roles::Manager, Roles::TutorTeacher, Roles::Student, Roles::Teacher, Roles::Staff)) {
                 ?>
-                <div>
-                    <h2>Avis Anonyme sur l'entreprise :</h2>
+                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <dt class="text-sm font-medium leading-6 text-zinc-900">Avis Anonyme sur l'entreprise :</dt>
+                    <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                     <?php
                     $avis = AvisRepository::getAvisEntreprise($entreprise->getIdutilisateur());
                     foreach ($avis as $avi) {
                         echo "- " . $avi['avis'] . "<br>";
                     }
                     ?>
+                        </dd>
                 </div>
             <?php }
             if ($offres != null) { ?>

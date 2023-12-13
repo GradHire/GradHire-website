@@ -89,6 +89,11 @@ class SoutenanceRepository extends AbstractRepository
             return true;
     }
 
+    public static function imOneOfTheTutor($id, $getNumConvention)
+    {
+        return self::imTheTuteurProf($id, $getNumConvention) || self::imTheTuteurEntreprise($id, $getNumConvention);
+    }
+
     public static function imTheTuteurProf($id, $getNumConvention)
     {
         $sql = Database::get_conn()->prepare("SELECT * FROM " . self::$table . " WHERE idtuteurprof = :id AND numconvention = :numconvention");

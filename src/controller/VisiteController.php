@@ -46,8 +46,8 @@ class VisiteController extends AbstractController
 
 		$supervise = SuperviseRepository::getByConvention($numConvention);
 		if (!$supervise) throw new NotFoundException();
-		if (Auth::has_role(Roles::Tutor) && Application::getUser()->id() !== $supervise->getIdtuteurentreprise()) throw new ForbiddenException();
-		if (Auth::has_role(Roles::TutorTeacher) && Application::getUser()->id() !== $supervise->getIdutilisateur()) throw new ForbiddenException();
+		if (Auth::has_role(Roles::Tutor) && Application::getUser()->id() !== $supervise->getIdtuteurentreprise()) throw new ForbiddenException("vous n'êtes pas le tuteur de l'entreprise");
+		if (Auth::has_role(Roles::TutorTeacher) && Application::getUser()->id() !== $supervise->getIdutilisateur()) throw new ForbiddenException("vous n'êtes pas le tuteur professeur de l'étudiant");
 
 		if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager)) {
 			$form = new FormModel([

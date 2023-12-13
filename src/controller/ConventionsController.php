@@ -53,7 +53,6 @@ class ConventionsController extends AbstractController
         $id = $request->getRouteParams()["id"];
         ConventionRepository::validerPedagogiquement($id);
         $array = ConventionRepository::getConventionXOffreById($id);
-        print_r($array);
         $mail = new MailRepository();
         $entreprise = EntrepriseRepository::getEmailById($array['idutilisateur']);
         $mail->send_Mail(
@@ -75,7 +74,6 @@ class ConventionsController extends AbstractController
         $mail = new MailRepository();
         $entreprise = EntrepriseRepository::getEmailById($array['idutilisateur']);
         echo "Email : ";
-        print_r($entreprise);
         $mail->send_Mail(
             [$entreprise['email']],
             "Convention non validée pédagogiquement",
@@ -93,8 +91,8 @@ class ConventionsController extends AbstractController
         ConventionRepository::unvalidate($id);
         $array = ConventionRepository::getConventionXOffreById($id);
         $mail = new MailRepository();
-        $entreprise = (new EntrepriseRepository([]))->getByIdFull($array['idoffre']);
-        $etudiant = EtudiantRepository::getEmailById($array["idutilisateur"]);
+        $entreprise = (new EntrepriseRepository([]))->getByIdFull($array['idutilisateur']);
+        $etudiant = EtudiantRepository::getEmailById($array["ideetudiant"]);
         $mail->send_Mail(
             [$etudiant['email']],
             "Convention non validée par l'enreprise " . $entreprise->getNom(),
@@ -112,8 +110,8 @@ class ConventionsController extends AbstractController
         ConventionRepository::validate($id);
         $array = ConventionRepository::getConventionXOffreById($id);
         $mail = new MailRepository();
-        $entreprise = (new EntrepriseRepository([]))->getByIdFull($array['idoffre']);
-        $etudiant = EtudiantRepository::getEmailById($array["idutilisateur"]);
+        $entreprise = (new EntrepriseRepository([]))->getByIdFull($array['idutilisateur']);
+        $etudiant = EtudiantRepository::getEmailById($array["idetudiant"]);
         $mail->send_Mail(
             [$etudiant['email']],
             "Convention validée par l'enreprise " . $entreprise->getNom(),

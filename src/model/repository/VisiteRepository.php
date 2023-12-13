@@ -21,6 +21,16 @@ class VisiteRepository extends AbstractRepository
         }
     }
 
+    public static function getIfVisiteExist(int $numConvention): bool
+    {
+            $statement = Database::get_conn()->prepare("select * from visite where num_convention=?");
+            $statement->execute([$numConvention]);
+            $statement->setFetchMode(\PDO::FETCH_ASSOC);
+            $result = $statement->fetch();
+            if (!$result) return false;
+            return true;
+    }
+
     /**
      * @throws ServerErrorException
      */
