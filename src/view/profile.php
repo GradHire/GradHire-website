@@ -3,7 +3,7 @@
 
 /** @var $form FormModel */
 
-use app\src\core\components\Modal;
+use app\src\core\components\layout\Modal;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
@@ -20,7 +20,7 @@ $modal = new Modal("Voulez vous vraiment archiver votre compte ?", "Oui, archive
 ?>
 
 
-<div class="mx-auto pt-5 pb-24 w-full lg:flex lg:gap-x-16">
+<div class="mx-auto gap-4 mx-auto w-full lg:flex lg:gap-x-16">
     <main class="px-4 sm:px-6 lg:flex-auto lg:px-0">
         <div class="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
             <?php
@@ -127,5 +127,5 @@ $modal = new Modal("Voulez vous vraiment archiver votre compte ?", "Oui, archive
                 </div>
             <?php } ?>
         </div>
-    </main>
+    </div>
 </div>

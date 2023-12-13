@@ -4,6 +4,7 @@ namespace app\src\controller;
 
 use app\src\core\components\Calendar\Event;
 use app\src\core\components\Notification;
+use app\src\core\db\Database;
 use app\src\core\exception\ForbiddenException;
 use app\src\core\exception\NotFoundException;
 use app\src\core\exception\ServerErrorException;
@@ -30,6 +31,44 @@ use app\src\model\Request;
 
 class DashboardController extends AbstractController
 {
+
+    public function modifierParametres(Request $request): void
+    {
+        $typeBlock = $request->getRouteParams()["type"];
+        $selectedItems = [];
+
+        if ($typeBlock === 'sections' || $typeBlock === 'actions') {
+            foreach ($request->getBody() as $key => $value) {
+                if (strpos($key, $typeBlock === 'sections' ? 'S' : 'A') === 0) {
+                    $selectedItems[] = $key;
+                }
+            }
+        }
+
+        if (!isset($_SESSION['parametres']['config'])) {
+            $_SESSION['parametres']['config'] = [
+                'sections' => [],
+                'actions' => []
+            ];
+        }
+
+        // Preserve existing values
+        if ($typeBlock === 'sections') {
+            $_SESSION['parametres']['config']['sections'] = $selectedItems;
+        } elseif ($typeBlock === 'actions') {
+            $_SESSION['parametres']['config']['actions'] = $selectedItems;
+        }
+
+        $newConfig = $_SESSION['parametres']['config'];
+
+        $configJson = json_encode($newConfig);
+
+        $statement = Database::get_conn()->prepare("UPDATE parametres SET config = ? WHERE idutilisateur = ?;");
+        $statement->execute([$configJson, Application::getUser()->id()]);
+
+        Application::redirectFromParam("/dashboard");
+    }
+
 
     /**
      * @throws ServerErrorException
@@ -128,13 +167,6 @@ class DashboardController extends AbstractController
         $waiting = EntrepriseRepository::getTuteurWaitingList(Application::getUser()->id());
         return $this->render('tuteurPro/listeTuteurPro', ['tuteurs' => $tuteurs, 'form' => $form, 'waiting' => $waiting]);
     }
-
-    /**
-     * @throws ForbiddenException
-     * @throws ServerErrorException
-     * @throws NotFoundException
-     */
-
 
     /**
      * @throws ServerErrorException

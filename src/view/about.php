@@ -1,4 +1,4 @@
-<div class="grow max-w-[800px] pt-12 pb-24 gap-2 flex flex-col">
+<div class="grow max-w-[800px] gap-4 mx-auto flex flex-col">
     <h1 class="text-center text-[50px] font-bold">Notre team de développeurs</h1>
     <p class="text-center text-zinc-500">Savoir-faire passionné, collaboration innovante : découvrez les visages
         derrière notre équipe de développement dévouée.</p>

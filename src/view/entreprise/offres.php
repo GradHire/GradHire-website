@@ -9,7 +9,7 @@ use app\src\model\dataObject\Roles;
 
 ?>
 
-<div class="w-full pt-12 pb-24">
+<div class="w-full gap-4 mx-auto">
     <?php if ($offres != null) { ?>
         <div class="px-4 py-6 sm:gap-4 sm:px-0">
             <div class="w-full">

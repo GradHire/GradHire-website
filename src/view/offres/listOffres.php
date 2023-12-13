@@ -3,7 +3,7 @@
 
 /** @var $form FormModel */
 
-use app\src\core\components\Modal;
+use app\src\core\components\layout\Modal;
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Offre;
@@ -25,7 +25,7 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
 }
 ?>
 
-<div class="w-full flex flex-col pt-12 pb-24 gap-4">
+<div class="w-full flex flex-col gap-4 mx-auto gap-4">
     <div class="flex flex-row gap-2 w-full">
         <?php
         if (!Auth::has_role(Roles::Student, Roles::Tutor, Roles::Teacher)) {
@@ -106,22 +106,14 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                     if ($offres != null) {
                         foreach ($offres as $offre) {
                             if ($offre["statut"] === "valider") {
-                                if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher, Roles::TutorTeacher)) {
-                                    require __DIR__ . '/offre.php';
-                                } else if (!Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Teacher, Roles::Tutor, Roles::TutorTeacher) && $offre["statut"] !== "archiver") {
-                                    if (Application::getUser()->attributes()["annee"] == 3 && $offre["anneevisee"] == 2) {
-                                        continue;
-                                    } else {
-                                        require __DIR__ . '/offre.php';
-                                    }
-                                } else if (Auth::has_role(Roles::Enterprise, Roles::Tutor) && $offre->getIdutilisateur() == Application::getUser()->id()) {
-                                    require __DIR__ . '/offre.php';
-                                }
+                                if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher, Roles::TutorTeacher)) require __DIR__ . '/offre.php';
+                                else if (!Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Teacher, Roles::Tutor, Roles::TutorTeacher) && $offre["statut"] !== "archiver") {
+                                    if (Application::getUser()->attributes()["annee"] == 3 && $offre["anneevisee"] == 2) continue;
+                                    else require __DIR__ . '/offre.php';
+                                } else if (Auth::has_role(Roles::Enterprise, Roles::Tutor) && $offre->getIdutilisateur() == Application::getUser()->id()) require __DIR__ . '/offre.php';
                             }
                         }
-                    } else {
-                        require __DIR__ . '/errorOffre.php';
-                    }
+                    } else require __DIR__ . '/errorOffre.php';
                     ?>
                 </div>
             </div>
@@ -133,12 +125,8 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
             ?>
             <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
                 <?php
-                if ($offres != null) {
-                    foreach ($offres as $offre) {
-                        if ($offre["statut"] === "en attente" && Auth::has_role(Roles::Manager, Roles::Staff)) {
-                            require __DIR__ . '/offre.php';
-                        }
-                    }
+                if ($offres != null) foreach ($offres as $offre) {
+                    if ($offre["statut"] === "en attente" && Auth::has_role(Roles::Manager, Roles::Staff)) require __DIR__ . '/offre.php';
                 }
                 echo "</div>"; ?>
             </div>
@@ -150,13 +138,10 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
             ?>
             <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
                 <?php
-                if ($offres != null) {
-                    foreach ($offres as $offre) {
-                        if ($offre["statut"] === "archiver" && Auth::has_role(Roles::Manager, Roles::Staff)) {
-                            require __DIR__ . '/offre.php';
-                        }
-                    }
+                if ($offres != null) foreach ($offres as $offre) {
+                    if ($offre["statut"] === "archiver" && Auth::has_role(Roles::Manager, Roles::Staff)) require __DIR__ . '/offre.php';
                 }
+
                 echo "</div>"; ?>
             </div>
         </div>

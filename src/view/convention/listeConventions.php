@@ -13,7 +13,7 @@ use app\src\model\repository\VisiteRepository;
 
 $this->title = 'Conventions';
 ?>
-<div class="overflow-x-auto w-full pt-12 pb-24">
+<div class="overflow-x-auto w-full gap-4 mx-auto">
     <?php
     $filteredConventions = [];
     foreach ($conventions as $convention) {

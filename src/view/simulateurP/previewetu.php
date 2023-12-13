@@ -4,7 +4,7 @@
 use app\src\model\Form\FormModel;
 
 ?>
-<div class="w-full max-w-md gap-4 flex flex-col pt-12 pb-24 mx-auto max-w-md">
+<div class="w-full max-w-md gap-4 flex flex-col gap-4 mx-auto mx-auto max-w-md">
 
     <h1 class="text-3xl font-bold text-center">Confirmez les données saisies :</h1>
     <?php

@@ -6,7 +6,7 @@ use app\src\model\Form\FormModel;
 
 ?>
 
-<div class="w-full max-w-md gap-4 flex flex-col pt-12 pb-24">
+<div class="w-full max-w-md gap-4 flex flex-col mx-auto">
 
     <?php $form->start(); ?>
     <div class="w-full gap-4 flex flex-col">

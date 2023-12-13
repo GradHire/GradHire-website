@@ -16,7 +16,7 @@ use app\src\model\repository\OffresRepository;
 Auth::check_role(Roles::Enterprise, Roles::Manager, Roles::Staff);
 
 ?>
-<div class="w-full max-w-md flex flex-col pt-12 pb-24 select-none">
+<div class="w-full max-w-md flex flex-col gap-4 mx-auto select-none">
     <?php
     if (Auth::has_role(Roles::Enterprise)) {
         $draft->start();
