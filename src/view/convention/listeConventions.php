@@ -10,8 +10,11 @@ use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\SoutenanceRepository;
 use app\src\model\repository\VisiteRepository;
+use app\src\model\View;
 
 $this->title = 'Conventions';
+View::setCurrentSection('Conventions');
+
 ?>
 <div class="overflow-x-auto w-full gap-4 mx-auto">
     <?php
