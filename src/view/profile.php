@@ -133,7 +133,7 @@ $modal = new Modal("Voulez vous vraiment archiver votre compte ?", "Oui, archive
         </nav>
     </aside>
 
-    <main class="px-4 py-16 sm:px-6 lg:flex-auto lg:px-0 lg:py-20">
+    <div class="px-4 py-16 sm:px-6 lg:flex-auto lg:px-0 lg:py-20">
         <div class="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
             <?php
             if (!is_null($form)) {
@@ -239,5 +239,5 @@ $modal = new Modal("Voulez vous vraiment archiver votre compte ?", "Oui, archive
                 </div>
             <?php } ?>
         </div>
-    </main>
+    </div>
 </div>

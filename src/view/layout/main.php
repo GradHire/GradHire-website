@@ -6,13 +6,41 @@ use app\src\core\components\Notification;
 use app\src\core\components\Separator;
 use app\src\model\Application;
 
-/** @var array $sections
- * @var array $actions
+/** @var array $allSections
+ * @var array $allActions
+ * @var array $parametres
  */
 
-require __DIR__ . '/liens.php';
-
 if (!isset($_COOKIE['sidebar_open']) || ($_COOKIE['sidebar_open'] == 'true')) $isOpen = true; else $isOpen = false;
+
+require __DIR__ . "/sidebar.php";
+
+$parametresContent = file_get_contents(__DIR__ . "/data/parametres_default.json");
+$parametres = json_decode($parametresContent, true);
+
+$config = $parametres['config'] ?? null;
+if ($config !== null) {
+    $sections = $config['sections'] ?? [];
+    $actions = $config['actions'] ?? [];
+} else {
+    $sections = [];
+    $actions = [];
+}
+
+if (isset($_SESSION['parametres']) && $_SESSION['parametres'] !== null) {
+    $parametres = $_SESSION['parametres'];
+    $config = $parametres['config'] ?? null;
+    if ($config !== null) {
+        $sections = $config['sections'] ?? [];
+        $actions = $config['actions'] ?? [];
+    } else {
+        $sections = [];
+        $actions = [];
+    }
+}
+
+$filteredSections = [];
+$filteredActions = [];
 
 ?>
 <!DOCTYPE html>
@@ -100,9 +128,13 @@ $modalAddSection = new Modal("Êtes-vous sûr de vouloir archiver cette offre ?"
                     </button>
                 </div>
                 <?php
-                foreach ($sections as $section) {
-                    if ($section['href'] === 'logout') continue;
-                    Lien::render($section);
+                foreach ($sections as $sectionId) {
+                    if (isset($allSections[$sectionId])) {
+                        $section = $allSections[$sectionId];
+                        $filteredSections[$sectionId] = $section;
+                        if ($section['href'] === 'logout') continue;
+                        Lien::render($section);
+                    }
                 }
                 new Separator([]);
                 ?>
@@ -117,13 +149,19 @@ $modalAddSection = new Modal("Êtes-vous sûr de vouloir archiver cette offre ?"
                     </button>
                 </div>
                 <?php
-                foreach ($actions as $action) Lien::render($action);
+                foreach ($actions as $actionId) {
+                    if (isset($allActions[$actionId])) {
+                        $action = $allActions[$actionId];
+                        $filteredActions[$actionId] = $action;
+                        Lien::render($action);
+                    }
+                }
                 ?>
             </div>
             <div class="flex items-start justify-start flex-col gap-4 w-full">
                 <?php new Separator([]); ?>
                 <div class="w-full flex flex-row justify-between items-st1">
-                    <?php Lien::render($sections['S11']); ?>
+                    <?php Lien::render($allSections['S11']); ?>
                 </div>
             </div>
         </div>

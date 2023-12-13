@@ -12,9 +12,7 @@ class View
     public function renderView($view, array $params)
     {
         $layoutName = Application::$app->layout;
-        if (Application::$app->controller) {
-            Application::isGuest() ? $layoutName = 'guest' : $layoutName = 'main';
-        }
+        if (Application::$app->controller) Application::isGuest() ? $layoutName = 'guest' : $layoutName = 'main';
         $viewContent = $this->renderViewOnly($view, $params);
         ob_start();
         include_once Application::$ROOT_DIR."/src/view/layout/$layoutName.php";

@@ -40,6 +40,13 @@ class Auth
         Application::setUser($user);
         $duration = $remember ? 604800 : 3600;
         setcookie("token", Token::generate(["id" => $user->id()], $duration), time() + $duration, "/");
+        $statement = Database::get_conn()->prepare("SELECT config FROM parametres WHERE idutilisateur = ?;");
+        $statement->execute([$user->id()]);
+        $parametres = $statement->fetch();
+        if ($parametres) {
+            $config = json_decode($parametres['config'], true);
+            $_SESSION['parametres'] = $config;
+        }
     }
 
     /**
