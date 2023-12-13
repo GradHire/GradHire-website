@@ -26,45 +26,49 @@ use app\src\model\Form\FormModel;
                 class="w-full h-[300px] mb-10"
                 src="https://maps.google.com/maps?q=<?= $addresse ?>&t=&z=13&ie=UTF8&iwloc=&output=embed">
         </iframe>
-        <h2 class="font-bold text-2xl mb-4">Commentaires sur la visite</h2>
         <?php
-        foreach ($commentaires as $commentaire) {
-            if ($commentaire['commentaireprof'] != null) {
-                echo <<<HTML
+        if (count($commentaires) > 0) {
+            ?>
+            <h2 class="font-bold text-2xl mb-4">Commentaires sur la visite</h2>
+            <?php
+            foreach ($commentaires as $commentaire) {
+                if ($commentaire['commentaireprof'] != null) {
+                    echo <<<HTML
             <div class="flex flex-col gap-1 mb-4">
                 <span class="font-bold">Tuteur universitaire :</span>
                  <p>{$commentaire['commentaireprof']}</p>
             </div>
             HTML;
-            }
-            if ($commentaire['commentaireentreprise'] != null) {
-                echo <<<HTML
+                }
+                if ($commentaire['commentaireentreprise'] != null) {
+                    echo <<<HTML
             <div class="flex flex-col gap-1 mb-4">
                 <span class="font-bold">Tuteur entreprise :</span>
                  <p>{$commentaire['commentaireentreprise']}</p>
             </div>
             HTML;
+                }
             }
-        }
-        ?>
-        <h2 class="font-bold text-2xl mb-4">Commentaires sur la soutenance</h2>
-        <?php
-        foreach ($commentaires as $commentaire) {
-            if ($commentaire['commentairesoutenanceprof'] != null) {
-                echo <<<HTML
+            ?>
+            <h2 class="font-bold text-2xl mb-4">Commentaires sur la soutenance</h2>
+            <?php
+            foreach ($commentaires as $commentaire) {
+                if ($commentaire['commentairesoutenanceprof'] != null) {
+                    echo <<<HTML
                 <div class="flex flex-col gap-1 mb-4">
                 <span class="font-bold">Tuteur universitaire :</span>
                  <p>{$commentaire['commentairesoutenanceprof']}</p>
             </div>
             HTML;
-            }
-            if ($commentaire['commentairesoutenanceentreprise'] != null) {
-                echo <<<HTML
+                }
+                if ($commentaire['commentairesoutenanceentreprise'] != null) {
+                    echo <<<HTML
                 <div class="flex flex-col gap-1 mb-4">
                 <span class="font-bold">Tuteur entreprise :</span>
                  <p>{$commentaire['commentairesoutenanceentreprise']}</p>
             </div>
             HTML;
+                }
             }
         }
     }
