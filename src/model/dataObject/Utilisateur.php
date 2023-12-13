@@ -50,7 +50,7 @@ class Utilisateur extends AbstractDataObject
         $this->numtelephone = $numtelephone;
     }
 
-    public function getNom(): string
+    public function getNom(): ?string
     {
         return $this->nom;
     }

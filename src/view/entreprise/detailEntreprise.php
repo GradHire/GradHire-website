@@ -9,13 +9,15 @@ use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\repository\AvisRepository;
 
+$nom = $entreprise->getNom();
+if(empty($nom) || $nom == "") $nom = "Sans nom";
 
 ?>
 <div class="w-full gap-4 mx-auto">
     <div class="w-full flex md:flex-row flex-col  justify-between items-start">
         <div class="px-4 sm:px-0">
-            <h3 class="text-lg font-semibold leading-7 text-zinc-900"><?= $entreprise->getNom() ?></h3>
-            <p class="mt-1 max-w-2xl text-sm leading-6 text-zinc-500"><?= $entreprise->getTypestructure() ?></p>
+            <h3 class="text-lg font-semibold leading-7 text-zinc-900"><?= $nom ?></h3>
+            <p class="mt-1 max-w-2xl text-sm leading-6 text-zinc-500">Structure: <?= $entreprise->getTypestructure() ?? "" ?></p>
         </div>
     </div>
     <div class="mt-6 border-t border-zinc-100">
