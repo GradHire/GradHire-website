@@ -79,7 +79,7 @@ class ConventionRepository extends AbstractRepository
 	public static function getByNumConvention(int $numConvention): array|null
 	{
 		try {
-			$statement = Database::get_conn()->prepare("SELECT * FROM convention WHERE numconvention=?");
+			$statement = Database::get_conn()->prepare("SELECT * FROM \"conventionValideVue\" WHERE numconvention=?");
 			$statement->execute([$numConvention]);
 			return $statement->fetch();
 		} catch (\Exception) {

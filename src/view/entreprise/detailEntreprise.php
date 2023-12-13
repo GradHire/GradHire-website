@@ -10,14 +10,15 @@ use app\src\model\dataObject\Roles;
 use app\src\model\repository\AvisRepository;
 
 $nom = $entreprise->getNom();
-if(empty($nom) || $nom == "") $nom = "Sans nom";
+if (empty($nom) || $nom == "") $nom = "Sans nom";
 
 ?>
 <div class="w-full gap-4 mx-auto">
     <div class="w-full flex md:flex-row flex-col  justify-between items-start">
         <div class="px-4 sm:px-0">
             <h3 class="text-lg font-semibold leading-7 text-zinc-900"><?= $nom ?></h3>
-            <p class="mt-1 max-w-2xl text-sm leading-6 text-zinc-500">Structure: <?= $entreprise->getTypestructure() ?? "" ?></p>
+            <p class="mt-1 max-w-2xl text-sm leading-6 text-zinc-500">
+                Structure: <?= $entreprise->getTypestructure() ?? "" ?></p>
         </div>
     </div>
     <div class="mt-6 border-t border-zinc-100">
@@ -96,19 +97,21 @@ if(empty($nom) || $nom == "") $nom = "Sans nom";
             </div>
             <?php
             if (Auth::has_role(Roles::ManagerAlternance, Roles::Manager, Roles::TutorTeacher, Roles::Student, Roles::Teacher, Roles::Staff)) {
-                ?>
-                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                    <dt class="text-sm font-medium leading-6 text-zinc-900">Avis Anonyme sur l'entreprise :</dt>
-                    <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
-                    <?php
-                    $avis = AvisRepository::getAvisEntreprise($entreprise->getIdutilisateur());
-                    foreach ($avis as $avi) {
-                        echo "- " . $avi['avis'] . "<br>";
-                    }
+                $avis = AvisRepository::getAvisEntreprise($entreprise->getIdutilisateur());
+                if ($avis != null) {
                     ?>
+                    <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt class="text-sm font-medium leading-6 text-zinc-900">Avis Anonyme sur l'entreprise :</dt>
+                        <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
+                            <?php
+                            foreach ($avis as $avi) {
+                                echo "- " . $avi['avis'] . "<br>";
+                            }
+                            ?>
                         </dd>
-                </div>
-            <?php }
+                    </div>
+                <?php }
+            }
             if ($offres != null) { ?>
                 <div class="px-4 py-6 sm:gap-4 sm:px-0">
                     <div class="w-full">
