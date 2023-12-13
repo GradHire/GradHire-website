@@ -202,7 +202,7 @@ if (!isset($_COOKIE['sidebar_open']) || ($_COOKIE['sidebar_open'] == 'true')) $i
                     <div class="flex w-full mt-2 space-x-3 max-w-xs">
                         <div class="flex flex-col gap-2">
                             <div class="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
-                                <p class="text-sm">Salut <?= Application::getUser()->full_name()?> ! Comment puis-je t'aider ?</p>
+                                <p class="text-sm">Salut <?= Application::getUser()->full_name()?></p>
                             </div>
                             <span class="text-xs text-gray-500 leading-none">Gilou</span>
                         </div>
