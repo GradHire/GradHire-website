@@ -176,7 +176,8 @@ $modalAddAction = generateFormCheckboxes($allActions, $actions, "actions");
             </div>
             <div class="flex items-start justify-start flex-col gap-4 w-full">
                 <?php new Separator([]); ?>
-                <div class="w-full flex flex-row justify-between items-st1">
+                <div class="flex items-start justify-start flex-col gap-1.5 w-full">
+                    <?php Lien::render($allSections['S12']); ?>
                     <?php Lien::render($allSections['S11']); ?>
                 </div>
             </div>

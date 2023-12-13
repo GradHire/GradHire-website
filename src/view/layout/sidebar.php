@@ -11,6 +11,7 @@ use app\src\view\resources\icons\I_Link;
 use app\src\view\resources\icons\I_ListeTuteurPro;
 use app\src\view\resources\icons\I_Logout;
 use app\src\view\resources\icons\I_Offres;
+use app\src\view\resources\icons\I_Parametres;
 use app\src\view\resources\icons\I_Utilisateurs;
 
 $allSections = [
@@ -68,6 +69,11 @@ $allSections = [
         'href' => 'logout',
         'nom' => 'Déconnexion',
         'svg' => I_Logout::render('w-4 h-4')
+    ],
+    'S12' => [
+        'href' => 'edit_profile',
+        'nom' => 'Paramètres',
+        'svg' => I_Parametres::render('w-4 h-4')
     ]
 ];
 
