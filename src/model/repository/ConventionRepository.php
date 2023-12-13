@@ -193,7 +193,7 @@ class ConventionRepository extends AbstractRepository
 		}
 	}
 
-    public static function imOneOfTheTutor(int $id, $numconvention)
+    public static function imOneOfTheTutor(int $id, $numconvention): bool
     {
         $statement = Database::get_conn()->prepare("SELECT idtuteurprof, idtuteurentreprise FROM \"conventionValideVue\" WHERE numconvention = :numconvention");
         $statement->execute([

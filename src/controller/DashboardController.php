@@ -117,13 +117,15 @@ class DashboardController extends AbstractController
             $utilisateur = array_filter($utilisateur, function ($user) {
                 return $user->getRole() !== Roles::ChefDepartment->value;
             });
-        } else {
+        } else if (Auth::has_role(Roles::Manager, Roles::Staff,Roles::ManagerStage,Roles::ManagerAlternance)) {
             $utilisateur = [];
             $entreprises = (new EntrepriseRepository([]))->getAll();
             $etudiants = (new EtudiantRepository([]))->getAll();
             $tuteurs = (new TuteurRepository([]))->getAll();
             $staffs = (new StaffRepository([]))->getAll();
             $utilisateur = array_merge($utilisateur, $entreprises, $etudiants, $tuteurs, $staffs);
+        } else {
+            throw new ForbiddenException("Vous n'avez pas le droit de voir les utilisateurs");
         }
 
         return $this->render('utilisateurs/utilisateurs', ['utilisateurs' => $utilisateur]);
@@ -235,7 +237,7 @@ class DashboardController extends AbstractController
             }
             $e = new Event($title, $visite->getDebutVisite(), $visite->getFinVisite(), "#1c4ed8");
             if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage) || (Auth::has_role(Roles::Student) && ConventionRepository::getStudentId($visite->getNumConvention()))) $e->setButton("Voir plus", "/visite/" . $visite->getNumConvention());
-            if ($visite->getFinVisite() < new \DateTime('now') && ConventionRepository::imOneOfTheTutor(Application::getUser()->id(),Auth::get_user()->id())) {
+            if ($visite->getFinVisite() < new \DateTime('now') && ConventionRepository::imOneOfTheTutor(Auth::get_user()->id(),$visite->getNumConvention())) {
                 if (!CompteRenduRepository::checkIfCompteRenduProfExist($visite->getNumConvention()) && Auth::has_role(Roles::TutorTeacher)) {
                     $e->setButton("deposer compte rendu prof", "/compteRendu/" . $visite->getNumConvention());
                 } else if (!CompteRenduRepository::checkIfCompteRenduEntrepriseExist($visite->getNumConvention()) && Auth::has_role(Roles::Tutor)) {

@@ -68,7 +68,6 @@ $this->title = 'Conventions';
         else if (SoutenanceRepository::getIfSoutenanceExist($convention->getNumConvention()))
         {
             if (Auth::has_role(Roles::TutorTeacher, Roles::Teacher) && !SoutenanceRepository::getIfJuryExist(Application::getUser()->id(), $convention->getNumConvention())) {
-                print_r("fbhreizfjreioj frehz guirepguea hguipeak");
                 if (!SoutenanceRepository::getIfImTheTuteurProf(Application::getUser()->id(), $convention->getNumConvention()) && SoutenanceRepository::getIfSoutenanceExist($convention->getNumConvention())) {
                     Table::button("/seProposerJury/" . $convention->getNumConvention(), "Etre jury");
                 } else {

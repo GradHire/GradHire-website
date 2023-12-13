@@ -41,7 +41,7 @@ class OffresRepository extends AbstractRepository
             if (isset($_GET['sujet']) && $_GET['sujet'] != "")
                 $filtres[] = "sujet LIKE :sujet";
             if (isset($params['year']) && $params['year'] != "all") $filtres[] = "anneevisee=" . $params['year'];
-            if (isset($params["duration"]) && $params["duration"] != "all") $filtres[] = "duree=" . $params["duration"];
+            if (isset($params["duration"]) && $params["duration"] != "all") $filtres[] = "duree='". $params["duration"] ."'";
             if (isset($params["theme"]) && count($params["theme"]) > 0) $filtres[] = self::constructFilterFromArray("thematique", $params["theme"]);
             if (isset($params["gratification"]))
                 $filtres[] = "gratification BETWEEN " . $params["gratification"]["min"] . " AND " . $params["gratification"]["max"];
@@ -55,7 +55,7 @@ class OffresRepository extends AbstractRepository
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             return $requete->fetchAll();
         } catch (\Exception) {
-            throw new ServerErrorException();
+            throw new ServerErrorException("Erreur lors de la récupération des offres");
         }
     }
 
