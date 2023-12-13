@@ -55,7 +55,7 @@ class SoutenanceRepository extends AbstractRepository
      */
     public static function getAllSoutenancesByIdTuteurProf(int $idTuteurProf): array
     {
-        $sql = Database::get_conn()->query("SELECT * FROM " . self::$table . " WHERE idtuteurprof = " . $idTuteurProf);
+        $sql = Database::get_conn()->query("SELECT * FROM " . self::$table . " WHERE idtuteurprof = " . $idTuteurProf . " OR idprof = " . $idTuteurProf);
         $dataObjects = [];
         foreach ($sql as $dataObjectFormatTableau) $dataObjects[] = new Soutenance($dataObjectFormatTableau);
         return $dataObjects;
