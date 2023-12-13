@@ -84,7 +84,7 @@ class VerticalBarChartBlock
         echo "<line class='drop-shadow' x1=\"$padding\" y1=\"$temp1\" x2=\"" . ($width - 1) . "\" y2=\"$temp1\" stroke-width=\"1\"  stroke=\"$color\" />";
 
         foreach ($data as $row) {
-            $domain = !empty($row[$row_2]) ? strtoupper($row[$row_2]) : 'AUTRE';
+            $domain = !empty($row[$row_2]) ? strtoupper(substr($row[$row_2], 0, 3) . '…' . substr($row[$row_2], -3)) : 'AUTRE';
             echo "<text x=\"$xOffset\" y=\"" . ($height - 5) . "\" font-size=\"10\" text-anchor=\"middle\" fill=\"#27272a\" class='drop-shadow' filter=\"url(#dropshadow)\">" . $domain . "</text>";
             $xOffset += $barWidth;
         }

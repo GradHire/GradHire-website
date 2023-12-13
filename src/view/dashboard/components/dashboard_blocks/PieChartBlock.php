@@ -13,12 +13,12 @@ class PieChartBlock
         $total = array_sum(array_column($data, $row_1)) ?? 0;
         $colors = $params['colors'] ?? ["#3d348b", "#7678ed", "#f7b801", "#f18701", "#f35b04", "#f542ad", "#4296f5", "#42f54e", "#f5df42"];
 
-        echo '<div class="w-full flex flex-col gap-1.5 rounded-[8px] shadow p-4 bg-white border relative items-start justify-start">';
+        echo '<div class="w-full flex flex-col gap-1.5 min-w-[300px] max-h-[380px] rounded-[8px] shadow p-4 bg-white border relative items-start justify-start">';
 
         $pieChartStyle = self::createPieChartStyle($data, $row_1, $total, $colors);
         ob_start();
         ?>
-        <div class="items-start min-w-[300px] max-h-[380px] flex flex-col gap-14 justify-start h-full w-full">
+        <div class="items-start flex flex-col justify-between h-full w-full">
             <?php TitleBlock::render(['title' => 'Distribution', 'subtitle' => 'Des offres par domaine']); ?>
             <div class="flex flex-row gap-2 items-center justify-around w-full">
                 <div class="pie-chart shadow drop-shadow border min-w-[200px] min-h-[200px]"
@@ -26,10 +26,10 @@ class PieChartBlock
                 <div class="pie-chart-legend uppercase text-[12px] grid grid-cols-1 gap-y-2 gap-x-2">
                     <?php foreach ($data as $index => $row): ?>
                         <div class="flex flex-row gap-1">
-                    <span class="w-[14px] h-[14px] rounded-[2px] shadow "
+                    <span class="w-[14px] h-[14px] rounded-[2px] shadow"
                           style="background-color: <?= $colors[$index] ?? '#000'; ?>;
                                   "></span><span
-                                    class="drop-shadow"> <?= ' - ' . htmlspecialchars($row[$row_2] ?? 'Autre') ?>
+                                    class="drop-shadow"> <?= ' - ' . htmlspecialchars(substr($row[$row_2], 0, 3) . '…' . substr($row[$row_2], -3)) ?? 'Autre' ?>
                         : <?= $row[$row_1] ?></span>
                         </div>
                     <?php endforeach; ?>

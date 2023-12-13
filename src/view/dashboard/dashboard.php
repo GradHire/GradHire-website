@@ -7,7 +7,6 @@ use app\src\view\dashboard\components\dashboard_blocks\LineChartBlock;
 use app\src\view\dashboard\components\dashboard_blocks\NumBlock;
 use app\src\view\dashboard\components\dashboard_blocks\PercentageBlock;
 use app\src\view\dashboard\components\dashboard_blocks\PieChartBlock;
-use app\src\view\dashboard\components\dashboard_blocks\TitleBlock;
 use app\src\view\dashboard\components\dashboard_blocks\VerticalBarChartBlock;
 
 /** @var array $data
