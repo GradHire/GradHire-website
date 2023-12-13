@@ -199,7 +199,14 @@ if (!isset($_COOKIE['sidebar_open']) || ($_COOKIE['sidebar_open'] == 'true')) $i
 					</button>
 				</div>
 				<div id="chatbot-chat" class="w-full flex flex-col gap-2 h-[400px] overflow-y-auto">
-
+                    <div class="flex w-full mt-2 space-x-3 max-w-xs">
+                        <div class="flex flex-col gap-2">
+                            <div class="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
+                                <p class="text-sm">Salut <?= Application::getUser()->full_name()?> ! Comment puis-je t'aider ?</p>
+                            </div>
+                            <span class="text-xs text-gray-500 leading-none">Gilou</span>
+                        </div>
+                    </div>
                 </div>
 				<div class="flex justify-between w-full gap-2 mt-2">
 					<label class="w-full">
