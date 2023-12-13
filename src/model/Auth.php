@@ -82,7 +82,7 @@ class Auth
     }
 
     public
-    static function get_user()
+    static function get_user(): ?UtilisateurRepository
     {
         return Application::getUser();
     }

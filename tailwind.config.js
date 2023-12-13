@@ -32,11 +32,23 @@ module.exports = {
                         opacity: 0
                     },
                 },
+                bounce: {
+                    '0%, 100%': {
+                        transform: 'translateY(-25%)',
+                        animationTimingFunction: 'cubic-bezier(0.8,0,1,1)'
+                    },
+                    "50%": {
+                        transform: 'translateY(0)',
+                        animationTimingFunction: 'cubic-bezier(0,0,0.2,1)'
+                    },
+                    }
+
                 }
             },
             animation: {
                 wiggle: 'wiggle 0.5s ease-in-out infinite',
                 ping: 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
+                bounce: 'bounce 1s infinite'
             }
         },
     plugins: [],

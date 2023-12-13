@@ -186,9 +186,9 @@ if (!isset($_COOKIE['sidebar_open']) || ($_COOKIE['sidebar_open'] == 'true')) $i
 			{{content}}
 			<div id="chatbot"
 			     style="display: none"
-			     class="w-[300px] !fixed flex-col gap-2 bottom-[20px] right-[20px] bg-white shadow-xl rounded-lg border border-zinc-200 p-2 z-20">
-				<div class="flex justify-between w-full">
-					<p class="text-zinc-800 font-bold">Gile le bot</p>
+			     class="w-[350px] !fixed bottom-[20px] right-[20px] bg-white shadow-xl rounded-lg border border-zinc-200 p-4 z-20">
+				<div class="flex justify-between w-full pb-2">
+					<p class="text-zinc-800 font-bold">Gilou bot</p>
 					<button class="p-1 rounded bg-zinc-800"
 					        onclick="closeChatbot()">
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="w-4 h-4">
@@ -198,14 +198,16 @@ if (!isset($_COOKIE['sidebar_open']) || ($_COOKIE['sidebar_open'] == 'true')) $i
 						</svg>
 					</button>
 				</div>
-				<div id="chatbot-chat" class="w-full h-[400px]">
-				</div>
-				<div class="flex justify-between w-full gap-2">
+				<div id="chatbot-chat" class="w-full flex flex-col gap-2 h-[400px] overflow-y-auto">
+
+                </div>
+				<div class="flex justify-between w-full gap-2 mt-2">
 					<label class="w-full">
 						<input type="text" placeholder="Message"
+                               id="chatbot-input"
 						       class="shadow-sm w-full bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light">
 					</label>
-					<button class="bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 rounded-lg px-3">
+					<button onclick="sendMessage()" class="bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 rounded-lg px-3">
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="w-6 h-6">
 							<path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z"/>
 						</svg>
