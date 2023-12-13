@@ -234,10 +234,9 @@ class DashboardController extends AbstractController
                 $title .= " de " . $name;
             }
             $e = new Event($title, $visite->getDebutVisite(), $visite->getFinVisite(), "#1c4ed8");
-            if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage) || Auth::has_role(Roles::Student) && ConventionRepository::getStudentId($visite->getNumConvention())) $e->setButton("Voir plus", "/visite/" . $visite->getNumConvention());
-            if ($visite->getFinVisite() < new \DateTime('now') && ConventionRepository::getIfIdTuteurs($visite->getNumConvention(), Application::getUser()->id())) {
+            if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage) || (Auth::has_role(Roles::Student) && ConventionRepository::getStudentId($visite->getNumConvention()))) $e->setButton("Voir plus", "/visite/" . $visite->getNumConvention());
+            if ($visite->getFinVisite() < new \DateTime('now') && ConventionRepository::imOneOfTheTutor(Application::getUser()->id(),Auth::get_user()->id())) {
                 if (!CompteRenduRepository::checkIfCompteRenduProfExist($visite->getNumConvention()) && Auth::has_role(Roles::TutorTeacher)) {
-                    print_r("caillou");
                     $e->setButton("deposer compte rendu prof", "/compteRendu/" . $visite->getNumConvention());
                 } else if (!CompteRenduRepository::checkIfCompteRenduEntrepriseExist($visite->getNumConvention()) && Auth::has_role(Roles::Tutor)) {
                     $e->setButton("deposer compte rendu entreprise", "/compteRendu/" . $visite->getNumConvention());

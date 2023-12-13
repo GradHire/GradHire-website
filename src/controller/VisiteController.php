@@ -18,69 +18,68 @@ use app\src\model\Request;
 
 class VisiteController extends AbstractController
 {
-	/**
-	 * @throws ServerErrorException
-	 * @throws ForbiddenException
-	 * @throws NotFoundException
-	 */
-	public function visite(Request $req): string
-	{
-		if ($req->getMethod() == "get") {
-			if (!Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Student, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage)) throw new ForbiddenException("Vous n'avez pas le droit de modifier les visites");
-		} else {
-			if (!Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager)) throw new ForbiddenException("Vous n'avez pas le droit de modifier les visites");
-		}
+    /**
+     * @throws ServerErrorException
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     */
+    public function visite(Request $req): string
+    {
+        if ($req->getMethod() == "get") {
+            if (!Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Student, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage)) throw new ForbiddenException("Vous n'avez pas le droit de modifier les visites");
+        } else {
+            if (!Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager)) throw new ForbiddenException("Vous n'avez pas le droit de modifier les visites");
+        }
 
-		$numConvention = $req->getRouteParam("id");
-		if (!ConventionRepository::exist($numConvention)) throw new NotFoundException("La convention n'existe pas");
+        $numConvention = $req->getRouteParam("id");
+        if (!ConventionRepository::exist($numConvention)) throw new NotFoundException("La convention n'existe pas");
 
-		$studentId = ConventionRepository::getStudentId($numConvention);
-		if (!$studentId) throw new NotFoundException("La convention n'est pas encore validée");
-		if (Auth::has_role(Roles::Student) && Application::getUser()->id() !== $studentId) throw new ForbiddenException();
+        $studentId = ConventionRepository::getStudentId($numConvention);
+        if (!$studentId) throw new NotFoundException("La convention n'est pas encore validée");
+        if (Auth::has_role(Roles::Student) && Application::getUser()->id() !== $studentId) throw new ForbiddenException();
 
-		$visite = VisiteRepository::getByStudentId($studentId);
+        $visite = VisiteRepository::getByStudentId($studentId);
 
-		$commentaires = CompteRenduRepository::getCommentaires($numConvention, $studentId);
+        $commentaires = CompteRenduRepository::getCommentaires($numConvention, $studentId);
 
-		if (!$visite && !Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager)) throw new NotFoundException();
+        if (!$visite && !Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager)) throw new NotFoundException();
 
-		$supervise = SuperviseRepository::getByConvention($numConvention);
-		if (!$supervise) throw new NotFoundException();
-		if (Auth::has_role(Roles::Tutor) && Application::getUser()->id() !== $supervise->getIdtuteurentreprise()) throw new ForbiddenException("vous n'êtes pas le tuteur de l'entreprise");
-		if (Auth::has_role(Roles::TutorTeacher) && Application::getUser()->id() !== $supervise->getIdutilisateur()) throw new ForbiddenException("vous n'êtes pas le tuteur professeur de l'étudiant");
+        $supervise = SuperviseRepository::getByConvention($numConvention);
+        if (!$supervise) throw new NotFoundException();
+        if (Auth::has_role(Roles::Tutor) && Application::getUser()->id() !== $supervise->getIdtuteurentreprise()) throw new ForbiddenException("vous n'êtes pas le tuteur de l'entreprise");
 
-		if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager)) {
-			$form = new FormModel([
-				"start" => FormModel::date("Début de la visite")->withHour()->default($visite ? $visite->getDebutVisite()->format('Y-m-d H:i:s') : (new \DateTime())->format('Y-m-d H:i:s'))->required(),
-				"end" => FormModel::date("Fin de la visite")->withHour()->default($visite ? $visite->getFinVisite()->format('Y-m-d H:i:s') : (new \DateTime())->format('Y-m-d H:i:s'))->required(),
-			]);
+        if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager) && Application::getUser()->id() !== $supervise->getIdutilisateur() && ConventionRepository::imOneOfTheTutor(Application::getUser()->id(), $numConvention)) {
+            $form = new FormModel([
+                "start" => FormModel::date("Début de la visite")->withHour()->default($visite ? $visite->getDebutVisite()->format('Y-m-d H:i:s') : (new \DateTime())->format('Y-m-d H:i:s'))->required(),
+                "end" => FormModel::date("Fin de la visite")->withHour()->default($visite ? $visite->getFinVisite()->format('Y-m-d H:i:s') : (new \DateTime())->format('Y-m-d H:i:s'))->required(),
+            ]);
 
-			if ($req->getMethod() == "post") {
-				if ($form->validate($req->getBody())) {
-					$data = $form->getParsedBody();
-					if (!$visite)
-						VisiteRepository::createVisite($data["start"], $data["end"], $numConvention);
-					else
-						VisiteRepository::update($numConvention, $data["start"], $data["end"]);
-					header("Location: /visite/" . $numConvention);
-				}
-			}
+            if ($req->getMethod() == "post") {
+                if ($form->validate($req->getBody())) {
+                    $data = $form->getParsedBody();
+                    if (!$visite)
+                        VisiteRepository::createVisite($data["start"], $data["end"], $numConvention);
+                    else
+                        VisiteRepository::update($numConvention, $data["start"], $data["end"]);
+                    header("Location: /visite/" . $numConvention);
+                }
+            }
 
-			return $this->render("visite/visite", [
-				'visite' => $visite,
-				'form' => $form,
-				'name' => EtudiantRepository::getFullNameByID($studentId),
-				"addresse" => ConventionRepository::getAddress($numConvention),
-				"commentaires" => $commentaires
-			]);
-		}
+            return $this->render("visite/visite", [
+                'visite' => $visite,
+                'form' => $form,
+                'name' => EtudiantRepository::getFullNameByID($studentId),
+                "addresse" => ConventionRepository::getAddress($numConvention),
+                "commentaires" => $commentaires
+            ]);
+        }
 
-		return $this->render("visite/visite", [
-			'visite' => $visite,
-			'name' => EtudiantRepository::getFullNameByID($studentId),
-			"addresse" => ConventionRepository::getAddress($numConvention),
-			"commentaires" => $commentaires
-		]);
-	}
+        return $this->render("visite/visite", [
+            'visite' => $visite,
+            'name' => EtudiantRepository::getFullNameByID($studentId),
+            "addresse" => ConventionRepository::getAddress($numConvention),
+            "commentaires" => $commentaires
+        ]);
+    }
 
 }
