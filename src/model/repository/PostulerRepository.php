@@ -14,7 +14,7 @@ class PostulerRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    private string $nomTable = "PostulerVue";
+    private string $nomTable = "postulervue";
 
     /**
      * @throws ServerErrorException

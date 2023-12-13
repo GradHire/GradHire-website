@@ -121,7 +121,14 @@ Non valide
                         <dt class="text-sm font-medium leading-6 text-zinc-900">En attente de visite</dt>
                     </div>
                     <?php
-            } else {
+            } else if (VisiteRepository::getIfVisiteExist($convention['numconvention']) && Auth::has_role(Roles::TutorTeacher, Roles::Tutor) && !ConventionRepository::imOneOfTheTutor(Auth::get_user()->id(), $convention['numconvention'])){
+                ?>
+                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <dt class="text-sm font-medium leading-6 text-zinc-900">Vous n'avez pas accès à cette visite</dt>
+                </div>
+                <?php
+            }
+            else {
                 ?>
                 <a href="/visite/<?php echo $convention['numconvention'] ?>"
                    class="btn btn-primary bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Voir la

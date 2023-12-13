@@ -80,6 +80,17 @@ class TuteurEntrepriseRepository extends ProRepository
         }
     }
 
+    public static function getIdEntrepriseByIdTutor(int $userid): ?int
+    {
+        $sql = "SELECT idEntreprise FROM tuteurvue WHERE idUtilisateur = ?";
+        $statement = Database::get_conn()->prepare($sql);
+        $statement->execute([$userid]);
+        $statement->setFetchMode(\PDO::FETCH_ASSOC);
+        $result = $statement->fetch();
+        if (!$result) return null;
+        return $result["identreprise"];
+    }
+
     /**
      * @throws ServerErrorException
      */
