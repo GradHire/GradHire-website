@@ -1,14 +1,14 @@
 <?php
 
-use app\src\core\components\dashboard_blocks\HorizontalBarChartBlock;
-use app\src\core\components\dashboard_blocks\LineChartBlock;
-use app\src\core\components\dashboard_blocks\NumBlock;
-use app\src\core\components\dashboard_blocks\PercentageBlock;
-use app\src\core\components\dashboard_blocks\PieChartBlock;
-use app\src\core\components\dashboard_blocks\TitleBlock;
-use app\src\core\components\dashboard_blocks\VerticalBarChartBlock;
 use app\src\core\components\Separator;
 use app\src\model\View;
+use app\src\view\dashboard\components\dashboard_blocks\HorizontalBarChartBlock;
+use app\src\view\dashboard\components\dashboard_blocks\LineChartBlock;
+use app\src\view\dashboard\components\dashboard_blocks\NumBlock;
+use app\src\view\dashboard\components\dashboard_blocks\PercentageBlock;
+use app\src\view\dashboard\components\dashboard_blocks\PieChartBlock;
+use app\src\view\dashboard\components\dashboard_blocks\TitleBlock;
+use app\src\view\dashboard\components\dashboard_blocks\VerticalBarChartBlock;
 
 /** @var array $data
  */
@@ -76,53 +76,53 @@ EOT;
         <div class="relative w-full bg-zinc-50 isolate overflow-hidden border rounded-2xl text-[#1A2421] backdrop-blur-xl [ p-2 md:p-4 ] [ border-[1px] border-solid border-black  border-opacity-10 ] [ shadow-black/5 shadow-2xl ]">
             <div class="flex flex-col gap-4 items-start justify-start">
                 <?php
-                    new TitleBlock([
-                        'title' => 'Exemple de titre', 'subtitle' => 'Exemple de sous-titre']);
-                    new Separator([]);
-                    echo '<div class="flex flex-row w-full gap-2">';
-                        new PercentageBlock([
-                            'title' => 'Conventions signées',
-                            'text' => 'General',
-                            'text2' => 'BUT2',
-                            'text3' => 'BUT3',
-                            'value' => ($data['percentageBlockData1']['pourcentageannuel'] ?? 0),
-                            'value2' => ($data['percentageBlockData1']['pourcentageannuel2'] ?? 0),
-                            'value3' => ($data['percentageBlockData1']['pourcentageannuel3'] ?? 0),
-                        ]);
-                new HorizontalBarChartBlock([
+                new TitleBlock([
+                    'title' => 'Exemple de titre', 'subtitle' => 'Exemple de sous-titre']);
+                new Separator([]);
+                echo '<div class="flex flex-row w-full gap-2">';
+                PercentageBlock::render([
+                    'title' => 'Conventions signées',
+                    'text' => 'General',
+                    'text2' => 'BUT2',
+                    'text3' => 'BUT3',
+                    'value' => ($data['percentageBlockData1']['pourcentageannuel'] ?? 0),
+                    'value2' => ($data['percentageBlockData1']['pourcentageannuel2'] ?? 0),
+                    'value3' => ($data['percentageBlockData1']['pourcentageannuel3'] ?? 0),
+                ]);
+                HorizontalBarChartBlock::render([
                     'data' => $data['barChartHorizontalData1'] ?? [],
                     'row_1' => 'nombrecandidatures',
                     'row_2' => 'thematique',
                 ]);
                 echo '<div class="flex flex-col w-full gap-2">';
-                            echo '<div class="flex flex-row w-full gap-2">';
-                                new NumBlock([
-                                    'title' => 'Stages',
-                                    'value' => $data['numBlockData1']['nombreoffresstageactives'] ?? 0,
-                                ]);
-                                new NumBlock([
-                                    'title' => 'Alternances',
-                                    'value' => $data['numBlockData1']['nombreoffresalternanceactives'] ?? 0,
-                                ]);
-                            echo '</div>';
-                            new NumBlock([
-                                'title' => 'Pourvues',
-                                'value' => $data['numBlockData1']['nombrepositionspourvues'] ?? 0,
-                            ]);
+                echo '<div class="flex flex-row w-full gap-2">';
+                NumBlock::render([
+                    'title' => 'Stages',
+                    'value' => $data['numBlockData1']['nombreoffresstageactives'] ?? 0,
+                ]);
+                NumBlock::render([
+                    'title' => 'Alternances',
+                    'value' => $data['numBlockData1']['nombreoffresalternanceactives'] ?? 0,
+                ]);
                 echo '</div>';
-                    echo '</div>';
+                NumBlock::render([
+                    'title' => 'Pourvues',
+                    'value' => $data['numBlockData1']['nombrepositionspourvues'] ?? 0,
+                ]);
+                echo '</div>';
+                echo '</div>';
                 echo '<div class="flex flex-row w-full gap-2 max-h-[300px]">';
-                new VerticalBarChartBlock([
+                VerticalBarChartBlock::render([
                     'data' => $data['barChartVerticalData1'] ?? [],
                     'row_1' => 'moyennecandidaturesparoffre',
                     'row_2' => 'thematique',
                 ]);
-                new PieChartBlock([
+                PieChartBlock::render([
                     'data' => $data['pieChartData1'] ?? [],
                     'row_1' => 'nombreoffres',
                     'row_2' => 'thematique',
                 ]);
-                new LineChartBlock([
+                LineChartBlock::render([
                     'data' => $data['lineChartData1'] ?? [],
                     'row_1' => 'nombrecandidatures',
                     'row_2' => 'mois'

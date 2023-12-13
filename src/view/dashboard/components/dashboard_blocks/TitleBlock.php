@@ -1,6 +1,6 @@
 <?php
 
-namespace app\src\core\components\dashboard_blocks;
+namespace app\src\view\dashboard\components\dashboard_blocks;
 
 use app\src\core\components\ComponentInterface;
 

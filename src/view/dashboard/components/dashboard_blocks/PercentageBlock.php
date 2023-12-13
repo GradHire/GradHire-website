@@ -1,49 +1,26 @@
 <?php
 
-namespace app\src\core\components\dashboard_blocks;
+namespace app\src\view\dashboard\components\dashboard_blocks;
 
 use app\src\core\components\ComponentInterface;
 use app\src\core\components\Separator;
 
-class PercentageBlock implements ComponentInterface
+class PercentageBlock
 {
-    private string $title;
-    private string $value;
-    private string $text;
-    private string $text2;
-    private string $text3;
-    private string $value2;
-    private string $value3;
-    private string $color1;
-    private string $color2;
 
-
-    public function __construct(array $params)
+    public static function render(array $params): void
     {
-        $this->title = $params['title'] ?? 'Title';
-        $this->text = $params['text'] ?? 'Text';
-        $this->text2 = $params['text2'] ?? 'Text2';
-        $this->text3 = $params['text3'] ?? 'Text3';
-        $this->value = (int)$params['value'] ?? 0;
-        $this->value2 = (int)$params['value2'] ?? 0;
-        $this->value3 = (int)$params['value3'] ?? 0;
-        $this->color1 = $params['color1'] ?? '#ffab61';
-        $this->color2 = $params['color2'] ?? '#ff773d';
-        $this->render();
-    }
 
+        $title = $params['title'] ?? 'Title';
+        $text = $params['text'] ?? 'Text';
+        $text2 = $params['text2'] ?? 'Text2';
+        $text3 = $params['text3'] ?? 'Text3';
+        $value = (int)$params['value'] ?? 0;
+        $value2 = (int)$params['value2'] ?? 0;
+        $value3 = (int)$params['value3'] ?? 0;
+        $color1 = $params['color1'] ?? '#ffab61';
+        $color2 = $params['color2'] ?? '#ff773d';
 
-    public function render(): void
-    {
-        $title = $this->title;
-        $value = $this->value;
-        $text = $this->text;
-        $text2 = $this->text2;
-        $text3 = $this->text3;
-        $value2 = $this->value2;
-        $value3 = $this->value3;
-        $color1 = $this->color1;
-        $color2 = $this->color2;
 
         echo <<<EOT
 

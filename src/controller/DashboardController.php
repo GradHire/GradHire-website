@@ -10,7 +10,6 @@ use app\src\core\exception\NotFoundException;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
-use app\src\model\dataObject\Entreprise;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 use app\src\model\repository\CompteRenduRepository;
@@ -37,13 +36,10 @@ class DashboardController extends AbstractController
         $typeBlock = $request->getRouteParams()["type"];
         $selectedItems = [];
 
-        if ($typeBlock === 'sections' || $typeBlock === 'actions') {
+        if ($typeBlock === 'sections' || $typeBlock === 'actions')
             foreach ($request->getBody() as $key => $value) {
-                if (strpos($key, $typeBlock === 'sections' ? 'S' : 'A') === 0) {
-                    $selectedItems[] = $key;
-                }
+                if (str_starts_with($key, $typeBlock === 'sections' ? 'S' : 'A')) $selectedItems[] = $key;
             }
-        }
 
         if (!isset($_SESSION['parametres'])) {
             $_SESSION['parametres'] = [
@@ -51,24 +47,16 @@ class DashboardController extends AbstractController
                 'actions' => []
             ];
         }
-
-        // Preserve existing values
-        if ($typeBlock === 'sections') {
-            $_SESSION['parametres']['sections'] = $selectedItems;
-        } elseif ($typeBlock === 'actions') {
-            $_SESSION['parametres']['actions'] = $selectedItems;
-        }
+        if ($typeBlock === 'sections') $_SESSION['parametres']['sections'] = $selectedItems;
+        elseif ($typeBlock === 'actions') $_SESSION['parametres']['actions'] = $selectedItems;
 
         $newConfig = $_SESSION['parametres'];
-
         $configJson = json_encode($newConfig);
-
         $statement = Database::get_conn()->prepare("UPDATE parametres SET config = ? WHERE idutilisateur = ?;");
         $statement->execute([$configJson, Application::getUser()->id()]);
 
         Application::redirectFromParam("/dashboard");
     }
-
 
     /**
      * @throws ServerErrorException
