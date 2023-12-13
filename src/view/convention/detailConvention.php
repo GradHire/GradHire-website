@@ -118,13 +118,13 @@ Non valide
             if (!VisiteRepository::getIfVisiteExist($convention['numconvention']) && (Auth::has_role(Roles::Student, Roles::Enterprise, Roles::Teacher) || (Auth::has_role(Roles::TutorTeacher, Roles::Tutor) && !ConventionRepository::imOneOfTheTutor(Auth::get_user()->id(), $convention['numconvention'])))) {
                     ?>
                     <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                        <dt class="text-sm font-medium leading-6 text-zinc-900">En attente de visite</dt>
+                        <dt class="text font-medium inline-flex items-center px-3 py-0.5 rounded-full text-sm leading-5 bg-amber-200 text-amber-800">En attente de visite</dt>
                     </div>
                     <?php
             } else if (VisiteRepository::getIfVisiteExist($convention['numconvention']) && Auth::has_role(Roles::TutorTeacher, Roles::Tutor) && !ConventionRepository::imOneOfTheTutor(Auth::get_user()->id(), $convention['numconvention'])){
                 ?>
                 <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                    <dt class="text-sm font-medium leading-6 text-zinc-900">Vous n'avez pas accès à cette visite</dt>
+                    <dt class="text font-medium inline-flex items-center px-3 py-0.5 rounded-full text-sm leading-5 bg-red-200 text-red-800">Vous n'avez pas accès à cette visite</dt>
                 </div>
                 <?php
             }

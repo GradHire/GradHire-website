@@ -126,8 +126,12 @@ class TuteurEntrepriseRepository extends ProRepository
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute();
         $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetchAll();
-        if (!$resultat) return null;
+        $data = $requete->fetchAll();
+        if (!$data) return null;
+        $resultat = [];
+        foreach ($data as $tuteur) {
+            $resultat[] = $this->construireTuteurProDepuisTableau($tuteur);
+        }
         return $resultat;
     }
 
