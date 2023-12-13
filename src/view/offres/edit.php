@@ -6,7 +6,7 @@ use app\src\model\Form\FormModel;
 $this->title = 'Modifier offre';
 
 ?>
-<div class="w-full max-w-md pt-12 pb-24 gap-4 flex flex-col">
+<div class="w-full max-w-md pt-12 pb-24 gap-4 flex flex-col mx-auto max-w-md">
     <?php $form->start(); ?>
     <div class="w-full gap-4 flex flex-col">
         <?php
