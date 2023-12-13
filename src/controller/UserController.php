@@ -11,6 +11,7 @@ use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\OffresRepository;
+use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\Request;
 
 class UserController extends AbstractController
@@ -124,7 +125,7 @@ class UserController extends AbstractController
             $offres = (new OffresRepository())->getOffresByIdEntreprise($id);
             return $this->render('entreprise/detailEntreprise', ['entreprise' => $entreprise, 'offres' => $offres]);
         }
-        if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Student, Roles::Teacher, Roles::Tutor, Roles::TutorTeacher)) {
+        if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Student, Roles::Teacher, Roles::TutorTeacher)) {
             $entreprises = (new EntrepriseRepository([]))->getAll();
             return $this->render('entreprise/entreprise', ['entreprises' => $entreprises]);
         } else {

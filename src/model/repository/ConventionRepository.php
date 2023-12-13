@@ -200,6 +200,7 @@ class ConventionRepository extends AbstractRepository
             'numconvention' => $numconvention
         ]);
         $data = $statement->fetch();
+        if (!$data) return false;
         if ($data["idtuteurprof"] == $id || $data["idtuteurentreprise"] == $id)
             return true;
         else
