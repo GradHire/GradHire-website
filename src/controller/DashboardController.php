@@ -51,7 +51,14 @@ class DashboardController extends AbstractController
             ];
         }
 
-        // Merge the selected items with the existing sections/actions
+        // Preserve the previous configuration for the opposite type
+        if ($typeBlock === 'sections') {
+            $_SESSION['parametres']['actions'] = $_SESSION['parametres']['actions'] ?? [];
+        } elseif ($typeBlock === 'actions') {
+            $_SESSION['parametres']['sections'] = $_SESSION['parametres']['sections'] ?? [];
+        }
+
+        // Update the selected items based on the type
         if ($typeBlock === 'sections') {
             $_SESSION['parametres']['sections'] = array_merge($_SESSION['parametres']['sections'], $selectedItems);
             $_SESSION['parametres']['sections'] = array_unique($_SESSION['parametres']['sections']);
@@ -61,12 +68,14 @@ class DashboardController extends AbstractController
         }
 
         $configJson = json_encode($_SESSION['parametres']);
-        $statement = Database::get_conn()->prepare("UPDATE parametres SET config = ? WHERE idutilisateur = ?;");
+        $statement = Database::get_conn()->prepare("SELECT * FROM updateParametres(?, ?);");
         $userId = Application::getUser()->id();
-        $statement->execute([$configJson, $userId]);
+        $statement->execute([$userId, $configJson]);
 
         Application::redirectFromParam("/dashboard");
     }
+
+
 
     /**
      * @throws ServerErrorException
