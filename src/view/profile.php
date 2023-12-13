@@ -20,14 +20,14 @@ $modal = new Modal("Voulez vous vraiment archiver votre compte ?", "Oui, archive
 ?>
 
 
-<div class="mx-auto gap-4 mx-auto w-full lg:flex lg:gap-x-16">
+<div class="mx-auto gap-4 mx-auto w-full lg:flex lg:gap-x-16 mx-auto max-w-md">
     <main class="px-4 sm:px-6 lg:flex-auto lg:px-0">
         <div class="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
             <?php
             if (!is_null($form)) {
                 ?>
                 <?php $form->start(); ?>
-                <div class="w-full gap-4 flex flex-col">
+                <div class="w-full gap-4 flex flex-col mx-auto max-w-md">
 
                     <img src="<?= $user->get_picture() ?>" alt="Photo de profil"
                          class="h-14 w-14 object-cover rounded-full" id="preview">
@@ -127,5 +127,5 @@ $modal = new Modal("Voulez vous vraiment archiver votre compte ?", "Oui, archive
                 </div>
             <?php } ?>
         </div>
-    </div>
+</div>
 </div>
