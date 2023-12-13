@@ -10,9 +10,9 @@ use app\src\model\repository\PostulerRepository;
 ?>
 
 <div class="w-full gap-4 mx-auto">
-    <div class="w-full flex md:flex-row flex-col justify-between items-start">
+    <div class="w-full pb-6 flex md:flex-row flex-col justify-between items-start">
         <div class="px-4 sm:px-0">
-            <h3 class="text-lg font-semibold leading-7 text-zinc-900"><?= $offre->getSujet() ?></h3>
+            <h3 class="text-xl font-semibold leading-7 text-zinc-900"><?= $offre->getSujet() ?></h3>
             <p class="mt-1 max-w-2xl text-sm leading-6 text-zinc-500">
                 <?php
                 try {
@@ -23,6 +23,24 @@ use app\src\model\repository\PostulerRepository;
                 }
                 ?></p>
         </div>
+        <?php if (Auth::has_role(Roles::Student)) {
+            if (!(new PostulerRepository())->getIfStudentAlreadyAccepted($offre->getIdOffre())){
+                if (!$offre->getUserPostuled()) { ?>
+                    <a href="<?php echo $offre->getIdOffre(); ?>/postuler"
+                       class="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 sm:w-auto">
+                        Postuler
+                    </a>
+                    <?php
+                } else {
+                    ?>
+                    <a href="/candidatures"
+                       class="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 sm:w-auto">
+                        Voir ma candidature
+                    </a>
+                    <?php
+                }
+            }
+        } ?>
         <?php if (Auth::has_role(Roles::Staff, Roles::Manager) || Auth::get_user()->getId() == $offre->getIdutilisateur()) { ?>
             <span class="inline-flex cursor-pointer  -space-x-px overflow-hidden rounded-md border bg-white shadow-sm">
   <a href="/offres/<?= $offre->getIdOffre() ?>/edit"
@@ -60,6 +78,16 @@ use app\src\model\repository\PostulerRepository;
         <?php } ?>
 
     </div>
+    <?php
+    if ($offre->getAdresse() != null) {
+        ?>
+        <iframe
+                class="mt-2 w-full h-[300px]"
+                src="https://maps.google.com/maps?q=<?= $offre->getAdresse() ?>&t=&z=13&ie=UTF8&iwloc=&output=embed">
+        </iframe>
+        <?php
+    }
+    ?>
     <div class="mt-6 border-t border-zinc-100">
         <dl class="divide-y divide-zinc-100">
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -146,34 +174,6 @@ use app\src\model\repository\PostulerRepository;
                     else echo "Non renseignée";
                     ?></dd>
             </div>
-            <?php
-            if ($offre->getAdresse() != null) {
-                ?>
-                <iframe
-                        class="w-full h-[500px]"
-                        src="https://maps.google.com/maps?q=<?= $offre->getAdresse() ?>&t=&z=13&ie=UTF8&iwloc=&output=embed">
-                </iframe>
-                <?php
-            }
-            ?>
         </dl>
     </div>
-    <?php if (Auth::has_role(Roles::Student)) {
-        if (!(new PostulerRepository())->getIfStudentAlreadyAccepted($offre->getIdOffre())){
-            if (!$offre->getUserPostuled()) { ?>
-                <a href="<?php echo $offre->getIdOffre(); ?>/postuler"
-                   class="mt-6 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-zinc-600 hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 sm:w-auto">
-                    Postuler
-                </a>
-                <?php
-            } else {
-                ?>
-                <a href="/candidatures"
-                   class="mt-6 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-zinc-600 hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 sm:w-auto">
-                    Voir ma candidature
-                </a>
-                <?php
-            }
-        }
-    } ?>
 </div>
