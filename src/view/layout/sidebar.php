@@ -27,7 +27,7 @@ $allSections = [
     ],
     'S03' => [
         'href' => 'utilisateurs',
-        'nom' => 'Gestion roles',
+        'nom' => 'Utilisateurs',
         'svg' => I_Utilisateurs::render('w-4 h-4')
     ],
     'S04' => [
@@ -90,7 +90,7 @@ $allActions = [
     ],
     'A03' => [
         'href' => 'gererSimulPstage',
-        'nom' => 'Gerer ces simulations Pstage',
+        'nom' => 'Gerer simulations Pstage',
         'svg' => I_Link::render('w-4 h-4'),
     ],
     'A04' => [

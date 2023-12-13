@@ -45,8 +45,8 @@ class DashboardController extends AbstractController
             }
         }
 
-        if (!isset($_SESSION['parametres']['config'])) {
-            $_SESSION['parametres']['config'] = [
+        if (!isset($_SESSION['parametres'])) {
+            $_SESSION['parametres'] = [
                 'sections' => [],
                 'actions' => []
             ];
@@ -54,12 +54,12 @@ class DashboardController extends AbstractController
 
         // Preserve existing values
         if ($typeBlock === 'sections') {
-            $_SESSION['parametres']['config']['sections'] = $selectedItems;
+            $_SESSION['parametres']['sections'] = $selectedItems;
         } elseif ($typeBlock === 'actions') {
-            $_SESSION['parametres']['config']['actions'] = $selectedItems;
+            $_SESSION['parametres']['actions'] = $selectedItems;
         }
 
-        $newConfig = $_SESSION['parametres']['config'];
+        $newConfig = $_SESSION['parametres'];
 
         $configJson = json_encode($newConfig);
 
