@@ -13,25 +13,27 @@ class PieChartBlock
         $total = array_sum(array_column($data, $row_1)) ?? 0;
         $colors = $params['colors'] ?? ["#3d348b", "#7678ed", "#f7b801", "#f18701", "#f35b04", "#f542ad", "#4296f5", "#42f54e", "#f5df42"];
 
-        echo '<div class="w-full flex flex-col gap-1.5 rounded-[8px] shadow p-4 bg-white border relative items-center justify-center">';
-        echo '<button class="w-5 h-5 border hover:scale-105 duration-75 bg-green-500 backdrop-blur-md shadow absolute top-0 right-0 rounded-full translate-x-2 -translate-y-2 flex items-center justify-center"><span class="text-white text-xl">+</span></button>';
+        echo '<div class="w-full flex flex-col gap-1.5 rounded-[8px] shadow p-4 bg-white border relative items-start justify-start">';
 
         $pieChartStyle = self::createPieChartStyle($data, $row_1, $total, $colors);
         ob_start();
         ?>
-        <div class="flex flex-row gap-2 items-center justify-around w-full">
-            <div class="pie-chart shadow drop-shadow border min-w-[200px] min-h-[200px]"
-                 style="width: 200px; height: 200px; border-radius: 50%; background: conic-gradient(<?= $pieChartStyle ?>);"></div>
-            <div class="pie-chart-legend uppercase text-[12px] grid grid-cols-1 gap-y-2 gap-x-2">
-                <?php foreach ($data as $index => $row): ?>
-                    <div class="flex flex-row gap-1">
+        <div class="items-start min-w-[300px] max-h-[380px] flex flex-col gap-14 justify-start h-full w-full">
+            <?php TitleBlock::render(['title' => 'Distribution', 'subtitle' => 'Des offres par domaine']); ?>
+            <div class="flex flex-row gap-2 items-center justify-around w-full">
+                <div class="pie-chart shadow drop-shadow border min-w-[200px] min-h-[200px]"
+                     style="width: 200px; height: 200px; border-radius: 50%; background: conic-gradient(<?= $pieChartStyle ?>);"></div>
+                <div class="pie-chart-legend uppercase text-[12px] grid grid-cols-1 gap-y-2 gap-x-2">
+                    <?php foreach ($data as $index => $row): ?>
+                        <div class="flex flex-row gap-1">
                     <span class="w-[14px] h-[14px] rounded-[2px] shadow "
                           style="background-color: <?= $colors[$index] ?? '#000'; ?>;
                                   "></span><span
-                                class="drop-shadow"> <?= ' - ' . htmlspecialchars($row[$row_2] ?? 'Autre') ?>
+                                    class="drop-shadow"> <?= ' - ' . htmlspecialchars($row[$row_2] ?? 'Autre') ?>
                         : <?= $row[$row_1] ?></span>
-                    </div>
-                <?php endforeach; ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
         </div>
         <?php

@@ -18,8 +18,8 @@ class HorizontalBarChartBlock
         $color3 = $colors[2];
         $color4 = $colors[3];
 
-        echo '<div class="w-full flex flex-col gap-1.5 rounded-[8px] shadow p-4 bg-white border relative">';
-        echo '<button class="w-5 h-5 border hover:scale-105 duration-75 bg-green-500 backdrop-blur-md shadow absolute top-0 right-0 rounded-full translate-x-2 -translate-y-2 flex items-center justify-center"><span class="text-white text-xl">+</span></button>';
+        echo '<div class="w-full min-w-[300px] max-h-[150px] flex flex-col gap-1.5 rounded-[8px] shadow p-4 bg-white border relative">';
+        TitleBlock::render(['title' => 'Domaines', 'subtitle' => 'Top 3 des plus demandés']);
         foreach ($data as $row) {
             $percentage = self::calculatePercentage($row[$row_1], $maxValue);
             $domain = !empty($row[$row_2]) ? $row[$row_2] : 'Autre';

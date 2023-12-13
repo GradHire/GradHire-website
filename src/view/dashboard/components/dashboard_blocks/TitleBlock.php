@@ -2,33 +2,23 @@
 
 namespace app\src\view\dashboard\components\dashboard_blocks;
 
-use app\src\core\components\ComponentInterface;
-
-class TitleBlock implements ComponentInterface
+class TitleBlock
 {
-    private string $title;
-    private string $subtitle;
-
-    public function __construct(array $params)
+    public static function render(array $params): void
     {
-        $this->title = $params['title'] ?? '';
-        $this->subtitle = $params['subtitle'] ?? '';
-        $this->render();
-    }
+        $title = $params['title'] ?? '';
+        $subtitle = $params['subtitle'] ?? '';
 
-    public function render(): void
-    {
-
-        if ($this->subtitle !== '') {
+        if ($subtitle !== '') {
             echo <<<EOT
             <div class="flex flex-col justify-start items-start">
-                <h2 class="text-md font-bold text-zinc-700">{$this->title}</h2>
-                <p class="text-sm text-zinc-500">{$this->subtitle}</p>
+                <h2 class="text-md font-bold text-zinc-700">{$title}</h2>
+                <p class="text-sm text-zinc-500">{$subtitle}</p>
             </div>
         EOT;
         } else {
             echo <<<EOT
-                <h2 class="text-md font-bold text-zinc-700">{$this->title}</h2>
+                <h2 class="text-md font-bold text-zinc-700">{$title}</h2>
             EOT;
         }
     }

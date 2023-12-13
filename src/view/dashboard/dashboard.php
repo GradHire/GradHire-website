@@ -76,10 +76,7 @@ EOT;
         <div class="relative w-full bg-zinc-50 isolate overflow-hidden border rounded-2xl text-[#1A2421] backdrop-blur-xl [ p-2 md:p-4 ] [ border-[1px] border-solid border-black  border-opacity-10 ] [ shadow-black/5 shadow-2xl ]">
             <div class="flex flex-col gap-4 items-start justify-start">
                 <?php
-                new TitleBlock([
-                    'title' => 'Exemple de titre', 'subtitle' => 'Exemple de sous-titre']);
-                new Separator([]);
-                echo '<div class="flex flex-row w-full gap-2">';
+                echo '<div class="w-full gap-2 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">';
                 PercentageBlock::render([
                     'title' => 'Conventions signées',
                     'text' => 'General',
@@ -94,8 +91,7 @@ EOT;
                     'row_1' => 'nombrecandidatures',
                     'row_2' => 'thematique',
                 ]);
-                echo '<div class="flex flex-col w-full gap-2">';
-                echo '<div class="flex flex-row w-full gap-2">';
+                echo '<div class="w-full gap-2 grid grid-cols-2 max-lg:grid-cols-1">';
                 NumBlock::render([
                     'title' => 'Stages',
                     'value' => $data['numBlockData1']['nombreoffresstageactives'] ?? 0,
@@ -104,14 +100,15 @@ EOT;
                     'title' => 'Alternances',
                     'value' => $data['numBlockData1']['nombreoffresalternanceactives'] ?? 0,
                 ]);
-                echo '</div>';
+                echo '<div class="lg:col-span-2">';
                 NumBlock::render([
                     'title' => 'Pourvues',
                     'value' => $data['numBlockData1']['nombrepositionspourvues'] ?? 0,
                 ]);
+                echo '</div></div>';
+                echo '<div class="w-full col-span-3">';
+                new Separator([]);
                 echo '</div>';
-                echo '</div>';
-                echo '<div class="flex flex-row w-full gap-2 max-h-[300px]">';
                 VerticalBarChartBlock::render([
                     'data' => $data['barChartVerticalData1'] ?? [],
                     'row_1' => 'moyennecandidaturesparoffre',
@@ -127,6 +124,8 @@ EOT;
                     'row_1' => 'nombrecandidatures',
                     'row_2' => 'mois'
                 ]);
+                echo '<div class="w-full col-span-3">';
+                new Separator([]);
                 echo '</div>';
                 echo '<div class="flex flex-row w-full gap-2">';
                 echo '</div>';
@@ -143,6 +142,8 @@ EOT;
                             <div class="w-full flex flex-col justify-start items-start">
                                 <?php
                                 $counter = 0;
+                                if ($data['lastActionsData1'] === []
+                                ) echo "<div class=\"w-full h-full flex items-center justify-center\"><span class=\"text-gray-400\">Il n'y a pas d'offres de cette semaine</span></div>";
                                 foreach ($data['lastActionsData1'] as $offre) {
                                     echo <<<EOT
 <div class="flex flex-row justify-between items-center gap-2 w-full relative">

@@ -32,9 +32,9 @@ class VerticalBarChartBlock
 
         $gradientId = $chartId . "_gradient";
         echo <<<EOT
-            <div class="border rounded-[8px] shadow w-full  bg-white p-4 relative">
-            <button class="w-5 h-5 border hover:scale-105 duration-75 bg-green-500 backdrop-blur-md shadow absolute top-0 right-0 rounded-full translate-x-2 -translate-y-2 flex items-center justify-center"><span class="text-white text-xl">+</span></button>
+            <div class="border rounded-[8px] shadow w-full min-w-[300px] max-h-[380px] bg-white p-4 relative flex flex-col gap-4">
         EOT;
+        TitleBlock::render(['title' => 'Moyenne', 'subtitle' => 'Des candidatures par offre par domaine']);
 
         echo "<svg id=\"$chartId\" width=\"100%\" height=\"100%\" viewBox=\"0 0 $width $height\" class=\"svg-bar-chart\">";
 

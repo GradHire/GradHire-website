@@ -30,9 +30,10 @@ class LineChartBlock
             return;
         }
         echo <<<EOT
-            <div class="border rounded-[8px] shadow w-full  bg-white p-4 relative">
-            <button class="w-5 h-5 border hover:scale-105 duration-75 bg-green-500 backdrop-blur-md shadow absolute top-0 right-0 rounded-full translate-x-2 -translate-y-2 flex items-center justify-center"><span class="text-white text-xl">+</span></button>
+            <div class="border rounded-[8px] shadow w-full min-w-[300px] max-h-[380px] bg-white p-4 relative">
         EOT;
+        TitleBlock::render(['title' => 'Candidatures', 'subtitle' => 'Nombre de candidatures de 4 derniers mois']);
+
 
         $innerWidth = $width - 2 * $padding;
         $innerHeight = $height - 2 * $padding;
@@ -65,7 +66,7 @@ class LineChartBlock
         $gradientId = $chartId . "_gradient";
 
         echo <<<EOT
-            <svg id="$chartId" width="100%" height="100%" viewBox="0 0 $width $height" class="line-chart translate-y-8 -translate-x-1.5">
+            <svg id="$chartId" width="100%" height="100%" viewBox="0 0 $width $height" class="line-chart translate-y-4 -translate-x-1.5">
             <defs>
             <linearGradient id="$gradientId" x1="0%" y1="100%" x2="0%" y2="0%">
                 <stop offset="10%" style="stop-opacity:0.15;stop-color:$color" />
