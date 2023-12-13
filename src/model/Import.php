@@ -30,7 +30,6 @@ class Import
         if (!$this->recordExists('Signataire', 'mailSignataire', $row[34])) $this->insertSignataire($row, $identreprise);
         else $this->updateSignataire($row);
         $idsignataire = $this->find('Signataire', 'mailSignataire', $row[34], 'idSignataire');
-
         if (!$this->recordExists('Utilisateur', 'email', $row[31])) $this->insertReferent($row);
         $idreferent = $this->find('Utilisateur', 'email', $row[31], 'idUtilisateur');
 
@@ -43,6 +42,7 @@ class Import
             $this->insertPostuler($row, $idOffre, $idetu);
             $this->insertSuperviser($row, $idOffre, $idetu, $idreferent, $idtuteur);
         }
+
         if (!$this->recordExists('Convention', 'numConvention', $row[0])) $this->insertConvention($row, $idsignataire, $idetu, $idOffre);
 
     }
@@ -293,6 +293,7 @@ class Import
         $row[28] = ($row[28] == "Oui") ? 1 : 0;
         $row[48] = ($row[48] == "Oui") ? 1 : 0;
         $row[51] = date('Y-m-d H:i:s', strtotime($row[51]));
+        $row[52] = date('Y-m-d H:i:s', strtotime($row[52]));
         $row[16] = date('Y-m-d', strtotime($row[16]));
         $row[17] = date('Y-m-d', strtotime($row[17]));
         $stmt = $this->db->prepare($sql);
