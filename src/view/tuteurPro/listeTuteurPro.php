@@ -15,8 +15,10 @@ use app\src\model\dataObject\TuteurEntreprise;
 use app\src\model\Form\FormModel;
 use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
+use app\src\model\View;
 
-$this->title = "Tuteurs";
+View::setCurrentSection('Tuteurs');
+$this->title = 'Tuteurs';
 
 $modal = new Modal("Voulez vous vraiment supprimer ce tuteur ?", "Supprimer", "");
 ?>

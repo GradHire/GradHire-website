@@ -44,7 +44,7 @@ class Auth
         $statement->execute([$user->id()]);
         $parametres = $statement->fetch();
         if ($parametres) {
-            $config = json_decode($parametres, true);
+            $config = json_decode($parametres['config'], true);
             $_SESSION['parametres'] = $config;
         }
     }

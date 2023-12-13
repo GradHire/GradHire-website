@@ -4,6 +4,7 @@ use app\src\core\components\FormModal;
 use app\src\core\components\Lien;
 use app\src\core\components\Notification;
 use app\src\core\components\Separator;
+use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Form\FormModel;
 
@@ -19,33 +20,31 @@ require __DIR__ . "/sidebar.php";
 $parametresContent = file_get_contents(__DIR__ . "/data/parametres_default.json");
 $parametres = json_decode($parametresContent, true);
 
-$sections = $parametres['sections'] ?? [];
-$actions = $parametres['actions'] ?? [];
+$defaultSections = $parametres['sections'] ?? [];
+$defaultActions = $parametres['actions'] ?? [];
 
-if (isset($_SESSION['parametres']) && $_SESSION['parametres'] !== null) {
-    $parametres = $_SESSION['parametres'];
-    $sections = $parametres['sections'] ?? [];
-    $actions = $parametres['actions'] ?? [];
-}
+$sections = $_SESSION['parametres']['sections'] ?? $defaultSections;
+$actions = $_SESSION['parametres']['actions'] ?? $defaultActions;
 
 $filteredSections = [];
 $filteredActions = [];
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title> GradHire | <?= $this->title ?></title>
-	<script type="text/javascript" src="/resources/js/load-functions.js"></script>
-	<script type="text/javascript" src="/resources/js/side-menu.js"></script>
-	<!--    <script type="text/javascript" src="/resources/js/animate-burger-menu.js"></script>-->
-	<link rel="stylesheet" href="/resources/css/input.css">
-	<link rel="stylesheet" href="/resources/css/output.css">
-	<link rel="icon" type="image/png" sizes="32x32" href="/resources/images/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="/resources/images/favicon-16x16.png">
-	<style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> GradHire | <?= $this->title ?></title>
+    <script type="text/javascript" src="/resources/js/load-functions.js"></script>
+    <script type="text/javascript" src="/resources/js/side-menu.js"></script>
+    <!--    <script type="text/javascript" src="/resources/js/animate-burger-menu.js"></script>-->
+    <link rel="stylesheet" href="/resources/css/input.css">
+    <link rel="stylesheet" href="/resources/css/output.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="/resources/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/resources/images/favicon-16x16.png">
+    <style>
         @import url('https://fonts.googleapis.com/css2?family=Gabarito:wght@400;500;600;700;800&display=swap');
 
         nav {
@@ -53,10 +52,10 @@ $filteredActions = [];
             backdrop-filter: blur(20px) saturate(160%) contrast(45%) brightness(140%);
             -webkit-backdrop-filter: blur(20px) saturate(160%) contrast(45%) brightness(140%);
         }
-	</style>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-	      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-	      crossorigin="anonymous" referrerpolicy="no-referrer">
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+          integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer">
 </head>
 <body class="font-sans">
 
@@ -105,8 +104,14 @@ function generateFormCheckboxes($items, $selectedItems, $defaultKey)
     });
 }
 
-$modalAddSection = generateFormCheckboxes($allSections, $sections, "sections");
-$modalAddAction = generateFormCheckboxes($allActions, $actions, "actions");
+try {
+    $modalAddSection = generateFormCheckboxes($allSections, $sections, "sections");
+    $modalAddAction = generateFormCheckboxes($allActions, $actions, "actions");
+
+} catch (ServerErrorException $e) {
+    $modalAddSection = null;
+    $modalAddAction = null;
+}
 
 ?>
 
@@ -198,82 +203,84 @@ $modalAddAction = generateFormCheckboxes($allActions, $actions, "actions");
                 <span class="text-lg tracking-widest font-bold uppercase first-letter:text-2xl first-letter:font-extrabold ">
                 <?= $this->title ?>
                 </span>
-			</div>
-			<div class="h-[40px] max-w-[40px] w-full bg-white flex relative items-center group justify-center cursor-pointer">
-				<div class="w-2 h-2 absolute top-1 right-1 bg-orange-500 rounded-full border"></div>
-				<div class="w-2 h-2 absolute top-1 right-1 bg-orange-500 rounded-full animate-ping "></div>
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-				     class="w-6 h-6 fill-zinc-600 group-hover:fill-orange-600 duration-150 ">
-					<path fill-rule="evenodd"
-					      d="M10 2a6 6 0 00-6 6c0 1.887-.454 3.665-1.257 5.234a.75.75 0 00.515 1.076 32.91 32.91 0 003.256.508 3.5 3.5 0 006.972 0 32.903 32.903 0 003.256-.508.75.75 0 00.515-1.076A11.448 11.448 0 0116 8a6 6 0 00-6-6zM8.05 14.943a33.54 33.54 0 003.9 0 2 2 0 01-3.9 0z"
-					      clip-rule="evenodd"/>
-				</svg>
+            </div>
+            <div class="h-[40px] max-w-[40px] w-full bg-white flex relative items-center group justify-center cursor-pointer">
+                <div class="w-2 h-2 absolute top-1 right-1 bg-orange-500 rounded-full border"></div>
+                <div class="w-2 h-2 absolute top-1 right-1 bg-orange-500 rounded-full animate-ping "></div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                     class="w-6 h-6 fill-zinc-600 group-hover:fill-orange-600 duration-150 ">
+                    <path fill-rule="evenodd"
+                          d="M10 2a6 6 0 00-6 6c0 1.887-.454 3.665-1.257 5.234a.75.75 0 00.515 1.076 32.91 32.91 0 003.256.508 3.5 3.5 0 006.972 0 32.903 32.903 0 003.256-.508.75.75 0 00.515-1.076A11.448 11.448 0 0116 8a6 6 0 00-6-6zM8.05 14.943a33.54 33.54 0 003.9 0 2 2 0 01-3.9 0z"
+                          clip-rule="evenodd"/>
+                </svg>
 
-			</div>
-			<?php new Separator(['orientation' => 'vertical', 'height' => '[40px]']); ?>
-			<a class="flex flex-row gap-4 items-center justify-center min-w-fit text-sm font-medium text-zinc-600 hover:text-zinc-800"
-			   href="/profile">
-				<div class="rounded-full overflow-hidden h-8 w-8 border">
-					<img src="<?= Application::getUser()->get_picture() ?>" alt="Photo de profil"
-					     class="w-full h-full object-cover rounded-full aspect-square">
-				</div>
-				<div class="flex flex-col justify-start items-start">
-					<span><?= Application::getUser()->full_name() ?></span>
-					<span class="whitespace-nowrap rounded-full bg-zinc-100 px-2 text-center flex justify-center items-center text-xs text-zinc-500">
+            </div>
+            <?php new Separator(['orientation' => 'vertical', 'height' => '[40px]']); ?>
+            <a class="flex flex-row gap-4 items-center justify-center min-w-fit text-sm font-medium text-zinc-600 hover:text-zinc-800"
+               href="/profile">
+                <div class="rounded-full overflow-hidden h-8 w-8 border">
+                    <img src="<?= Application::getUser()->get_picture() ?>" alt="Photo de profil"
+                         class="w-full h-full object-cover rounded-full aspect-square">
+                </div>
+                <div class="flex flex-col justify-start items-start">
+                    <span><?= Application::getUser()->full_name() ?></span>
+                    <span class="whitespace-nowrap rounded-full bg-zinc-100 px-2 text-center flex justify-center items-center text-xs text-zinc-500">
                                     <?= Application::getUser()->role()->value ?>
                                     </span></div>
-			</a>
-		</div>
-		<div class="w-full flex flex-col justify-start items-start p-4 gap-4">
-			<?php Notification::show(); ?>
-			{{content}}
-			<div id="chatbot"
-			     style="display: none"
-			     class="w-[350px] !fixed bottom-[20px] right-[20px] bg-white shadow-xl rounded-lg border border-zinc-200 p-4 z-20">
-				<div class="flex justify-between w-full pb-2">
-					<p class="text-zinc-800 font-bold">Gilou bot</p>
-					<button class="p-1 rounded bg-zinc-800"
-					        onclick="closeChatbot()">
-						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="w-4 h-4">
-							<path fill-rule="evenodd"
-							      d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
-							      clip-rule="evenodd"/>
-						</svg>
-					</button>
-				</div>
-				<div id="chatbot-chat" class="w-full flex flex-col gap-2 h-[400px] overflow-y-auto">
+            </a>
+        </div>
+        <div class="w-full flex flex-col justify-start items-start p-4 gap-4">
+            <?php Notification::show(); ?>
+            {{content}}
+            <div id="chatbot"
+                 style="display: none"
+                 class="w-[350px] !fixed bottom-[20px] right-[20px] bg-white shadow-xl rounded-lg border border-zinc-200 p-4 z-20">
+                <div class="flex justify-between w-full pb-2">
+                    <p class="text-zinc-800 font-bold">Gilou bot</p>
+                    <button class="p-1 rounded bg-zinc-800"
+                            onclick="closeChatbot()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="w-4 h-4">
+                            <path fill-rule="evenodd"
+                                  d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
+                                  clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                </div>
+                <div id="chatbot-chat" class="w-full flex flex-col gap-2 h-[400px] overflow-y-auto">
                     <div class="flex w-full mt-2 space-x-3 max-w-xs">
                         <div class="flex flex-col gap-2">
                             <div class="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
-                                <p class="text-sm">Salut <?= Application::getUser()->full_name()?> ! Comment puis-je vous aider ?</p>
+                                <p class="text-sm">Salut <?= Application::getUser()->full_name() ?> ! Comment puis-je
+                                    vous aider ?</p>
                             </div>
                             <span class="text-xs text-gray-500 leading-none">Gilou</span>
                         </div>
                     </div>
                 </div>
-				<div class="flex justify-between w-full gap-2 mt-2">
-					<label class="w-full">
-						<input type="text" placeholder="Message"
+                <div class="flex justify-between w-full gap-2 mt-2">
+                    <label class="w-full">
+                        <input type="text" placeholder="Message"
                                id="chatbot-input"
-						       class="shadow-sm w-full bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light">
-					</label>
-					<button onclick="sendMessage()" class="bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 rounded-lg px-3">
-						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="w-6 h-6">
-							<path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z"/>
-						</svg>
-					</button>
-				</div>
-			</div>
-			<button id="chatbot-button"
-			        onclick="openChatbot()"
-			        class="fixed bottom-[20px] right-[20px] bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 rounded-lg p-3">
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="w-6 h-6">
-					<path d="M4.913 2.658c2.075-.27 4.19-.408 6.337-.408 2.147 0 4.262.139 6.337.408 1.922.25 3.291 1.861 3.405 3.727a4.403 4.403 0 00-1.032-.211 50.89 50.89 0 00-8.42 0c-2.358.196-4.04 2.19-4.04 4.434v4.286a4.47 4.47 0 002.433 3.984L7.28 21.53A.75.75 0 016 21v-4.03a48.527 48.527 0 01-1.087-.128C2.905 16.58 1.5 14.833 1.5 12.862V6.638c0-1.97 1.405-3.718 3.413-3.979z"/>
-					<path d="M15.75 7.5c-1.376 0-2.739.057-4.086.169C10.124 7.797 9 9.103 9 10.609v4.285c0 1.507 1.128 2.814 2.67 2.94 1.243.102 2.5.157 3.768.165l2.782 2.781a.75.75 0 001.28-.53v-2.39l.33-.026c1.542-.125 2.67-1.433 2.67-2.94v-4.286c0-1.505-1.125-2.811-2.664-2.94A49.392 49.392 0 0015.75 7.5z"/>
-				</svg>
-			</button>
-		</div>
-	</div>
+                               class="shadow-sm w-full bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light">
+                    </label>
+                    <button onclick="sendMessage()"
+                            class="bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 rounded-lg px-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="w-6 h-6">
+                            <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <button id="chatbot-button"
+                    onclick="openChatbot()"
+                    class="fixed bottom-[20px] right-[20px] bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 rounded-lg p-3">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="w-6 h-6">
+                    <path d="M4.913 2.658c2.075-.27 4.19-.408 6.337-.408 2.147 0 4.262.139 6.337.408 1.922.25 3.291 1.861 3.405 3.727a4.403 4.403 0 00-1.032-.211 50.89 50.89 0 00-8.42 0c-2.358.196-4.04 2.19-4.04 4.434v4.286a4.47 4.47 0 002.433 3.984L7.28 21.53A.75.75 0 016 21v-4.03a48.527 48.527 0 01-1.087-.128C2.905 16.58 1.5 14.833 1.5 12.862V6.638c0-1.97 1.405-3.718 3.413-3.979z"/>
+                    <path d="M15.75 7.5c-1.376 0-2.739.057-4.086.169C10.124 7.797 9 9.103 9 10.609v4.285c0 1.507 1.128 2.814 2.67 2.94 1.243.102 2.5.157 3.768.165l2.782 2.781a.75.75 0 001.28-.53v-2.39l.33-.026c1.542-.125 2.67-1.433 2.67-2.94v-4.286c0-1.505-1.125-2.811-2.664-2.94A49.392 49.392 0 0015.75 7.5z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
 </div>
 <script src="/resources/js/chatbot.js"></script>
 </body>

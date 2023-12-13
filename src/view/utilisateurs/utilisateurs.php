@@ -8,7 +8,9 @@ use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurRepository;
+use app\src\model\View;
 
+View::setCurrentSection('Utilisateurs');
 $this->title = 'Utilisateurs';
 
 Table::createTable($utilisateurs, ["nom", "email", "numéro de téléphone", "Role"], function ($utilisateur) {

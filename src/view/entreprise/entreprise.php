@@ -8,7 +8,9 @@ use app\src\model\Auth;
 use app\src\model\repository\AvisRepository;
 use app\src\model\dataObject\Entreprise;
 use app\src\model\dataObject\Roles;
+use app\src\model\View;
 
+View::setCurrentSection('Entreprises');
 $this->title = 'Entreprises';
 if (Auth::has_role(Roles::Enterprise)) {
     throw new ForbiddenException("Vous n'avez pas le droit de voir cette page");

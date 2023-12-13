@@ -8,6 +8,10 @@ use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\UtilisateurRepository;
+use app\src\model\View;
+
+View::setCurrentSection('Candidatures');
+$this->title = 'Candidatures';
 
 ?>
 <div class="w-full grid-cols-1 gap-4 lg:grid-cols-4 ">
