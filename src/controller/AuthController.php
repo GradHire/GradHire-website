@@ -234,4 +234,9 @@ class AuthController extends AbstractController
         Application::$app->response->redirect('/dashboard');
         return '';
     }
+
+    public function aboutreal(Request $request): string
+    {
+        return $this->render('apropos');
+    }
 }
