@@ -35,7 +35,6 @@ class DashboardController extends AbstractController
     {
         $typeBlock = $request->getRouteParams()["type"];
         $selectedItems = [];
-
         if ($typeBlock === 'sections' || $typeBlock === 'actions') {
             foreach ($request->getBody() as $key => $value) {
                 if (strpos($key, $typeBlock === 'sections' ? 'S' : 'A') === 0) {
@@ -43,7 +42,6 @@ class DashboardController extends AbstractController
                 }
             }
         }
-
         if (!isset($_SESSION['parametres'])) {
             $_SESSION['parametres'] = [
                 'sections' => [],
@@ -51,30 +49,18 @@ class DashboardController extends AbstractController
             ];
         }
 
-        // Preserve the previous configuration for the opposite type
         if ($typeBlock === 'sections') {
-            $_SESSION['parametres']['actions'] = $_SESSION['parametres']['actions'] ?? [];
+            $_SESSION['parametres']['sections'] = $selectedItems;
         } elseif ($typeBlock === 'actions') {
-            $_SESSION['parametres']['sections'] = $_SESSION['parametres']['sections'] ?? [];
-        }
-
-        // Update the selected items based on the type
-        if ($typeBlock === 'sections') {
-            $_SESSION['parametres']['sections'] = array_merge($_SESSION['parametres']['sections'], $selectedItems);
-            $_SESSION['parametres']['sections'] = array_unique($_SESSION['parametres']['sections']);
-        } elseif ($typeBlock === 'actions') {
-            $_SESSION['parametres']['actions'] = array_merge($_SESSION['parametres']['actions'], $selectedItems);
-            $_SESSION['parametres']['actions'] = array_unique($_SESSION['parametres']['actions']);
+            $_SESSION['parametres']['actions'] = $selectedItems;
         }
 
         $configJson = json_encode($_SESSION['parametres']);
         $statement = Database::get_conn()->prepare("SELECT * FROM updateParametres(?, ?);");
         $userId = Application::getUser()->id();
         $statement->execute([$userId, $configJson]);
-
         Application::redirectFromParam("/dashboard");
     }
-
 
 
     /**
