@@ -31,28 +31,32 @@ use app\src\model\Request;
 class DashboardController extends AbstractController
 {
 
+    private const TYPE_SECTIONS = 'sections';
+    private const TYPE_ACTIONS = 'actions';
+
+    /**
+     * Modifies the parameters based on the given request.
+     *
+     * @param Request $request The request object.
+     * @throws ServerErrorException If there is an error in the server.
+     */
     public function modifierParametres(Request $request): void
     {
-        $typeBlock = $request->getRouteParams()["type"];
-        $selectedItems = [];
-        if ($typeBlock === 'sections' || $typeBlock === 'actions') {
-            foreach ($request->getBody() as $key => $value) {
-                if (strpos($key, $typeBlock === 'sections' ? 'S' : 'A') === 0) {
-                    $selectedItems[] = $key;
-                }
-            }
-        }
+        $typeBlock = $request->getRouteParams()['type'];
+        $filteredParams = $this->filterRequestedParams($request->getBody(), $typeBlock);
+
         if (!isset($_SESSION['parametres'])) {
             $_SESSION['parametres'] = [
-                'sections' => [],
-                'actions' => []
+                self::TYPE_SECTIONS => [],
+                self::TYPE_ACTIONS => []
             ];
         }
 
-        if ($typeBlock === 'sections') {
-            $_SESSION['parametres']['sections'] = $selectedItems;
-        } elseif ($typeBlock === 'actions') {
-            $_SESSION['parametres']['actions'] = $selectedItems;
+        switch ($typeBlock) {
+            case self::TYPE_SECTIONS:
+            case self::TYPE_ACTIONS:
+                $_SESSION['parametres'][$typeBlock] = $filteredParams;
+                break;
         }
 
         $configJson = json_encode($_SESSION['parametres']);
@@ -62,6 +66,15 @@ class DashboardController extends AbstractController
         Application::redirectFromParam("/dashboard");
     }
 
+    private function filterRequestedParams(array $body, string $typeBlock): array
+    {
+        $filteredParams = [];
+        if (in_array($typeBlock, [self::TYPE_SECTIONS, self::TYPE_ACTIONS])) {
+            $prefix = $typeBlock === self::TYPE_SECTIONS ? 'S' : 'A';
+            foreach ($body as $key => $value) if (str_starts_with($key, $prefix)) $filteredParams[] = $key;
+        }
+        return $filteredParams;
+    }
 
     /**
      * @throws ServerErrorException
@@ -69,13 +82,18 @@ class DashboardController extends AbstractController
     public function showDashboard(): string
     {
         $data = [];
-        $data['percentageBlockData1'] = (new ConventionRepository())->getPourcentageEtudiantsConventionCetteAnnee();
-        $data['numBlockData1'] = (new OffresRepository())->getStatsDensembleStageEtAlternance();
-        $data['barChartHorizontalData1'] = (new OffresRepository())->getTop5DomainesPlusDemandes();
-        $data['pieChartData1'] = (new OffresRepository())->getStatsDistributionDomaine();
-        $data['barChartVerticalData1'] = (new OffresRepository())->getMoyenneCandidaturesParOffreParDomaine();
-        $data['lineChartData1'] = (new PostulerRepository())->getStatsCandidaturesParMois();
-        $data['lastActionsData1'] = (new OffresRepository())->getOffresDernierSemaine();
+        $conventionRepo = new ConventionRepository();
+        $offresRepo = new OffresRepository();
+        $postulerRepo = new PostulerRepository();
+
+        $data['percentageBlockData1'] = $conventionRepo->getPourcentageEtudiantsConventionCetteAnnee();
+        $data['numBlockData1'] = $offresRepo->getStatsDensembleStageEtAlternance();
+        $data['barChartHorizontalData1'] = $offresRepo->getTop5DomainesPlusDemandes();
+        $data['pieChartData1'] = $offresRepo->getStatsDistributionDomaine();
+        $data['barChartVerticalData1'] = $offresRepo->getMoyenneCandidaturesParOffreParDomaine();
+        $data['lineChartData1'] = $postulerRepo->getStatsCandidaturesParMois();
+        $data['lastActionsData1'] = $offresRepo->getOffresDernierSemaine();
+
         return $this->render('dashboard/dashboard', [
             'data' => $data
         ]);
