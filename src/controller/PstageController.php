@@ -253,7 +253,7 @@ class PstageController extends AbstractController
                     return $this->render('simulateurP/General', ['form' => $form, 'vueChemin' => 'simulateurServiceAccueil.php']);
                 }
             }
-            return $this->render('simulateurP/General', ['form' => $form, 'vueChemin' => 'creerService.php']);
+            return $this->render('simulateurP/General', ['form' => $form, 'vueChemin' => 'creer.php', "nom" => "Créer un service d'accueil"]);
         } else throw new ForbiddenException();
     }
 
@@ -294,7 +294,7 @@ class PstageController extends AbstractController
                     return $this->render('simulateurP/General', ['listTuteur' => $tut, 'vueChemin' => 'simulateurTuteur.php']);
                 }
             }
-            return $this->render('simulateurP/General', ['form' => $form, 'vueChemin' => 'creerTuteur.php']);
+            return $this->render('simulateurP/General', ['form' => $form, 'vueChemin' => 'creer.php', "nom" => "Créer un tuteur"]);
         } else throw new ForbiddenException();
     }
 
