@@ -38,6 +38,7 @@ class SoutenanceController extends AbstractController
             ]);
             if ($request->getMethod() == "post") {
                 if ($form->validate($request->getBody())) {
+                    print_r($infosConvention);
                     $values = array_merge($form->getParsedBody(), [
                         'numconvention' => $infosConvention['numconvention'],
                         'idtuteurprof' => $infosConvention['idtuteurprof'],
@@ -85,7 +86,7 @@ class SoutenanceController extends AbstractController
         $soutenance = SoutenanceRepository::getSoutenanceByNumConvention($numConvention);
         $convention = $soutenance->getNumConvention();
         $convention = ConventionRepository::getById($convention);
-        $etudiant = $convention->getIdUtilisateur();
+        $etudiant = $convention['idutilisateur'];
         $etudiant = (new EtudiantRepository([]))->getByIdFull($etudiant);
 
         $form = new FormModel([

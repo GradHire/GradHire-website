@@ -6,6 +6,8 @@ use app\src\core\components\Notification;
 use app\src\core\components\Separator;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
+use app\src\model\Auth;
+use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 
 /** @var array $allSections
@@ -17,8 +19,38 @@ if (!isset($_COOKIE['sidebar_open']) || ($_COOKIE['sidebar_open'] == 'true')) $i
 
 require __DIR__ . "/sidebar.php";
 
-$parametresContent = file_get_contents(__DIR__ . "/data/parametres_default.json");
-$parametres = json_decode($parametresContent, true);
+$sections = ['S01'];
+$actions = [];
+
+if (!Auth::has_role(Roles::ChefDepartment)) $sections[] = 'S02';
+else $sections[] = 'S03';
+
+if (!Auth::has_role(Roles::Enterprise, Roles::Tutor, Roles::ChefDepartment)) $sections[] = 'S04';
+
+if (Auth::has_role(Roles::Student, Roles::Teacher, Roles::Tutor, Roles::Enterprise)) $sections[] = 'S05';
+
+if (Auth::has_role(Roles::Enterprise)) {
+    $sections[] = 'S01';
+    $sections[] = 'S06';
+}
+
+if (Auth::has_role(Roles::Manager, Roles::Staff)) {
+    $sections[] = 'S03';
+    $sections[] = 'S05';
+    $sections[] = 'S06';
+    $sections[] = 'S07';
+}
+
+if (Auth::has_role(Roles::Student)) $actions[] = 'A03';
+
+if (Auth::has_role(Roles::Enterprise, Roles::Student, Roles::Manager, Roles::Staff)) $sections[] = 'S08';
+
+$parametres = [
+    'sections' => $sections,
+    'actions' => $actions
+];
+
+$parametresContent = json_encode($parametres);
 
 $defaultSections = $parametres['sections'] ?? [];
 $defaultActions = $parametres['actions'] ?? [];
@@ -81,6 +113,7 @@ function generateFormCheckboxes($items, $selectedItems, $defaultKey)
     $checkboxes = [];
 
     foreach ($items as $itemId => $item) {
+        if ($itemId === 'S12' || $itemId === 'S11') continue;
         $checkbox = FormModel::checkbox("", [$itemId => $item['nom']]);
         $checkboxes[$itemId] = $checkbox;
 

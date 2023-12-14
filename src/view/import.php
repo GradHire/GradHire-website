@@ -3,6 +3,11 @@
 /** @var $form FormModel */
 
 use app\src\model\Form\FormModel;
+use app\src\model\View;
+
+View::setCurrentSection('Imports');
+$this->title = 'Imports';
+
 
 ?>
 
