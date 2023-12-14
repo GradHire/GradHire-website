@@ -1,10 +1,9 @@
 <?php
 
-/** @var $form FormModel */
-
-/** @var $nom String */
-
 use app\src\model\Form\FormModel;
+
+/** @var $form FormModel */
+/** @var $nom String */
 
 ?>
 
@@ -16,14 +15,11 @@ use app\src\model\Form\FormModel;
     if ($nom != "Créer un service d'accueil") {
         $form->print_all_fields();
     } else {
-        $form->print_fields(["nomService", "memeAdresse"]);
-        ?>
+        $form->print_fields(["nomService", "memeAdresse"]); ?>
         <div class="w-full gap-4 flex flex-col hidden" id="adr">
-        <?php
-        $form->print_fields(["voie", "residence", "cp", "ville", "pays"]);
-        ?>
-        </div><?php
-    }
+            <?php $form->print_fields(["voie", "residence", "cp", "ville", "pays"]); ?>
+        </div>
+    <?php }
     $form->submit("Créer");
     $form->getError();
     $form->end();

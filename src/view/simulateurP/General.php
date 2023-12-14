@@ -99,7 +99,7 @@
     </div>
     <div class="ml-5">
         <?php
-        if ($vueChemin == "simulateurProfReferent.php" || $vueChemin == "listProf.php") {
+        if ($vueChemin == "listProf.php") {
             ?>
             <p class="text-blue-500">Professeur référent</p>
             <?php

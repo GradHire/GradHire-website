@@ -7,6 +7,7 @@ use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\ServiceAccueilRepository;
 use app\src\model\repository\SimulationPstageRepository;
+use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurRepository;
 
 $etudiant = $_SESSION["simulateurEtu"];
@@ -20,6 +21,8 @@ $entreprise = (new EntrepriseRepository([]))->getByIdFull($_SESSION['idEntrepris
 $idtuteur = $_SESSION['idTuteur'];
 $tuteur = (new TuteurRepository([]))->getByIdFull($idtuteur);
 $signataire = $_SESSION['signataire'];
+$profref = $_SESSION['idProfRef'];
+$prof = (new StaffRepository([]))->getByIdFull($profref);
 
 $filename = 'convention_stage_' . $etudiant["numEtudiant"] . '.pdf';
 while (file_exists('uploads/Pstage/' . $filename)) {
@@ -59,7 +62,7 @@ $travailApresStage = "Rapport de Stage";
 $modaliteValidationStage = "Soutenance";
 $dureeStage = "392 heures de presence effective dans l organisme d accueil (representant une duree totale de 2 mois 12 jour(s) et 0 heure(s))";
 $dureeStage = $offre["duree"] . " heures de presence effective dans l'organisme d'accueil";
-$enseignantReferent = $_SESSION["prenomProf"] . " " . $_SESSION["nomProf"];
+$enseignantReferent = $profref->getNom() . " " . $profref->getPrenom();
 $etablissementAccueil = $entreprise->getNom() . "\n" . $entreprise->getAdresse() . " " . $entreprise->getCodePostal() . " " . $entreprise->getVille() . " " . $entreprise->getPays();
 $lieuStage = $accueil->getNomService() . "\n" . $accueil->getAdresse() . " " . $accueil->getCodePostal() . " " . $accueil->getCommune() . " " . $accueil->getPays();
 $tuteurProfessionnel = $tuteur->getNom() . " " . $tuteur->getPrenom();

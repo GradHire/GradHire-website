@@ -354,6 +354,8 @@ class PstageController extends AbstractController
     public function simulateurProfReferent(Request $request)
     {
         if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"]) && isset($_SESSION["accueil"]) && isset($_SESSION["idTuteur"]) && isset($_SESSION["simulateurCandidature"])) {
+            $listProf = new StaffRepository([]);
+            $listProf = $listProf->getAll();
             $form = new FormModel([
                 "nom" => FormModel::string("Nom du professeur référent")->required(),
                 "prenom" => FormModel::string("Prénom du professeur référent")->required()
@@ -362,14 +364,10 @@ class PstageController extends AbstractController
                 $form->setError("Impossible de trouver le professeur référent");
                 if ($form->validate($request->getBody())) {
                     $formData = $form->getParsedBody();
-                    $listProf = new StaffRepository([]);
-                    $listProf = $listProf->getByNomPreFull($formData["nom"], $formData["prenom"]);
-                    $_SESSION["nomProf"] = $formData["nom"];
-                    $_SESSION["prenomProf"] = $formData["prenom"];
                     return $this->render('simulateurP/General', ["listProf" => $listProf, "vueChemin" => "listProf.php"]);
                 }
             }
-            return $this->render('simulateurP/General', ["form" => $form, "vueChemin" => "simulateurProfReferent.php"]);
+            return $this->render('simulateurP/General', ["form" => $form, "vueChemin" => "listProf.php", "listProf" => $listProf]);
         } else throw new ForbiddenException();
     }
 
