@@ -373,9 +373,11 @@ class PstageController extends AbstractController
 
     public function simulateurSignataire(Request $request)
     {
-        if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"]) && isset($_SESSION["accueil"]) && isset($_SESSION["idTuteur"]) && isset($_SESSION["simulateurCandidature"]) && isset($_SESSION["nomProf"])) {
+        if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"]) && isset($_SESSION["accueil"]) && isset($_SESSION["idTuteur"]) && isset($_SESSION["simulateurCandidature"])) {
             $id = $_GET['idProfRef'] ?? null;
-            $_SESSION['idProfRef'] = $id;
+            if ($id != null) {
+                $_SESSION['idProfRef'] = $id;
+            }
             $signataire = (new SignataireRepository())->getFullByEntreprise($_SESSION["idEntreprise"]);
             $signataire["Non renseigné"] = "Non renseigné";
             $form = new FormModel([
@@ -395,7 +397,7 @@ class PstageController extends AbstractController
 
     public function creerSignataire(Request $request)
     {
-        if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"]) && isset($_SESSION["accueil"]) && isset($_SESSION["idTuteur"]) && isset($_SESSION["simulateurCandidature"]) && isset($_SESSION["nomProf"])) {
+        if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"]) && isset($_SESSION["accueil"]) && isset($_SESSION["idTuteur"]) && isset($_SESSION["simulateurCandidature"])) {
             $form = new FormModel([
                 "nom" => FormModel::string("Nom du signataire")->required(),
                 "prenom" => FormModel::string("Prénom du signataire")->required(),
@@ -422,14 +424,14 @@ class PstageController extends AbstractController
 
     public function previewSignataire(Request $request)
     {
-        if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"]) && isset($_SESSION["accueil"]) && isset($_SESSION["idTuteur"]) && isset($_SESSION["simulateurCandidature"]) && isset($_SESSION["nomProf"])) {
+        if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"]) && isset($_SESSION["accueil"]) && isset($_SESSION["idTuteur"]) && isset($_SESSION["simulateurCandidature"])) {
             return $this->render('simulateurP/General', ['vueChemin' => 'previewSignataire.php']);
         } else throw new ForbiddenException();
     }
 
     public function visuRecapConv(Request $request)
     {
-        if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"]) && isset($_SESSION["accueil"]) && isset($_SESSION["idTuteur"]) && isset($_SESSION["simulateurCandidature"]) && isset($_SESSION["nomProf"]) && isset($_SESSION["signataire"])) {
+        if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"]) && isset($_SESSION["accueil"]) && isset($_SESSION["idTuteur"]) && isset($_SESSION["simulateurCandidature"]) && isset($_SESSION["signataire"])) {
             return $this->render('simulateurP/General', ['vueChemin' => 'visuRecapConv.php']);
         } else throw new ForbiddenException();
     }
