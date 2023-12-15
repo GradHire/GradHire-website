@@ -5,7 +5,6 @@ use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurRepository;
 
 $etudiant = $_SESSION['simulateurEtu'];
-
 $offre = $_SESSION['simulateurCandidature'];
 $accueil = new ServiceAccueilRepository();
 $accueil = $accueil->getFullByEntrepriseNom($_SESSION['idEntreprise'], $_SESSION['accueil']);

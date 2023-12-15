@@ -14,7 +14,7 @@
     </div>
     <div class="ml-5">
         <?php
-        if ($vueChemin == "simulateuretu.php" || $vueChemin == "previewetu.php") {
+        if ($vueChemin == "simulateuretu.php") {
             ?>
             <p class="text-blue-500">Etudiant</p>
             <?php
@@ -31,7 +31,7 @@
     </div>
     <div class="ml-5">
         <?php
-        if ($vueChemin == "listEntreprise.php" || $vueChemin == "previewOffre.php" || $vueChemin == "creer.php" || $vueChemin == "listEntreprise.php") {
+        if ($vueChemin == "listEntreprise.php" || $vueChemin == "creer.php" || $vueChemin == "listEntreprise.php") {
             ?>
             <p class="text-blue-500">Entreprise</p>
             <?php
@@ -48,7 +48,7 @@
     </div>
     <div class="ml-5">
         <?php
-        if ($vueChemin == "simulateurServiceAccueil.php" || $vueChemin == "previewServiceAccueil.php" || $vueChemin == "creerService.php") {
+        if ($vueChemin == "simulateurServiceAccueil.php" || $vueChemin == "creerService.php") {
             ?>
             <p class="text-blue-500">Service d'accueil</p>
             <?php
@@ -65,7 +65,7 @@
     </div>
     <div class="ml-5">
         <?php
-        if ($vueChemin == "simulateurTuteur.php" || $vueChemin == "creerTuteur.php" || $vueChemin == "previewTuteur.php") {
+        if ($vueChemin == "simulateurTuteur.php" || $vueChemin == "creerTuteur.php") {
             ?>
             <p class="text-blue-500">Tuteur</p>
             <?php
@@ -82,7 +82,7 @@
     </div>
     <div class="ml-5">
         <?php
-        if ($vueChemin == "simulateurCandidature.php" || $vueChemin == "previewCandidature.php") {
+        if ($vueChemin == "simulateurCandidature.php") {
             ?>
             <p class="text-blue-500">Stage</p>
             <?php
@@ -116,7 +116,7 @@
     </div>
     <div class="ml-5">
         <?php
-        if ($vueChemin == "simulateurSignataire.php" || $vueChemin == "creerSignataire.php" || $vueChemin == "previewSignataire.php") {
+        if ($vueChemin == "simulateurSignataire.php" || $vueChemin == "creerSignataire.php") {
             ?>
             <p class="text-blue-500">Signataire</p>
             <?php

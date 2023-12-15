@@ -125,7 +125,7 @@ class PstageController extends AbstractController
                 if ($form->validate($request->getBody())) {
                     $_SESSION['simulateurEtu'] = $form->getParsedBody();
                     (new EtudiantRepository([]))->updateEtu($form->getParsedBody()['numEtudiant'], $form->getParsedBody()['nom'], $form->getParsedBody()['prenom'], $form->getParsedBody()['telephone'], $form->getParsedBody()['emailPerso'], $form->getParsedBody()['emailUniv'], $form->getParsedBody()['adresse'], $form->getParsedBody()['codePostal'], $form->getParsedBody()['ville'], "France", "");
-                    return $this->render('simulateurP/General', ['vueChemin' => "previewetu.php", 'form' => $form]);
+                    return $this->render('simulateurP/General', ['vueChemin' => "preview.php", 'form' => $form, 'array' => $_SESSION['simulateurEtu']]);
                 }
             }
             return $this->render('simulateurP/General', ['vueChemin' => "simulateuretu.php", 'form' => $form]);
@@ -137,7 +137,19 @@ class PstageController extends AbstractController
         if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"])) {
             $id = $_GET['idEntreprise'];
             $_SESSION["idEntreprise"] = $id;
-            return $this->render('simulateurP/General', ['id' => $id, 'vueChemin' => "previewOffre.php"]);
+            $entreprise = (new EntrepriseRepository([]))->getByIdFull($id);
+            $array = [
+                "Nom Entreprise" => $entreprise->getNom(),
+                "Type d'établissement" => $entreprise->getTypestructure(),
+                "Effectif" => $entreprise->getEffectif(),
+                "Siret" => $entreprise->getSiret(),
+                "Adresse" => $entreprise->getAdresse(),
+                "Code Postal" => $entreprise->getCodePostal(),
+                "Ville" => $entreprise->getVille(),
+                "Pays" => $entreprise->getPays(),
+                "Code Naf" => $entreprise->getCodenaf()
+            ];
+            return $this->render('simulateurP/General', ['id' => $id, 'vueChemin' => "preview.php", 'array' => $array]);
         } else throw new ForbiddenException();
     }
 
@@ -213,8 +225,15 @@ class PstageController extends AbstractController
                 if ($form->validate($request->getBody())) {
                     $formData = $form->getParsedBody();
                     $_SESSION['accueil'] = $formData['accueil'];
-                    Application::$app->response->redirect("/previewServiceAccueil");
-                    return $this->render('simulateurP/General', ['vueChemin' => 'previewServiceAccueil.php']);
+                    $accueil = (new ServiceAccueilRepository())->getFullByEntrepriseNom($_SESSION['idEntreprise'], $_SESSION['accueil']);
+                    $array = [
+                        "Nom Accueil" => $accueil->getNomService(),
+                        "Voie" => $accueil->getAdresse(),
+                        "Code Postal" => $accueil->getCodePostal(),
+                        "Commune" => $accueil->getCommune(),
+                        "Pays" => $accueil->getPays()
+                    ];
+                    return $this->render('simulateurP/General', ['vueChemin' => 'preview.php', 'array' => $array]);
                 }
             }
             return $this->render('simulateurP/General', ['form' => $form, 'vueChemin' => 'simulateurServiceAccueil.php']);
@@ -257,12 +276,6 @@ class PstageController extends AbstractController
         } else throw new ForbiddenException();
     }
 
-    public function previewServiceAccueil(Request $request)
-    {
-        if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"])) {
-            return $this->render('simulateurP/General', ['vueChemin' => 'previewServiceAccueil.php']);
-        } else throw new ForbiddenException();
-    }
 
     public function simulateurTuteur(Request $request)
     {
@@ -336,18 +349,10 @@ class PstageController extends AbstractController
                 $form->setError("Impossible de créer la candidature");
                 if ($form->validate($request->getBody())) {
                     $_SESSION['simulateurCandidature'] = $form->getParsedBody();
-                    Application::$app->response->redirect("/previewCandidature");
-                    return $this->render('simulateurP/General', ['vueChemin' => 'previewCandidature.php']);
+                    return $this->render('simulateurP/General', ['vueChemin' => 'preview.php', 'array' => $_SESSION['simulateurCandidature']]);
                 }
             }
             return $this->render('simulateurP/General', ['form' => $form, 'vueChemin' => 'simulateurCandidature.php']);
-        } else throw new ForbiddenException();
-    }
-
-    public function previewCandidature(Request $request)
-    {
-        if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"]) && isset($_SESSION["accueil"]) && isset($_SESSION["idTuteur"])) {
-            return $this->render('simulateurP/General', ['vueChemin' => 'previewCandidature.php']);
         } else throw new ForbiddenException();
     }
 
@@ -387,8 +392,14 @@ class PstageController extends AbstractController
                 if ($form->validate($request->getBody())) {
                     $formData = $form->getParsedBody();
                     $_SESSION['signataire'] = $formData['signataire'];
-                    Application::$app->response->redirect("/previewSignataire");
-                    return $this->render('simulateurP/General', ['vueChemin' => 'previewSignataire.php']);
+                    $signataire = (new SignataireRepository())->getFullByEntrepriseNom($_SESSION['signataire'], $_SESSION["idEntreprise"]);
+                    $array = [
+                        "Nom Signataire" => $signataire->getNomSignataire(),
+                        "Prénom Signataire" => $signataire->getPrenomSignataire(),
+                        "Fonction Signataire" => $signataire->getFonctionSignataire(),
+                        "Mail Signataire" => $signataire->getMailSignataire()
+                    ];
+                    return $this->render('simulateurP/General', ['vueChemin' => 'preview.php', 'array' => $array]);
                 }
             }
             return $this->render('simulateurP/General', ["form" => $form, "vueChemin" => "simulateurSignataire.php"]);
@@ -419,13 +430,6 @@ class PstageController extends AbstractController
                 }
             }
             return $this->render('simulateurP/General', ["form" => $form, "vueChemin" => "creer.php", "nom" => "Créer un signataire"]);
-        } else throw new ForbiddenException();
-    }
-
-    public function previewSignataire(Request $request)
-    {
-        if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"]) && isset($_SESSION["accueil"]) && isset($_SESSION["idTuteur"]) && isset($_SESSION["simulateurCandidature"])) {
-            return $this->render('simulateurP/General', ['vueChemin' => 'previewSignataire.php']);
         } else throw new ForbiddenException();
     }
 
