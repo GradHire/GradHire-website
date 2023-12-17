@@ -50,12 +50,12 @@ class VerticalBarChartBlock
         $labelIncrement = $height / $maxValue;
         for ($i = 0; $i <= $maxValue; $i += $maxValue / 18) {
             $yPos = $height - $padding - $labelIncrement * $i;
-            echo "<line class='drop-shadow' x1=\"" . ($padding) . "\" y1=\"$yPos\" x2=\"" . ($width) . "\" y2=\"$yPos\" stroke-width=\"1\" stroke=\"$color\" opacity=\"0.075\" />";
+            echo "<line x1=\"" . ($padding) . "\" y1=\"$yPos\" x2=\"" . ($width) . "\" y2=\"$yPos\" stroke-width=\"1\" stroke=\"$color\" opacity=\"0.075\" />";
         }
 
         $xOffset = $padding + $barWidth / 2;
         for ($i = 0; $i < (count($data) * 2); $i++) {
-            echo "<line class='drop-shadow' x1=\"$xOffset\" y1=\"0\" x2=\"$xOffset\" y2=\"$height\" stroke-width=\"1\" stroke=\"$color\" opacity=\"0.075\" />";
+            echo "<line x1=\"$xOffset\" y1=\"0\" x2=\"$xOffset\" y2=\"$height\" stroke-width=\"1\" stroke=\"$color\" opacity=\"0.075\" />";
             $xOffset += $barWidth / 2;
         }
 
@@ -65,27 +65,28 @@ class VerticalBarChartBlock
             $barHeight = $increment * $row[$row_1];
             $yPos = $height - $barHeight + $padding;
             echo <<<EOT
-            <rect class="barChartRect drop-shadow" x="$xOffset" y="$yPos" width="$barWidth" stroke="$color" height="$barHeight" fill="url(#$gradientId)" rx="$rounding" ry="$rounding" />
+            <rect class="barChartRect" x="$xOffset" y="$yPos" width="$barWidth" stroke="$color" height="$barHeight" fill="url(#$gradientId)" rx="$rounding" ry="$rounding" />
             EOT;
-            echo "<line class='drop-shadow' x1=\"" . ($padding) . "\" y1=\"$yPos\" x2=\"" . ($xOffset + $barWidth / 2) . "\" y2=\"$yPos\" stroke-width=\"1\" stroke-dasharray=\"5,5\" stroke=\"$color\" />";
-            echo "<circle class='drop-shadow' cx=\"" . ($xOffset + $barWidth / 2) . "\" cy=\"$yPos\" r=\"3\" fill=\"$color\" />";
+            echo "<line x1=\"" . ($padding) . "\" y1=\"$yPos\" x2=\"" . ($xOffset + $barWidth / 2) . "\" y2=\"$yPos\" stroke-width=\"1\" stroke-dasharray=\"5,5\" stroke=\"$color\" />";
+            echo "<circle cx=\"" . ($xOffset + $barWidth / 2) . "\" cy=\"$yPos\" r=\"3\" fill=\"$color\" />";
             $xOffset += $barWidth;
         }
 
         $labelIncrement = ($height) / $maxValue;
         for ($i = 0; $i <= $maxValue; $i += $maxValue / 6) {
             $yPos = $height + $padding - $labelIncrement * $i;
-            echo "<text class='drop-shadow' x=\"" . ($padding / 2 - 1) . "\" y=\"$yPos\" font-size=\"10\" text-anchor=\"middle\">" . round($i, 2) . "</text>";
+            echo "<text x=\"" . ($padding / 2 - 1) . "\" y=\"$yPos\" font-size=\"10\" text-anchor=\"middle\">" . round($i, 2) . "</text>";
         }
 
         $xOffset = $padding + $barWidth / 2;
         $temp1 = $height - $padding + 2;
-        echo "<rect x=\"" . ($padding - 3) . "\" y=\"$temp1\" width=\"$width\" height=\"$padding\" fill=\"#fff\" />";
-        echo "<line class='drop-shadow' x1=\"$padding\" y1=\"$temp1\" x2=\"" . ($width - 1) . "\" y2=\"$temp1\" stroke-width=\"1\"  stroke=\"$color\" />";
+        $temp2 = $height - 18;
+        echo "<rect x=\"" . ($padding - 3) . "\" y=\"$temp2\" width=\"$width\" height=\"$temp2\" fill=\"#fff\" />";
+        echo "<line x1=\"$padding\" y1=\"$temp1\" x2=\"" . ($width - 1) . "\" y2=\"$temp1\" stroke-width=\"1\"  stroke=\"$color\" />";
 
         foreach ($data as $row) {
             $domain = !empty($row[$row_2]) ? strtoupper(substr($row[$row_2], 0, 3) . '…' . substr($row[$row_2], -3)) : 'AUTRE';
-            echo "<text x=\"$xOffset\" y=\"" . ($height - 5) . "\" font-size=\"10\" text-anchor=\"middle\" fill=\"#27272a\" class='drop-shadow' filter=\"url(#dropshadow)\">" . $domain . "</text>";
+            echo "<text x=\"$xOffset\" y=\"" . ($height - 5) . "\" font-size=\"10\" text-anchor=\"middle\" fill=\"#27272a\" filter=\"url(#dropshadow)\">" . $domain . "</text>";
             $xOffset += $barWidth;
         }
 

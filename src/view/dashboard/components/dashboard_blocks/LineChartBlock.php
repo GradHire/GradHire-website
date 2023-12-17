@@ -73,33 +73,33 @@ class LineChartBlock
                 <stop offset="100%" style="stop-opacity:0.8;stop-color:$color" />
             </linearGradient>
             </defs>
-            <path class='drop-shadow' d="$filledPathPoints" fill="url(#$gradientId)" />
-            <polyline class='drop-shadow' fill="none" stroke-linecap='round' stroke-width="2" points="$pointsString" stroke="$color" />
+            <path d="$filledPathPoints" fill="url(#$gradientId)" />
+            <polyline fill="none" stroke-linecap='round' stroke-width="2" points="$pointsString" stroke="$color" />
         EOT;
 
         if ($legend) {
             $labelIncrement = ($height - 2 * $padding) / $maxValue - 1;
             for ($i = 0; $i <= $maxValue + 3; $i += $maxValue / 10) {
                 $yPos = $height - $padding - $labelIncrement * $i;
-                echo "<line class='drop-shadow' x1=\"" . ($padding) . "\" y1=\"$yPos\" x2=\"" . ($width) . "\" y2=\"$yPos\" stroke-width=\"1\" stroke=\"$color\" opacity=\"0.075\" />";
+                echo "<line x1=\"" . ($padding) . "\" y1=\"$yPos\" x2=\"" . ($width) . "\" y2=\"$yPos\" stroke-width=\"1\" stroke=\"$color\" opacity=\"0.075\" />";
             }
 
             $xOffset = $padding + $increment;
             for ($i = 0; $i < (count($data)); $i++) {
-                echo "<line class='drop-shadow' x1=\"$xOffset\" y1=\"0\" x2=\"$xOffset\" y2=\"$height\" stroke-width=\"1\" stroke=\"$color\" opacity=\"0.075\" />";
+                echo "<line x1=\"$xOffset\" y1=\"0\" x2=\"$xOffset\" y2=\"$height\" stroke-width=\"1\" stroke=\"$color\" opacity=\"0.075\" />";
                 $xOffset += $increment;
             }
         }
 
         $temp1 = $height - $padding;
         echo "<rect x=\"" . ($padding - 3) . "\" y=\"$temp1\" width=\"$width\" height=\"$padding\" fill=\"#fff\" />";
-        echo "<line class='drop-shadow' x1=\"$padding\" y1=\"$temp1\" x2=\"$width\" y2=\"$temp1\" stroke-width=\"1\"  stroke=\"$color\" />";
+        echo "<line x1=\"$padding\" y1=\"$temp1\" x2=\"$width\" y2=\"$temp1\" stroke-width=\"1\"  stroke=\"$color\" />";
 
         if ($legend) {
             foreach ($points as $point) {
                 list($x, $y) = explode(',', $point);
-                echo "<line class='drop-shadow' x1='$x' y1='$xAxisYPosition' x2='$x' y2='$y' stroke-width='1' stroke-dasharray='5,5' stroke=$color />";
-                echo "<line class='drop-shadow' x1='$yAxisXPosition' y1='$y' x2='$x' y2='$y' stroke-width='1' stroke-dasharray='5,5' stroke=$color />";
+                echo "<line x1='$x' y1='$xAxisYPosition' x2='$x' y2='$y' stroke-width='1' stroke-dasharray='5,5' stroke=$color />";
+                echo "<line x1='$yAxisXPosition' y1='$y' x2='$x' y2='$y' stroke-width='1' stroke-dasharray='5,5' stroke=$color />";
             }
         }
 
@@ -114,13 +114,13 @@ class LineChartBlock
                     $date = explode('-', $row[$row_2]);
                     $month = $date[1];
                     $year = substr($date[0], 2);
-                    echo "<text class='drop-shadow dateLineChart' font-size='10' x='$x' y='$yLabelPosition' text-anchor='middle'>$month/$year</text>";
+                    echo "<text class=' dateLineChart' font-size='10' x='$x' y='$yLabelPosition' text-anchor='middle'>$month/$year</text>";
                 } else {
-                    echo "<text class='drop-shadow' font-size='10' x='$x' y='$yLabelPosition' text-anchor='middle'>" . $row[$row_2] . "</text>";
+                    echo "<text font-size='10' x='$x' y='$yLabelPosition' text-anchor='middle'>" . $row[$row_2] . "</text>";
                 }
                 $yAxisValue = round($row[$row_1], 2);
-                echo "<text class='drop-shadow' x='" . ($yAxisXPosition - 5) . "' y='$y' font-size='10' text-anchor='end' alignment-baseline='middle'>$yAxisValue</text>";
-                echo "<circle class='drop-shadow' cx='$x' cy='$y' r='3' fill=$color />";
+                echo "<text x='" . ($yAxisXPosition - 5) . "' y='$y' font-size='10' text-anchor='end' alignment-baseline='middle'>$yAxisValue</text>";
+                echo "<circle cx='$x' cy='$y' r='3' fill=$color />";
             }
             $index++;
         }
@@ -131,7 +131,7 @@ class LineChartBlock
         EOT;
     }
 
-    private static function calculatePercentage(mixed $row_1, mixed $maxValue)
+    private static function calculatePercentage(mixed $row_1, mixed $maxValue): int|float
     {
         if ($maxValue == 0) return 0;
         else return ($row_1 / $maxValue) * 100;
