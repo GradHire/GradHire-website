@@ -4,6 +4,7 @@ node_modules
 public_html/resources/css/output.css
 public_html/uploads
 public_html/pictures
+src/config.php
 public
 .phplint.cache
 yarn.lock
