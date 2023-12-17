@@ -1,6 +1,10 @@
 <?php
-/** @var $id int */
+/**
+ * @var $id int
+ * @var $entreprise Entreprise
+ */
 
+use app\src\model\dataObject\Entreprise;
 use app\src\model\repository\TuteurRepository;
 
 ?>

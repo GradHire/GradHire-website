@@ -1,5 +1,0 @@
-REFRESH MATERIALIZED VIEW candidatures_par_mois_cache;
-REFRESH MATERIALIZED VIEW moyenne_candidatures_par_offre_par_domaine_cache;
-REFRESH MATERIALIZED VIEW obtenir_vue_ensemble_stage_et_alternance_cache;
-REFRESH MATERIALIZED VIEW distribution_stage_alternance_par_domaine_cache;
-REFRESH MATERIALIZED VIEW top_5_domaines_plus_demandes_cache;

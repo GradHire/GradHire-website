@@ -3,7 +3,6 @@
 namespace app\src\model\repository;
 
 use app\src\core\db\Database;
-use app\src\model\dataObject\AbstractDataObject;
 use app\src\model\dataObject\Notes;
 
 class NotesRepository extends AbstractRepository
@@ -71,7 +70,7 @@ class NotesRepository extends AbstractRepository
 
     public function getAll(): ?array
     {
-        parent::getAll();
+        return parent::getAll();
     }
 
     public function getById(int $getSoutenance): ?Notes
