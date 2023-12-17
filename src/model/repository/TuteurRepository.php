@@ -137,14 +137,14 @@ class TuteurRepository extends ProRepository
     {
         try {
             //on vas d'abord verifier si il est plusieurs fois tutor
-            $sql = "SELECT COUNT(*) as 'nbFoisTuteur' FROM Supervise s JOIN Staff st on st.idUtilisateur = s.idUtilisateur WHERE s.idUtilisateur = :idUtilisateur AND statut = 'validee'";
+            $sql = "SELECT COUNT(*) as \"nbFoisTuteur\" FROM Supervise s JOIN Staff st on st.idUtilisateur = s.idUtilisateur WHERE s.idUtilisateur = :idUtilisateur AND statut = 'validee'";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute([
                 'idUtilisateur' => $iduser,
             ]);
             $requete->setFetchMode(\PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
-            if ($resultat["nbfoistuteur"] < 1) {
+            if ($resultat["nbFoisTuteur"] < 1) {
                 $sql = "UPDATE Staff SET role = 'enseignant' WHERE idUtilisateur = :idUtilisateur";
                 $requete = Database::get_conn()->prepare($sql);
                 $requete->execute([

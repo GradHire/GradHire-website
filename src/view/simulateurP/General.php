@@ -1,3 +1,10 @@
+<?php
+
+/* @var $vueChemin string
+ * */
+
+?>
+
 <div class="flex w-full mt-3 justify-center">
     <div class="">
         <?php
