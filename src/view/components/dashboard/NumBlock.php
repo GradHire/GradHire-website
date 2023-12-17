@@ -1,8 +1,10 @@
 <?php
 
-namespace app\src\view\dashboard\components\dashboard_blocks;
+namespace app\src\view\components\dashboard;
 
-class NumBlock
+use app\src\view\components\ComponentInterface;
+
+class NumBlock implements ComponentInterface
 {
     public static function render(array $params): void
     {

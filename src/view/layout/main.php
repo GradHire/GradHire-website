@@ -1,14 +1,14 @@
 <?php
 
-use app\src\core\components\FormModal;
-use app\src\core\components\Lien;
-use app\src\core\components\Notification;
-use app\src\core\components\Separator;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
+use app\src\view\components\layout\Lien;
+use app\src\view\components\ui\FormModal;
+use app\src\view\components\ui\Notification;
+use app\src\view\components\ui\Separator;
 
 /** @var array $allSections
  * @var array $allActions
@@ -189,7 +189,7 @@ try {
                         Lien::render($section);
                     }
                 }
-                new Separator([]);
+                Separator::render([]);
                 ?>
                 <div class="w-full flex flex-row justify-between items-center">
                     <span class="uppercase text-zinc-400 font-light text-[8px] duration-300 tracking-widest sectionText <?= $isOpen ? " text-[12px] " : " text-[8px] " ?>">Actions</span>
@@ -213,7 +213,7 @@ try {
                 ?>
             </div>
             <div class="flex items-start justify-start flex-col gap-4 w-full">
-                <?php new Separator([]); ?>
+                <?php Separator::render([]) ?>
                 <div class="flex items-start justify-start flex-col gap-1.5 w-full">
                     <?php Lien::render($allSections['S12']); ?>
                     <?php Lien::render($allSections['S11']); ?>
@@ -248,7 +248,7 @@ try {
                 </svg>
 
             </div>
-            <?php new Separator(['orientation' => 'vertical', 'height' => '[40px]']); ?>
+            <?php Separator::render(['orientation' => 'vertical', 'height' => '[40px]']) ?>
             <a class="flex flex-row gap-4 items-center justify-center min-w-fit text-sm font-medium text-zinc-600 hover:text-zinc-800"
                href="/profile">
                 <div class="rounded-full overflow-hidden h-8 w-8 border">

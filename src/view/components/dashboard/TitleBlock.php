@@ -1,8 +1,10 @@
 <?php
 
-namespace app\src\view\dashboard\components\dashboard_blocks;
+namespace app\src\view\components\dashboard;
 
-class TitleBlock
+use app\src\view\components\ComponentInterface;
+
+class TitleBlock implements ComponentInterface
 {
     const BASIC_TYPE = "text-md font-bold text-zinc-700";
     const SUB_TYPE = "text-sm text-zinc-500";

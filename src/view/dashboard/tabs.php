@@ -1,9 +1,5 @@
 <?php
 
-use app\src\core\components\Lien;
-use app\src\core\components\Separator;
-use app\src\model\Application;
-
 $currentTab = $_COOKIE['currentTab'] ?? 'tab1';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

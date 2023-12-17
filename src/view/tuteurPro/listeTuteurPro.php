@@ -6,16 +6,15 @@
 /** @var $waiting array */
 
 
-use app\src\core\components\layout\Modal;
-use app\src\core\components\Table;
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\dataObject\TuteurEntreprise;
 use app\src\model\Form\FormModel;
 use app\src\model\repository\StaffRepository;
-use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\View;
+use app\src\view\components\ui\Modal;
+use app\src\view\components\ui\Table;
 
 View::setCurrentSection('Tuteurs');
 $this->title = 'Tuteurs';

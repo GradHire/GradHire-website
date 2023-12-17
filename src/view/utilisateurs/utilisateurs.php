@@ -1,14 +1,10 @@
 <?php
 /** @var $utilisateurs */
 
-use app\src\core\components\Table;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
-use app\src\model\repository\EntrepriseRepository;
-use app\src\model\repository\EtudiantRepository;
-use app\src\model\repository\StaffRepository;
-use app\src\model\repository\TuteurRepository;
 use app\src\model\View;
+use app\src\view\components\ui\Table;
 
 View::setCurrentSection('Utilisateurs');
 $this->title = 'Utilisateurs';

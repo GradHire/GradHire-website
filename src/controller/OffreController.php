@@ -2,7 +2,6 @@
 
 namespace app\src\controller;
 
-use app\src\core\components\Notification;
 use app\src\core\exception\ForbiddenException;
 use app\src\core\exception\NotFoundException;
 use app\src\core\exception\ServerErrorException;
@@ -19,6 +18,7 @@ use app\src\model\repository\OffresRepository;
 use app\src\model\repository\PostulerRepository;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\Request;
+use app\src\view\components\ui\Notification;
 
 class OffreController extends AbstractController
 {

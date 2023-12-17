@@ -1,8 +1,10 @@
 <?php
 
-namespace app\src\view\dashboard\components\dashboard_blocks;
+namespace app\src\view\components\dashboard;
 
-class HorizontalBarChartBlock
+use app\src\view\components\ComponentInterface;
+
+class HorizontalBarChartBlock implements ComponentInterface
 {
     const DEFAULT_ROW_1 = 'Row1';
     const DEFAULT_ROW_2 = 'Row2';

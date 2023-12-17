@@ -5,14 +5,13 @@
 
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
-use app\src\model\repository\ConventionRepository;
-use app\src\core\components\Table;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\PostulerRepository;
 use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\repository\TuteurRepository;
 use app\src\model\repository\UtilisateurRepository;
+use app\src\view\components\ui\Table;
 
 ?>
 <div class="flex flex-col gap-1 w-full gap-4 mx-auto">

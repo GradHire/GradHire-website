@@ -1,6 +1,6 @@
 <?php
 
-namespace app\src\core\components;
+namespace app\src\view\components\ui;
 
 class Notification
 {

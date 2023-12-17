@@ -1,8 +1,10 @@
 <?php
 
-namespace app\src\view\dashboard\components\dashboard_blocks;
+namespace app\src\view\components\dashboard;
 
-class PieChartBlock
+use app\src\view\components\ComponentInterface;
+
+class PieChartBlock implements ComponentInterface
 {
 
     public static function render(array $params): void
@@ -41,7 +43,7 @@ class PieChartBlock
         echo '</div>';
     }
 
-    private static function createPieChartStyle(mixed $data, mixed $row_1, float|int $total, mixed $colors)
+    private static function createPieChartStyle(mixed $data, mixed $row_1, float|int $total, mixed $colors): string
     {
         $gradientPieces = [];
         $offset = 0;

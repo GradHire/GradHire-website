@@ -3,13 +3,13 @@
 
 /** @var $form FormModel */
 
-use app\src\core\components\layout\Modal;
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Offre;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 use app\src\model\View;
+use app\src\view\components\ui\Modal;
 
 $this->title = 'Offres';
 View::setCurrentSection('Offres');

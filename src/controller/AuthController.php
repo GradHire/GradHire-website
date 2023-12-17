@@ -2,7 +2,6 @@
 
 namespace app\src\controller;
 
-use app\src\core\components\Notification;
 use app\src\core\db\Database;
 use app\src\core\exception\ForbiddenException;
 use app\src\core\exception\NotFoundException;
@@ -17,6 +16,7 @@ use app\src\model\repository\ProRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\Request;
 use app\src\model\Response;
+use app\src\view\components\ui\Notification;
 
 class AuthController extends AbstractController
 {

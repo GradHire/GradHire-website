@@ -1,14 +1,14 @@
 <?php
 /** @var $entreprises Entreprise[] */
 
-use app\src\core\components\Table;
 use app\src\core\exception\ForbiddenException;
 use app\src\model\Application;
 use app\src\model\Auth;
-use app\src\model\repository\AvisRepository;
 use app\src\model\dataObject\Entreprise;
 use app\src\model\dataObject\Roles;
+use app\src\model\repository\AvisRepository;
 use app\src\model\View;
+use app\src\view\components\ui\Table;
 
 View::setCurrentSection('Entreprises');
 $this->title = 'Entreprises';

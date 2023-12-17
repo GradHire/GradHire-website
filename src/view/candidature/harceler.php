@@ -1,10 +1,9 @@
 <?php
 
 use app\src\model\dataObject\Etudiant;
+use app\src\view\components\ui\Table;
 
 /** @var $etudiants Etudiant */
-
-use app\src\core\components\Table;
 
 ?>
 <div class="overflow-x-auto w-full pb-24">

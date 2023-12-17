@@ -1,7 +1,7 @@
 <?php
 
-use app\src\core\components\Notification;
 use app\src\model\Application;
+use app\src\view\components\ui\Notification;
 
 ?>
 
