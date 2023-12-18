@@ -1,8 +1,8 @@
 <?php
 /** @var $listTuteur ?array */
 
-use app\src\core\components\Table;
 use app\src\model\repository\TuteurEntrepriseRepository;
+use app\src\view\components\ui\Table;
 
 
 ?>

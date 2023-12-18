@@ -1,7 +1,7 @@
 <?php
 /** @var $listProf */
 
-use app\src\core\components\Table;
+use app\src\view\components\ui\Table;
 
 ?>
 <h1 class=" mx-auto max-w-md font-medium text-2xl ">Simulateur Pstage (Professeur Référent)</h1>
