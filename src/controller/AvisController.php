@@ -1,8 +1,6 @@
 <?php
 namespace app\src\controller;
 
-use app\src\controller\AbstractController;
-use app\src\core\components\FormModal;
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\Form\FormModel;

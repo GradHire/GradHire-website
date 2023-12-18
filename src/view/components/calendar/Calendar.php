@@ -1,9 +1,9 @@
 <?php
 
-namespace app\src\core\components\Calendar;
+namespace app\src\view\components\calendar;
 
-use app\src\core\components\FormModal;
 use app\src\core\exception\ServerErrorException;
+use app\src\view\components\ui\FormModal;
 use DateInterval;
 use DateTime;
 use IntlDateFormatter;

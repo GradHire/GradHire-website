@@ -1,10 +1,11 @@
 <?php
 
-namespace app\src\core\components;
+namespace app\src\view\components\layout;
 
 use app\src\model\View;
+use app\src\view\components\ComponentInterface;
 
-class Lien
+class Lien implements ComponentInterface
 {
     public static function render(array $params): void
     {

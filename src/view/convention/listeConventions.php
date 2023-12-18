@@ -1,7 +1,6 @@
 <?php
 /** @var $conventions ConventionRepository */
 
-use app\src\core\components\Table;
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
@@ -11,6 +10,7 @@ use app\src\model\repository\OffresRepository;
 use app\src\model\repository\SoutenanceRepository;
 use app\src\model\repository\VisiteRepository;
 use app\src\model\View;
+use app\src\view\components\ui\Table;
 
 $this->title = 'Conventions';
 View::setCurrentSection('Conventions');

@@ -1,10 +1,10 @@
 <?php
 
-/** @var $events Event[]
+/** @var $events \app\src\view\components\calendar\Event[]
  * */
 
-use app\src\core\components\Calendar\Calendar;
-use app\src\core\components\Calendar\Event;
+use app\src\view\components\calendar\Calendar;
+use app\src\view\components\calendar\Event;
 
 ?>
 <div class="mt-6 w-full">

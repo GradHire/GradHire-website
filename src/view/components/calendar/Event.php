@@ -1,6 +1,6 @@
 <?php
 
-namespace app\src\core\components\Calendar;
+namespace app\src\view\components\calendar;
 
 class Event
 {

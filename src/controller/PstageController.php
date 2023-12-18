@@ -2,7 +2,6 @@
 
 namespace app\src\controller;
 
-use app\src\core\components\Notification;
 use app\src\core\exception\ForbiddenException;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
@@ -19,6 +18,7 @@ use app\src\model\repository\SimulationPstageRepository;
 use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\Request;
+use app\src\view\components\ui\Notification;
 
 
 class PstageController extends AbstractController

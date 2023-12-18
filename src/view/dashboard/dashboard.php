@@ -1,15 +1,15 @@
 <?php
 
-use app\src\core\components\Separator;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\View;
-use app\src\view\dashboard\components\dashboard_blocks\HorizontalBarChartBlock;
-use app\src\view\dashboard\components\dashboard_blocks\LineChartBlock;
-use app\src\view\dashboard\components\dashboard_blocks\NumBlock;
-use app\src\view\dashboard\components\dashboard_blocks\PercentageBlock;
-use app\src\view\dashboard\components\dashboard_blocks\PieChartBlock;
-use app\src\view\dashboard\components\dashboard_blocks\VerticalBarChartBlock;
+use app\src\view\components\dashboard\HorizontalBarChartBlock;
+use app\src\view\components\dashboard\LineChartBlock;
+use app\src\view\components\dashboard\NumBlock;
+use app\src\view\components\dashboard\PercentageBlock;
+use app\src\view\components\dashboard\PieChartBlock;
+use app\src\view\components\dashboard\VerticalBarChartBlock;
+use app\src\view\components\ui\Separator;
 
 /** @var array $data
  */
@@ -108,7 +108,7 @@ EOT;
                 ]);
                 echo '</div></div>';
                 echo '<div class="w-full col-span-3">';
-                new Separator([]);
+                Separator::render([]);
                 echo '</div>';
                 VerticalBarChartBlock::render([
                     'data' => $data['barChartVerticalData1'] ?? [],
@@ -126,9 +126,7 @@ EOT;
                     'row_2' => 'mois'
                 ]);
                 echo '<div class="w-full col-span-3">';
-                if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::ChefDepartment)) {
-                new Separator([]);
-                }
+                if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::ChefDepartment)) Separator::render([]);
                 echo '</div>';
                 echo '<div class="flex flex-row w-full gap-2">';
                 echo '</div>';

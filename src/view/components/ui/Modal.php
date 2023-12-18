@@ -1,6 +1,6 @@
 <?php
 
-namespace app\src\core\components\layout;
+namespace app\src\view\components\ui;
 
 use app\src\core\exception\ServerErrorException;
 

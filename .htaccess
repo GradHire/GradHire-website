@@ -1,1 +1,3 @@
-Require all denied
+<Directory ".">
+    Require all denied
+</Directory>

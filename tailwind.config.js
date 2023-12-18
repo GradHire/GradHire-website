@@ -41,16 +41,16 @@ module.exports = {
                         transform: 'translateY(0)',
                         animationTimingFunction: 'cubic-bezier(0,0,0.2,1)'
                     },
-                    }
-
                 }
-            },
-            animation: {
-                wiggle: 'wiggle 0.5s ease-in-out infinite',
-                ping: 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
-                bounce: 'bounce 1s infinite'
+
             }
         },
+        animation: {
+            wiggle: 'wiggle 0.5s ease-in-out infinite',
+            ping: 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
+            bounce: 'bounce 1s infinite'
+        }
+    },
     plugins: [],
 }
 

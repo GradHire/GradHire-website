@@ -1,7 +1,7 @@
 <?php
 
-use app\src\core\components\Table;
 use app\src\model\repository\EntrepriseRepository;
+use app\src\view\components\ui\Table;
 
 $entreprises = new EntrepriseRepository([]);
 $entreprises = $entreprises->getAll();

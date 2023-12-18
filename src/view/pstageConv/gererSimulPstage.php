@@ -1,11 +1,11 @@
 <?php
 
 use app\src\core\components\Modal;
-use app\src\core\components\Table;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\SimulationPstageRepository;
+use app\src\view\components\ui\Table;
 
 $files = new SimulationPstageRepository([]);
 if (Auth::has_role(Roles::Student)) {
