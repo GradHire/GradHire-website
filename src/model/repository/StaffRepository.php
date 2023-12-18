@@ -136,7 +136,7 @@ class StaffRepository extends LdapRepository
     /**
      * @throws ServerErrorException
      */
-    public function getCountPostulationTuteur(int $idUtilisateur): int
+    public static function getCountPostulationTuteur(int $idUtilisateur): int
     {
         try {
             $stmt = Database::get_conn()->prepare("SELECT COUNT(*) as nbPosutlation FROM Supervise WHERE idUtilisateur = :idUtilisateur");

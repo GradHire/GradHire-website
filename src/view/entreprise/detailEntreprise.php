@@ -2,6 +2,8 @@
 
 /** @var $entreprise \app\src\model\dataObject\Entreprise
  * @var $offres \app\src\model\dataObject\Offre
+ * @var $avisPublic \app\src\model\dataObject\Avis
+ * @var $avisPriver \app\src\model\dataObject\Avis
  */
 
 use app\src\model\Application;
@@ -96,21 +98,34 @@ if (empty($nom) || $nom == "") $nom = "Sans nom";
                     ?></dd>
             </div>
             <?php
-            if (Auth::has_role(Roles::ManagerAlternance, Roles::Manager, Roles::TutorTeacher, Roles::Student, Roles::Teacher, Roles::Staff)) {
-                $avis = AvisRepository::getAvisEntreprise($entreprise->getIdutilisateur());
-                if ($avis != null) {
+            if (Auth::has_role(Roles::ManagerAlternance, Roles::Manager, Roles::TutorTeacher, Roles::ManagerStage, Roles::Teacher, Roles::Staff)) {
+                $avisPublic = AvisRepository::getAvisEntreprisePublic($entreprise->getIdutilisateur());
+                $avisPriver = AvisRepository::getAvisEntreprisePriver($entreprise->getIdutilisateur());
+                if ($avisPublic != null) {
                     ?>
                     <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                        <dt class="text-sm font-medium leading-6 text-zinc-900">Avis Anonyme sur l'entreprise :</dt>
+                        <dt class="text-sm font-medium leading-6 text-zinc-900">Avis public sur l'entreprise :</dt>
                         <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                             <?php
-                            foreach ($avis as $avi) {
+                            foreach ($avisPublic as $avi) {
                                 echo "- " . $avi['avis'] . "<br>";
                             }
                             ?>
-                        </dd>
                     </div>
                 <?php }
+                if ($avisPriver != null && Auth::has_role(Roles::ManagerAlternance, Roles::Manager, Roles::TutorTeacher, Roles::ManagerStage, Roles::Teacher, Roles::Staff)) {
+                    ?>
+                    <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt class="text-sm font-medium leading-6 text-zinc-900">Avis Professeur sur l'entreprise :</dt>
+                        <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
+                            <?php
+                            foreach ($avisPriver as $avi) {
+                                echo "- " . $avi['avis'] . "<br>";
+                            }
+                            ?>
+                    </div>
+                    <?php
+                }
             }
             if ($offres != null) { ?>
                 <div class="px-4 py-6 sm:gap-4 sm:px-0">

@@ -201,7 +201,7 @@ class UtilisateurRepository extends AbstractRepository
                 Application::setUser($this);
             }
         } catch (\Exception) {
-            throw new ServerErrorException();
+            throw new ServerErrorException("Erreur lors de la mise à jour de l'utilisateur");
         }
     }
 
@@ -275,6 +275,7 @@ class UtilisateurRepository extends AbstractRepository
     {
         $this->id = $id;
     }
+
 
     protected function getNomColonnes(): array
     {

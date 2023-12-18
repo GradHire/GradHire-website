@@ -206,7 +206,7 @@ class PostulerRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public function refuserCandidature(int $idutilisateur, mixed $idOffre): void
+    public static function refuserCandidature(int $idutilisateur, mixed $idOffre): void
     {
         try {
             $sql = "UPDATE Postuler SET statut = 'refusee' WHERE idOffre=:idoffre AND idUtilisateur=:idutilisateur";
@@ -223,7 +223,7 @@ class PostulerRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public function validerCandidatureEtudiant(mixed $idEtudiant, mixed $idOffre): void
+    public static function validerCandidatureEtudiant(mixed $idEtudiant, mixed $idOffre): void
     {
         try {
             $sql = "UPDATE Postuler SET statut = 'en attente tuteur prof' WHERE idOffre=:idoffre AND idUtilisateur=:idutilisateur";
@@ -260,7 +260,7 @@ class PostulerRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public function validerCandidatureEntreprise(int $idUtilisateur, int $idOffre): void
+    public static function validerCandidatureEntreprise(int $idUtilisateur, int $idOffre): void
     {
         try {
             $sql = "UPDATE Postuler SET statut = 'en attente etudiant' WHERE idOffre=:idoffre AND idUtilisateur=:idutilisateur";

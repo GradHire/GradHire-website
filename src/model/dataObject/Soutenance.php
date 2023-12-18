@@ -10,6 +10,7 @@ class Soutenance extends AbstractDataObject
     private int $idtuteurprof;
     private int $idtuteurentreprise;
     private ?int $idprof;
+    private ?int $idetudiant;
     private \DateTime $debut_soutenance;
     private \DateTime $fin_soutenance;
 
@@ -26,6 +27,36 @@ class Soutenance extends AbstractDataObject
                     $this->$key = $value;
                 }
             }
+    }
+
+    public function getIdtuteurentreprise(): int
+    {
+        return $this->idtuteurentreprise;
+    }
+
+    public function setIdtuteurentreprise(int $idtuteurentreprise): void
+    {
+        $this->idtuteurentreprise = $idtuteurentreprise;
+    }
+
+    public function getIdprof(): ?int
+    {
+        return $this->idprof;
+    }
+
+    public function setIdprof(?int $idprof): void
+    {
+        $this->idprof = $idprof;
+    }
+
+    public function getIdetudiant(): ?int
+    {
+        return $this->idetudiant;
+    }
+
+    public function setIdetudiant(?int $idetudiant): void
+    {
+        $this->idetudiant = $idetudiant;
     }
 
     public function getIdSoutenance(): int

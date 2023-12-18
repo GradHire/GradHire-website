@@ -12,6 +12,7 @@ use app\src\model\Import;
 use app\src\model\ImportStudea;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
+use app\src\model\repository\NotificationRepository;
 use app\src\model\repository\ServiceAccueilRepository;
 use app\src\model\repository\SignataireRepository;
 use app\src\model\repository\SimulationPstageRepository;
@@ -50,6 +51,9 @@ class PstageController extends AbstractController
         } else throw new ForbiddenException();
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     private function ImportPstage(FormModel $form): void
     {
         $path = "Import/";
@@ -70,8 +74,12 @@ class PstageController extends AbstractController
             $importer->importerligne($data);
         }
         Notification::createNotification("Importation réussi");
+        NotificationRepository::createNotification(Auth::get_user()->id(), "Importation PStage réussi", "/conventions");
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     private function ImportStudea(FormModel $form): void
     {
         $path = "ImportStudea/";
@@ -92,8 +100,13 @@ class PstageController extends AbstractController
             $importer->importerligneStudea($data);
         }
         Notification::createNotification("Importation réussi");
+        NotificationRepository::createNotification(Auth::get_user()->id(), "Importation Studea réussi", "/conventions");
     }
 
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
     public function explicationSimu(Request $request): string
     {
         if (Auth::has_role(Roles::Student)) return $this->render('simulateurP/General', ['vueChemin' => "explicationSimu.php"]);
@@ -439,6 +452,7 @@ class PstageController extends AbstractController
     public function validersimulation(Request $request)
     {
         if (Auth::has_role(Roles::Student)) {
+            NotificationRepository::createNotification(Auth::get_user()->id(), "Simulation de convention validé", "/gererSimulPstage");
             return $this->render('simulateurP/validersimulation');
         } else throw new ForbiddenException();
     }

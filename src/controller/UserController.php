@@ -10,6 +10,7 @@ use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 use app\src\model\repository\EntrepriseRepository;
+use app\src\model\repository\NotificationRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\Request;
@@ -50,9 +51,9 @@ class UserController extends AbstractController
         $id = $request->getRouteParams()["id"] ?? null;
         if (!is_null($id))
             if (!Auth::has_role(Roles::Manager, Roles::Staff) && !(Application::getUser()->role() == Roles::Enterprise && Application::getUser()->id() == $id))
-                throw new ForbiddenException();
+                throw new ForbiddenException("Vous n'avez pas le droit de modifier ce profil");
         $user = is_null($id) ? Application::getUser() : Auth::load_user_by_id($id);
-        if (is_null($user)) throw new NotFoundException();
+        if (is_null($user)) throw new NotFoundException("Utilisateur introuvable");
         $user->setId($user->attributes["idutilisateur"]);
         $attr = [];
         switch ($user->role()) {
@@ -97,6 +98,13 @@ class UserController extends AbstractController
                 $picture = $form->getFile("picture");
                 if (!is_null($picture)) $picture->save("pictures", $user->id());
                 $user->update($form->getParsedBody());
+                if ($user->id() == Application::getUser()->id()) {
+                    NotificationRepository::createNotification($user->id(), "Votre profil a été modifié", "/profile");
+                } else {
+                    NotificationRepository::createNotification($user->id(), "Votre profil a été modifié", "/profile");
+                    NotificationRepository::createNotification(Auth::get_user()->id(), "Le profil de " . $user->full_name()
+                        . " a été modifié", "/profile/" . $user->id());
+                }
                 Application::redirectFromParam('/profile');
                 return '';
             }

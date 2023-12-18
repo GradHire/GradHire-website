@@ -12,6 +12,7 @@ use app\src\model\Form\FormModel;
 use app\src\model\repository\CompteRenduRepository;
 use app\src\model\repository\ConventionRepository;
 use app\src\model\repository\EtudiantRepository;
+use app\src\model\repository\NotificationRepository;
 use app\src\model\repository\SuperviseRepository;
 use app\src\model\repository\VisiteRepository;
 use app\src\model\Request;
@@ -57,10 +58,25 @@ class VisiteController extends AbstractController
             if ($req->getMethod() == "post") {
                 if ($form->validate($req->getBody())) {
                     $data = $form->getParsedBody();
-                    if (!$visite)
+                    $convention = ConventionRepository::getByNumConvention($numConvention);
+                    if (!$visite) {
                         VisiteRepository::createVisite($data["start"], $data["end"], $numConvention);
-                    else
+                        NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez créé une visite", "/visite/" . $numConvention);
+                        NotificationRepository::createNotification($studentId, "Une visite a été créée pour votre convention", "/visite/" . $numConvention);
+                        if (!Auth::has_role(Roles::Tutor))
+                            NotificationRepository::createNotification($convention["idtuteurentreprise"], "Une visite a été créée pour votre convention", "/visite/" . $numConvention);
+                        if (!Auth::has_role(Roles::TutorTeacher))
+                            NotificationRepository::createNotification($convention["idtuteurprof"], "Une visite a été créée pour votre convention", "/visite/" . $numConvention);
+                    }
+                    else {
                         VisiteRepository::update($numConvention, $data["start"], $data["end"]);
+                        NotificationRepository::createNotification(Auth::get_user()->id(),"Vous avez modifié une visite","/visite/".$numConvention);
+                        NotificationRepository::createNotification($studentId,"Une visite a été modifiée pour votre convention","/visite/".$numConvention);
+                        if (!Auth::has_role(Roles::Tutor))
+                            NotificationRepository::createNotification($convention["idtuteurentreprise"],"Une visite a été modifiée pour votre convention","/visite/".$numConvention);
+                        if (!Auth::has_role(Roles::TutorTeacher))
+                            NotificationRepository::createNotification($convention["idtuteurprof"],"Une visite a été modifiée pour votre convention","/visite/".$numConvention);
+                    }
                     header("Location: /visite/" . $numConvention);
                 }
             }

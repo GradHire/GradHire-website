@@ -14,6 +14,7 @@ use app\src\model\OffreForm;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\MailRepository;
+use app\src\model\repository\NotificationRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\PostulerRepository;
 use app\src\model\repository\UtilisateurRepository;
@@ -67,6 +68,8 @@ class OffreController extends AbstractController
             (new OffresRepository())->updateToApproved($id);
             (new MailRepository())->send_mail([UtilisateurRepository::getEmail($offre->getIdutilisateur())], "Validation de votre offre", "Votre offre a été validée");
             (new MailRepository())->send_mail(EtudiantRepository::getNewsletterEmails($offre->getIdoffre()), "Nouvelle offre pour vous", "Une nouvelle offre a été publiée. Vous pouvez la consulter au lien suivant : " . HOST . "/offres/$id");
+            NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez validé une offre", "/offres/" . $id);
+            NotificationRepository::createNotification($offre->getIdutilisateur(), "Une de vos offres a été validée", "/offres/" . $id);
             header("Location: /offres/" . $id);
             return '';
         }
@@ -128,6 +131,8 @@ class OffreController extends AbstractController
             ]);
             $form = new FormModel($attr);
             (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmail()], "Modification de votre offre", "Votre offre a été modifiée");
+            NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez modifié une offre", "/offres/".$id);
+            NotificationRepository::createNotification($offre->getIdutilisateur(), "Une de vos offres a été modifiée", "/offres/".$id);
             return $this->render('/offres/edit', ['offre' => $offre, 'form' => $form]);
         }
     }
@@ -150,10 +155,14 @@ class OffreController extends AbstractController
                 (new OffresRepository())->updateToArchiver($id);
                 (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmail()], "Archivage de votre offre", "Votre offre a été archivée");
                 $offre = (new OffresRepository())->getByIdWithUser($id);
+                NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez archivé une offre", "/offres/" . $id);
+                NotificationRepository::createNotification($offre->getIdutilisateur(), "Une de vos offres a été archivée", "/offres/" . $id);
                 header("Location: /offres/" . $id);
             } elseif ($request->getMethod() === 'get') {
                 (new OffresRepository())->updateToArchiver($id);
                 (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmail()], "Archivage de votre offre", "Votre offre a été archivée");
+                NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez archivé une offre", "/offres/" . $id);
+                NotificationRepository::createNotification($offre->getIdutilisateur(), "Une de vos offres a été archivée", "/offres/" . $id);
                 Application::redirectFromParam("/offres");
             }
             return $this->render('offres/detailOffre', ['offre' => $offre]);
@@ -235,6 +244,13 @@ class OffreController extends AbstractController
                 else
                     OffreForm::creerOffre($o, $typeStage, $typeAlternance, $distanciel);
                 Notification::createNotification($action === "send" ? "Offre publié" : "Brouillon sauvegardé");
+                NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez " . ($action === "send" ? "publié" : "sauvegardé") . " une offre", "/offres/" . $id);
+                if ($action === "publié") {
+                    $etudiants = (new EtudiantRepository([]))->getAll();
+                    foreach ($etudiants as $etudiant) {
+                        NotificationRepository::createNotification($etudiant->getIdutilisateur(), "Une nouvelle offre a été publiée", "/offres/" . $id);
+                    }
+                }
                 header("Location: /offres/create");
             }
         }
@@ -281,6 +297,8 @@ class OffreController extends AbstractController
                     return '';
                 }
                 PostulerRepository::postuler($id);
+                NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez postulé à une offre", "/offres/" . $id);
+                NotificationRepository::createNotification($offre->getIdutilisateur(), "Une de vos offres a été postulée", "/offres/" . $id);
                 Application::$app->response->redirect('/offres');
             }
         }

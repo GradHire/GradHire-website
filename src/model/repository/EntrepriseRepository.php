@@ -309,6 +309,17 @@ class EntrepriseRepository extends ProRepository
         return $resultat['nom'];
     }
 
+    public static function getIdEntrepriseByIdOffre(int $id):int{
+        $sql = "SELECT Distinct idUtilisateur FROM " . self::$view . " WHERE idOffre = :idOffre";
+        $requete = Database::get_conn()->prepare($sql);
+        $requete->execute(['idOffre' => $id]);
+        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $resultat = $requete->fetch();
+        if (!$resultat) {
+            return 0;
+        }
+        return $resultat['idutilisateur'];
+    }
 
     protected
     function getNomColonnes(): array

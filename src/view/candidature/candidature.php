@@ -24,11 +24,7 @@ use app\src\view\components\ui\Table;
             } else if ((new PostulerRepository())->getIfValideeInArray($candidatures)){
                 $nameColonnes = ["Nom de l'entreprise", "Sujet de l'offre", "Email étudiant", "Dates de candidature", "Etat de la candidature", "Tuteur"];
             }
-            Table::createTable(
-            /**
-             *
-             * @throws \app\src\core\exception\ServerErrorException
-             */ $candidatures, $nameColonnes, function ($candidature) {
+            Table::createTable($candidatures, $nameColonnes, function ($candidature) {
                 $offre = (new OffresRepository())->getById($candidature['idoffre']);
                 $entreprise = (new UtilisateurRepository([]))->getUserById($candidature['identreprise']);
                 $etudiant = (new UtilisateurRepository([]))->getUserById($candidature['idutilisateur']);

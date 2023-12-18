@@ -12,6 +12,7 @@ use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\LdapRepository;
+use app\src\model\repository\NotificationRepository;
 use app\src\model\repository\ProRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\Request;
@@ -117,6 +118,7 @@ class AuthController extends AbstractController
                 ProRepository::setNewPassword($body["password"], $infos["idutilisateur"]);
                 ProRepository::deleteForgetToken($infos["idutilisateur"]);
                 Notification::createNotification("Mot de passe modifié !");
+                NotificationRepository::createNotification($infos["idutilisateur"], "Votre mot de passe a été modifié avec succès", "");
                 $res->redirect('/pro_login');
             }
         }
@@ -156,6 +158,7 @@ class AuthController extends AbstractController
             if ($req->getMethod() === 'post') {
                 if ($form->validate($req->getBody())) {
                     if (TuteurEntrepriseRepository::register($form->getParsedBody(), $data, $form)) {
+                        NotificationRepository::createNotification($data['idEntreprise'], "Votre tuteur a été créé avec succès", "/ListeTuteurPro");
                         Application::$app->response->redirect('/');
                         return '';
                     }

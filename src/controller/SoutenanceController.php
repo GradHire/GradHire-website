@@ -9,9 +9,11 @@ use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
+use app\src\model\repository\CompteRenduRepository;
 use app\src\model\repository\ConventionRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\NotesRepository;
+use app\src\model\repository\NotificationRepository;
 use app\src\model\repository\SoutenanceRepository;
 use app\src\model\Request;
 
@@ -45,6 +47,9 @@ class SoutenanceController extends AbstractController
                         'idtuteurentreprise' => $infosConvention['idtuteurentreprise'],
                     ]);
                     SoutenanceRepository::createSoutenance($values);
+                    NotificationRepository::createNotification(Auth::get_user()->id(),"Vous avez créé une soutenance","/voirSoutenance/".$numConvention);
+                    NotificationRepository::createNotification($infosConvention['idetudiant'],"Une soutenance a été créée pour votre convention","/voirSoutenance/".$numConvention);
+                    NotificationRepository::createNotification($infosConvention['idtuteurentreprise'],"Une soutenance a été créée pour votre convention","/voirSoutenance/".$numConvention);
                     Application::redirectFromParam("/conventions");
                 }
             }
@@ -64,6 +69,10 @@ class SoutenanceController extends AbstractController
             $numConvention = $request->getRouteParam("numConvention");
             $idtuteurprof = Application::getUser()->id();
             SoutenanceRepository::seProposerCommeJury($idtuteurprof, $numConvention);
+            NotificationRepository::createNotification(Auth::get_user()->id(),"Vous vous êtes proposé comme jury pour une soutenance","/voirSoutenance/".$numConvention);
+            NotificationRepository::createNotification(ConventionRepository::getByNumConvention($numConvention)['idetudiant'],"Un professeur s'est proposé comme jury pour votre soutenance","/voirSoutenance/".$numConvention);
+            NotificationRepository::createNotification(ConventionRepository::getByNumConvention($numConvention)['idtuteurentreprise'],"Un professeur s'est proposé comme jury pour votre soutenance","/voirSoutenance/".$numConvention);
+            NotificationRepository::createNotification(ConventionRepository::getByNumConvention($numConvention)['idtuteurprof'],"Un professeur s'est proposé comme jury pour votre soutenance","/voirSoutenance/".$numConvention);
             Application::redirectFromParam("/conventions");
         } else {
             throw new ForbiddenException();
@@ -74,11 +83,16 @@ class SoutenanceController extends AbstractController
     {
         $numConvention = $request->getRouteParam("numConvention");
         $soutenance = SoutenanceRepository::getSoutenanceByNumConvention($numConvention);
+        $commentaires = CompteRenduRepository::getCommentaires($numConvention, $soutenance->getIdetudiant());
         return $this->render("soutenance/details", [
-            "soutenance" => $soutenance
+            "soutenance" => $soutenance,
+            "commentaires" => $commentaires
         ]);
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function noteSoutenance(Request $request)
     {
 
@@ -113,6 +127,8 @@ class SoutenanceController extends AbstractController
                     'idsoutenance' => $soutenance->getIdSoutenance(),
                 ]);
                 (new NotesRepository())->create($values);
+                NotificationRepository::createNotification(Auth::get_user()->id(),"Vous avez noté une soutenance","/voirSoutenance/".$numConvention);
+                NotificationRepository::createNotification($soutenance->getIdetudiant(),"Votre soutenance a été notée","/voirSoutenance/".$numConvention);
                 header("Location: /voirSoutenance/$numConvention");
             }
         }

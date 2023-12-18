@@ -6,6 +6,7 @@ use app\src\controller\CandidatureController;
 use app\src\controller\CompteRenduController;
 use app\src\controller\ConventionsController;
 use app\src\controller\DashboardController;
+use app\src\controller\NotificationController;
 use app\src\controller\OffreController;
 use app\src\controller\PostulerController;
 use app\src\controller\PstageController;
@@ -259,5 +260,11 @@ $app->router->get('/entreprises/{id:\d+}/modifierAvis', [AvisController::class, 
 $app->router->post('/entreprises/{id:\d+}/modifierAvis', [AvisController::class, 'modifierAvis']);
 
 $app->router->get('/apropos', [AuthController::class, 'aboutreal']);
+
+//notifications controller
+$app->router->get('/notifications', [NotificationController::class, 'listeNotifications']);
+$app->router->get('/notifications/lu/{id}', [NotificationController::class, 'lireNotification']);
+$app->router->get('/notifications/supprimer/{id}', [NotificationController::class, 'supprimerNotification']);
+
 
 $app->run();

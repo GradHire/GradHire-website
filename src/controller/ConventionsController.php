@@ -13,6 +13,7 @@ use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\LdapRepository;
 use app\src\model\repository\MailRepository;
+use app\src\model\repository\NotificationRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\ProRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
@@ -60,6 +61,9 @@ class ConventionsController extends AbstractController
             "Convention validée pédagogiquement",
             "La convention n°" . $id . " de l'offre " . $array['sujet'] . " a été validée pédagogiquement par le Staff "
         );
+        NotificationRepository::createNotification($array['idetudiant'], "Votre convention a été validée pédagogiquement", "/conventions/".$id);
+        NotificationRepository::createNotification($array['idutilisateur'], "La convention n°" . $id . " de l'offre " . $array['sujet'] . " a été validée pédagogiquement par le Staff ", "/conventions/".$id);
+        NotificationRepository::createNotification(Auth::get_user()->getId(), "Vous avez validé la convention n°" . $id . " de l'offre " . $array['sujet'] . " pédagogiquement", "/conventions/".$id);
         Application::redirectFromParam("/conventions");
     }
 
@@ -79,6 +83,9 @@ class ConventionsController extends AbstractController
             "Convention non validée pédagogiquement",
             "La convention n°" . $id . " de l'offre " . $array['sujet'] . " n'a pas été validée pédagogiquement par le Staff "
         );
+        NotificationRepository::createNotification($array['idetudiant'], "Votre convention n'a pas été validée pédagogiquement", "/conventions/".$id);
+        NotificationRepository::createNotification($array['idutilisateur'], "La convention n°" . $id . " de l'offre " . $array['sujet'] . " n'a pas été validée pédagogiquement par le Staff ", "/conventions/".$id);
+        NotificationRepository::createNotification(Auth::get_user()->getId(), "Vous n'avais pas validé la convention n°" . $id . " de l'offre " . $array['sujet'] . " pédagogiquement", "/conventions/".$id);
         Application::redirectFromParam("/conventions");
     }
 
@@ -98,6 +105,10 @@ class ConventionsController extends AbstractController
             "Convention non validée par l'enreprise " . $entreprise->getNom(),
             "La convention n°" . $id . " de l'offre " . $array['sujet'] . " n'a pas été validée par l'entreprise " . $entreprise->getNom()
         );
+        NotificationRepository::createNotification($array['idetudiant'], "Votre convention n'a pas été validée par l'entreprise " . $entreprise->getNom(), "/conventions/".$id);
+        NotificationRepository::createNotification($array['idutilisateur'], "Vous n'avez pas validé la convention n°" . $id . " de l'offre " . $array['sujet'] . " ", "/conventions/".$id);
+        NotificationRepository::createNotification(Auth::get_user()->getId(), "La convention n°" . $id . " de l'offre " . $array['sujet'] . " n'a pas été validée par l'entreprise " . $entreprise->getNom(), "/conventions/".$id);
+
         Application::redirectFromParam("/conventions");
     }
 
@@ -117,6 +128,9 @@ class ConventionsController extends AbstractController
             "Convention validée par l'enreprise " . $entreprise->getNom(),
             "La convention n°" . $id . " de l'offre " . $array['sujet'] . " a été validée par l'entreprise " . $entreprise->getNom()
         );
+        NotificationRepository::createNotification($array['idetudiant'], "Votre convention a été validée par l'entreprise " . $entreprise->getNom(), "/conventions/".$id);
+        NotificationRepository::createNotification($array['idutilisateur'], "Vous avez validé la convention n°" . $id . " de l'offre " . $array['sujet'] . " ", "/conventions/".$id);
+        NotificationRepository::createNotification(Auth::get_user()->getId(), "La convention n°" . $id . " de l'offre " . $array['sujet'] . " a été validée par l'entreprise " . $entreprise->getNom(), "/conventions/".$id);
         Application::redirectFromParam("/conventions");
     }
 

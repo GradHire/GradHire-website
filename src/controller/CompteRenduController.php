@@ -9,6 +9,7 @@ use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 use app\src\model\repository\CompteRenduRepository;
 use app\src\model\repository\ConventionRepository;
+use app\src\model\repository\NotificationRepository;
 use app\src\model\repository\VisiteRepository;
 use app\src\model\Request;
 
@@ -43,13 +44,31 @@ class CompteRenduController extends AbstractController
                     $data = $form->getParsedBody();
                     print_r($data);
                     if (CompteRenduRepository::checkIfCompteRenduExist($informations['numconvention'])) {
-                        if (Auth::has_role(Roles::TutorTeacher))
+                        if (Auth::has_role(Roles::TutorTeacher)) {
                             CompteRenduRepository::updateCompteRenduProf($informations['numconvention'], $data['compteRendu']);
-                        else
+                            NotificationRepository::createNotification($informations['idtuteurentreprise'], "Le tuteur professeur a changé le compte rendu de la convention " . $informations['numconvention'], "/visite/" . $informations['numconvention']);
+                            NotificationRepository::createNotification($informations['idetudiant'], "Le tuteur professeur a changé le compte rendu de votre convention " . $informations['numconvention'], "/visite/" . $informations['numconvention']);
+                            NotificationRepository::createNotification($informations['idtuteurprof'], "Vous avez changé le compte rendu de la convention " . $informations['numconvention'], "/visite/" . $informations['numconvention']);
+                           }
+                        else {
                             CompteRenduRepository::updateCompteRenduEntreprise($informations['numconvention'], $data['compteRendu']);
+                            NotificationRepository::createNotification($informations['idtuteurprof'], "Le tuteur entreprise a changé le compte rendu de la convention " . $informations['numconvention'], "/visite/" . $informations['numconvention']);
+                            NotificationRepository::createNotification($informations['idetudiant'], "Le tuteur entreprise a changé le compte rendu de votre convention " . $informations['numconvention'], "/visite/" . $informations['numconvention']);
+                            NotificationRepository::createNotification($informations['idtuteurentreprise'], "Vous avez changé le compte rendu de la convention" . $informations['numconvention'], "/visite/" . $informations['numconvention']);
+                        }
                     } else
-                        if (Auth::has_role(Roles::TutorTeacher)) CompteRenduRepository::createCompteRenduAsProf($informations['idtuteurprof'], $informations['idtuteurentreprise'], $informations['idetudiant'], $informations['numconvention'], $data['compteRendu']);
-                        else CompteRenduRepository::createCompteRenduAsEntreprise($informations['idtuteurprof'], $informations['idtuteurentreprise'], $informations['idetudiant'], $informations['numconvention'], $data['compteRendu']);
+                        if (Auth::has_role(Roles::TutorTeacher)) {
+                            CompteRenduRepository::createCompteRenduAsProf($informations['idtuteurprof'], $informations['idtuteurentreprise'], $informations['idetudiant'], $informations['numconvention'], $data['compteRendu']);
+                            NotificationRepository::createNotification($informations['idtuteurentreprise'], "Le tuteur professeur a ajouté un compte rendu pour la convention " . $informations['numconvention'], "/visite/" . $informations['numconvention']);
+                            NotificationRepository::createNotification($informations['idetudiant'], "Le tuteur professeur a ajouté un compte rendu pour la convention " . $informations['numconvention'], "/visite/" . $informations['numconvention']);
+                            NotificationRepository::createNotification($informations['idtuteurprof'], "Vous avez ajouté un compte rendu pour la convention " . $informations['numconvention'], "/visite/" . $informations['numconvention']);
+                        }
+                        else {
+                            CompteRenduRepository::createCompteRenduAsEntreprise($informations['idtuteurprof'], $informations['idtuteurentreprise'], $informations['idetudiant'], $informations['numconvention'], $data['compteRendu']);
+                            NotificationRepository::createNotification($informations['idtuteurprof'], "Le tuteur entreprise a ajouté un compte rendu pour la convention " . $informations['numconvention'], "/visite/" . $informations['numconvention']);
+                            NotificationRepository::createNotification($informations['idetudiant'], "Le tuteur entreprise a ajouté un compte rendu pour la convention " . $informations['numconvention'], "/visite/" . $informations['numconvention']);
+                            NotificationRepository::createNotification($informations['idtuteurentreprise'], "Vous avez ajouté un compte rendu pour la convention " . $informations['numconvention'], "/visite/" . $informations['numconvention']);
+                        }
                     Application::redirectFromParam("/visite/" . $numConvention);
                 }
             }
@@ -80,12 +99,25 @@ class CompteRenduController extends AbstractController
                 if ($form->validate($request->getBody())) {
                     $data = $form->getParsedBody();
                     if (CompteRenduRepository::checkIfCompteRenduExist($informations['numconvention'])) {
-                        if (Auth::has_role(Roles::TutorTeacher))
+                        if (Auth::has_role(Roles::TutorTeacher)) {
                             CompteRenduRepository::updateCompteRenduSoutenanceProf($informations['numconvention'], $data['compteRenduSoutenance']);
-                        else
+                            NotificationRepository::createNotification($informations['idtuteurentreprise'], "Le tuteur professeur a modifier le compte rendu de la soutenance pour la convention " . $informations['numconvention'], "/voirSoutenance/" . $informations['numconvention']);
+                            NotificationRepository::createNotification($informations['idetudiant'], "Le tuteur professeur a modifier le compte rendu de votre soutenance pour la convention " . $informations['numconvention'], "/voirSoutenance/" . $informations['numconvention']);
+                            NotificationRepository::createNotification($informations['idtuteurprof'], "Vous avez modifier le compte rendu de la soutenance pour la convention " . $informations['numconvention'], "/voirSoutenance/" . $informations['numconvention']);
+                            if ($informations['idprof'] != null)
+                                NotificationRepository::createNotification($informations['idprof'], "Le tuteur professeur a modifier le compte rendu de la  soutenance pour la convention " . $informations['numconvention'], "/voirSoutenance/" . $informations['numconvention']);
+                        }
+
+                        else {
                             CompteRenduRepository::updateCompteRenduSoutenanceEntreprise($informations['numconvention'], $data['compteRenduSoutenance']);
+                            NotificationRepository::createNotification($informations['idtuteurprof'], "Le tuteur entreprise a ajouté un compte rendu de soutenance pour la convention " . $informations['numconvention'], "/voirSoutenance/" . $informations['numconvention']);
+                            NotificationRepository::createNotification($informations['idetudiant'], "Le tuteur entreprise a ajouté un compte rendu de soutenance pour la convention " . $informations['numconvention'], "/voirSoutenance/" . $informations['numconvention']);
+                            NotificationRepository::createNotification($informations['idtuteurentreprise'], "Vous avez ajouté un compte rendu de soutenance pour la convention " . $informations['numconvention'], "/voirSoutenance/" . $informations['numconvention']);
+                            if ($informations['idprof'] != null)
+                                NotificationRepository::createNotification($informations['idprof'], "Le tuteur entreprise a ajouté un compte rendu de soutenance pour la convention " . $informations['numconvention'], "/voirSoutenance/" . $informations['numconvention']);
+                        }
                     }
-                    Application::redirectFromParam("/visite/" . $numConvention);
+                    Application::redirectFromParam("/voirSoutenance/" . $numConvention);
                 }
             }
             return $this->render("visite/compteRendu", [
@@ -93,7 +125,7 @@ class CompteRenduController extends AbstractController
                 'form' => $form,
             ]);
         }
-        Application::redirectFromParam("/visite");
+        Application::redirectFromParam("/voirSoutenance");
         return "";
     }
 }

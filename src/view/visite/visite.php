@@ -50,26 +50,7 @@ use app\src\model\Form\FormModel;
                 }
             }
             ?>
-            <h2 class="font-bold text-2xl mb-4">Commentaires sur la soutenance</h2>
             <?php
-            foreach ($commentaires as $commentaire) {
-                if ($commentaire['commentairesoutenanceprof'] != null) {
-                    echo <<<HTML
-                <div class="flex flex-col gap-1 mb-4">
-                <span class="font-bold">Tuteur universitaire :</span>
-                 <p>{$commentaire['commentairesoutenanceprof']}</p>
-            </div>
-            HTML;
-                }
-                if ($commentaire['commentairesoutenanceentreprise'] != null) {
-                    echo <<<HTML
-                <div class="flex flex-col gap-1 mb-4">
-                <span class="font-bold">Tuteur entreprise :</span>
-                 <p>{$commentaire['commentairesoutenanceentreprise']}</p>
-            </div>
-            HTML;
-                }
-            }
         }
     }
     if (isset($form)) {

@@ -10,12 +10,23 @@ class Avis extends AbstractDataObject{
     private int $identreprise;
     private int $idutilisateur;
     private string $commentaire;
+    private bool $private;
 
     public function __construct(array $dataObjectFormatTableau)
     {
         foreach ($dataObjectFormatTableau as $key => $value) {
             $this->$key = $value;
         }
+    }
+
+    public function isPrivate(): bool
+    {
+        return $this->private;
+    }
+
+    public function setPrivate(bool $private): void
+    {
+        $this->private = $private;
     }
 
     public function getIdavis(): int

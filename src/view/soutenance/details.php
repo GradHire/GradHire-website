@@ -8,10 +8,12 @@ use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurEntrepriseRepository;
 
 /** @var $soutenance Soutenance */
+/** @var $commentaires array */
 $tuteurProf = $soutenance->getIdTuteurProf();
 $tuteurProf = (new StaffRepository([]))->getByIdFull($tuteurProf);
 $tuteurEntreprise = $soutenance->getIdTuteurEnterprise();
 $tuteurEntreprise = (new TuteurEntrepriseRepository([]))->getById($tuteurEntreprise);
+
 if ($soutenance->getIdProfesseur() !== null) {
     $prof = $soutenance->getIdProfesseur();
     $prof = (new StaffRepository([]))->getByIdFull($prof);
@@ -58,6 +60,27 @@ if ($soutenance->getIdProfesseur() !== null) {
     <?php }
     if ($soutenance->getFinSoutenance() < new DateTime() && Auth::has_role(Roles::Staff, Roles::Teacher, Roles::TutorTeacher, Roles::Manager, Roles::Student)) {
         $existnote = (new NotesRepository([]))->getById($soutenance->getIdSoutenance());
+        ?>
+        <h2 class="text-center font-bold text-2xl mb-4">Commentaires sur la soutenance</h2>
+            <?php
+            foreach ($commentaires as $commentaire) {
+                if ($commentaire['commentairesoutenanceprof'] != null) {
+                    echo <<<HTML
+                <div class="text-center flex flex-col gap-1 mb-4">
+                <span class="font-bold">Tuteur universitaire :</span>
+                 <p>{$commentaire['commentairesoutenanceprof']}</p>
+            </div>
+            HTML;
+                }
+                if ($commentaire['commentairesoutenanceentreprise'] != null) {
+                    echo <<<HTML
+                <div class="text-center flex flex-col gap-1 mb-4">
+                <span class="font-bold">Tuteur entreprise :</span>
+                 <p>{$commentaire['commentairesoutenanceentreprise']}</p>
+            </div>
+            HTML;
+                }
+            }
         if ($existnote === null && !Auth::has_role(Roles::Student)) {
             ?>
             <div class="flex justify-center mt-8">

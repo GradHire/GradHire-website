@@ -15,6 +15,7 @@ use app\src\model\repository\ConventionRepository;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\MailRepository;
+use app\src\model\repository\NotificationRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\PostulerRepository;
 use app\src\model\repository\SoutenanceRepository;
@@ -63,6 +64,7 @@ class DashboardController extends AbstractController
         $statement = Database::get_conn()->prepare("SELECT * FROM updateParametres(?, ?);");
         $userId = Application::getUser()->id();
         $statement->execute([$userId, $configJson]);
+        NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez modifié les paramètres de votre dashboard", "/dashboard");
         Application::redirectFromParam("/dashboard");
     }
 
@@ -157,6 +159,8 @@ class DashboardController extends AbstractController
         $id = $req->getRouteParams()['id'];
         StaffRepository::updateRole($id, $role);
         Notification::createNotification("Le rôle de l'utilisateur a été modifié");
+        NotificationRepository::createNotification(Auth::get_user()->getId(), "Vous avez modifié le rôle de l'utilisateur", "/utilisateurs/" . $id);
+        NotificationRepository::createNotification($id, "Votre rôle a été modifié", "/utilisateurs/" . $id);
         Application::redirectFromParam('/utilisateurs');
     }
 
@@ -202,9 +206,13 @@ class DashboardController extends AbstractController
             if (!(new UtilisateurRepository([]))->isArchived($user)) {
                 (new UtilisateurRepository([]))->setUserToArchived($user, true);
                 (new MailRepository())->send_mail([$user->getEmail()], "Archivage de votre compte", "Votre compte a été archivé");
+                NotificationRepository::createNotification(Auth::get_user()->getId(), "Vous avez archivé le compte de " . EtudiantRepository::getFullNameByID($user->getIdutilisateur()), "/utilisateurs/" . $user->getIdutilisateur());
+                NotificationRepository::createNotification($user->getIdutilisateur(), "Votre compte a été archivé", "/utilisateurs/" . $user->getIdutilisateur());
             } else if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::ManagerStage, Roles::ManagerAlternance)) {
                 (new UtilisateurRepository([]))->setUserToArchived($user, false);
                 (new MailRepository())->send_mail([$user->getEmail()], "Désarchivage de votre compte", "Votre compte a été désarchivé");
+                NotificationRepository::createNotification(Auth::get_user()->getId(), "Vous avez désarchivé le compte de " . $user->getNom() . " " . $user->getPrenom(), "/utilisateurs/" . $user->getId());
+                NotificationRepository::createNotification($user->getIdutilisateur(), "Votre compte a été désarchivé", "/utilisateurs/" . $user->getId());
             }
             if ((string)Application::getUser()->id() === $id)
                 Auth::logout();

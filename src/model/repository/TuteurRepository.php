@@ -14,6 +14,8 @@ class TuteurRepository extends ProRepository
     protected static string $update_function = "updateTuteur";
 
 
+
+
     public function role(): Roles
     {
         return Roles::Tutor;
@@ -50,7 +52,7 @@ class TuteurRepository extends ProRepository
     /**
      * @throws ServerErrorException
      */
-    public function addTuteur($idUtilisateur, $idOffre, $idEtudiant): void
+    public static function addTuteur($idUtilisateur, $idOffre, $idEtudiant): void
     {
         try {
             $sql = "UPDATE Supervise SET Statut = 'validee' WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant";
@@ -74,7 +76,7 @@ class TuteurRepository extends ProRepository
         } catch (PDOException) {
             throw new ServerErrorException('erreur Update Postuler');
         }
-        $this->refuserTuteur($idUtilisateur, $idOffre, $idEtudiant);
+        self::refuserTuteur($idUtilisateur, $idOffre, $idEtudiant);
         try {
             //refuser toutes les autres candidatures
             $sql = "UPDATE Postuler SET statut = 'refusee' WHERE idUtilisateur != :idUtilisateur AND idOffre = :idOffre";
@@ -91,7 +93,31 @@ class TuteurRepository extends ProRepository
     /**
      * @throws ServerErrorException
      */
-    public function refuserTuteur(int $getIdutilisateur, mixed $idOffre, $idEtudiant)
+    public static function getTuteurWhereIsNotMyId($idUtilisateur, $idOffre, $idEtudiant): ?array
+    {
+        try {
+            $sql = "SELECT * FROM Supervise WHERE idEtudiant = :idEtudiant AND idOffre = :idOffre AND s.idUtilisateur != :idUtilisateur";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idUtilisateur' => $idUtilisateur,
+                'idOffre' => $idOffre,
+                'idEtudiant' => $idEtudiant
+            ]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetch();
+            if (!$resultat) {
+                return null;
+            }
+            return $resultat;
+        } catch (PDOException) {
+            throw new ServerErrorException('erreur getTuteurWhereIsNotMyId');
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public static function refuserTuteur(int $getIdutilisateur, mixed $idOffre, $idEtudiant)
     {
         try {
             $sql = "UPDATE Supervise SET Statut = 'refusee' WHERE idUtilisateur!=:idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant";
@@ -133,7 +159,7 @@ class TuteurRepository extends ProRepository
     /**
      * @throws ServerErrorException
      */
-    public function annulerTuteur(int $iduser, int $idOffre, int $idetudiant): void
+    public static function annulerTuteur(int $iduser, int $idOffre, int $idetudiant): void
     {
         try {
             //on vas d'abord verifier si il est plusieurs fois tutor
@@ -169,7 +195,7 @@ class TuteurRepository extends ProRepository
     /**
      * @throws ServerErrorException
      */
-    public function seProposerProf(int $idutilisateur, int $idOffre, int $idetudiant): void
+    public static function seProposerProf(int $idutilisateur, int $idOffre, int $idetudiant): void
     {
         try {
             $statement = Database::get_conn()->prepare("INSERT INTO Supervise VALUES (?,?,?,'en attente',null);");
@@ -193,7 +219,7 @@ class TuteurRepository extends ProRepository
     /**
      * @throws ServerErrorException
      */
-    public function seDeProposerProf(int $idUtilisateur, mixed $idOffre, $idEtudiant)
+    public static function seDeProposerProf(int $idUtilisateur, mixed $idOffre, $idEtudiant)
     {
         try {
             $statement = Database::get_conn()->prepare("DELETE FROM Supervise WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant");
@@ -275,7 +301,7 @@ class TuteurRepository extends ProRepository
     /**
      * @throws ServerErrorException
      */
-    public function assigneCommeTuteurEntreprise(mixed $idUtilisateur, mixed $idOffre, mixed $idEtudiant, mixed $idTuteurEntreprise)
+    public static function assigneCommeTuteurEntreprise(mixed $idUtilisateur, mixed $idOffre, mixed $idEtudiant, mixed $idTuteurEntreprise)
     {
         try {
             $sql = "UPDATE Supervise SET idTuteurEntreprise = :idTuteurEntreprise WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant";
@@ -298,6 +324,30 @@ class TuteurRepository extends ProRepository
             ]);
         } catch (PDOException) {
             throw new ServerErrorException('erreur assigneCommeTuteurEntreprise');
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getTuteurEnAttente(int $getIdutilisateur, mixed $idOffre, mixed $idEtudiant)
+    {
+        try {
+            $sql = "SELECT * FROM Supervise WHERE idUtilisateur = :idUtilisateur AND idOffre = :idOffre AND idEtudiant = :idEtudiant AND statut = 'en attente'";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute([
+                'idUtilisateur' => $getIdutilisateur,
+                'idOffre' => $idOffre,
+                'idEtudiant' => $idEtudiant
+            ]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $resultat = $requete->fetch();
+            if (!$resultat) {
+                return null;
+            }
+            return $resultat;
+        } catch (PDOException) {
+            throw new ServerErrorException('erreur getTuteurEnAttente');
         }
     }
 
