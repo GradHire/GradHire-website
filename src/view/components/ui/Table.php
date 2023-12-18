@@ -21,7 +21,8 @@ class Table
             }
             if ($nbButtons > 5)
                 $buttons .= "<p>...</p>";
-            $buttons .= "<button onclick='nextTable(`$id`)' class='h-[40px] w-[40px] border-2 border-zinc-500 rounded-md enabled:hover:text-white enabled:hover:bg-zinc-500 disabled:opacity-50'>&gt;</button>";
+            $enabled = $nbButtons > 1 ? "" : "disabled";
+            $buttons .= "<button onclick='nextTable(`$id`)' $enabled class='h-[40px] w-[40px] border-2 border-zinc-500 rounded-md enabled:hover:text-white enabled:hover:bg-zinc-500 disabled:opacity-50'>&gt;</button>";
         }
 
         echo <<<HTML
