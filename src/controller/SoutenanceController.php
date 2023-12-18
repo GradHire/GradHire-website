@@ -121,4 +121,43 @@ class SoutenanceController extends AbstractController
             "soutenance" => $soutenance, "form" => $form
         ]);
     }
+
+    public function gerervalidenote(Request $request)
+    {
+        $notes = (new NotesRepository())->getAllnonvalide();
+        return $this->render("soutenance/gerervalidenote", [
+            "notes" => $notes
+        ]);
+    }
+
+    public function valideNote(Request $request)
+    {
+        $idnote = $request->getRouteParams()['id'] ?? null;
+        $note = (new NotesRepository())->valideById($idnote);
+        Application::$app->response->redirect("/gerervalidenote");
+    }
+
+    public function modifierNote(Request $request)
+    {
+        $idnote = $request->getRouteParams()['id'] ?? null;
+        $note = (new NotesRepository())->getByIdnote($idnote);
+        $form = new FormModel([
+            "noteoral" => FormModel::int("Note proposé pour l'oral *")->required()->default($note->getNoteOral()),
+            "noterapport" => FormModel::int("Note proposé pour le rapport *")->required()->default($note->getNoteRapport()),
+            "noterelation" => FormModel::int("Note proposé pour les relations interpersonnelles *")->required()->default($note->getNoteRelation()),
+            "notedemarche" => FormModel::int("Note proposé pour la démarche *")->required()->default($note->getNoteDemarche()),
+            "noteresultat" => FormModel::int("Note proposé pour le résultat *")->required()->default($note->getNoteResultat()),
+        ]);
+        if ($request->getMethod() == "post") {
+            if ($form->validate($request->getBody())) {
+                $notemodif = $form->getParsedBody();
+                print_r($notemodif);
+                (new NotesRepository())->modifierNote($idnote, $notemodif);
+                Application::$app->response->redirect("/gerervalidenote");
+            }
+        }
+        return $this->render("soutenance/gerermodifnote", [
+            "note" => $note, "form" => $form
+        ]);
+    }
 }
