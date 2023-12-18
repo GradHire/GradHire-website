@@ -4,12 +4,26 @@ namespace app\src\view\components\ui;
 
 class Table
 {
-    public static function createTable(array $values, array $columns, callable $callback)
+    public static function createTable(array $values, array $columns, callable $callback): void
     {
         $i = (time() + rand(0, 1000));
         $id = "table-" . $i;
         $cols = count($columns);
         $empty = 'empty-' . $i;
+
+        $buttons = "";
+
+        if (count($values) > 0) {
+            $buttons = "<button onclick='previousTable(`$id`)' disabled class='h-[40px] w-[40px] border-2 border-zinc-500 rounded-md enabled:hover:text-white enabled:hover:bg-zinc-500 disabled:opacity-50'>&lt;</button>";
+            $nbButtons = ceil(count($values) / 20);
+            for ($i = 1; $i <= $nbButtons && $i <= 5; $i++) {
+                $buttons .= "<button onclick='goToTable(`$id`, $i)' class='h-[40px] w-[40px] border-2 border-zinc-500 rounded-md hover:text-white hover:bg-zinc-500 " . ($i === 1 ? "active" : "") . " [&.active]:text-white [&.active]:bg-zinc-500'>$i</button>";
+            }
+            if ($nbButtons > 5)
+                $buttons .= "<p>...</p>";
+            $enabled = $nbButtons > 1 ? "" : "disabled";
+            $buttons .= "<button onclick='nextTable(`$id`)' $enabled class='h-[40px] w-[40px] border-2 border-zinc-500 rounded-md enabled:hover:text-white enabled:hover:bg-zinc-500 disabled:opacity-50'>&gt;</button>";
+        }
 
         echo <<<HTML
 <div class="flex pt-4 mb-4 gap-2 pr-2 w-full">
@@ -20,6 +34,11 @@ class Table
 <table class="min-w-full divide-y-2 divide-zinc-200 bg-white text-sm" id="$id">
         <thead class="ltr:text-left rtl:text-right">
         <tr>
+<th class="select-none cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900 hover:bg-gray-100" onclick="sortTable(\'' . $id . '\', this, ' . $i . ')">
+				<div class="flex justify-between items-center">
+				ID <i class="fa-solid fa-sort"></i>
+				</div>                
+            </th>
 HTML;
         for ($i = 0; $i < count($columns); $i++) {
             echo '<th class="select-none cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900 hover:bg-gray-100" onclick="sortTable(\'' . $id . '\', this, ' . $i . ')">
@@ -37,11 +56,16 @@ HTML;
         <tbody class="divide-y divide-zinc-200">
 HTML;
         if (count($values) > 0) {
-            foreach ($values as $value) {
+            for ($i = 0; $i < count($values); $i++) {
+                $colId = $i + 1;
+                $hidden = $i >= 20 ? "hidden" : "";
                 echo <<<HTML
-<tr class="odd:bg-zinc-50">
+<tr class="odd:bg-zinc-50 $hidden">
+<td class="whitespace-nowrap px-4 py-2 font-medium text-zinc-900">
+$colId
+</td>
 HTML;
-                $callback($value);
+                $callback($values[$i]);
                 echo <<<HTML
 </tr>
 HTML;
@@ -51,12 +75,15 @@ HTML;
         echo <<<HTML
 </tbody>
     </table>
+    <div class="w-full flex justify-center gap-2 mt-4" id="$id-pagination">
+    $buttons
+</div>
     <p id="$empty" style="$style" class="pl-4 pt-2 text-zinc-800">Aucun résultats</p>
 <script src="/resources/js/table.js"></script>
 HTML;
     }
 
-    public static function button($link, $text = "Voir plus", $color = "")
+    public static function button($link, $text = "Voir plus", $color = ""): void
     {
         $c = "bg-zinc-600 hover:bg-zinc-700";
         if ($color == "red")
@@ -70,7 +97,7 @@ HTML
         );
     }
 
-    public static function cell($value)
+    public static function cell($value): void
     {
         $color = "text-zinc-900";
         if ($value == null || $value == "") {
@@ -84,7 +111,7 @@ $value
 HTML;
     }
 
-    public static function chip($value, $color)
+    public static function chip($value, $color): void
     {
         $c = "bg-green-100 text-green-800";
         if ($color == "red")
@@ -97,7 +124,7 @@ HTML
         );
     }
 
-    public static function link($link)
+    public static function link($link): void
     {
         self::cell(($link == null || $link == "") ? "" : <<<HTML
 <a target="_blank" href="$link" class="text-blue-600">$link</a>
