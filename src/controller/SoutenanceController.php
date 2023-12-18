@@ -124,6 +124,7 @@ class SoutenanceController extends AbstractController
 
     public function gerervalidenote(Request $request)
     {
+        if (!Auth::has_role(Roles::Manager, Roles::Staff)) throw new ForbiddenException();
         $notes = (new NotesRepository())->getAllnonvalide();
         return $this->render("soutenance/gerervalidenote", [
             "notes" => $notes
@@ -132,6 +133,7 @@ class SoutenanceController extends AbstractController
 
     public function valideNote(Request $request)
     {
+        if (!Auth::has_role(Roles::Manager, Roles::Staff)) throw new ForbiddenException();
         $idnote = $request->getRouteParams()['id'] ?? null;
         $note = (new NotesRepository())->valideById($idnote);
         Application::$app->response->redirect("/gerervalidenote");
@@ -139,6 +141,7 @@ class SoutenanceController extends AbstractController
 
     public function modifierNote(Request $request)
     {
+        if (!Auth::has_role(Roles::Manager, Roles::Staff)) throw new ForbiddenException();
         $idnote = $request->getRouteParams()['id'] ?? null;
         $note = (new NotesRepository())->getByIdnote($idnote);
         $form = new FormModel([
