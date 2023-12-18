@@ -214,6 +214,10 @@ class Notes extends AbstractDataObject
         $this->idsoutenance = $idsoutenance;
     }
 
+    public function noteFinal(): float
+    {
+        return ($this->noterapport * 20 + $this->noteoral * 10 + $this->noterelation * 10 + $this->notedemarche * 20 + $this->noteresultat * 20) / 80;
+    }
 
     protected function getValueColonne(string $nomColonne): string
     {
