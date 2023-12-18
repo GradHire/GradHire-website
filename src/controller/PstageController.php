@@ -467,5 +467,3 @@ class PstageController extends AbstractController
         } else throw new ForbiddenException();
     }
 }
-
-
