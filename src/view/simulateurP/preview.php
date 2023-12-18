@@ -10,7 +10,9 @@
     <div class="w-full gap-4 flex flex-col" id="step1">
         <?php
         foreach ($array as $key => $value) {
-            echo "<p id='el-$key'>" . $key . " : " . $value . "</p>";
+            //remove spaces
+            $k = str_replace(' ', '', $key);
+            echo "<p id='el-$k'>" . $key . " : " . $value . "</p>";
         }
         ?>
         <button type="button" id="modifyButton" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
@@ -21,18 +23,17 @@
         </button>
     </div>
     <script>
+        const elements = {
+            "el-typeStage": "simulateurProfReferent",
+            "el-numEtudiant": "listEntreprise",
+            "el-Effectif": "simulateurServiceAccueil",
+            "el-NomAccueil": "simulateurTuteur",
+            "el-NomSignataire": "visuRecapConv"
+        }
         document.getElementById('confirmButton').addEventListener('click', function () {
-            if (document.getElementById('el-typeStage') != null) {
-                window.location.href = 'simulateurProfReferent';
-            } else if (document.getElementById('el-numEtudiant') != null) {
-                window.location.href = 'listEntreprise';
-            } else if (document.getElementById('el-Effectif') != null) {
-                window.location.href = 'simulateurServiceAccueil';
-            } else if (document.getElementById('el-Nom Accueil') != null) {
-                window.location.href = 'simulateurTuteur';
-            } else if (document.getElementById('el-Nom Signataire') != null) {
-                window.location.href = 'visuRecapConv';
-            }
+            for (const [key, value] of Object.entries(elements))
+                if (document.getElementById(key) != null)
+                    window.location.href = value;
         });
     </script>
     <script>

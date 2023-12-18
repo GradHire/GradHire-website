@@ -38,10 +38,7 @@ class PstageController extends AbstractController
             $form->useFile();
             if ($request->getMethod() === 'post') {
                 if ($form->validate($request->getBody())) {
-                    if ($form->getParsedBody()['type'] == "pstage")
-                        $this->ImportPstage($form);
-                    else
-                        $this->ImportStudea($form);
+                    $this->Import($form, $form->getParsedBody()['type']);
                 }
             }
             return $this->render('Import', [
@@ -50,14 +47,17 @@ class PstageController extends AbstractController
         } else throw new ForbiddenException();
     }
 
-    private function ImportPstage(FormModel $form): void
+    private function Import(FormModel $form, string $type): void
     {
-        $path = "Import/";
+        if ($type == "pstage")
+            $path = "Import/";
+        else
+            $path = "ImportStudea/";
         if (!$form->getFile("file")->save($path, "file")) {
             $form->setError("Impossible de télécharger tous les fichiers");
             return;
         }
-        $path = fopen("Import/file.csv", "r");
+        $path = fopen($path . "file.csv", "r");
         $i = 0;
         $importer = new Import();
         while (($data = fgetcsv($path, 100000, ";")) !== FALSE) {
@@ -67,29 +67,10 @@ class PstageController extends AbstractController
                 $i++;
                 continue;
             }
-            $importer->importerligne($data);
-        }
-        Notification::createNotification("Importation réussi");
-    }
-
-    private function ImportStudea(FormModel $form): void
-    {
-        $path = "ImportStudea/";
-        if (!$form->getFile("file")->save($path, "file")) {
-            $form->setError("Impossible de télécharger tous les fichiers");
-            return;
-        }
-        $path = fopen("ImportStudea/file.csv", "r");
-        $i = 0;
-        $importer = new Import();
-        while (($data = fgetcsv($path, 100000, ";")) !== FALSE) {
-
-            $num = count($data);
-            if ($i == 0) {
-                $i++;
-                continue;
-            }
-            $importer->importerligneStudea($data);
+            if ($type == "pstage")
+                $importer->importerligne($data);
+            else
+                $importer->importerligneStudea($data);
         }
         Notification::createNotification("Importation réussi");
     }
@@ -99,6 +80,7 @@ class PstageController extends AbstractController
         if (Auth::has_role(Roles::Student)) return $this->render('simulateurP/General', ['vueChemin' => "explicationSimu.php"]);
         else throw new ForbiddenException();
     }
+
 
     public function simulateur(Request $request): string
     {
@@ -128,7 +110,7 @@ class PstageController extends AbstractController
                     return $this->render('simulateurP/General', ['vueChemin' => "preview.php", 'form' => $form, 'array' => $_SESSION['simulateurEtu']]);
                 }
             }
-            return $this->render('simulateurP/General', ['vueChemin' => "simulateuretu.php", 'form' => $form]);
+            return $this->render('simulateurP/General', ['vueChemin' => "simulateur.php", 'form' => $form, "nom" => "Etudiant"]);
         } else throw new ForbiddenException();
     }
 
@@ -185,32 +167,11 @@ class PstageController extends AbstractController
                     $formData = $form->getParsedBody();
                     $ent = new EntrepriseRepository([]);
                     $ent->create($formData['nomEnt'], $formData['email'], $formData['tel'], "", $formData['type'], $formData['effectif'], $formData['codeNaf'], $formData['fax'], $formData['web'], $formData['voie'], $formData['cedex'], $formData['residence'], $formData['codePostal'], $formData['pays'], $formData['ville'], $formData['siret']);
-                    $form2 = $this->getModel();
-                    return $this->render('simulateurP/General', ['form2' => $form2, 'vueChemin' => "listEntreprise.php"]);
+                    return $this->render('simulateurP/General', ['vueChemin' => "listEntreprise.php"]);
                 }
             }
             return $this->render('simulateurP/General', ['form' => $form, 'vueChemin' => "creer.php", 'nom' => "Créer une entreprise"]);
         } else throw new ForbiddenException();
-    }
-
-    /**
-     * @return FormModel
-     */
-    public function getModel(): FormModel
-    {
-        $form2 = new FormModel([
-            "typeRecherche" => FormModel::select("Type de recherche", ["nomEnt" => "Nom de l'entreprise", "numsiret" => "Numéro Siret", "numTel" => "Tèl/Fax", "adresse" => "adresse"])->required()->default("nomEnt"),
-            "nomEnt" => FormModel::string("Nom de l'entreprise")->default("")->required(),
-            "pays" => FormModel::select("Pays", ["France" => "France", "Allemagne" => "Allemagne", "Angleterre" => "Angleterre", "Espagne" => "Espagne", "Italie" => "Italie", "Portugal" => "Portugal", "Suisse" => "Suisse", "Autre" => "Autre"])->required(),
-            "department" => FormModel::string("Département")->default("")->length(2)->required(),
-            "siret" => FormModel::string("Numéro Siret")->default("")->length(14),
-            "siren" => FormModel::string("Numéro Siren")->default("")->length(9),
-            "tel" => FormModel::phone("Téléphone")->default(""),
-            "fax" => FormModel::phone("Fax")->default(""),
-            "adresse" => FormModel::string("Adresse")->default(""),
-            "codePostal" => FormModel::string("Code postal")->default("")->length(5)
-        ]);
-        return $form2;
     }
 
     public function simulateurServiceAccueil(Request $request)
@@ -236,7 +197,7 @@ class PstageController extends AbstractController
                     return $this->render('simulateurP/General', ['vueChemin' => 'preview.php', 'array' => $array]);
                 }
             }
-            return $this->render('simulateurP/General', ['form' => $form, 'vueChemin' => 'simulateurServiceAccueil.php']);
+            return $this->render('simulateurP/General', ['form' => $form, 'vueChemin' => 'simulateur.php', 'nom' => "Service"]);
         } else throw new ForbiddenException();
     }
 
@@ -269,7 +230,6 @@ class PstageController extends AbstractController
                         "accueil" => FormModel::select("Accueil", $serviceaccueil)->required()->default("Non renseigné"),
                     ]);
                     Application::$app->response->redirect("/simulateurServiceAccueil");
-                    return $this->render('simulateurP/General', ['form' => $form, 'vueChemin' => 'simulateurServiceAccueil.php']);
                 }
             }
             return $this->render('simulateurP/General', ['form' => $form, 'vueChemin' => 'creer.php', "nom" => "Créer un service d'accueil"]);
@@ -282,7 +242,7 @@ class PstageController extends AbstractController
         if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"]) && isset($_SESSION["accueil"])) {
             $tut = new TuteurEntrepriseRepository([]);
             $tut = $tut->getFullByEntreprise($_SESSION["idEntreprise"]);
-            return $this->render('simulateurP/General', ['listTuteur' => $tut, 'vueChemin' => 'simulateurTuteur.php']);
+            return $this->render('simulateurP/General', ['listTuteur' => $tut, 'vueChemin' => 'listTuteur.php']);
         } else throw new ForbiddenException();
     }
 
@@ -304,7 +264,7 @@ class PstageController extends AbstractController
                     $tut = new TuteurEntrepriseRepository([]);
                     $tut = $tut->getFullByEntreprise($_SESSION["idEntreprise"]);
                     Application::$app->response->redirect("/simulateurTuteur");
-                    return $this->render('simulateurP/General', ['listTuteur' => $tut, 'vueChemin' => 'simulateurTuteur.php']);
+                    return $this->render('simulateurP/General', ['listTuteur' => $tut, 'vueChemin' => 'listTuteur.php']);
                 }
             }
             return $this->render('simulateurP/General', ['form' => $form, 'vueChemin' => 'creer.php', "nom" => "Créer un tuteur"]);
@@ -402,7 +362,7 @@ class PstageController extends AbstractController
                     return $this->render('simulateurP/General', ['vueChemin' => 'preview.php', 'array' => $array]);
                 }
             }
-            return $this->render('simulateurP/General', ["form" => $form, "vueChemin" => "simulateurSignataire.php"]);
+            return $this->render('simulateurP/General', ["form" => $form, "vueChemin" => "simulateur.php", "nom" => "Signataire"]);
         } else throw new ForbiddenException();
     }
 
@@ -426,7 +386,6 @@ class PstageController extends AbstractController
                         "signataire" => FormModel::select("Signataire", $signataire)->required()->default("Non renseigné")->id("signataire"),
                     ]);
                     Application::$app->response->redirect("/simulateurSignataire");
-                    return $this->render('simulateurP/General', ["form", $form, "vueChemin" => "simulateurSignataire.php"]);
                 }
             }
             return $this->render('simulateurP/General', ["form" => $form, "vueChemin" => "creer.php", "nom" => "Créer un signataire"]);
@@ -484,7 +443,6 @@ class PstageController extends AbstractController
                     if ($form->validate($request->getBody())) {
                         $formData = $form->getParsedBody();
                         $simul = (new SimulationPstageRepository([]));
-                        $simulationnom = $simul->getNomById($id);
                         $simul->updaterefuse($id);
                         $simul->updateMotif($id, $formData['motif']);
                         Application::$app->response->redirect("/gererSimulPstage");
@@ -508,7 +466,6 @@ class PstageController extends AbstractController
             return $this->render('pstageConv/gererSimulPstage');
         } else throw new ForbiddenException();
     }
-
 }
 
 

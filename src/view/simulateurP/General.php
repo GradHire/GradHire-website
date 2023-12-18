@@ -14,7 +14,7 @@
     </div>
     <div class="ml-5">
         <?php
-        if ($vueChemin == "simulateuretu.php") {
+        if ($vueChemin == "simulateur.php") {
             ?>
             <p class="text-blue-500">Etudiant</p>
             <?php
@@ -48,7 +48,7 @@
     </div>
     <div class="ml-5">
         <?php
-        if ($vueChemin == "simulateurServiceAccueil.php" || $vueChemin == "creerService.php") {
+        if ($vueChemin == "creerService.php") {
             ?>
             <p class="text-blue-500">Service d'accueil</p>
             <?php
@@ -65,7 +65,7 @@
     </div>
     <div class="ml-5">
         <?php
-        if ($vueChemin == "simulateurTuteur.php" || $vueChemin == "creerTuteur.php") {
+        if ($vueChemin == "listTuteur.php" || $vueChemin == "creerTuteur.php") {
             ?>
             <p class="text-blue-500">Tuteur</p>
             <?php
@@ -116,7 +116,7 @@
     </div>
     <div class="ml-5">
         <?php
-        if ($vueChemin == "simulateurSignataire.php" || $vueChemin == "creerSignataire.php") {
+        if ($vueChemin == "creerSignataire.php") {
             ?>
             <p class="text-blue-500">Signataire</p>
             <?php
