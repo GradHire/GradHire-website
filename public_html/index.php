@@ -259,5 +259,6 @@ $app->router->get('/entreprises/{id:\d+}/modifierAvis', [AvisController::class, 
 $app->router->post('/entreprises/{id:\d+}/modifierAvis', [AvisController::class, 'modifierAvis']);
 
 $app->router->get('/apropos', [AuthController::class, 'aboutreal']);
+$app->router->get('/conditionutilisation', [AuthController::class, 'conditionutilisation']);
 
 $app->run();
