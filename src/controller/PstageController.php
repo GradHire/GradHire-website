@@ -32,7 +32,7 @@ class PstageController extends AbstractController
     {
         if (Auth::has_role(Roles::Staff, Roles::Manager)) {
             $form = new FormModel([
-                "type" => FormModel::select("Type", ["studea" => "Studea", "pstage" => "Pstage"])->required()->default("pstage")->sm(),
+                "type" => FormModel::select("Type", ["studea" => "Studea", "pstage" => "Pstage", "scodoc" => "Scodoc"])->required()->default("pstage")->sm(),
                 "file" => FormModel::file("CSV")->required()->accept([".csv"])->sm()
             ]);
             $form->useFile();
@@ -51,8 +51,10 @@ class PstageController extends AbstractController
     {
         if ($type == "pstage")
             $path = "Import/";
-        else
+        else if ($type == "studea")
             $path = "ImportStudea/";
+        else
+            $path = "ImportScodoc/";
         if (!$form->getFile("file")->save($path, "file")) {
             $form->setError("Impossible de télécharger tous les fichiers");
             return;
@@ -69,8 +71,10 @@ class PstageController extends AbstractController
             }
             if ($type == "pstage")
                 $importer->importerligne($data);
-            else
+            else if ($type == "studea")
                 $importer->importerligneStudea($data);
+            else
+                $importer->importerligneScodoc($data);
         }
         Notification::createNotification("Importation réussi");
     }
