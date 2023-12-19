@@ -22,13 +22,13 @@ function getRoleBasedData($role, &$sections, &$actions): array
 {
     match ($role) {
         Roles::Student => [
-            $selectedIds = ['S01', 'S05', 'S09', 'S08'],
+            $selectedIds = ['S01', 'S02', 'S05', 'S09', 'S08'],
             $actionsId = ['A01', 'A02', 'A03'],
-            $sections[] = 'S05',
+            array_push($sections, 'S02', 'S05'),
             $actions[] = 'A03'
         ],
         Roles::Tutor, Roles::Teacher => [
-            $selectedIds = ['S01', 'S05'],
+            $selectedIds = ['S01', 'S02', 'S05'],
             $actionsId = ['A01', 'A02', 'A03'],
             $sections[] = 'S05'
         ],
@@ -38,7 +38,7 @@ function getRoleBasedData($role, &$sections, &$actions): array
             array_push($sections, 'S01', 'S06', 'S08')
         ],
         Roles::Staff, Roles::Manager => [
-            $selectedIds = ['S01', 'S03', 'S05', 'S06', 'S07', 'S08'],
+            $selectedIds = ['S01', 'S02', 'S03', 'S05', 'S06', 'S07', 'S08'],
             $actionsId = ['A01', 'A02', 'A04', 'A05'],
             array_push($sections, 'S03', 'S05', 'S06', 'S07', 'S08')
         ],

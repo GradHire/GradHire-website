@@ -6,6 +6,8 @@ use app\src\view\components\layout\Lien;
 use app\src\view\components\ui\FormModal;
 use app\src\view\components\ui\Notification;
 use app\src\view\components\ui\Separator;
+use app\src\view\resources\icons\I_More;
+use app\src\view\resources\icons\I_Notification;
 
 /** @var array $allSections
  * @var array $allActions
@@ -20,8 +22,6 @@ use app\src\view\components\ui\Separator;
  */
 
 $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
-require_once __DIR__ . '/parametres-loader.php';
-
 ?>
 
 <!DOCTYPE html>
@@ -41,7 +41,7 @@ require_once __DIR__ . '/parametres-loader.php';
 <body class="font-sans">
 <div id="blur-background"
      class="hidden w-screen h-screen fixed z-50 top-0 left-0 bg-white/50 backdrop-blur-[4px]"></div>
-<?php require_once __DIR__ . '/modal-loader.php'; ?>
+<?php require_once __DIR__ . '/parametres/modal-loader.php'; ?>
 <div class="w-full flex justify-start items-start bg-zinc-50 flex-row duration-300">
     <div id="sidebar-container"
          class="duration-300 ease-out relative text-[14px] w-full <?= $isOpen ? " max-w-[275px] " : " max-w-[75px] " ?> m-0 bg-white justify-around border-r text-[#1A2421] backdrop-blur-xl p-4 [ shadow-black/5 shadow-2xl ] sticky top-0 left-0 z-40 h-screen ">
@@ -66,11 +66,9 @@ require_once __DIR__ . '/parametres-loader.php';
                     <span class="uppercase text-zinc-400 font-light text-[8px] duration-300 tracking-widest sectionText <?= $isOpen ? " text-[12px] " : " text-[8px] " ?>">Sections</span>
                     <button <?= $modalAddSection ? $modalAddSection->Show() : "" ?>
                             class="flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                             class="w-5 h-5 hover:fill-zinc-800 fill-zinc-400 duration-300 sectionAdd"
-                             style="display: <?= $isOpen ? "block" : "none" ?>">
-                            <path d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"/>
-                        </svg>
+                        <span class="sectionAdd" style="display: <?= $isOpen ? "block" : "none" ?>">
+                        <?= I_More::render('w-5 h-5 hover:fill-zinc-800 fill-zinc-400 duration-300 ') ?>
+                        </span>
                     </button>
                 </div>
                 <?php
@@ -88,11 +86,9 @@ require_once __DIR__ . '/parametres-loader.php';
                     <span class="uppercase text-zinc-400 font-light text-[8px] duration-300 tracking-widest sectionText <?= $isOpen ? " text-[12px] " : " text-[8px] " ?>">Actions</span>
                     <button <?= $modalAddAction ? $modalAddAction->Show() : "" ?>
                             class="flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                             class="w-5 h-5 hover:fill-zinc-800 fill-zinc-400 duration-300 sectionAdd"
-                             style="display: <?= $isOpen ? "block" : "none" ?>">
-                            <path d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"/>
-                        </svg>
+                        <span class="sectionAdd" style="display: <?= $isOpen ? "block" : "none" ?>">
+                        <?= I_More::render('w-5 h-5 hover:fill-zinc-800 fill-zinc-400 duration-300 ') ?>
+                        </span>
                     </button>
                 </div>
                 <?php
@@ -133,6 +129,7 @@ require_once __DIR__ . '/parametres-loader.php';
             <div class="h-[40px] max-w-[40px] w-full bg-white flex relative items-center group justify-center cursor-pointer">
                 <div class="w-2 h-2 absolute top-1 right-1 bg-orange-500 rounded-full border"></div>
                 <div class="w-2 h-2 absolute top-1 right-1 bg-orange-500 rounded-full animate-ping "></div>
+                <?= I_Notification::render('w-6 h-6 fill-zinc-600 group-hover:fill-orange-600 duration-150 '); ?>
                 <a href="/notifications">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                          class="w-6 h-6 fill-zinc-600 group-hover:fill-orange-600 duration-150 ">
