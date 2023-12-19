@@ -118,7 +118,6 @@ use app\src\view\components\ui\Notification;
 </div>
 <div id="blur-background" class="hidden w-screen h-screen fixed z-50 top-0 left-0 backdrop-blur-md"></div>
 <div class="w-full flex  justify-center items-center <?php if (Application::isGuest()): ?> flex-col<?php else: ?> flex-row<?php endif; ?>">
-    <?php require __DIR__ . '/../dashboard/tabs.php'; ?>
     <div class="w-full flex flex-col <?php if (Application::isGuest()): ?> justify-center items-center py-0 max-w-7xl mt-[65px] px-4 sm:px-6 lg:px-8 <?php else: ?> justify-start items-start<?php endif; ?>">
         <?php
         Notification::show();
