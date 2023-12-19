@@ -57,7 +57,7 @@ class ProRepository extends UtilisateurRepository
             $user = $statement->fetch();
             if (is_null($user) || $user === false) return null;
             $user = new static($user);
-            if (!password_verify($password, $user->attributes()["hash"])) return null;
+            if (!self::checkPassword($password, $user->attributes()["hash"])) return null;
             return $user;
         } catch
         (\Exception) {
@@ -133,7 +133,7 @@ class ProRepository extends UtilisateurRepository
             throw new ServerErrorException();
         }
     }
-    
+
     public static function changePassword(string $password, string $new, FormModel $form): bool
     {
         try {
@@ -158,11 +158,21 @@ class ProRepository extends UtilisateurRepository
     public static function setNewPassword(string $password, int $id): void
     {
         try {
-            $hash = password_hash($password, PASSWORD_DEFAULT);
+            $hash = self::hashPassword($password);
             $statement = Database::get_conn()->prepare("UPDATE ComptePro SET hash=? WHERE idUtilisateur=?");
             $statement->execute([$hash, $id]);
         } catch (\Exception) {
             throw new ServerErrorException();
         }
+    }
+
+    protected static function hashPassword(string $password): string
+    {
+        return password_hash(hash_hmac("sha256", $password, HASH_MDP), PASSWORD_DEFAULT);
+    }
+
+    protected static function checkPassword(string $password, string $hash): bool
+    {
+        return password_verify(hash_hmac("sha256", $password, HASH_MDP), $hash);
     }
 }

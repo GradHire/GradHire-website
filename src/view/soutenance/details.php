@@ -89,17 +89,19 @@ if ($soutenance->getIdProfesseur() !== null) {
                     soutenance</a>
             </div>
             <?php
-        } else {
+        } else if ($existnote !== null && $existnote->getValide() == 1) {
             ?>
-            <h3 class="font-bold text-center mt-5">Les notes de la soutenances sont :</h3>
+            <h3 class="font-bold text-center mt-5">La notes de la soutenances est :</h3>
             <div class="w-full flex justify-center mt-2">
                 <ul class=" list-disc ml-6 ">
-                    <li><?php echo $existnote->getNotedemarche() ?> pour la démarche</li>
-                    <li><?php echo $existnote->getNoterapport() ?> pour le rapport</li>
-                    <li><?php echo $existnote->getNoteoral() ?> pour l'oral</li>
-                    <li><?php echo $existnote->getNoterelation() ?> pour les relations interpersonnelles</li>
-                    <li><?php echo $existnote->getNoteresultat() ?> pour le résultat</li>
+                    <li><?php echo $existnote->noteFinal() ?>/20</li>
                 </ul>
+            </div>
+            <?php
+        } else {
+            ?>
+            <div class="text-center mt-8 text-red-500">
+                <?php echo "La soutenance n'a pas encore été notée" ?>
             </div>
             <?php
         }

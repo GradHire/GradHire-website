@@ -130,3 +130,21 @@ if (gratificationOui && gratificationNon) {
         }
     });
 }
+if (document.getElementById("signataire") != null) {
+    document.getElementById("signataire").addEventListener("input", function () {
+        if (document.getElementById("signataire").value === "Non renseigné") {
+            document.getElementById("step2").classList.add("hidden");
+        } else {
+            document.getElementById("step2").classList.remove("hidden");
+        }
+    });
+}
+if (document.getElementById("accueil") != null) {
+    document.getElementById("accueil").addEventListener("input", function () {
+        if (document.getElementById("accueil").value === "Non renseigné") {
+            document.getElementById("step2").classList.add("hidden");
+        } else {
+            document.getElementById("step2").classList.remove("hidden");
+        }
+    });
+}

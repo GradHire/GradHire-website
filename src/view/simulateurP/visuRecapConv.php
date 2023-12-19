@@ -1,6 +1,7 @@
 <?php
 
 use app\src\model\repository\ServiceAccueilRepository;
+use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurRepository;
 
 $etudiant = $_SESSION['simulateurEtu'];
@@ -10,6 +11,8 @@ $accueil = $accueil->getFullByEntrepriseNom($_SESSION['idEntreprise'], $_SESSION
 $idtuteur = $_SESSION['idTuteur'];
 $tuteur = (new TuteurRepository([]))->getByIdFull($idtuteur);
 $signataire = $_SESSION['signataire'];
+$profRef = new StaffRepository([]);
+$profRef = $profRef->getByIdFull($_SESSION['idProfRef']);
 ?>
 <div class="w-full flex justify-center mt-5">
     <div class="grid grid-cols-2 gap-4">
@@ -106,7 +109,7 @@ $signataire = $_SESSION['signataire'];
             echo "<p class='mb-2'>" . $offre["modalsuivi"] . "</p>";
             echo "<p class='mb-2'>" . $offre["avantage"] . "</p>";
 
-            echo "<p class='mb-2'>" . $_SESSION["nomProf"] . " " . $_SESSION["prenomProf"] . "</p>";
+            echo "<p class='mb-2'>" . $profRef->getNom() . " " . $profRef->getPrenom() . "</p>";
 
             echo "<p class='mb-2'>" . $accueil->getNomService() . "</p>";
             echo "<p class='mb-2'>" . $accueil->getAdresse() . $accueil->getCodePostal() . $accueil->getCommune() . "</p>";

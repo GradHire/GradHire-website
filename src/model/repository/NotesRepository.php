@@ -7,6 +7,28 @@ use app\src\model\dataObject\Notes;
 
 class NotesRepository extends AbstractRepository
 {
+    public function getByIdnote(int $idnote): ?Notes
+    {
+        $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE idnote = ?";
+        $stmt = Database::get_conn()->prepare($sql);
+        $stmt->execute([$idnote]);
+        $dataObjectFormatTableau = $stmt->fetch();
+        if ($dataObjectFormatTableau === false) {
+            return null;
+        }
+        return $this->construireDepuisTableau($dataObjectFormatTableau);
+    }
+
+    protected function getNomTable(): string
+    {
+        return "Notes";
+    }
+
+    protected function construireDepuisTableau(array $dataObjectFormatTableau): Notes
+    {
+        return new Notes($dataObjectFormatTableau);
+    }
+
     public function create(array $dataObject): void
     {
         $sql = "SELECT idnote FROM Notes WHERE idnote = (SELECT MAX(idnote) FROM Notes)";
@@ -15,8 +37,10 @@ class NotesRepository extends AbstractRepository
         $id = $stmt->fetch();
         $id = $id["idnote"] + 1;
         $dataObject["idnote"] = $id;
-        $sql = "INSERT INTO " . $this->getNomTable() . " (" . implode(", ", $this->getNomColonnes()) . ") VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+        $dataObject["valide"] = 0;
+        $sql = "INSERT INTO " . $this->getNomTable() . " (" . implode(", ", $this->getNomColonnes()) . ") VALUES ( ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
         $stmt = Database::get_conn()->prepare($sql);
+
         $stmt->execute([
             $dataObject["idnote"],
             $dataObject["etudiant"],
@@ -36,12 +60,8 @@ class NotesRepository extends AbstractRepository
             $dataObject["recherche"],
             $dataObject["recontact"],
             $dataObject["idsoutenance"],
+            $dataObject["valide"]
         ]);
-    }
-
-    protected function getNomTable(): string
-    {
-        return "Notes";
     }
 
     protected function getNomColonnes(): array
@@ -65,6 +85,7 @@ class NotesRepository extends AbstractRepository
             "recherche",
             "recontact",
             "idsoutenance",
+            "valide"
         ];
     }
 
@@ -85,8 +106,39 @@ class NotesRepository extends AbstractRepository
         return $this->construireDepuisTableau($dataObjectFormatTableau);
     }
 
-    protected function construireDepuisTableau(array $dataObjectFormatTableau): Notes
+    public function getAllnonvalide()
     {
-        return new Notes($dataObjectFormatTableau);
+        $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE valide = 0";
+        $stmt = Database::get_conn()->prepare($sql);
+        $stmt->execute();
+        $dataObjectFormatTableau = $stmt->fetchAll();
+        if ($dataObjectFormatTableau === false) {
+            return null;
+        }
+        foreach ($dataObjectFormatTableau as $key => $value) {
+            $dataObjectFormatTableau[$key] = $this->construireDepuisTableau($value);
+        }
+        return $dataObjectFormatTableau;
+    }
+
+    public function valideById(int $id)
+    {
+        $sql = "UPDATE " . $this->getNomTable() . " SET valide = 1 WHERE idnote = ?";
+        $stmt = Database::get_conn()->prepare($sql);
+        $stmt->execute([$id]);
+    }
+
+    public function modifierNote(mixed $idnote, array $notemodif)
+    {
+        $sql = "UPDATE " . $this->getNomTable() . " SET noteoral = ?, noterapport = ?, noterelation = ?, notedemarche = ?, noteresultat = ? WHERE idnote = ?";
+        $stmt = Database::get_conn()->prepare($sql);
+        $stmt->execute([
+            $notemodif["noteoral"],
+            $notemodif["noterapport"],
+            $notemodif["noterelation"],
+            $notemodif["notedemarche"],
+            $notemodif["noteresultat"],
+            $idnote
+        ]);
     }
 }

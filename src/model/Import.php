@@ -542,4 +542,18 @@ class Import
         $stmt->bindParam(13, $null);
         $stmt->execute();
     }
+
+    public function importerligneScodoc(bool|array $data)
+    {
+        $isRecordExists = $this->recordExists('Etudiant', 'numetudiant', $data[2]);
+        $sql = $isRecordExists ? "CALL updateEtuScodoc(?,?,?,?,?) " : "CALL creerEtuScodoc(?,?,?,?,?) ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(1, $data[0]);
+        $stmt->bindParam(2, $data[1]);
+        $stmt->bindParam(3, $data[2]);
+        $stmt->bindParam(4, $data[3]);
+        $str = $data[4] . " " . $data[5];
+        $stmt->bindParam(5, $str);
+        $stmt->execute();
+    }
 }

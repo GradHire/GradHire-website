@@ -22,6 +22,7 @@ class Notes extends AbstractDataObject
     private ?string $recherche;
     private ?string $recontact;
     private ?int $idsoutenance;
+    private ?int $valide;
 
     /**
      * @throws \Exception
@@ -44,7 +45,7 @@ class Notes extends AbstractDataObject
         $this->idnote = $idnote;
     }
 
-    public function getEtudiant(): int
+    public function getEtudiant(): ?string
     {
         return $this->etudiant;
     }
@@ -94,7 +95,7 @@ class Notes extends AbstractDataObject
         $this->commentairerapport = $commentairerapport;
     }
 
-    public function getNoteoral(): int
+    public function getNoteoral(): ?int
     {
         return $this->noteoral;
     }
@@ -214,9 +215,24 @@ class Notes extends AbstractDataObject
         $this->idsoutenance = $idsoutenance;
     }
 
+    public function noteFinal(): float
+    {
+        return ($this->noterapport * 20 + $this->noteoral * 10 + $this->noterelation * 10 + $this->notedemarche * 20 + $this->noteresultat * 20) / 80;
+    }
+
+    public function getValide(): ?int
+    {
+        return $this->valide;
+    }
+
+    public function setValide(?int $valide): void
+    {
+        $this->valide = $valide;
+    }
 
     protected function getValueColonne(string $nomColonne): string
     {
         return strval($$nomColonne);
     }
+
 }

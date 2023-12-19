@@ -242,4 +242,14 @@ class AuthController extends AbstractController
     {
         return $this->render('apropos');
     }
+
+    public function conditionutilisation(Request $request): string
+    {
+        return $this->render('conditionutilisation');
+    }
+
+    public function politiqueconfidentialite(Request $request): string
+    {
+        return $this->render('politiqueconfidentialite');
+    }
 }

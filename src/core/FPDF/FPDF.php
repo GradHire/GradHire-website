@@ -2,6 +2,7 @@
 namespace app\src\core\FPDF;
 
 use Exception;
+
 const FPDF_FONTPATH = 'font/';
 /*******************************************************************************
  * FPDF                                                                         *

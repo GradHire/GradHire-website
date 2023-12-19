@@ -260,6 +260,13 @@ $app->router->get('/entreprises/{id:\d+}/modifierAvis', [AvisController::class, 
 $app->router->post('/entreprises/{id:\d+}/modifierAvis', [AvisController::class, 'modifierAvis']);
 
 $app->router->get('/apropos', [AuthController::class, 'aboutreal']);
+$app->router->get('/conditionutilisation', [AuthController::class, 'conditionutilisation']);
+$app->router->get('/politiqueconfidentialite', [AuthController::class, 'politiqueconfidentialite']);
+
+$app->router->get('/gerervalidenote', [SoutenanceController::class, 'gerervalidenote']);
+$app->router->get('/gererNote/valide/{id}', [SoutenanceController::class, 'valideNote']);
+$app->router->get('/gererNote/modifier/{id}', [SoutenanceController::class, 'modifierNote']);
+$app->router->post('/gererNote/modifier/{id}', [SoutenanceController::class, 'modifierNote']);
 
 //notifications controller
 $app->router->get('/notifications', [NotificationController::class, 'listeNotifications']);

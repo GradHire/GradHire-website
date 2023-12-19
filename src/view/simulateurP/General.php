@@ -1,11 +1,8 @@
 <?php
-
-/* @var $vueChemin string
- * */
-
+/* @var $vueChemin */
+/* @var $nom */
 ?>
-
-<div class="flex w-full mt-3 justify-center">
+<div class="flex w-full mt-3 ml-10">
     <div class="">
         <?php
         if ($vueChemin == "explicationSimu.php") {
@@ -21,7 +18,7 @@
     </div>
     <div class="ml-5">
         <?php
-        if ($vueChemin == "simulateuretu.php" || $vueChemin == "previewetu.php") {
+        if ($vueChemin == "simulateur.php" && $nom == "Etudiant") {
             ?>
             <p class="text-blue-500">Etudiant</p>
             <?php
@@ -38,7 +35,7 @@
     </div>
     <div class="ml-5">
         <?php
-        if ($vueChemin == "listEntreprise.php" || $vueChemin == "previewOffre.php" || $vueChemin == "creer.php" || $vueChemin == "listEntreprise.php") {
+        if ($vueChemin == "listEntreprise.php" || ($vueChemin == "preview.php" && isset($array["Nom Entreprise"])) || $vueChemin == "creerEntreprise.php") {
             ?>
             <p class="text-blue-500">Entreprise</p>
             <?php
@@ -55,7 +52,7 @@
     </div>
     <div class="ml-5">
         <?php
-        if ($vueChemin == "simulateurServiceAccueil.php" || $vueChemin == "previewServiceAccueil.php" || $vueChemin == "creerService.php") {
+        if (($vueChemin == "simulateur.php" && $nom == "Service") || ($vueChemin == "creer.php" && $nom == "Créer un service d'accueil") || ($vueChemin == "preview.php" && isset($array["Nom Accueil"]))) {
             ?>
             <p class="text-blue-500">Service d'accueil</p>
             <?php
@@ -72,7 +69,7 @@
     </div>
     <div class="ml-5">
         <?php
-        if ($vueChemin == "simulateurTuteur.php" || $vueChemin == "creerTuteur.php" || $vueChemin == "previewTuteur.php") {
+        if (($vueChemin == "listTuteur.php") || ($vueChemin == "creer.php" && $nom == "Créer un tuteur")) {
             ?>
             <p class="text-blue-500">Tuteur</p>
             <?php
@@ -89,7 +86,7 @@
     </div>
     <div class="ml-5">
         <?php
-        if ($vueChemin == "simulateurCandidature.php" || $vueChemin == "previewCandidature.php") {
+        if ($vueChemin == "simulateurCandidature.php" || isset($_GET["idTuteur"])) {
             ?>
             <p class="text-blue-500">Stage</p>
             <?php
@@ -106,11 +103,11 @@
     </div>
     <div class="ml-5">
         <?php
-        if ($vueChemin == "simulateurProfReferent.php" || $vueChemin == "listProf.php") {
+        if ($vueChemin == "listProf.php") {
             ?>
             <p class="text-blue-500">Professeur référent</p>
             <?php
-        } else if (isset($_SESSION["nomProf"])) {
+        } else if (isset($_SESSION["idProfRef"])) {
             ?>
             <a href="simulateurProfReferent">Professeur référent</a>
             <?php
@@ -123,7 +120,7 @@
     </div>
     <div class="ml-5">
         <?php
-        if ($vueChemin == "simulateurSignataire.php" || $vueChemin == "creerSignataire.php" || $vueChemin == "previewSignataire.php") {
+        if (($vueChemin == "simulateur.php" && $nom == "Signataire") || ($vueChemin == "creer.php" && $nom == "Créer un signataire") || ($vueChemin == "preview.php" && isset($array["Nom Signataire"]))) {
             ?>
             <p class="text-blue-500">Signataire</p>
             <?php
@@ -144,7 +141,7 @@
             ?>
             <p class="text-blue-500">Récapitulatif</p>
             <?php
-        } else if (isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"]) && isset($_SESSION["accueil"]) && isset($_SESSION["idTuteur"]) && isset($_SESSION["simulateurCandidature"]) && isset($_SESSION["nomProf"]) && isset($_SESSION["signataire"])) {
+        } else if (isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"]) && isset($_SESSION["accueil"]) && isset($_SESSION["idTuteur"]) && isset($_SESSION["simulateurCandidature"]) && isset($_SESSION["idProfRef"]) && isset($_SESSION["signataire"])) {
             ?>
             <a href="visuRecapConv">Récapitulatif</a>
             <?php
