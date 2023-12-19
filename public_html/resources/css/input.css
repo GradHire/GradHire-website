@@ -1,9 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Gabarito:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 
 @layer components {
+
     .tablink.active {
         @apply text-zinc-900 bg-zinc-100
     }
@@ -161,6 +164,13 @@ input[type="range"]:active::-webkit-slider-thumb {
     cursor: pointer;
 }
 
+nav {
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(20px) saturate(160%) contrast(45%) brightness(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%) contrast(45%) brightness(140%);
+}
+
+
 @keyframes slideIn {
     0% {
         transform: translateX(-100%);
@@ -221,6 +231,7 @@ input[type="range"]:active::-webkit-slider-thumb {
     opacity: 0;
     animation: fadeInAnimation 0.25s ease-out forwards;
 }
+
 @keyframes fadeInAnimation {
     0% {
         opacity: 0;
@@ -231,6 +242,7 @@ input[type="range"]:active::-webkit-slider-thumb {
         transform: translateY(0);
     }
 }
+
 .calendar-arrow {
     width: 25px;
     height: 25px;
@@ -250,6 +262,7 @@ input[type="range"]:active::-webkit-slider-thumb {
         transform: scaleY(1);
     }
 }
+
 .calendar-arrow.disabled {
     pointer-events: none;
     opacity: 0.4;

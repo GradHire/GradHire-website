@@ -1,10 +1,7 @@
 <?php
 
-use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
-use app\src\model\Auth;
-use app\src\model\dataObject\Roles;
-use app\src\model\Form\FormModel;
+use app\src\view\components\layout\Chatbot;
 use app\src\view\components\layout\Lien;
 use app\src\view\components\ui\FormModal;
 use app\src\view\components\ui\Notification;
@@ -13,55 +10,20 @@ use app\src\view\components\ui\Separator;
 /** @var array $allSections
  * @var array $allActions
  * @var array $parametres
+ * @var boolean $isOpen
+ * @var FormModal $modalAddSection
+ * @var FormModal $modalAddAction
+ * @var array $filteredSections
+ * @var array $filteredActions
+ * @var array $sections
+ * @var array $actions
  */
 
-if (!isset($_COOKIE['sidebar_open']) || ($_COOKIE['sidebar_open'] == 'true')) $isOpen = true; else $isOpen = false;
-
-require __DIR__ . "/sidebar.php";
-
-$sections = ['S01'];
-$actions = [];
-
-if (!Auth::has_role(Roles::ChefDepartment)) $sections[] = 'S02';
-else $sections[] = 'S03';
-
-if (!Auth::has_role(Roles::Enterprise, Roles::Tutor, Roles::ChefDepartment)) $sections[] = 'S04';
-
-if (Auth::has_role(Roles::Student, Roles::Teacher, Roles::Tutor, Roles::Enterprise)) $sections[] = 'S05';
-
-if (Auth::has_role(Roles::Enterprise)) {
-    $sections[] = 'S01';
-    $sections[] = 'S06';
-}
-
-if (Auth::has_role(Roles::Manager, Roles::Staff)) {
-    $sections[] = 'S03';
-    $sections[] = 'S05';
-    $sections[] = 'S06';
-    $sections[] = 'S07';
-}
-
-if (Auth::has_role(Roles::Student)) $actions[] = 'A03';
-
-if (Auth::has_role(Roles::Enterprise, Roles::Student, Roles::Manager, Roles::Staff)) $sections[] = 'S08';
-
-$parametres = [
-    'sections' => $sections,
-    'actions' => $actions
-];
-
-$parametresContent = json_encode($parametres);
-
-$defaultSections = $parametres['sections'] ?? [];
-$defaultActions = $parametres['actions'] ?? [];
-
-$sections = $_SESSION['parametres']['sections'] ?? $defaultSections;
-$actions = $_SESSION['parametres']['actions'] ?? $defaultActions;
-
-$filteredSections = [];
-$filteredActions = [];
+$isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
+require_once __DIR__ . '/parametres-loader.php';
 
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -69,86 +31,17 @@ $filteredActions = [];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> GradHire | <?= $this->title ?></title>
-    <script type="text/javascript" src="/resources/js/load-functions.js"></script>
     <script type="text/javascript" src="/resources/js/side-menu.js"></script>
-    <!--    <script type="text/javascript" src="/resources/js/animate-burger-menu.js"></script>-->
+    <script type="text/javascript" src="/resources/js/chatbot.js"></script>
     <link rel="stylesheet" href="/resources/css/input.css">
     <link rel="stylesheet" href="/resources/css/output.css">
     <link rel="icon" type="image/png" sizes="32x32" href="/resources/images/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/resources/images/favicon-16x16.png">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Gabarito:wght@400;500;600;700;800&display=swap');
-
-        nav {
-            background-color: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(20px) saturate(160%) contrast(45%) brightness(140%);
-            -webkit-backdrop-filter: blur(20px) saturate(160%) contrast(45%) brightness(140%);
-        }
-    </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-          integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-          crossorigin="anonymous" referrerpolicy="no-referrer">
 </head>
 <body class="font-sans">
-
-<!--<div id="nav-container"-->
-<!--     class="hidden fixed top-0 left-0 w-full h-screen bg-white bg-opacity-90 backdrop-blur-xl backdrop-filter z-50 mt-[65px]">-->
-<!--    <div class="flex flex-col justify-center items-center space-y-8 uppercase mt-[50px]">-->
-<!--        <a href="/"-->
-<!--           class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Accueil</a>-->
-<!--        <a href="/dashboard"-->
-<!--           class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">Dashboard</a>-->
-<!--        <a href="/about"-->
-<!--           class="flex items-center text-xl md:text-sm font-medium text-zinc-700 hover:text-zinc-800">A propos</a>-->
-<!--    </div>-->
-<!--</div>-->
 <div id="blur-background"
      class="hidden w-screen h-screen fixed z-50 top-0 left-0 bg-white/50 backdrop-blur-[4px]"></div>
-<?php
-/**
- * @throws \app\src\core\exception\ServerErrorException
- */
-function generateFormCheckboxes($items, $selectedItems, $defaultKey)
-{
-    $checkboxes = [];
-
-    foreach ($items as $itemId => $item) {
-        if ($itemId === 'S12' || $itemId === 'S11') continue;
-        $checkbox = FormModel::checkbox("", [$itemId => $item['nom']]);
-        $checkboxes[$itemId] = $checkbox;
-
-        if (in_array($itemId, $selectedItems)) {
-            $checkbox->default([$itemId]);
-        }
-    }
-
-    return new FormModal(function () use ($checkboxes, $defaultKey) {
-        $form = new FormModel($checkboxes);
-        $form->setAction("/modifierParametres/{$defaultKey}?" . Application::getRedirect());
-        $form->start();
-        echo "<div class='flex flex-col justify-center items-center gap-2 mb-4'>";
-        echo "<span class='text-xl font-bold'>Ajouter une {$defaultKey} dans le menu</span>";
-        foreach ($checkboxes as $itemId => $checkbox) {
-            $form->field($itemId);
-        }
-        echo "</div>";
-        $form->submit("Enregistrer");
-        $form->end();
-    });
-}
-
-try {
-    $modalAddSection = generateFormCheckboxes($allSections, $sections, "sections");
-    $modalAddAction = generateFormCheckboxes($allActions, $actions, "actions");
-
-} catch (ServerErrorException $e) {
-    $modalAddSection = null;
-    $modalAddAction = null;
-}
-
-?>
-
-
+<?php require_once __DIR__ . '/modal-loader.php'; ?>
 <div class="w-full flex justify-start items-start bg-zinc-50 flex-row duration-300">
     <div id="sidebar-container"
          class="duration-300 ease-out relative text-[14px] w-full <?= $isOpen ? " max-w-[275px] " : " max-w-[75px] " ?> m-0 bg-white justify-around border-r text-[#1A2421] backdrop-blur-xl p-4 [ shadow-black/5 shadow-2xl ] sticky top-0 left-0 z-40 h-screen ">
@@ -265,56 +158,9 @@ try {
         <div class="w-full flex flex-col justify-start items-start p-4 gap-4">
             <?php Notification::show(); ?>
             {{content}}
-            <div id="chatbot"
-                 style="display: none"
-                 class="w-[350px] !fixed bottom-[20px] right-[20px] bg-white shadow-xl rounded-lg border border-zinc-200 p-4 z-20">
-                <div class="flex justify-between w-full pb-2">
-                    <p class="text-zinc-800 font-bold">Gilou bot</p>
-                    <button class="p-1 rounded bg-zinc-800"
-                            onclick="closeChatbot()">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="w-4 h-4">
-                            <path fill-rule="evenodd"
-                                  d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
-                                  clip-rule="evenodd"/>
-                        </svg>
-                    </button>
-                </div>
-                <div id="chatbot-chat" class="w-full flex flex-col gap-2 h-[400px] overflow-y-auto">
-                    <div class="flex w-full mt-2 space-x-3 max-w-xs">
-                        <div class="flex flex-col gap-2">
-                            <div class="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
-                                <p class="text-sm">Salut <?= Application::getUser()->full_name() ?> ! Comment puis-je
-                                    vous aider ?</p>
-                            </div>
-                            <span class="text-xs text-gray-500 leading-none">Gilou</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex justify-between w-full gap-2 mt-2">
-                    <label class="w-full">
-                        <input type="text" placeholder="Message"
-                               id="chatbot-input"
-                               class="shadow-sm w-full bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light">
-                    </label>
-                    <button onclick="sendMessage()"
-                            class="bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 rounded-lg px-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="w-6 h-6">
-                            <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-            <button id="chatbot-button"
-                    onclick="openChatbot()"
-                    class="fixed bottom-[20px] right-[20px] bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 rounded-lg p-3">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="w-6 h-6">
-                    <path d="M4.913 2.658c2.075-.27 4.19-.408 6.337-.408 2.147 0 4.262.139 6.337.408 1.922.25 3.291 1.861 3.405 3.727a4.403 4.403 0 00-1.032-.211 50.89 50.89 0 00-8.42 0c-2.358.196-4.04 2.19-4.04 4.434v4.286a4.47 4.47 0 002.433 3.984L7.28 21.53A.75.75 0 016 21v-4.03a48.527 48.527 0 01-1.087-.128C2.905 16.58 1.5 14.833 1.5 12.862V6.638c0-1.97 1.405-3.718 3.413-3.979z"/>
-                    <path d="M15.75 7.5c-1.376 0-2.739.057-4.086.169C10.124 7.797 9 9.103 9 10.609v4.285c0 1.507 1.128 2.814 2.67 2.94 1.243.102 2.5.157 3.768.165l2.782 2.781a.75.75 0 001.28-.53v-2.39l.33-.026c1.542-.125 2.67-1.433 2.67-2.94v-4.286c0-1.505-1.125-2.811-2.664-2.94A49.392 49.392 0 0015.75 7.5z"/>
-                </svg>
-            </button>
+            <?php Chatbot::render([]); ?>
         </div>
     </div>
 </div>
-<script src="/resources/js/chatbot.js"></script>
 </body>
 </html>
