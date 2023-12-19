@@ -151,6 +151,21 @@ class UtilisateurRepository extends AbstractRepository
         }
     }
 
+    public static function getAllId(int $id): array
+    {
+        $sql = "SELECT idutilisateur FROM utilisateur WHERE idutilisateur != :id";
+        $stmt = Database::get_conn()->prepare($sql);
+        $stmt->execute([
+            "id" => $id
+        ]);
+        $result = $stmt->fetchAll();
+        if ($result) {
+            return $result;
+        } else {
+            return [];
+        }
+    }
+
     /**
      * @throws ServerErrorException
      */

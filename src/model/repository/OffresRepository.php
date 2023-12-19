@@ -142,6 +142,19 @@ class OffresRepository extends AbstractRepository
         }
     }
 
+    public static function getOffresByIdEntreprisePublic(mixed $id)
+    {
+        try {
+            $sql = "SELECT * FROM Offre WHERE idUtilisateur = :idUtilisateur AND statut = 'valider'";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['idUtilisateur' => $id]);
+            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            return $requete->fetchAll();
+        } catch (\Exception) {
+            throw new ServerErrorException();
+        }
+    }
+
     /**
      * @throws ServerErrorException
      */

@@ -16,8 +16,6 @@ use app\src\model\repository\MailRepository;
 use app\src\model\repository\NotificationRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\PostulerRepository;
-use app\src\model\repository\TuteurEntrepriseRepository;
-use app\src\model\repository\TuteurRepository;
 use app\src\model\Request;
 
 class CandidatureController extends AbstractController
@@ -33,9 +31,7 @@ class CandidatureController extends AbstractController
         $idOffre = $request->getRouteParams()['idOffre'] ?? null;
         $idUtilisateur = $request->getRouteParams()['idUtilisateur'] ?? null;
         $candidatures = (new PostulerRepository())->getById($idOffre, $idUtilisateur);
-//        if (Auth::has_role(Roles::Tutor)) {
-//            $entrepriseid = (new TuteurRepository([]))->getIdOffreByIdEtuAndIdOffre($userid,$idOffre);
-//        }
+        $entrepriseid = null;
         if (Auth::has_role(Roles::Enterprise)) $entrepriseid = $userid;
         if ($candidatures != null && $idOffre != null && $idUtilisateur != null) {
             $offre = (new OffresRepository())->getById($candidatures->getIdoffre());
@@ -158,7 +154,7 @@ class CandidatureController extends AbstractController
      * @throws ForbiddenException
      * @throws ServerErrorException
      */
-    public function harceler(Request $request): string
+    public function harceler(): string
     {
         if (Auth::has_role(Roles::ChefDepartment, Roles::Manager, Roles::Staff)) {
             if (isset($_GET["idUtilisateur"])) {

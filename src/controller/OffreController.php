@@ -97,6 +97,7 @@ class OffreController extends AbstractController
                 "theme" => $body["theme"]
             ]);
             Notification::createNotification("Vous êtes maintenant inscrit à la newsletter");
+            NotificationRepository::createNotification(Auth::get_user()->id(), "Vous êtes maintenant inscrit à la newsletter", "/offres?".parse_url($_SERVER["REQUEST_URI"], PHP_URL_QUERY));
             header("Location: /offres?" . parse_url($_SERVER["REQUEST_URI"], PHP_URL_QUERY));
         } else {
             throw new NotFoundException();

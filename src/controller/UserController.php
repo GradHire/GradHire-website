@@ -130,7 +130,8 @@ class UserController extends AbstractController
         if ($entreprise == null && $id != null) {
             throw new NotFoundException();
         } else if ($entreprise != null && $id != null) {
-            $offres = (new OffresRepository())->getOffresByIdEntreprise($id);
+            if (!Auth::has_role(Roles::Student)) $offres = (new OffresRepository())->getOffresByIdEntreprise($id);
+            else $offres = OffresRepository::getOffresByIdEntreprisePublic($id);
             return $this->render('entreprise/detailEntreprise', ['entreprise' => $entreprise, 'offres' => $offres]);
         }
         if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Student, Roles::Teacher, Roles::TutorTeacher)) {

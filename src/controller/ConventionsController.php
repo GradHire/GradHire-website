@@ -2,21 +2,14 @@
 
 namespace app\src\controller;
 
-use app\src\controller\AbstractController;
-use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
-use app\src\model\Auth;
-use app\src\model\Form\FormModel;
 use app\src\model\repository\ConventionRepository;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\LdapRepository;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\NotificationRepository;
-use app\src\model\repository\OffresRepository;
-use app\src\model\repository\ProRepository;
-use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\Request;
 use app\src\model\Response;
 
@@ -26,7 +19,7 @@ class ConventionsController extends AbstractController
     /**
      * @throws ServerErrorException
      */
-    public function afficherListeConventions(Request $request): string
+    public function afficherListeConventions(): string
     {
         $conventions = (new ConventionRepository())->getAll();
         return $this->render('convention/listeConventions', [

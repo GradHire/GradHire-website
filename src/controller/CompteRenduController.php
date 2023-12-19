@@ -10,7 +10,6 @@ use app\src\model\Form\FormModel;
 use app\src\model\repository\CompteRenduRepository;
 use app\src\model\repository\ConventionRepository;
 use app\src\model\repository\NotificationRepository;
-use app\src\model\repository\VisiteRepository;
 use app\src\model\Request;
 
 class CompteRenduController extends AbstractController
@@ -84,7 +83,7 @@ class CompteRenduController extends AbstractController
     /**
      * @throws ServerErrorException
      */
-    public function compteRenduSoutenance(Request $request)
+    public function compteRenduSoutenance(Request $request): string
     {
         if (Auth::has_role(Roles::Tutor, Roles::TutorTeacher)) {
             $numConvention = $request->getRouteParam("numconvention");

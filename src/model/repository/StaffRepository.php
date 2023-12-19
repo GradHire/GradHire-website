@@ -6,6 +6,8 @@ use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\Roles;
 use app\src\model\dataObject\Staff;
+use Exception;
+use PDO;
 use PDOException;
 
 class StaffRepository extends LdapRepository
@@ -28,6 +30,7 @@ class StaffRepository extends LdapRepository
         }
     }
 
+
     public function role(): Roles
     {
         foreach (Roles::cases() as $case) {
@@ -38,6 +41,9 @@ class StaffRepository extends LdapRepository
         return Roles::Teacher;
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getAllTuteurProf(): ?array
     {
         try {
@@ -50,8 +56,8 @@ class StaffRepository extends LdapRepository
                 $utilisateurs[] = $this->construireDepuisTableau($utilisateur);
             }
             return $utilisateurs;
-        } catch (PDOException) {
-            throw new ServerErrorException();
+        } catch (ServerErrorException $e) {
+            throw new ServerErrorException($e);
         }
     }
 
@@ -77,24 +83,11 @@ class StaffRepository extends LdapRepository
                 $emails[] = $email["email"];
             return $emails;
         } catch
-        (\Exception) {
+        (Exception) {
             throw new ServerErrorException();
         }
     }
 
-    public function getByNomPreFull(mixed $nom, mixed $prenom)
-    {
-        $sql = "SELECT * FROM " . self::$view . " WHERE nom = :nom AND prenom=:prenom";
-        $requete = Database::get_conn()->prepare($sql);
-        $requete->execute(['nom' => $nom, 'prenom' => $prenom]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetch();
-
-        if (!$resultat) {
-            return null;
-        }
-        return $this->construireDepuisTableau($resultat);
-    }
 
     /**
      * @throws ServerErrorException
@@ -105,7 +98,7 @@ class StaffRepository extends LdapRepository
             $sql = "SELECT * FROM " . self::$view . " WHERE idUtilisateur = :idUtilisateur";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idUtilisateur' => $idutilisateur]);
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $requete->setFetchMode(PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
             if (!$resultat) {
                 return null;
@@ -142,14 +135,14 @@ class StaffRepository extends LdapRepository
             $stmt = Database::get_conn()->prepare("SELECT COUNT(*) as nbPosutlation FROM Supervise WHERE idUtilisateur = :idUtilisateur");
             $stmt->execute(['idUtilisateur' => $idUtilisateur]);
             $stmt->execute();
-            $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
             $resultat = $stmt->fetch();
             if (!$resultat) {
                 return 0;
             } else {
                 return $resultat["nbposutlation"];
             }
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException('erreur getCountPostulationTuteur');
         }
     }

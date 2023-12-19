@@ -211,8 +211,8 @@ class DashboardController extends AbstractController
             } else if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::ManagerStage, Roles::ManagerAlternance)) {
                 (new UtilisateurRepository([]))->setUserToArchived($user, false);
                 (new MailRepository())->send_mail([$user->getEmail()], "Désarchivage de votre compte", "Votre compte a été désarchivé");
-                NotificationRepository::createNotification(Auth::get_user()->getId(), "Vous avez désarchivé le compte de " . $user->getNom() . " " . $user->getPrenom(), "/utilisateurs/" . $user->getId());
-                NotificationRepository::createNotification($user->getIdutilisateur(), "Votre compte a été désarchivé", "/utilisateurs/" . $user->getId());
+                NotificationRepository::createNotification(Auth::get_user()->getId(), "Vous avez désarchivé le compte de " . EtudiantRepository::getFullNameByID($user->getIdutilisateur()), "/utilisateurs/" . $user->getIdutilisateur());
+                NotificationRepository::createNotification($user->getIdutilisateur(), "Votre compte a été désarchivé", "/utilisateurs/" . $user->getIdutilisateur());
             }
             if ((string)Application::getUser()->id() === $id)
                 Auth::logout();
