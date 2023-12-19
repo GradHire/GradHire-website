@@ -2,10 +2,6 @@
 
 namespace app\src\model\dataObject;
 
-use app\src\core\exception\ServerErrorException;
-use app\src\model\dataObject\AbstractDataObject;
-use app\src\model\repository\ConventionRepository;
-
 class Convention extends AbstractDataObject
 {
     private int $numconvention;

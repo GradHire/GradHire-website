@@ -4,8 +4,6 @@ namespace app\src\model\repository;
 
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
-use app\src\core\lib\StackTrace;
-use app\src\model\dataObject\AbstractDataObject;
 use app\src\model\dataObject\Soutenance;
 
 class SoutenanceRepository extends AbstractRepository

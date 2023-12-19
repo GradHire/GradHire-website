@@ -2,8 +2,6 @@
 
 namespace app\src\model\dataObject;
 
-use app\src\model\dataObject\AbstractDataObject;
-
 class Avis extends AbstractDataObject{
 
     private int $idavis;

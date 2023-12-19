@@ -4,7 +4,6 @@ namespace app\src\model\repository;
 
 use app\src\core\db\Database;
 use app\src\model\dataObject\Avis;
-use app\src\model\repository\AbstractRepository;
 
 class AvisRepository extends AbstractRepository{
 

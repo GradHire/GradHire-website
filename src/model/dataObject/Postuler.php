@@ -2,9 +2,6 @@
 
 namespace app\src\model\dataObject;
 
-use app\src\core\exception\ServerErrorException;
-use app\src\model\repository\ConventionRepository;
-use app\src\model\repository\OffresRepository;
 use app\src\model\repository\PostulerRepository;
 
 class Postuler extends AbstractDataObject

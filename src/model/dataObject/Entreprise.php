@@ -2,9 +2,6 @@
 
 namespace app\src\model\dataObject;
 
-use app\src\model\repository\ConventionRepository;
-use app\src\model\repository\EntrepriseRepository;
-
 class Entreprise extends Utilisateur
 {
     private int $idutilisateur;

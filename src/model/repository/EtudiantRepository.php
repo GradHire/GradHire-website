@@ -8,7 +8,6 @@ use app\src\core\lib\StackTrace;
 use app\src\model\Application;
 use app\src\model\dataObject\Etudiant;
 use app\src\model\dataObject\Roles;
-use app\src\model\Request;
 use PDOException;
 
 class EtudiantRepository extends LdapRepository
