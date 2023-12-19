@@ -58,7 +58,8 @@ class TuteurEntrepriseRepository extends ProRepository
                 self::deleteCreationToken($tokenData["tokencreation"]);
                 return false;
             }
-            $user = self::save([$body["name"], $body["surname"], $tokenData["email"], "tuteur", $tokenData["identreprise"], password_hash($body["password"], PASSWORD_DEFAULT), $body["phone"]]);
+            $hash = self::hashPassword($body["password"]);
+            $user = self::save([$body["name"], $body["surname"], $tokenData["email"], "tuteur", $tokenData["identreprise"], $hash, $body["phone"]]);
             Auth::generate_token($user, false);
             self::deleteCreationToken($tokenData["tokencreation"]);
             return true;
