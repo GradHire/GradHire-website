@@ -29,6 +29,10 @@ class Offre extends AbstractDataObject
     private ?string $adresse;
 
 //    private ?int $alternance;
+
+    /**
+     * @throws ServerErrorException
+     */
     public function __construct
     (
         array $attributes
@@ -58,15 +62,15 @@ class Offre extends AbstractDataObject
             $this->duree . " " .
             $this->thematique . " " .
             $this->sujet . " " .
-            $this->nbJourTravailHebdo . " " .
-            $this->nbHeureTravailHebdo . " " .
+            $this->nbjourtravailhebdo . " " .
+            $this->nbheuretravailhebdo . " " .
             $this->gratification . " " .
-            $this->avantageNature . " " .
-            $this->dateDebut . " " .
-            $this->dateFin . " " .
+            $this->avantagesnature . " " .
+            $this->datedebut . " " .
+            $this->datefin . " " .
             $this->statut . " " .
             $this->pourvue . " " .
-            $this->anneeVisee . " " .
+            $this->anneevisee . " " .
             $this->annee . " " .
             $this->idutilisateur . " ";
     }
@@ -256,6 +260,9 @@ class Offre extends AbstractDataObject
         return (new OffresRepository())->checkIfUserPostuled($this);
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getNomEntreprise(): string
     {
         return (new EntrepriseRepository([]))->getByIdFull($this->idutilisateur)->getNom();
@@ -263,7 +270,7 @@ class Offre extends AbstractDataObject
 
     protected function getValueColonne(string $nomColonne): string
     {
-        return $this->strval($$nomColonne);
+        return strval($$nomColonne);
     }
 
 }

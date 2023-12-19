@@ -2,6 +2,9 @@
 
 namespace app\src\model\dataObject;
 
+use DateTime;
+use Exception;
+
 class Soutenance extends AbstractDataObject
 {
 
@@ -11,18 +14,18 @@ class Soutenance extends AbstractDataObject
     private int $idtuteurentreprise;
     private ?int $idprof;
     private ?int $idetudiant;
-    private \DateTime $debut_soutenance;
-    private \DateTime $fin_soutenance;
+    private DateTime $debut_soutenance;
+    private DateTime $fin_soutenance;
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(array $attributes)
     {
         foreach ($attributes as $key => $value)
             if (property_exists($this, $key)) {
                 if ($key == "debut_soutenance" || $key == "fin_soutenance") {
-                    $this->$key = new \DateTime($value);
+                    $this->$key = new DateTime($value);
                 } else {
                     $this->$key = $value;
                 }
@@ -109,22 +112,22 @@ class Soutenance extends AbstractDataObject
         $this->idprof = $id_professeur;
     }
 
-    public function getDebutSoutenance(): \DateTime
+    public function getDebutSoutenance(): DateTime
     {
         return $this->debut_soutenance;
     }
 
-    public function setDebutSoutenance(\DateTime $debut_soutenance): void
+    public function setDebutSoutenance(DateTime $debut_soutenance): void
     {
         $this->debut_soutenance = $debut_soutenance;
     }
 
-    public function getFinSoutenance(): \DateTime
+    public function getFinSoutenance(): DateTime
     {
         return $this->fin_soutenance;
     }
 
-    public function setFinSoutenance(\DateTime $fin_soutenance): void
+    public function setFinSoutenance(DateTime $fin_soutenance): void
     {
         $this->fin_soutenance = $fin_soutenance;
     }

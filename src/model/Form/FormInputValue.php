@@ -5,6 +5,7 @@ namespace app\src\model\Form;
 
 use app\src\model\Form\fields\FormAttribute;
 use DateTime;
+use Exception;
 
 class FormInputValue
 {
@@ -51,8 +52,8 @@ class FormInputValue
         try {
             $this->setValue(new DateTime($this->value));
             return $this->value;
-        } catch (\Exception $e) {
-            die();
+        } catch (Exception $e) {
+            die($e);
         }
     }
 

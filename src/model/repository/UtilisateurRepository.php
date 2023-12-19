@@ -7,6 +7,8 @@ use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\dataObject\Roles;
 use app\src\model\dataObject\Utilisateur;
+use Exception;
+use PDO;
 use PDOException;
 
 class UtilisateurRepository extends AbstractRepository
@@ -38,7 +40,7 @@ class UtilisateurRepository extends AbstractRepository
             $user = $statement->fetch();
             if (is_null($user)) return null;
             return $user["email"];
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
@@ -66,7 +68,7 @@ class UtilisateurRepository extends AbstractRepository
             $statement = Database::get_conn()->prepare("SELECT " . static::$create_function . "(" . ltrim(str_repeat(",?", count($values)), ",") . ") ");
             $statement->execute($values);
             return static::find_by_id(intval($statement->fetchColumn()));
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
@@ -83,7 +85,7 @@ class UtilisateurRepository extends AbstractRepository
             $user = $statement->fetch();
             if (is_null($user) || $user === false) return null;
             return new static($user);
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
@@ -99,7 +101,7 @@ class UtilisateurRepository extends AbstractRepository
             $user = $statement->fetch();
             if (is_null($user)) return null;
             return $user["idutilisateur"];
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
@@ -140,7 +142,7 @@ class UtilisateurRepository extends AbstractRepository
             $sql = "SELECT * FROM $this->nomTable WHERE idUtilisateur = :idUtilisateur";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idUtilisateur' => $idUtilisateur]);
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $requete->setFetchMode(PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
             if (!$resultat) {
                 return null;
@@ -151,6 +153,9 @@ class UtilisateurRepository extends AbstractRepository
         }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public static function getAllId(int $id): array
     {
         $sql = "SELECT idutilisateur FROM utilisateur WHERE idutilisateur != :id";
@@ -215,7 +220,7 @@ class UtilisateurRepository extends AbstractRepository
                 $this->refresh();
                 Application::setUser($this);
             }
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException("Erreur lors de la mise à jour de l'utilisateur");
         }
     }
@@ -243,7 +248,7 @@ class UtilisateurRepository extends AbstractRepository
             $user = $statement->fetch();
             if (is_null($user)) throw new ServerErrorException();
             $this->attributes = $user;
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
@@ -258,10 +263,10 @@ class UtilisateurRepository extends AbstractRepository
      */
     public function role(): ?Roles
     {
-        if ((new StaffRepository([]))->getByIdFull($this->id) !== null) return (new StaffRepository([]))->role($this->id);
-        else if ((new EtudiantRepository([]))->getByIdFull($this->id) !== null) return (new EtudiantRepository([]))->role($this->id);
-        else if ((new TuteurRepository([]))->getByIdFull($this->id) !== null) return (new TuteurRepository([]))->role($this->id);
-        else if ((new EntrepriseRepository([]))->getByIdFull($this->id) !== null) return (new EntrepriseRepository([]))->role($this->id);
+        if ((new StaffRepository([]))->getByIdFull($this->id) !== null) return (new StaffRepository([]))->role();
+        else if ((new EtudiantRepository([]))->getByIdFull($this->id) !== null) return (new EtudiantRepository([]))->role();
+        else if ((new TuteurRepository([]))->getByIdFull($this->id) !== null) return (new TuteurRepository([]))->role();
+        else if ((new EntrepriseRepository([]))->getByIdFull($this->id) !== null) return (new EntrepriseRepository([]))->role();
         else return null;
     }
 
@@ -281,7 +286,7 @@ class UtilisateurRepository extends AbstractRepository
         return $this->attributes["archiver"] === 1;
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }

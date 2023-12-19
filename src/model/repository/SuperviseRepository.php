@@ -5,6 +5,7 @@ namespace app\src\model\repository;
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\Supervise;
+use Exception;
 
 class SuperviseRepository extends AbstractRepository
 {
@@ -21,7 +22,7 @@ class SuperviseRepository extends AbstractRepository
             $data = $statement->fetch();
             if (!$data) return null;
             return new Supervise($data);
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }

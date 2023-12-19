@@ -2,6 +2,8 @@
 
 namespace app\src\model\repository;
 
+use Exception;
+
 class MailRepository
 {
     public static function send_mail(array $email, string $subject, string $message): bool
@@ -16,12 +18,12 @@ class MailRepository
             try { 
             $smtpConn = fsockopen(SMTP_SERVER, SMTP_PORT, $errno, $errstr, 5);
 
-            if (!$smtpConn) throw new \Exception("SMTP Connection Failed: $errstr ($errno)");
+            if (!$smtpConn) throw new Exception("SMTP Connection Failed: $errstr ($errno)");
 
             self::sendCommand($smtpConn, "EHLO example.com");
             $response = fgets($smtpConn, 512);
 
-            if (strpos($response, '250-STARTTLS') !== false) {
+            if (str_contains($response, '250-STARTTLS')) {
                 self::sendCommand($smtpConn, "STARTTLS");
                 stream_socket_enable_crypto($smtpConn, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
             }
@@ -43,7 +45,7 @@ class MailRepository
 
         }
     catch
-        (\Exception){
+        (Exception){
                 return false;
             }
         }

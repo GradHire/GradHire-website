@@ -4,9 +4,8 @@ namespace app\src\model\repository;
 
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
-use app\src\core\lib\StackTrace;
-use app\src\model\dataObject\AbstractDataObject;
 use app\src\model\dataObject\Soutenance;
+use Exception;
 
 class SoutenanceRepository extends AbstractRepository
 {
@@ -16,6 +15,7 @@ class SoutenanceRepository extends AbstractRepository
     /**
      * @return Soutenance[]
      * @throws ServerErrorException
+     * @throws Exception
      */
     public static function getAllSoutenances(): array
     {
@@ -28,6 +28,7 @@ class SoutenanceRepository extends AbstractRepository
     /**
      * @return Soutenance[]
      * @throws ServerErrorException
+     * @throws Exception
      */
     public static function getAllSoutenancesByIdEtudiant(int $idEtudiant): array
     {
@@ -40,6 +41,7 @@ class SoutenanceRepository extends AbstractRepository
     /**
      * @return Soutenance[]
      * @throws ServerErrorException
+     * @throws Exception
      */
     public static function getAllSoutenancesByIdTuteurEntreprise(int $idTuteurEntreprise): array
     {
@@ -52,6 +54,7 @@ class SoutenanceRepository extends AbstractRepository
     /**
      * @return Soutenance[]
      * @throws ServerErrorException
+     * @throws Exception
      */
     public static function getAllSoutenancesByIdTuteurProf(int $idTuteurProf): array
     {
@@ -61,7 +64,10 @@ class SoutenanceRepository extends AbstractRepository
         return $dataObjects;
     }
 
-    public static function imTheEtudiant($id, $getNumConvention)
+    /**
+     * @throws ServerErrorException
+     */
+    public static function imTheEtudiant($id, $getNumConvention): bool
     {
         $sql = Database::get_conn()->prepare("SELECT * FROM " . self::$table . " WHERE idetudiant = :id AND numconvention = :numconvention");
         $sql->execute([
@@ -75,7 +81,10 @@ class SoutenanceRepository extends AbstractRepository
             return true;
     }
 
-    public static function imTheTuteurEntreprise($id, $getNumConvention)
+    /**
+     * @throws ServerErrorException
+     */
+    public static function imTheTuteurEntreprise($id, $getNumConvention): bool
     {
         $sql = Database::get_conn()->prepare("SELECT * FROM " . self::$table . " WHERE idtuteurentreprise = :id AND numconvention = :numconvention");
         $sql->execute([
@@ -89,12 +98,18 @@ class SoutenanceRepository extends AbstractRepository
             return true;
     }
 
-    public static function imOneOfTheTutor($id, $getNumConvention)
+    /**
+     * @throws ServerErrorException
+     */
+    public static function imOneOfTheTutor($id, $getNumConvention): bool
     {
         return self::imTheTuteurProf($id, $getNumConvention) || self::imTheTuteurEntreprise($id, $getNumConvention);
     }
 
-    public static function imTheTuteurProf($id, $getNumConvention)
+    /**
+     * @throws ServerErrorException
+     */
+    public static function imTheTuteurProf($id, $getNumConvention): bool
     {
         $sql = Database::get_conn()->prepare("SELECT * FROM " . self::$table . " WHERE idtuteurprof = :id AND numconvention = :numconvention");
         $sql->execute([
@@ -108,7 +123,10 @@ class SoutenanceRepository extends AbstractRepository
             return true;
     }
 
-    public static function imTheJury($id, $getNumConvention)
+    /**
+     * @throws ServerErrorException
+     */
+    public static function imTheJury($id, $getNumConvention): bool
     {
         $sql = Database::get_conn()->prepare("SELECT * FROM " . self::$table . " WHERE idprof = :id AND numconvention = :numconvention");
         $sql->execute([
@@ -122,7 +140,11 @@ class SoutenanceRepository extends AbstractRepository
             return true;
     }
 
-    public static function getSoutenanceByNumConvention(mixed $numConvention)
+    /**
+     * @throws ServerErrorException
+     * @throws Exception
+     */
+    public static function getSoutenanceByNumConvention(mixed $numConvention): ?Soutenance
     {
         $sql = Database::get_conn()->prepare("SELECT * FROM soutenancesvue WHERE numconvention = :numconvention");
         $sql->execute([
@@ -135,7 +157,10 @@ class SoutenanceRepository extends AbstractRepository
             return new Soutenance($result);
     }
 
-    public static function createSoutenance(?array $array)
+    /**
+     * @throws ServerErrorException
+     */
+    public static function createSoutenance(?array $array): void
     {
         $debut_soutenance = date('Y-m-d H:i:s', strtotime($array['debut_soutenance']));
         $fin_soutenance = date('Y-m-d H:i:s', strtotime($array['fin_soutenance']));
@@ -150,6 +175,9 @@ class SoutenanceRepository extends AbstractRepository
         ]);
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public static function getIfSoutenanceExist(int $numConvention): bool
     {
         $sql = Database::get_conn()->prepare("SELECT idsoutenance FROM " . self::$table . " WHERE numconvention = :numconvention");
@@ -166,7 +194,7 @@ class SoutenanceRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public static function seProposerCommeJury(int $idprof, int $numConvention)
+    public static function seProposerCommeJury(int $idprof, int $numConvention): void
     {
         try {
             $sql = "UPDATE soutenances SET idprof = :idprof WHERE numconvention = :numconvention";
@@ -175,11 +203,14 @@ class SoutenanceRepository extends AbstractRepository
                 'idprof' => $idprof,
                 'numconvention' => $numConvention
             ]);
-        } catch (\Exception $e) {
-            throw new ServerErrorException();
+        } catch (Exception $e) {
+            throw new ServerErrorException($e);
         }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public static function getIfJuryExist(int $idprof, int $numConvention): bool
     {
         $sql = Database::get_conn()->prepare("SELECT idsoutenance FROM " . self::$table . " WHERE idprof = :idprof AND numconvention = :numconvention");
@@ -194,6 +225,9 @@ class SoutenanceRepository extends AbstractRepository
             return true;
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public static function getIfImTheTuteurProf(int $idprof, int $numConvention): bool
     {
         $sql = Database::get_conn()->prepare("SELECT idsoutenance FROM " . self::$table . " WHERE idtuteurprof = :idprof AND numconvention = :numconvention");
@@ -208,11 +242,9 @@ class SoutenanceRepository extends AbstractRepository
             return true;
     }
 
-    public function getAll(): ?array
-    {
-        return parent::getAll();
-    }
-
+    /**
+     * @throws Exception
+     */
     protected function construireDepuisTableau(array $dataObjectFormatTableau): Soutenance
     {
         return new Soutenance($dataObjectFormatTableau);

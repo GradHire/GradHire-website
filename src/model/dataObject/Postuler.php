@@ -3,8 +3,6 @@
 namespace app\src\model\dataObject;
 
 use app\src\core\exception\ServerErrorException;
-use app\src\model\repository\ConventionRepository;
-use app\src\model\repository\OffresRepository;
 use app\src\model\repository\PostulerRepository;
 
 class Postuler extends AbstractDataObject
@@ -77,6 +75,9 @@ class Postuler extends AbstractDataObject
         $this->dates = $dates;
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function setStatutPostuler(string $etat): void
     {
         (new PostulerRepository())->setStatutPostuler($this->getIdUtilisateur(), $this->getIdOffre(), $etat);
@@ -107,6 +108,9 @@ class Postuler extends AbstractDataObject
         return (new PostulerRepository())->getIfSuivi($idUtilisateur, $this->getIdUtilisateur(), $this->getIdOffre());
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getSiTuteurPostuler(): bool
     {
         return (new PostulerRepository())->getSiTuteurPostuler($this->getIdUtilisateur(), $this->getIdOffre());

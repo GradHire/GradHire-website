@@ -24,7 +24,7 @@ class SoutenanceController extends AbstractController
      * @throws ServerErrorException
      * @throws NotFoundException
      */
-    public function createSoutenance(Request $request)
+    public function createSoutenance(Request $request): string
     {
         $numConvention = $request->getRouteParam("numConvention");
         if ($numConvention === null) {
@@ -79,7 +79,10 @@ class SoutenanceController extends AbstractController
         }
     }
 
-    public function voirSoutenance(Request $request)
+    /**
+     * @throws ServerErrorException
+     */
+    public function voirSoutenance(Request $request): string
     {
         $numConvention = $request->getRouteParam("numConvention");
         $soutenance = SoutenanceRepository::getSoutenanceByNumConvention($numConvention);
@@ -93,7 +96,7 @@ class SoutenanceController extends AbstractController
     /**
      * @throws ServerErrorException
      */
-    public function noteSoutenance(Request $request)
+    public function noteSoutenance(Request $request): string
     {
 
         $numConvention = $request->getRouteParam("numConvention");
@@ -138,7 +141,11 @@ class SoutenanceController extends AbstractController
         ]);
     }
 
-    public function gerervalidenote(Request $request)
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
+    public function gerervalidenote(): string
     {
         if (!Auth::has_role(Roles::Manager, Roles::Staff)) throw new ForbiddenException();
         $notes = (new NotesRepository())->getAllnonvalide();
@@ -147,15 +154,23 @@ class SoutenanceController extends AbstractController
         ]);
     }
 
-    public function valideNote(Request $request)
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
+    public function valideNote(Request $request): void
     {
         if (!Auth::has_role(Roles::Manager, Roles::Staff)) throw new ForbiddenException();
         $idnote = $request->getRouteParams()['id'] ?? null;
-        $note = (new NotesRepository())->valideById($idnote);
+        (new NotesRepository())->valideById($idnote);
         Application::$app->response->redirect("/gerervalidenote");
     }
 
-    public function modifierNote(Request $request)
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
+    public function modifierNote(Request $request): string
     {
         if (!Auth::has_role(Roles::Manager, Roles::Staff)) throw new ForbiddenException();
         $idnote = $request->getRouteParams()['id'] ?? null;

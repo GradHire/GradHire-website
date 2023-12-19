@@ -9,7 +9,9 @@ use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 use app\src\model\repository\AvisRepository;
 use app\src\model\repository\EntrepriseRepository;
+use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\NotificationRepository;
+use app\src\model\repository\StaffRepository;
 use app\src\model\Request;
 
 class AvisController extends AbstractController

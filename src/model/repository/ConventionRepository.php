@@ -5,6 +5,7 @@ namespace app\src\model\repository;
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\Convention;
+use Exception;
 
 class ConventionRepository extends AbstractRepository
 {
@@ -21,7 +22,7 @@ class ConventionRepository extends AbstractRepository
 			$data = $statement->fetch();
 			if (!$data) return null;
 			return $data["idetudiant"];
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			throw new ServerErrorException("Erreur lors de la récupération de l'id de l'étudiant", 500, $e);
 		}
 	}
@@ -37,7 +38,7 @@ class ConventionRepository extends AbstractRepository
 			$data = $statement->fetch();
 			if (!$data) return null;
 			return $data["adresse"] . ", " . $data["codepostal"] . " " . $data["nomville"];
-		} catch (\Exception) {
+		} catch (Exception) {
 			throw new ServerErrorException();
 		}
 	}
@@ -53,7 +54,7 @@ class ConventionRepository extends AbstractRepository
 			$num = $statement->fetch();
 			if (!$num) return null;
 			return $num["numconvention"];
-		} catch (\Exception) {
+		} catch (Exception) {
 			throw new ServerErrorException();
 		}
 	}
@@ -68,7 +69,7 @@ class ConventionRepository extends AbstractRepository
 			$statement->execute([$numConvention]);
 			$data = $statement->fetch();
 			return $data !== null;
-		} catch (\Exception) {
+		} catch (Exception) {
 			throw new ServerErrorException();
 		}
 	}
@@ -82,19 +83,21 @@ class ConventionRepository extends AbstractRepository
 			$statement = Database::get_conn()->prepare("SELECT * FROM \"conventionValideVue\" WHERE numconvention=?");
 			$statement->execute([$numConvention]);
 			return $statement->fetch();
-		} catch (\Exception) {
+		} catch (Exception) {
 			throw new ServerErrorException();
 		}
 	}
 
-	public static function getConventionXOffreById(mixed $id)
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getConventionXOffreById(mixed $id)
 	{
 		$statement = Database::get_conn()->prepare("SELECT c.idutilisateur as idetudiant, c.idoffre, o.idutilisateur, o.sujet FROM convention c JOIN Offre o ON c.idoffre = o.idoffre WHERE numconvention = :id");
 		$statement->execute([
 			'id' => $id
 		]);
-		$data = $statement->fetch();
-		return $data;
+		return $statement->fetch();
 	}
 
 	/**
@@ -106,7 +109,7 @@ class ConventionRepository extends AbstractRepository
 			$statement = Database::get_conn()->prepare("UPDATE " . static::$table . " SET conventionvalideepedagogiquement = 1 WHERE numconvention = :id");
 			$statement->bindParam(":id", $id);
 			$statement->execute();
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			throw new ServerErrorException("Erreur lors de la validation pédagogique de la convention", 500, $e);
 		}
 	}
@@ -123,7 +126,7 @@ class ConventionRepository extends AbstractRepository
 			$data = $statement->fetch();
 			if (!$data) return null;
 			return $data;
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			throw new ServerErrorException("Erreur lors de la récupération de la convention", 500, $e);
 		}
 	}
@@ -137,7 +140,7 @@ class ConventionRepository extends AbstractRepository
 			$statement = Database::get_conn()->prepare("UPDATE " . static::$table . " SET conventionvalideepedagogiquement = 0 WHERE numconvention = :id");
 			$statement->bindParam(":id", $id);
 			$statement->execute();
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			throw new ServerErrorException("Erreur lors de l'archivage pédagogique de la convention", 500, $e);
 		}
 	}
@@ -151,12 +154,15 @@ class ConventionRepository extends AbstractRepository
 			$statement = Database::get_conn()->prepare("UPDATE " . static::$table . " SET conventionvalidee = 0 WHERE numconvention = :id");
 			$statement->bindParam(":id", $id);
 			$statement->execute();
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			throw new ServerErrorException("Erreur lors de l'archivage de la convention", 500, $e);
 		}
 	}
 
-	public static function getIfIdTuteurs(int $numconvention, int $idtuteur): bool
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getIfIdTuteurs(int $numconvention, int $idtuteur): bool
 	{
 		$statement = Database::get_conn()->prepare("SELECT idtuteurprof, idtuteurentreprise FROM \"conventionValideVue\" WHERE numconvention = :numconvention");
 		$statement->execute([
@@ -169,14 +175,16 @@ class ConventionRepository extends AbstractRepository
 			return false;
 	}
 
-	public static function getInformationByNumConvention(int $numconvention): array
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getInformationByNumConvention(int $numconvention): array
 	{
 		$statement = Database::get_conn()->prepare("SELECT * FROM \"conventionValideVue\" WHERE numconvention = :numconvention");
 		$statement->execute([
 			'numconvention' => $numconvention
 		]);
-		$data = $statement->fetch();
-		return $data;
+		return $statement->fetch();
 	}
 
 	/**
@@ -188,11 +196,14 @@ class ConventionRepository extends AbstractRepository
 			$statement = Database::get_conn()->prepare("UPDATE " . static::$table . " SET conventionvalidee = 1 WHERE numconvention = :id");
 			$statement->bindParam(":id", $id);
 			$statement->execute();
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			throw new ServerErrorException("Erreur lors de la validation de la convention", 500, $e);
 		}
 	}
 
+    /**
+     * @throws ServerErrorException
+     */
     public static function imOneOfTheTutor(int $id, $numconvention): bool
     {
         $statement = Database::get_conn()->prepare("SELECT idtuteurprof, idtuteurentreprise FROM \"conventionValideVue\" WHERE numconvention = :numconvention");
@@ -221,7 +232,7 @@ class ConventionRepository extends AbstractRepository
 				$conventions[] = $this->construireDepuisTableau($row);
 			}
 			return $conventions;
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			throw new ServerErrorException("Erreur lors de la récupération des conventions", 500, $e);
 		}
 	}
@@ -233,39 +244,10 @@ class ConventionRepository extends AbstractRepository
 		);
 	}
 
-	public function getByIdOffreAndIdUser(int $idOffre, int $idUser): ?Convention
-	{
-		try {
-			$statement = Database::get_conn()->prepare("SELECT * FROM " . static::$table . " WHERE idoffre = :idOffre AND idutilisateur = :idUser");
-			$statement->bindParam(":idOffre", $idOffre);
-			$statement->bindParam(":idUser", $idUser);
-			$statement->execute();
-			$data = $statement->fetch();
-			if (!$data) return null;
-			return $this->construireDepuisTableau($data);
-		} catch (\Exception $e) {
-			throw new ServerErrorException("Erreur lors de la récupération de la convention", 500, $e);
-		}
-	}
-
-	/**
-	 * @throws ServerErrorException
-	 */
-	public function checkIfConventionsValideePedagogiquement(int $idConvention): bool
-	{
-		try {
-			$statement = Database::get_conn()->prepare("SELECT conventionvalideepedagogiquement FROM " . static::$table . " WHERE numconvention = :idConvention");
-			$statement->bindParam(":idConvention", $idConvention);
-			$statement->execute();
-			$data = $statement->fetch();
-			if (!$data) return false;
-			return (bool)$data["conventionvalideepedagogiquement"];
-		} catch (\Exception $e) {
-			throw new ServerErrorException("Erreur lors de la récupération de la convention", 500, $e);
-		}
-	}
-
-	public function getPourcentageEtudiantsConventionCetteAnnee(): false|array
+    /**
+     * @throws ServerErrorException
+     */
+    public function getPourcentageEtudiantsConventionCetteAnnee(): false|array
 	{
 		return Database::get_conn()->query("SELECT * FROM pourcentage_etudiants_convention_cette_annee_cache;")->fetch();
 	}

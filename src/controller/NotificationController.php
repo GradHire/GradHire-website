@@ -43,7 +43,8 @@ class NotificationController extends AbstractController
             if (!$notification->isLu()) {
                 NotificationRepository::setLuToTrue($id);
             }
-            Application::redirectFromParam($notification->getUrl());
+            if ($notification->getUrl() != "") Application::redirectFromParam($notification->getUrl());
+            else Application::redirectFromParam("/notifications");
         }
     }
 
@@ -54,11 +55,9 @@ class NotificationController extends AbstractController
     {
         $id = $request->getRouteParams()['id'];
         $notification = NotificationRepository::loadNotification($id);
-        if ($notification === null) {
-            Application::redirectFromParam("/notifications");
-        } else {
+        if ($notification !== null) {
             NotificationRepository::deleteNotification($id);
-            Application::redirectFromParam("/notifications");
         }
+        Application::redirectFromParam("/notifications");
     }
 }

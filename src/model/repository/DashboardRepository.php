@@ -3,6 +3,7 @@
 namespace app\src\model\repository;
 
 use app\src\core\db\Database;
+use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Request;
 
@@ -11,6 +12,9 @@ class DashboardRepository
     private const TYPE_SECTIONS = 'sections';
     private const TYPE_ACTIONS = 'actions';
 
+    /**
+     * @throws ServerErrorException
+     */
     public function modifyParams(Request $request): void
     {
         $typeBlock = $request->getRouteParams()['type'];
@@ -47,6 +51,9 @@ class DashboardRepository
         return $filteredParams;
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function fetchDashboardData(): array
     {
         $data = [];

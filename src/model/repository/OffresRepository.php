@@ -8,13 +8,13 @@ use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Offre;
 use app\src\model\dataObject\Roles;
+use Exception;
 use PDO;
 use PDOException;
 
 
 class OffresRepository extends AbstractRepository
 {
-    private static int $count;
     private string $nomTable = "Offre";
 
     /**
@@ -52,9 +52,9 @@ class OffresRepository extends AbstractRepository
             if (isset($_GET['sujet']) && $_GET['sujet'] != "")
                 $requete->execute([':sujet' => '%' . strip_tags($_GET['sujet']) . '%']);
             else $requete->execute();
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $requete->setFetchMode(PDO::FETCH_ASSOC);
             return $requete->fetchAll();
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException("Erreur lors de la récupération des offres");
         }
     }
@@ -69,9 +69,9 @@ class OffresRepository extends AbstractRepository
             $sql = "SELECT * FROM $this->nomTable WHERE idoffre = :idoffre";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idoffre' => $idOffre]);
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $requete->setFetchMode(PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
-            if ($resultat == false) return null;
+            if (!$resultat) return null;
             return $this->construireDepuisTableau($resultat);
         } catch
         (PDOException) {
@@ -79,6 +79,9 @@ class OffresRepository extends AbstractRepository
         }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     protected
     function construireDepuisTableau(array $dataObjectFormatTableau): Offre
     {
@@ -87,7 +90,7 @@ class OffresRepository extends AbstractRepository
         );
     }
 
-    private static function constructFilterFromArray($column, $types)
+    private static function constructFilterFromArray($column, $types): string
     {
         if (empty($types))
             return "";
@@ -117,7 +120,7 @@ class OffresRepository extends AbstractRepository
 
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            throw new ServerErrorException();
+            throw new ServerErrorException($e);
         }
     }
 
@@ -135,22 +138,25 @@ class OffresRepository extends AbstractRepository
             $sql = "SELECT idOffre, sujet, thematique, datecreation, statut FROM Offre WHERE idUtilisateur = :idUtilisateur";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idUtilisateur' => $id]);
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $requete->setFetchMode(PDO::FETCH_ASSOC);
             return $requete->fetchAll();
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
 
-    public static function getOffresByIdEntreprisePublic(mixed $id)
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getOffresByIdEntreprisePublic(mixed $id): bool|array
     {
         try {
             $sql = "SELECT * FROM Offre WHERE idUtilisateur = :idUtilisateur AND statut = 'valider'";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idUtilisateur' => $id]);
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $requete->setFetchMode(PDO::FETCH_ASSOC);
             return $requete->fetchAll();
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
@@ -164,9 +170,9 @@ class OffresRepository extends AbstractRepository
             $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idUtilisateur = Utilisateur.idUtilisateur";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute();
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $requete->setFetchMode(PDO::FETCH_ASSOC);
             $resultat = $requete->fetchAll();
-            if ($resultat == false) return null;
+            if (!$resultat) return null;
             return $resultat;
         } catch (PDOException) {
             throw new ServerErrorException();
@@ -217,7 +223,7 @@ class OffresRepository extends AbstractRepository
             $sql = "SELECT * FROM $this->nomTable JOIN Utilisateur ON $this->nomTable.idUtilisateur = Utilisateur.idUtilisateur WHERE idoffre = :idoffre";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idoffre' => $idOffre]);
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $requete->setFetchMode(PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
             if (!$resultat) return null;
             return $this->construireDepuisTableau($resultat);
@@ -237,9 +243,9 @@ class OffresRepository extends AbstractRepository
             $sql = "SELECT * FROM Offre WHERE idUtilisateur = :idUtilisateur";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idUtilisateur' => $idEntreprise]);
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $requete->setFetchMode(PDO::FETCH_ASSOC);
             $resultat = $requete->fetchAll();
-            if ($resultat == false) return null;
+            if (!$resultat) return null;
             $offres = [];
             foreach ($resultat as $offre_data) {
                 $offres[] = $this->construireDepuisTableau($offre_data);
@@ -261,7 +267,7 @@ class OffresRepository extends AbstractRepository
             $sql = "SELECT * FROM Offre WHERE idUtilisateur = :idUtilisateur AND statut = 'brouillon'";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idUtilisateur' => $idEntreprise]);
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $requete->setFetchMode(PDO::FETCH_ASSOC);
             $resultat = $requete->fetchAll();
             $offres = [];
             if (!$resultat) return $offres;
@@ -297,7 +303,7 @@ class OffresRepository extends AbstractRepository
      * @throws ServerErrorException
      */
     public
-    function updateToApproved(mixed $id)
+    function updateToApproved(mixed $id): void
     {
         try {
             $sql = "UPDATE $this->nomTable SET statut = 'valider' WHERE idoffre = :idoffre";
@@ -358,7 +364,7 @@ class OffresRepository extends AbstractRepository
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idoffre' => $offre->getIdoffre(), 'idUtilisateur' => Auth::get_user()->id()]);
             $resultat = $requete->fetch();
-            if ($resultat == false) return false;
+            if (!$resultat) return false;
             else return true;
         } catch
         (PDOException) {
@@ -366,11 +372,17 @@ class OffresRepository extends AbstractRepository
         }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getTop5DomainesPlusDemandes(): false|array
     {
         return Database::get_conn()->query("SELECT * FROM top_5_domaines_plus_demandes_cache;")->fetchAll();
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getMoyenneCandidaturesParOffreParDomaine(): false|array
     {
         return Database::get_conn()->query("SELECT * FROM moyenne_candidatures_par_offre_par_domaine_cache;")->fetchAll();
@@ -427,7 +439,7 @@ class OffresRepository extends AbstractRepository
     protected
     function checkFilterNotEmpty(array $filter): bool
     {
-        foreach ($filter as $key => $value) if ($value != "") return true;
+        foreach ($filter as $value) if ($value != "") return true;
         return false;
     }
 }

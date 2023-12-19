@@ -2,8 +2,6 @@
 
 namespace app\src\model\dataObject;
 
-use app\src\model\dataObject\Utilisateur;
-
 class Etudiant extends Utilisateur
 {
     private static int $convId = 0;
@@ -80,7 +78,7 @@ class Etudiant extends Utilisateur
 
     public function setNumEtudiant(?string $numEtudiant): void
     {
-        $this->nueEtudiant = $numEtudiant;
+        $this->numetudiant = $numEtudiant;
     }
 
     public function getAdresse(): ?string
@@ -190,6 +188,6 @@ class Etudiant extends Utilisateur
 
     protected function getValueColonne(string $nomColonne): string
     {
-        return $this->strval($$nomColonne);
+        return strval($$nomColonne);
     }
 }

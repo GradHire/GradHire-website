@@ -71,7 +71,7 @@ class SimulationPstage extends AbstractDataObject
 
     protected function getValueColonne(string $nomColonne): string
     {
-        return $this->strval($$nomColonne);
+        return strval($$nomColonne);
     }
 
 }

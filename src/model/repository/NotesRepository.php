@@ -3,10 +3,16 @@
 namespace app\src\model\repository;
 
 use app\src\core\db\Database;
+use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\Notes;
+use Exception;
 
 class NotesRepository extends AbstractRepository
 {
+    /**
+     * @throws ServerErrorException
+     * @throws Exception
+     */
     public function getByIdnote(int $idnote): ?Notes
     {
         $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE idnote = ?";
@@ -24,22 +30,29 @@ class NotesRepository extends AbstractRepository
         return "Notes";
     }
 
+    /**
+     * @throws Exception
+     */
     protected function construireDepuisTableau(array $dataObjectFormatTableau): Notes
     {
         return new Notes($dataObjectFormatTableau);
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function create(array $dataObject): void
     {
         $sql = "SELECT idnote FROM Notes WHERE idnote = (SELECT MAX(idnote) FROM Notes)";
-        $stmt = Database::get_conn()->prepare($sql);
+        $connextion = Database::get_conn();
+        $stmt = $connextion->prepare($sql);
         $stmt->execute();
         $id = $stmt->fetch();
         $id = $id["idnote"] + 1;
         $dataObject["idnote"] = $id;
         $dataObject["valide"] = 0;
         $sql = "INSERT INTO " . $this->getNomTable() . " (" . implode(", ", $this->getNomColonnes()) . ") VALUES ( ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
-        $stmt = Database::get_conn()->prepare($sql);
+        $stmt = $connextion->prepare($sql);
 
         $stmt->execute([
             $dataObject["idnote"],
@@ -89,11 +102,10 @@ class NotesRepository extends AbstractRepository
         ];
     }
 
-    public function getAll(): ?array
-    {
-        return parent::getAll();
-    }
-
+    /**
+     * @throws ServerErrorException
+     * @throws Exception
+     */
     public function getById(int $getSoutenance): ?Notes
     {
         $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE idsoutenance = ?";
@@ -106,7 +118,11 @@ class NotesRepository extends AbstractRepository
         return $this->construireDepuisTableau($dataObjectFormatTableau);
     }
 
-    public function getAllnonvalide()
+    /**
+     * @throws ServerErrorException
+     * @throws Exception
+     */
+    public function getAllnonvalide(): ?array
     {
         $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE valide = 0";
         $stmt = Database::get_conn()->prepare($sql);
@@ -121,14 +137,20 @@ class NotesRepository extends AbstractRepository
         return $dataObjectFormatTableau;
     }
 
-    public function valideById(int $id)
+    /**
+     * @throws ServerErrorException
+     */
+    public function valideById(int $id): void
     {
         $sql = "UPDATE " . $this->getNomTable() . " SET valide = 1 WHERE idnote = ?";
         $stmt = Database::get_conn()->prepare($sql);
         $stmt->execute([$id]);
     }
 
-    public function modifierNote(mixed $idnote, array $notemodif)
+    /**
+     * @throws ServerErrorException
+     */
+    public function modifierNote(mixed $idnote, array $notemodif): void
     {
         $sql = "UPDATE " . $this->getNomTable() . " SET noteoral = ?, noterapport = ?, noterelation = ?, notedemarche = ?, noteresultat = ? WHERE idnote = ?";
         $stmt = Database::get_conn()->prepare($sql);

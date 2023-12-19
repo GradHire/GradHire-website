@@ -20,15 +20,15 @@ use app\src\model\repository\PostulerRepository;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\model\Request;
 use app\src\view\components\ui\Notification;
+use DateTime;
 
 class OffreController extends AbstractController
 {
     /**
-     * @throws NotFoundException
      * @throws ForbiddenException
      * @throws ServerErrorException
      */
-    public function offres(Request $request): string
+    public function offres(): string
     {
         if (Application::isGuest() || Auth::has_role(Roles::ChefDepartment)) throw new ForbiddenException();
         if (Auth::has_role(Roles::Enterprise, Roles::Tutor))
@@ -46,7 +46,11 @@ class OffreController extends AbstractController
         return $this->render('offres/listOffres', ['offres' => $offres, "form" => $form]);
     }
 
-    public function detailOffre(Request $request)
+    /**
+     * @throws NotFoundException
+     * @throws ServerErrorException
+     */
+    public function detailOffre(Request $request): string
     {
         $id = $request->getRouteParams()['id'] ?? null;
         $offre = (new OffresRepository())->getByIdWithUser($id);
@@ -203,8 +207,8 @@ class OffreController extends AbstractController
             "nbheureparjour" => FormModel::double("Nombre d'heure par jour")->default($draft ? $draft->getNbJourTravailHebdo() : 7)->min(1)->max(12)->required(),
             "gratification" => FormModel::double("Tarif horaire")->min(4.05)->max(15)->required()->default($draft ? $draft->getGratification() : 4.05),
             "avantage" => FormModel::string("Avantages")->default($draft ? $draft->getAvantageNature() : ""),
-            "datedebut" => FormModel::date("Date de début")->id("dateDebut")->after(new \DateTime())->required()->default($draft ? $draft->getDateDebut() : ""),
-            "datefin" => FormModel::date("Date de fin")->id("dateFin")->after(new \DateTime())->required()->default($draft ? $draft->getDateFin() : ""),
+            "datedebut" => FormModel::date("Date de début")->id("dateDebut")->after(new DateTime())->required()->default($draft ? $draft->getDateDebut() : ""),
+            "datefin" => FormModel::date("Date de fin")->id("dateFin")->after(new DateTime())->required()->default($draft ? $draft->getDateFin() : ""),
             "distanciel" => FormModel::int("Distanciel")->min(0)->max(6)->default(0)->id("distanciel"),
             "dureeStage" => FormModel::int("Durée du stage (en heure)")->id("dureeStage")->min(1)->default(1),
             "dureeAlternance" => FormModel::select("Durée de l'alternance", ["1" => "1 ans", "1.5" => "1 ans et demi", "2" => "2 ans"])->id("dureeAlternance")->default("1"),
@@ -308,6 +312,9 @@ class OffreController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function mapsOffres(): string
     {
         $offres = (new OffresRepository())->getAll();

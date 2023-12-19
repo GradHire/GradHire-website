@@ -3,18 +3,23 @@
 namespace app\src\model\repository;
 
 use app\src\core\db\Database;
+use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\AbstractDataObject;
 use app\src\model\dataObject\Signataire;
+use PDO;
 
 class SignataireRepository extends AbstractRepository
 {
+    /**
+     * @throws ServerErrorException
+     */
     public function getFullByEntreprise(int $identreprise): ?array
     {
         $sql = "SELECT * FROM Signataire WHERE idEntreprise = :idEntreprise";
         $stmt = Database::get_conn()->prepare($sql);
         $stmt->bindValue(":idEntreprise", $identreprise);
         $stmt->execute();
-        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $result = $stmt->fetchAll();
         $signataires = [];
         foreach ($result as $row) {
@@ -23,6 +28,9 @@ class SignataireRepository extends AbstractRepository
         return $signataires;
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getFullByEntrepriseNom(string $nomsignataire, int $idEntreprise): ?AbstractDataObject
     {
         $sql = "SELECT * FROM Signataire WHERE idEntreprise = :idEntreprise AND nomSignataire= :nomsignataire";
@@ -30,7 +38,7 @@ class SignataireRepository extends AbstractRepository
         $stmt->bindValue(":idEntreprise", $idEntreprise);
         $stmt->bindValue(":nomsignataire", $nomsignataire);
         $stmt->execute();
-        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $result = $stmt->fetchAll();
         if (!$result) {
             return null;
@@ -44,7 +52,10 @@ class SignataireRepository extends AbstractRepository
             $dataObjectFormatTableau);
     }
 
-    public function create(mixed $nomSignataire, mixed $prenomSignataire, mixed $fonctionSignataire, mixed $mailSignataire, mixed $idEntreprise)
+    /**
+     * @throws ServerErrorException
+     */
+    public function create(mixed $nomSignataire, mixed $prenomSignataire, mixed $fonctionSignataire, mixed $mailSignataire, mixed $idEntreprise): void
     {
         $sql = "SELECT creerSignataire(:nomSignataire, :prenomSignataire, :mailSignataire, :fonctionSignataire, :idEntreprise) ";
         $stmt = Database::get_conn()->prepare($sql);

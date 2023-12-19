@@ -7,6 +7,8 @@ use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\Form\FormModel;
+use DateTime;
+use Exception;
 
 class ProRepository extends UtilisateurRepository
 {
@@ -29,7 +31,7 @@ class ProRepository extends UtilisateurRepository
             }
             Auth::generate_token($user, $remember);
             return true;
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
@@ -60,7 +62,7 @@ class ProRepository extends UtilisateurRepository
             if (!self::checkPassword($password, $user->attributes()["hash"])) return null;
             return $user;
         } catch
-        (\Exception) {
+        (Exception) {
             throw new ServerErrorException();
         }
     }
@@ -74,7 +76,7 @@ class ProRepository extends UtilisateurRepository
             $stmt = Database::get_conn()->prepare("SELECT * FROM modifiermdp WHERE token=?");
             $stmt->execute([$token]);
             return $stmt->fetch();
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
@@ -94,13 +96,13 @@ class ProRepository extends UtilisateurRepository
             if (!$token) {
                 self::createForgetToken($email, $userId);
             } else {
-                $now = new \DateTime();
-                $tokenDate = new \DateTime($token["datecreation"]);
+                $now = new DateTime();
+                $tokenDate = new DateTime($token["datecreation"]);
                 $diff = $now->diff($tokenDate);
                 if ($diff->h >= 1 || $diff->days > 0)
                     self::createForgetToken($email, $userId);
             }
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
@@ -116,7 +118,7 @@ class ProRepository extends UtilisateurRepository
             $stmt = Database::get_conn()->prepare("INSERT INTO modifiermdp (idutilisateur, token) values(?,?)");
             $stmt->execute([$id, $token]);
             MailRepository::send_mail([$email], "Changer mon mot de passe", "Voici le lien pour changer votre mot de passe: " . HOST . "/forgetPassword/" . $token . "<br>Ce lien est valide pendant 1 heure.");
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
@@ -129,7 +131,7 @@ class ProRepository extends UtilisateurRepository
         try {
             $delete = Database::get_conn()->prepare("DELETE FROM modifiermdp WHERE idutilisateur=?");
             $delete->execute([$id]);
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
@@ -147,7 +149,7 @@ class ProRepository extends UtilisateurRepository
             }
             self::setNewPassword($new, $id);
             return true;
-        } catch (\Exception) {
+        } catch (Exception) {
             return false;
         }
     }
@@ -161,7 +163,7 @@ class ProRepository extends UtilisateurRepository
             $hash = self::hashPassword($password);
             $statement = Database::get_conn()->prepare("UPDATE ComptePro SET hash=? WHERE idUtilisateur=?");
             $statement->execute([$hash, $id]);
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }

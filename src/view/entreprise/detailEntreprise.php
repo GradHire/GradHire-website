@@ -134,14 +134,14 @@ if (empty($nom) || $nom == "") $nom = "Sans nom";
              */
             function print_cell($offre): void
             {
-                Table::cell($offre->getSujet());
-                Table::cell($offre->getThematique());
-                Table::cell($offre->getDateCreation());
-                if ($offre->getStatut() == "en attente") Table::chip("En attente", "yellow");
-                else if ($offre->getStatut() == "valider") Table::chip("Validée", "green");
-                else if ($offre->getStatut() == "archiver") Table::chip("Archivée", "red");
-                else if ($offre->getStatut() == "brouillon") Table::chip("Brouillon", "gray");
-                Table::cell("<a href=\"/offres/" . $offre->getIdoffre() . "\" class=\"inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700\">Voir plus</a>");
+                Table::cell($offre['sujet']);
+                Table::cell($offre['thematique']);
+                Table::cell($offre['datecreation']);
+                if ($offre['statut'] == "en attente") Table::chip("En attente", "yellow");
+                else if ($offre['statut'] == "valider") Table::chip("Validée", "green");
+                else if ($offre['statut'] == "archiver") Table::chip("Archivée", "red");
+                else if ($offre['statut'] == "brouillon") Table::chip("Brouillon", "gray");
+                Table::cell("<a href=\"/offres/" . $offre['idoffre'] . "\" class=\"inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700\">Voir plus</a>");
             }
 
             if ($offres != null)

@@ -4,14 +4,13 @@ namespace app\src\controller;
 
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
+use app\src\model\Auth;
 use app\src\model\repository\ConventionRepository;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
-use app\src\model\repository\LdapRepository;
 use app\src\model\repository\MailRepository;
 use app\src\model\repository\NotificationRepository;
 use app\src\model\Request;
-use app\src\model\Response;
 
 class ConventionsController extends AbstractController
 {

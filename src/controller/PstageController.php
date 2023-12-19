@@ -9,7 +9,6 @@ use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 use app\src\model\Import;
-use app\src\model\ImportStudea;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\NotificationRepository;
@@ -40,6 +39,7 @@ class PstageController extends AbstractController
             if ($request->getMethod() === 'post') {
                 if ($form->validate($request->getBody())) {
                     $this->Import($form, $form->getParsedBody()['type']);
+                    NotificationRepository::createNotification(Auth::get_user()->id(), "Importation CSV réussi", "/conventions");
                 }
             }
             return $this->render('Import', [
@@ -68,7 +68,6 @@ class PstageController extends AbstractController
         $importer = new Import();
         while (($data = fgetcsv($path, 100000, ";")) !== FALSE) {
 
-            $num = count($data);
             if ($i == 0) {
                 $i++;
                 continue;
@@ -88,12 +87,16 @@ class PstageController extends AbstractController
      * @throws ForbiddenException
      * @throws ServerErrorException
      */
-    public function explicationSimu(Request $request): string
+    public function explicationSimu(): string
     {
         if (Auth::has_role(Roles::Student)) return $this->render('simulateurP/General', ['vueChemin' => "explicationSimu.php"]);
         else throw new ForbiddenException();
     }
 
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
     public function simulateur(Request $request): string
     {
         if (Auth::has_role(Roles::Student)) {
@@ -126,7 +129,11 @@ class PstageController extends AbstractController
         } else throw new ForbiddenException();
     }
 
-    public function previewOffre(Request $request): string
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
+    public function previewOffre(): string
     {
         if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"])) {
             $id = $_GET['idEntreprise'];
@@ -147,11 +154,15 @@ class PstageController extends AbstractController
         } else throw new ForbiddenException();
     }
 
-    public function listEntreprise(Request $request)
+    public function listEntreprise(): string
     {
         return $this->render('simulateurP/General', ['vueChemin' => "listEntreprise.php"]);
     }
 
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
     public function creerEntreprise(Request $request): string
     {
         if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"])) {
@@ -186,7 +197,11 @@ class PstageController extends AbstractController
         } else throw new ForbiddenException();
     }
 
-    public function simulateurServiceAccueil(Request $request)
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
+    public function simulateurServiceAccueil(Request $request): string
     {
         if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"])) {
             $serviceaccueil = (new ServiceAccueilRepository())->getFullByEntreprise($_SESSION["idEntreprise"]);
@@ -213,7 +228,11 @@ class PstageController extends AbstractController
         } else throw new ForbiddenException();
     }
 
-    public function creerService(Request $request)
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
+    public function creerService(Request $request): string
     {
         if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"])) {
             $entreprise = new EntrepriseRepository([]);
@@ -249,7 +268,11 @@ class PstageController extends AbstractController
     }
 
 
-    public function simulateurTuteur(Request $request)
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
+    public function simulateurTuteur(): string
     {
         if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"]) && isset($_SESSION["accueil"])) {
             $tut = new TuteurEntrepriseRepository([]);
@@ -258,7 +281,11 @@ class PstageController extends AbstractController
         } else throw new ForbiddenException();
     }
 
-    public function creerTuteur(Request $request)
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
+    public function creerTuteur(Request $request): string
     {
         if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"]) && isset($_SESSION["accueil"])) {
             $form = new FormModel([
@@ -283,7 +310,11 @@ class PstageController extends AbstractController
         } else throw new ForbiddenException();
     }
 
-    public function simulateurCandidature(Request $request)
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
+    public function simulateurCandidature(Request $request): string
     {
         if (isset($_GET['idTuteur'])) {
             $_SESSION['idTuteur'] = $_GET['idTuteur'];
@@ -328,7 +359,11 @@ class PstageController extends AbstractController
         } else throw new ForbiddenException();
     }
 
-    public function simulateurProfReferent(Request $request)
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
+    public function simulateurProfReferent(Request $request): string
     {
         if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"]) && isset($_SESSION["accueil"]) && isset($_SESSION["idTuteur"]) && isset($_SESSION["simulateurCandidature"])) {
             $listProf = new StaffRepository([]);
@@ -340,7 +375,6 @@ class PstageController extends AbstractController
             if ($request->getMethod() === "post") {
                 $form->setError("Impossible de trouver le professeur référent");
                 if ($form->validate($request->getBody())) {
-                    $formData = $form->getParsedBody();
                     return $this->render('simulateurP/General', ["listProf" => $listProf, "vueChemin" => "listProf.php"]);
                 }
             }
@@ -348,7 +382,11 @@ class PstageController extends AbstractController
         } else throw new ForbiddenException();
     }
 
-    public function simulateurSignataire(Request $request)
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
+    public function simulateurSignataire(Request $request): string
     {
         if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"]) && isset($_SESSION["accueil"]) && isset($_SESSION["idTuteur"]) && isset($_SESSION["simulateurCandidature"])) {
             $id = $_GET['idProfRef'] ?? null;
@@ -378,7 +416,11 @@ class PstageController extends AbstractController
         } else throw new ForbiddenException();
     }
 
-    public function creerSignataire(Request $request)
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
+    public function creerSignataire(Request $request): string
     {
         if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"]) && isset($_SESSION["accueil"]) && isset($_SESSION["idTuteur"]) && isset($_SESSION["simulateurCandidature"])) {
             $form = new FormModel([
@@ -404,7 +446,11 @@ class PstageController extends AbstractController
         } else throw new ForbiddenException();
     }
 
-    public function visuRecapConv(Request $request)
+    /**
+     * @throws ForbiddenException
+     * @throws ServerErrorException
+     */
+    public function visuRecapConv(): string
     {
         if (Auth::has_role(Roles::Student) && isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"]) && isset($_SESSION["accueil"]) && isset($_SESSION["idTuteur"]) && isset($_SESSION["simulateurCandidature"]) && isset($_SESSION["signataire"])) {
             return $this->render('simulateurP/General', ['vueChemin' => 'visuRecapConv.php']);
@@ -415,10 +461,10 @@ class PstageController extends AbstractController
      * @throws ForbiddenException
      * @throws ServerErrorException
      */
-    public function validersimulation(Request $request)
+    public function validersimulation(): string
     {
         if (Auth::has_role(Roles::Student)) {
-            NotificationRepository::createNotification(Auth::get_user()->id(), "Simulation de convention validé", "/gererSimulPstage");
+            NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez finalisez votre simulation de convention", "/gererSimulPstage");
             return $this->render('simulateurP/validersimulation');
         } else throw new ForbiddenException();
     }
@@ -427,7 +473,7 @@ class PstageController extends AbstractController
      * @throws ForbiddenException
      * @throws ServerErrorException
      */
-    public function gererSimulPstage(Request $request): string
+    public function gererSimulPstage(): string
     {
         if (Auth::has_role(Roles::Staff, Roles::Manager, Roles::Student)) {
             return $this->render('pstageConv/gererSimulPstage');
@@ -438,13 +484,16 @@ class PstageController extends AbstractController
      * @throws ForbiddenException
      * @throws ServerErrorException
      */
-    public function gererSimulPstagevalide(Request $request)
+    public function gererSimulPstagevalide(Request $request): string
     {
         if (Auth::has_role(Roles::Staff, Roles::Manager)) {
             $id = $request->getRouteParams()['id'] ?? null;
             if ($id != null) {
-                $simul = (new SimulationPstageRepository([]));
+                $simul = (new SimulationPstageRepository());
+                $idetudiant = SimulationPstageRepository::getStudentId($id);
                 $simul->updatevalide($id);
+                NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez validé une simulation de convention", "/gererSimulPstage");
+                NotificationRepository::createNotification($idetudiant, "Votre simulation de convention a été validé", "/gererSimulPstage");
                 Application::$app->response->redirect("/gererSimulPstage");
             }
             return $this->render('pstageConv/gererSimulPstage');
@@ -455,7 +504,7 @@ class PstageController extends AbstractController
      * @throws ForbiddenException
      * @throws ServerErrorException
      */
-    public function gererSimulPstagerefuse(Request $request)
+    public function gererSimulPstagerefuse(Request $request): string
     {
         if (Auth::has_role(Roles::Staff, Roles::Manager)) {
             $id = $request->getRouteParams()['id'] ?? null;
@@ -469,6 +518,9 @@ class PstageController extends AbstractController
                         $simul = (new SimulationPstageRepository([]));
                         $simul->updaterefuse($id);
                         $simul->updateMotif($id, $formData['motif']);
+                        $idetudiant = SimulationPstageRepository::getStudentId($id);
+                        NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez refusé une simulation de convention avec pour motif ". $formData['motif'], "/gererSimulPstage");
+                        NotificationRepository::createNotification($idetudiant, "Votre simulation de convention a été refusé avec pour motif ". $formData['motif'] , "/gererSimulPstage");
                         Application::$app->response->redirect("/gererSimulPstage");
                     }
                 }
@@ -482,7 +534,7 @@ class PstageController extends AbstractController
      * @throws ForbiddenException
      * @throws ServerErrorException
      */
-    public function motifRefus(Request $request)
+    public function motifRefus(Request $request): string
     {
         if (Auth::has_role(Roles::Staff, Roles::Manager, Roles::Student)) {
             $id = $request->getRouteParams()['id'] ?? null;

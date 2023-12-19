@@ -12,8 +12,8 @@ use app\src\model\Form\FormModel;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\NotificationRepository;
 use app\src\model\repository\OffresRepository;
-use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\Request;
+use DateTime;
 
 class UserController extends AbstractController
 {
@@ -79,7 +79,7 @@ class UserController extends AbstractController
                 $attr = array_merge($attr, [
                     "email" => FormModel::email("Adresse mail perso")->default($user->attributes()["emailperso"]),
                     "tel" => FormModel::phone("Téléphone")->numeric()->default($user->attributes()["numtelephone"])->nullable(),
-                    "date" => FormModel::date("Date de naissance")->default($user->attributes()["datenaissance"])->before(new \DateTime()),
+                    "date" => FormModel::date("Date de naissance")->default($user->attributes()["datenaissance"])->before(new DateTime()),
                     "studentnum" => FormModel::string("Numéro Etudiant")->default($user->attributes()["numetudiant"]),
                 ]);
                 break;
@@ -98,10 +98,8 @@ class UserController extends AbstractController
                 $picture = $form->getFile("picture");
                 if (!is_null($picture)) $picture->save("pictures", $user->id());
                 $user->update($form->getParsedBody());
-                if ($user->id() == Application::getUser()->id()) {
-                    NotificationRepository::createNotification($user->id(), "Votre profil a été modifié", "/profile");
-                } else {
-                    NotificationRepository::createNotification($user->id(), "Votre profil a été modifié", "/profile");
+                NotificationRepository::createNotification($user->id(), "Votre profil a été modifié", "/profile");
+                if ($user->id() != Application::getUser()->id()) {
                     NotificationRepository::createNotification(Auth::get_user()->id(), "Le profil de " . $user->full_name()
                         . " a été modifié", "/profile/" . $user->id());
                 }

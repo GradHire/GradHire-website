@@ -19,7 +19,7 @@ class TestController extends AbstractController
     /**
      * @throws ServerErrorException
      */
-    public function user_test(Request $req)
+    public function user_test(Request $req): void
     {
         if (session_status() !== PHP_SESSION_NONE)
             session_destroy();

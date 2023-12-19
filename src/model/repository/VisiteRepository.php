@@ -5,6 +5,8 @@ namespace app\src\model\repository;
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\Visite;
+use Exception;
+use PDO;
 
 class VisiteRepository extends AbstractRepository
 {
@@ -16,16 +18,19 @@ class VisiteRepository extends AbstractRepository
         try {
             $statement = Database::get_conn()->prepare("update visite set debut_visite=?, fin_visite= ? where num_convention=?");
             $statement->execute([date('Y-m-d H:i:s', strtotime($start)), date('Y-m-d H:i:s', strtotime($end)), $numConvention]);
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public static function getIfVisiteExist(int $numConvention): bool
     {
             $statement = Database::get_conn()->prepare("select * from visite where num_convention=?");
             $statement->execute([$numConvention]);
-            $statement->setFetchMode(\PDO::FETCH_ASSOC);
+            $statement->setFetchMode(PDO::FETCH_ASSOC);
             $result = $statement->fetch();
             if (!$result) return false;
             return true;
@@ -42,12 +47,12 @@ class VisiteRepository extends AbstractRepository
             $sql = "SELECT * FROM visite WHERE num_convention = ?";
             $stmt = Database::get_conn()->prepare($sql);
             $stmt->execute([$convention]);
-            $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
             $result = $stmt->fetch();
             if (!$result) return null;
             return new Visite($result);
-        } catch (\Exception $e) {
-            throw new ServerErrorException();
+        } catch (Exception $e) {
+            throw new ServerErrorException($e);
         }
     }
 
@@ -61,14 +66,14 @@ class VisiteRepository extends AbstractRepository
             $sql = "SELECT v.* FROM supervise s JOIN convention c ON c.idoffre = s.idoffre JOIN visite v ON v.num_convention = c.numconvention WHERE s.idtuteurentreprise=?";
             $stmt = Database::get_conn()->prepare($sql);
             $stmt->execute([$idTuteurPro]);
-            $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
             $result = $stmt->fetchAll();
             $visites = [];
             foreach ($result as $row)
                 $visites[] = new Visite($row);
             return $visites;
-        } catch (\Exception $e) {
-            throw new ServerErrorException();
+        } catch (Exception $e) {
+            throw new ServerErrorException($e);
         }
     }
 
@@ -82,14 +87,14 @@ class VisiteRepository extends AbstractRepository
             $sql = "SELECT v.* FROM supervise s JOIN convention c ON c.idoffre = s.idoffre JOIN visite v ON v.num_convention = c.numconvention WHERE s.idutilisateur=?";
             $stmt = Database::get_conn()->prepare($sql);
             $stmt->execute([$idTuteurUniv]);
-            $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
             $result = $stmt->fetchAll();
             $visites = [];
             foreach ($result as $row)
                 $visites[] = new Visite($row);
             return $visites;
-        } catch (\Exception $e) {
-            throw new ServerErrorException();
+        } catch (Exception $e) {
+            throw new ServerErrorException($e);
         }
     }
 
@@ -103,26 +108,26 @@ class VisiteRepository extends AbstractRepository
             $sql = "SELECT * FROM visite";
             $stmt = Database::get_conn()->prepare($sql);
             $stmt->execute();
-            $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
             $result = $stmt->fetchAll();
             $visites = [];
             foreach ($result as $row)
                 $visites[] = new Visite($row);
             return $visites;
-        } catch (\Exception $e) {
-            throw new ServerErrorException();
+        } catch (Exception $e) {
+            throw new ServerErrorException($e);
         }
     }
 
     /**
      * @throws ServerErrorException
      */
-    public static function createVisite(string $debut, string $fin, int $numConvention)
+    public static function createVisite(string $debut, string $fin, int $numConvention): void
     {
         try {
             $statement = Database::get_conn()->prepare("insert into visite (debut_visite, fin_visite, num_convention) values (?,?,?);");
             $statement->execute([date('Y-m-d H:i:s', strtotime($debut)), date('Y-m-d H:i:s', strtotime($fin)), $numConvention]);
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
@@ -130,20 +135,20 @@ class VisiteRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public static function getAllByEnterpriseId(int $id)
+    public static function getAllByEnterpriseId(int $id): array
     {
         try {
             $sql = "SELECT v.* FROM convention c JOIN visite v ON v.num_convention = c.numconvention JOIN Offre o ON o.idoffre=c.idoffre WHERE o.idutilisateur=?";
             $stmt = Database::get_conn()->prepare($sql);
             $stmt->execute([$id]);
-            $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
             $result = $stmt->fetchAll();
             $visites = [];
             foreach ($result as $row)
                 $visites[] = new Visite($row);
             return $visites;
-        } catch (\Exception $e) {
-            throw new ServerErrorException();
+        } catch (Exception $e) {
+            throw new ServerErrorException($e);
         }
     }
 
@@ -157,13 +162,13 @@ class VisiteRepository extends AbstractRepository
             $statement = Database::get_conn()->prepare("SELECT * FROM visite WHERE num_convention=?");
             $statement->execute([$numConvention]);
             return $statement->fetch();
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     protected function construireDepuisTableau(array $dataObjectFormatTableau): Visite
     {

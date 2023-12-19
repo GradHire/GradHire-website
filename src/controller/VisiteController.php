@@ -16,6 +16,7 @@ use app\src\model\repository\NotificationRepository;
 use app\src\model\repository\SuperviseRepository;
 use app\src\model\repository\VisiteRepository;
 use app\src\model\Request;
+use DateTime;
 
 class VisiteController extends AbstractController
 {
@@ -51,8 +52,8 @@ class VisiteController extends AbstractController
 
         if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager) && ConventionRepository::imOneOfTheTutor(Application::getUser()->id(), $numConvention)) {
             $form = new FormModel([
-                "start" => FormModel::date("Début de la visite")->withHour()->default($visite ? $visite->getDebutVisite()->format('Y-m-d H:i:s') : (new \DateTime())->format('Y-m-d H:i:s'))->required(),
-                "end" => FormModel::date("Fin de la visite")->withHour()->default($visite ? $visite->getFinVisite()->format('Y-m-d H:i:s') : (new \DateTime())->format('Y-m-d H:i:s'))->required(),
+                "start" => FormModel::date("Début de la visite")->withHour()->default($visite ? $visite->getDebutVisite()->format('Y-m-d H:i:s') : (new DateTime())->format('Y-m-d H:i:s'))->required(),
+                "end" => FormModel::date("Fin de la visite")->withHour()->default($visite ? $visite->getFinVisite()->format('Y-m-d H:i:s') : (new DateTime())->format('Y-m-d H:i:s'))->required(),
             ]);
 
             if ($req->getMethod() == "post") {

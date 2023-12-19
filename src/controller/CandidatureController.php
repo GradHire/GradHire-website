@@ -2,7 +2,6 @@
 
 namespace app\src\controller;
 
-use app\src\controller\AbstractController;
 use app\src\core\exception\ForbiddenException;
 use app\src\core\exception\NotFoundException;
 use app\src\core\exception\ServerErrorException;
@@ -103,7 +102,7 @@ class CandidatureController extends AbstractController
     /**
      * @throws ServerErrorException
      */
-    public function validerAsEntreprise(Request $request)
+    public function validerAsEntreprise(Request $request): void
     {
         if (Auth::has_role(Roles::Enterprise)) {
             $idEtudiant = $request->getRouteParams()["idEtudiant"];
@@ -156,7 +155,7 @@ class CandidatureController extends AbstractController
      */
     public function harceler(): string
     {
-        if (Auth::has_role(Roles::ChefDepartment, Roles::Manager, Roles::Staff)) {
+        if (Auth::has_role(Roles::ChefDepartment, Roles::Manager,Roles::ManagerStage,Roles::ManagerAlternance, Roles::Staff)) {
             if (isset($_GET["idUtilisateur"])) {
                 $idUtilisateur = $_GET["idUtilisateur"];
                 $etudiant = (new EtudiantRepository([]))->getByIdFull($idUtilisateur);

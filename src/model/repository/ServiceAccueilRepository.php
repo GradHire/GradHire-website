@@ -5,6 +5,7 @@ namespace app\src\model\repository;
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\ServiceAccueil;
+use PDO;
 
 class ServiceAccueilRepository extends AbstractRepository
 {
@@ -18,7 +19,7 @@ class ServiceAccueilRepository extends AbstractRepository
         $stmt = Database::get_conn()->prepare($sql);
         $stmt->bindValue(":idEntreprise", $identreprise);
         $stmt->execute();
-        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $result = $stmt->fetchAll();
         $serviceAccueil = [];
         foreach ($result as $row) {
@@ -27,7 +28,10 @@ class ServiceAccueilRepository extends AbstractRepository
         return $serviceAccueil;
     }
 
-    public function create(mixed $nomService, mixed $idEntreprise, mixed $voie, mixed $residence, mixed $cp, mixed $ville, mixed $pays)
+    /**
+     * @throws ServerErrorException
+     */
+    public function create(mixed $nomService, mixed $idEntreprise, mixed $voie, mixed $residence, mixed $cp, mixed $ville, mixed $pays): void
     {
         $sql = "CALL creerServiceAccueil(:nomService,:residence, :voie,:cedex, :cp, :ville, :pays,:idEntreprise)";
         $stmt = Database::get_conn()->prepare($sql);
@@ -42,6 +46,9 @@ class ServiceAccueilRepository extends AbstractRepository
         $stmt->execute();
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getFullByEntrepriseNom(int $identreprise, string $nomService): ?ServiceAccueil
     {
         $sql = "SELECT * FROM ServiceAccueil WHERE idEntreprise = :idEntreprise AND nomService = :nomService";
@@ -49,7 +56,7 @@ class ServiceAccueilRepository extends AbstractRepository
         $stmt->bindValue(":idEntreprise", $identreprise);
         $stmt->bindValue(":nomService", $nomService);
         $stmt->execute();
-        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $result = $stmt->fetch();
         if (!$result) {
             return null;
@@ -64,6 +71,9 @@ class ServiceAccueilRepository extends AbstractRepository
         );
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getCodePostal(int $idEntreprise, string $nomService): ?string
     {
         $idVille = $this->idVille($idEntreprise, $nomService);
@@ -71,7 +81,7 @@ class ServiceAccueilRepository extends AbstractRepository
         $stmt = Database::get_conn()->prepare($sql);
         $stmt->bindValue(":idVille", $idVille);
         $stmt->execute();
-        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $result = $stmt->fetch();
         if (!$result) {
             return null;
@@ -79,6 +89,9 @@ class ServiceAccueilRepository extends AbstractRepository
         return $result['codepostal'];
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function idVille(int $idEntreprise, string $nomService): ?string
     {
         $sql = "SELECT idVille FROM ServiceAccueil WHERE idEntreprise = :idEntreprise AND nomService = :nomService";
@@ -86,7 +99,7 @@ class ServiceAccueilRepository extends AbstractRepository
         $stmt->bindValue(":idEntreprise", $idEntreprise);
         $stmt->bindValue(":nomService", $nomService);
         $stmt->execute();
-        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $result = $stmt->fetch();
         if (!$result) {
             return null;
@@ -94,6 +107,9 @@ class ServiceAccueilRepository extends AbstractRepository
         return $result['idville'];
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getCommune(int $idEntreprise, string $nomService): ?string
     {
         $idVille = $this->idVille($idEntreprise, $nomService);
@@ -101,7 +117,7 @@ class ServiceAccueilRepository extends AbstractRepository
         $stmt = Database::get_conn()->prepare($sql);
         $stmt->bindValue(":idVille", $idVille);
         $stmt->execute();
-        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $result = $stmt->fetch();
         if (!$result) {
             return null;
@@ -109,6 +125,9 @@ class ServiceAccueilRepository extends AbstractRepository
         return $result['nomville'];
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getPays(int $idEntreprise, string $nomService): ?string
     {
         $idVille = $this->idVille($idEntreprise, $nomService);
@@ -116,7 +135,7 @@ class ServiceAccueilRepository extends AbstractRepository
         $stmt = Database::get_conn()->prepare($sql);
         $stmt->bindValue(":idVille", $idVille);
         $stmt->execute();
-        $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $result = $stmt->fetch();
         if (!$result) {
             return null;

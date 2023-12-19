@@ -2,6 +2,8 @@
 
 namespace app\src\model\dataObject;
 
+use Exception;
+
 class Notes extends AbstractDataObject
 {
     private int $idnote;
@@ -25,7 +27,7 @@ class Notes extends AbstractDataObject
     private ?int $valide;
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(array $attributes)
     {

@@ -2,21 +2,24 @@
 
 namespace app\src\model\dataObject;
 
+use DateTime;
+use Exception;
+
 class Visite extends AbstractDataObject
 {
     private int $num_convention;
-    private \DateTime $debut_visite;
-    private \DateTime $fin_visite;
+    private DateTime $debut_visite;
+    private DateTime $fin_visite;
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(array $attributes)
     {
         foreach ($attributes as $key => $value)
             if (property_exists($this, $key)) {
                 if ($key == "debut_visite" || $key == "fin_visite") {
-                    $this->$key = new \DateTime($value);
+                    $this->$key = new DateTime($value);
                 } else {
                     $this->$key = $value;
                 }
@@ -33,22 +36,22 @@ class Visite extends AbstractDataObject
         $this->num_convention = $num_convention;
     }
 
-    public function getDebutVisite(): \DateTime
+    public function getDebutVisite(): DateTime
     {
         return $this->debut_visite;
     }
 
-    public function setDebutVisite(\DateTime $debut_visite): void
+    public function setDebutVisite(DateTime $debut_visite): void
     {
         $this->debut_visite = $debut_visite;
     }
 
-    public function getFinVisite(): \DateTime
+    public function getFinVisite(): DateTime
     {
         return $this->fin_visite;
     }
 
-    public function setFinVisite(\DateTime $fin_visite): void
+    public function setFinVisite(DateTime $fin_visite): void
     {
         $this->fin_visite = $fin_visite;
     }

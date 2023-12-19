@@ -18,6 +18,7 @@ use app\src\model\repository\TuteurEntrepriseRepository;
 use app\src\model\Request;
 use app\src\model\Response;
 use app\src\view\components\ui\Notification;
+use Exception;
 
 class AuthController extends AbstractController
 {
@@ -45,7 +46,7 @@ class AuthController extends AbstractController
             return $this->render('pro_login', [
                 'form' => $loginForm
             ]);
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
@@ -79,7 +80,7 @@ class AuthController extends AbstractController
      * @throws ForbiddenException
      * @throws ServerErrorException
      */
-    public function resetPassword(Request $req, Response $res): string
+    public function resetPassword(Request $req): string
     {
         if (!Application::isGuest()) throw new ForbiddenException();
         $form = new FormModel([
@@ -127,7 +128,7 @@ class AuthController extends AbstractController
         ]);
     }
 
-    public function logout(Request $request, Response $response): void
+    public function logout(Response $response): void
     {
         Auth::logout();
         $response->redirect('/');
@@ -169,8 +170,8 @@ class AuthController extends AbstractController
                 'enterprise' => $data['nom'],
                 'form' => $form
             ]);
-        } catch (\Exception $e) {
-            throw new ServerErrorException();
+        } catch (Exception $e) {
+            throw new ServerErrorException($e);
         }
     }
 
@@ -229,7 +230,7 @@ class AuthController extends AbstractController
         ]);
     }
 
-    public function home(Request $request): string
+    public function home(): string
     {
         if (Application::isGuest()) {
             return $this->render('home');
@@ -238,17 +239,17 @@ class AuthController extends AbstractController
         return '';
     }
 
-    public function aboutreal(Request $request): string
+    public function aboutreal(): string
     {
         return $this->render('apropos');
     }
 
-    public function conditionutilisation(Request $request): string
+    public function conditionutilisation(): string
     {
         return $this->render('conditionutilisation');
     }
 
-    public function politiqueconfidentialite(Request $request): string
+    public function politiqueconfidentialite(): string
     {
         return $this->render('politiqueconfidentialite');
     }

@@ -2,8 +2,6 @@
 
 namespace app\src\model\dataObject;
 
-use app\src\model\Form\rules\RuleIsBoolean;
-
 class Notifications extends AbstractDataObject
 {
     private int $idnotification;

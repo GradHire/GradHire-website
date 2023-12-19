@@ -8,7 +8,8 @@ use app\src\core\lib\StackTrace;
 use app\src\model\Application;
 use app\src\model\dataObject\Etudiant;
 use app\src\model\dataObject\Roles;
-use app\src\model\Request;
+use Exception;
+use PDO;
 use PDOException;
 
 class EtudiantRepository extends LdapRepository
@@ -40,7 +41,7 @@ class EtudiantRepository extends LdapRepository
 
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute([$annee, "%" . $offre["thematique"] . "%", $type]);
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $requete->setFetchMode(PDO::FETCH_ASSOC);
             $resultat = $requete->fetchAll();
             if (!$resultat)
                 return [];
@@ -56,20 +57,23 @@ class EtudiantRepository extends LdapRepository
         }
     }
 
-    public static function getEtuSansConv()
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getEtuSansConv(): ?array
     {
         $sql = "SELECT idUtilisateur FROM EtudiantVue WHERE idUtilisateur NOT IN (SELECT idUtilisateur FROM Convention)";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute();
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
         $resultat = $requete->fetchAll();
         if (!$resultat) {
             return null;
         }
+        $etudiant = new EtudiantRepository([]);
+        $etudiants = [];
         foreach ($resultat as $etu) {
-            $etudiant = new EtudiantRepository([]);
-            $etudiant = $etudiant->getByIdFull($etu["idutilisateur"]);
-            $etudiants[] = $etudiant;
+            $etudiants[] = $etudiant->getByIdFull($etu["idutilisateur"]);
         }
         return $etudiants;
     }
@@ -84,7 +88,7 @@ class EtudiantRepository extends LdapRepository
             $sql = "SELECT * FROM " . self::$view . " WHERE idUtilisateur = :idUtilisateur";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idUtilisateur' => $idutilisateur]);
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $requete->setFetchMode(PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
             if (!$resultat) {
                 return null;
@@ -113,13 +117,13 @@ class EtudiantRepository extends LdapRepository
             $sql = "SELECT nom, prenom FROM etudiantvue where idutilisateur=?";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute([$id]);
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $requete->setFetchMode(PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
             if (!$resultat) {
                 return "";
             }
             return $resultat["prenom"] . " " . $resultat["nom"];
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
@@ -182,7 +186,28 @@ class EtudiantRepository extends LdapRepository
         try {
             $statement = Database::get_conn()->prepare("UPDATE etudiant SET annee=? WHERE idUtilisateur=?");
             $statement->execute([$new_year, $this->id]);
-        } catch (\Exception) {
+        } catch (Exception) {
+            throw new ServerErrorException();
+        }
+    }
+
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function getByNumEtudiantFull($numEtudiant): ?Etudiant
+    {
+        try {
+            $sql = "SELECT * FROM " . self::$view . " WHERE numEtudiant = :numEtudiant";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute(['numEtudiant' => $numEtudiant]);
+            $requete->setFetchMode(PDO::FETCH_ASSOC);
+            $resultat = $requete->fetch();
+            if (!$resultat) {
+                return null;
+            }
+            return $this->construireDepuisTableau($resultat);
+        } catch (PDOException) {
             throw new ServerErrorException();
         }
     }
@@ -190,42 +215,6 @@ class EtudiantRepository extends LdapRepository
     /**
      * @throws ServerErrorException
      */
-    public function getByNumEtudiant($numEtudiant): ?Etudiant
-    {
-        try {
-            $sql = "SELECT * FROM " . self::$view . " WHERE numEtudiant = :numEtudiant";
-            $requete = Database::get_conn()->prepare($sql);
-            $requete->execute(['numEtudiant' => $numEtudiant]);
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
-            $resultat = $requete->fetch();
-            if (!$resultat) {
-                return null;
-            }
-            return $this->construireDepuisTableau($resultat);
-        } catch
-        (PDOException) {
-            throw new ServerErrorException();
-        }
-    }
-
-    public function getByNumEtudiantFull($numEtudiant): ?Etudiant
-    {
-        try {
-            $sql = "SELECT * FROM " . self::$view . " WHERE numEtudiant = :numEtudiant";
-            $requete = Database::get_conn()->prepare($sql);
-            $requete->execute(['numEtudiant' => $numEtudiant]);
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
-            $resultat = $requete->fetch();
-            if (!$resultat) {
-                return null;
-            }
-            return $this->construireDepuisTableau($resultat);
-        } catch
-        (PDOException) {
-            throw new ServerErrorException();
-        }
-    }
-
     public function updateEtu(string $numEtu, string $nom, string $prenom, string $tel, string $mailPerso, string $mailUniv, string $adresse, string $codePostal, string $ville, string $pays, ?string $groupe): void
     {
         $statement = Database::get_conn()->prepare("Call updateetuimp(?,?,?,?,?,?,?,?,?,?,?,?)");

@@ -7,6 +7,8 @@ use app\src\core\exception\ServerErrorException;
 use app\src\model\Auth;
 use app\src\model\dataObject\TuteurEntreprise;
 use app\src\model\Form\FormModel;
+use Exception;
+use PDO;
 
 class TuteurEntrepriseRepository extends ProRepository
 {
@@ -38,7 +40,7 @@ class TuteurEntrepriseRepository extends ProRepository
 <a href="' . HOST . '/registerTutor/' . $token . '">Créer mon compte</a>
 </div>');
             $form->setSuccess("Un email à été envoyé à l'adresse mail indiquée.");
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
 
@@ -63,8 +65,8 @@ class TuteurEntrepriseRepository extends ProRepository
             Auth::generate_token($user, false);
             self::deleteCreationToken($tokenData["tokencreation"]);
             return true;
-        } catch (\Exception $e) {
-            throw new ServerErrorException();
+        } catch (Exception $e) {
+            throw new ServerErrorException($e);
         }
     }
 
@@ -76,21 +78,11 @@ class TuteurEntrepriseRepository extends ProRepository
         try {
             $statement = Database::get_conn()->prepare("DELETE FROM CreationCompteTuteur WHERE tokenCreation = ?");
             $statement->execute([$token]);
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
 
-    public static function getIdEntrepriseByIdTutor(int $userid): ?int
-    {
-        $sql = "SELECT idEntreprise FROM tuteurvue WHERE idUtilisateur = ?";
-        $statement = Database::get_conn()->prepare($sql);
-        $statement->execute([$userid]);
-        $statement->setFetchMode(\PDO::FETCH_ASSOC);
-        $result = $statement->fetch();
-        if (!$result) return null;
-        return $result["identreprise"];
-    }
 
     /**
      * @throws ServerErrorException
@@ -101,14 +93,14 @@ class TuteurEntrepriseRepository extends ProRepository
         try {
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idEntreprise' => $idEntreprise]);
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $requete->setFetchMode(PDO::FETCH_ASSOC);
             $resultat = $requete->fetchAll();
             if (!$resultat) return null;
             foreach ($resultat as $key => $tuteur) {
                 $resultat[$key] = $this->construireTuteurProDepuisTableau($tuteur);
             }
             return $resultat;
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException('erreur getAllTuteursByIdEntreprise');
         }
 
@@ -126,7 +118,7 @@ class TuteurEntrepriseRepository extends ProRepository
         $sql = "SELECT * FROM $this->nomtable JOIN Utilisateur u ON u.idUtilisateur=$this->nomtable.idUtilisateur WHERE u.archiver = 0";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute();
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
         $data = $requete->fetchAll();
         if (!$data) return null;
         $resultat = [];
@@ -141,12 +133,15 @@ class TuteurEntrepriseRepository extends ProRepository
         return $this->nomtable;
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getById($idTuteur): ?TuteurEntreprise
     {
         $sql = "SELECT * FROM $this->nomtable JOIN Utilisateur ON $this->nomtable.idUtilisateur = Utilisateur.idUtilisateur WHERE $this->nomtable.idUtilisateur = :idUtilisateur";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idUtilisateur' => $idTuteur]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
         $resultat = $requete->fetch();
         if (!$resultat) {
             return null;
@@ -154,12 +149,15 @@ class TuteurEntrepriseRepository extends ProRepository
         return $this->construireTuteurProDepuisTableau($resultat);
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getFullByEntreprise(mixed $idEntreprise): ?array
     {
         $sql = "SELECT * FROM $this->nomtable WHERE $this->nomtable.idEntreprise = :idEntreprise";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idEntreprise' => $idEntreprise]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
         $resultat = $requete->fetchAll();
         if (!$resultat) {
             return null;
@@ -170,6 +168,9 @@ class TuteurEntrepriseRepository extends ProRepository
         return $resultat;
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function create(mixed $nom, mixed $prenom, mixed $fonction, mixed $tel, mixed $email, mixed $idEntreprise)
     {
         $sql = "SELECT creerTuteur(:prenom, :nom, :email, :fonction, :idEntreprise, :hash, :tel)  ";
@@ -183,9 +184,8 @@ class TuteurEntrepriseRepository extends ProRepository
             'hash' => null,
             'tel' => $tel
         ]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
-        $resultat = $requete->fetch();
-        return $resultat;
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
+        return $requete->fetch();
     }
 
     protected function getNomColonnes(): array

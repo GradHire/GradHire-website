@@ -5,12 +5,15 @@ namespace app\src\model\repository;
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\Avis;
-use app\src\model\repository\AbstractRepository;
+use Exception;
 
 class AvisRepository extends AbstractRepository{
 
     private static string $nomTable = "avis";
 
+    /**
+     * @throws ServerErrorException
+     */
     public static function checkIfAvisPosted($getIdutilisateur, int $id): bool
     {
         $sql = "SELECT idavis FROM avis WHERE idutilisateur = :idutilisateur AND identreprise = :identreprise";
@@ -27,7 +30,10 @@ class AvisRepository extends AbstractRepository{
         }
     }
 
-    public static function createAvis(mixed $identreprise, int $id, mixed $Avis, int $visible)
+    /**
+     * @throws ServerErrorException
+     */
+    public static function createAvis(mixed $identreprise, int $id, mixed $Avis, int $visible): void
     {
         $sql = "INSERT INTO avis (identreprise, idutilisateur, avis, private) VALUES (:identreprise, :idutilisateur, :avis, :private)";
         $stmt = Database::get_conn()->prepare($sql);
@@ -39,6 +45,9 @@ class AvisRepository extends AbstractRepository{
         ]);
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public static function getAvisById(mixed $identreprise, int $idutilisateur)
     {
         $sql = "SELECT avis FROM avis WHERE identreprise = :identreprise AND idutilisateur = :idutilisateur";
@@ -55,7 +64,10 @@ class AvisRepository extends AbstractRepository{
         }
     }
 
-    public static function updateAvis(mixed $identreprise, int $id, mixed $Avis, int $visible)
+    /**
+     * @throws ServerErrorException
+     */
+    public static function updateAvis(mixed $identreprise, int $id, mixed $Avis, int $visible): void
     {
         try {
             $sql = "UPDATE avis SET avis = :avis, private = :private WHERE identreprise = :identreprise AND idutilisateur = :idutilisateur";
@@ -66,12 +78,15 @@ class AvisRepository extends AbstractRepository{
                 "avis" => $Avis,
                 "private" => $visible
             ]);
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException("Erreur lors de la modification de l'avis");
         }
     }
 
-    public static function getAvisEntreprisePriver(int $getIdutilisateur)
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getAvisEntreprisePriver(int $getIdutilisateur): array
     {
         $sql = "SELECT avis FROM avis WHERE identreprise = :identreprise AND private = 1";
         $stmt = Database::get_conn()->prepare($sql);
@@ -86,7 +101,10 @@ class AvisRepository extends AbstractRepository{
         }
     }
 
-    public static function getAvisEntreprisePublic(int $getIdutilisateur)
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getAvisEntreprisePublic(int $getIdutilisateur): array
     {
         $sql = "SELECT avis FROM avis WHERE identreprise = :identreprise AND private = 0";
         $stmt = Database::get_conn()->prepare($sql);
@@ -101,6 +119,9 @@ class AvisRepository extends AbstractRepository{
         }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public static function getPrivate(mixed $identreprise, int $idutilisateur)
     {
         $sql = "SELECT private FROM avis WHERE identreprise = :identreprise AND idutilisateur = :idutilisateur";

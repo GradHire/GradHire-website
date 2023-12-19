@@ -2,8 +2,6 @@
 
 namespace app\src\model\dataObject;
 
-use app\src\model\repository\ConventionRepository;
-use app\src\model\repository\EntrepriseRepository;
 
 class Entreprise extends Utilisateur
 {
@@ -143,7 +141,7 @@ class Entreprise extends Utilisateur
 
     protected function getValueColonne(string $nomColonne): string
     {
-        return $this->strval($$nomColonne);
+        return strval($$nomColonne);
     }
 
 }

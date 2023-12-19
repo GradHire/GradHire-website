@@ -6,6 +6,8 @@ use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
 use app\src\model\dataObject\Postuler;
+use Exception;
+use PDO;
 use PDOException;
 
 class PostulerRepository extends AbstractRepository
@@ -29,7 +31,7 @@ class PostulerRepository extends AbstractRepository
                 date("Y-m-d H:i:s")
             ];
             $stmt->execute($values);
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
@@ -42,7 +44,7 @@ class PostulerRepository extends AbstractRepository
         $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE idOffre=:idOffre AND idUtilisateur=:idUtilisateur";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idOffre' => $idOffre, 'idUtilisateur' => $idUtilisateur]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
         $resultat = $requete->fetch();
         if (!$resultat) return null;
         return $this->construireDepuisTableau($resultat);
@@ -55,39 +57,51 @@ class PostulerRepository extends AbstractRepository
         );
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getByIdEntreprise($identreprise): ?array
     {
         $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE identreprise= :id AND statut::text='validee' OR statut::text='refusee'";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['id' => $identreprise]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
         return $requete->fetchAll();
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getCandidaturesAttenteEntreprise($identreprise): ?array
     {
         $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE identreprise= :id AND statut::text LIKE 'en attente%'";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['id' => $identreprise]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
         return $requete->fetchAll();
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getCandidaturesAttenteEtudiant($identreprise): ?array
     {
         $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE idUtilisateur= :id AND statut::text LIKE 'en attente%'";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['id' => $identreprise]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
         return $requete->fetchAll();
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getByIdEtudiant($idEtudiant): ?array
     {
         $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM $this->nomTable  WHERE idUtilisateur= :id AND statut::text='validee' OR statut::text='refusee'";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['id' => $idEtudiant]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
         return $requete->fetchAll();
     }
 
@@ -101,21 +115,27 @@ class PostulerRepository extends AbstractRepository
         $requete->execute(['etat' => $etat, 'idutilisateur' => $idutilisateur, 'idoffre' => $idoffre]);
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getByStatementValideeOrRefusee(): array
     {
         $sql = "SELECT nom,sujet,dates,idOffre, idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE statut::text='validee' OR statut::text='refusee'";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute();
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
         return $requete->fetchAll();
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getByStatementAttente(): array
     {
         $sql = "SELECT nom,sujet,dates,idOffre, idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE statut::text LIKE 'en attente%'";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute();
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
         return $requete->fetchAll();
     }
 
@@ -128,7 +148,7 @@ class PostulerRepository extends AbstractRepository
             $sql = "SELECT * FROM $this->nomTable;";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute();
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $requete->setFetchMode(PDO::FETCH_ASSOC);
             $resultat = $requete->fetchAll();
             if (!$resultat) return null;
             return $resultat;
@@ -145,6 +165,9 @@ class PostulerRepository extends AbstractRepository
         return Database::get_conn()->query("SELECT * FROM candidatures_par_mois_cache;")->fetchAll();
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getIfSuivi(int $idUtilisateur, $idetu, $idoffre): bool
     {
         $statement = Database::get_conn()->prepare("SELECT idUtilisateur FROM Supervise WHERE idutilisateur = :idutilisateur AND idetudiant = :idetudiant AND idoffre = :idoffre");
@@ -157,12 +180,15 @@ class PostulerRepository extends AbstractRepository
         return true;
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getByIdOffre(mixed $idOffre): ?array
     {
         $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE idOffre=:idOffre";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idOffre' => $idOffre]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
         $resultat = [];
         foreach ($requete as $item) {
             $resultat[] = $this->construireDepuisTableau($item);
@@ -173,32 +199,35 @@ class PostulerRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public function getSiTuteurPostuler(?int $getIdUtilisateur, ?int $getIdOffre)
+    public function getSiTuteurPostuler(?int $getIdUtilisateur, ?int $getIdOffre): bool
     {
         try {
             $sql = "SELECT idUtilisateur FROM Supervise WHERE idEtudiant=:idUtilisateur AND idOffre=:idOffre";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idUtilisateur' => $getIdUtilisateur, 'idOffre' => $getIdOffre]);
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $requete->setFetchMode(PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
             if (!$resultat) return false;
             return true;
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException('erreurs getSiTuteurPostuler');
         }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getTuteurByIdOffre(mixed $idOffre): ?array
     {
         try {
             $sql = "SELECT * FROM Supervise WHERE idOffre=:idOffre";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idOffre' => $idOffre]);
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $requete->setFetchMode(PDO::FETCH_ASSOC);
             $resultat = $requete->fetchAll();
             if (!$resultat) return null;
             return $resultat;
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException('erreurs getTuteurByIdOffre');
         }
     }
@@ -215,7 +244,7 @@ class PostulerRepository extends AbstractRepository
                 'idoffre' => $idOffre,
                 'idutilisateur' => $idutilisateur
             ]);
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException('erreurs refuserCandidature');
         }
     }
@@ -232,7 +261,7 @@ class PostulerRepository extends AbstractRepository
                 'idoffre' => $idOffre,
                 'idutilisateur' => $idEtudiant
             ]);
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException('erreurs validerCandidatureEtudiant');
         }
         try {
@@ -242,7 +271,7 @@ class PostulerRepository extends AbstractRepository
                 'idoffre' => $idOffre,
                 'idutilisateur' => $idEtudiant
             ]);
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException('erreurs validerCandidatureEtudiant');
         }
         try {
@@ -252,7 +281,7 @@ class PostulerRepository extends AbstractRepository
                 'idoffre' => $idOffre,
                 'idutilisateur' => $idEtudiant
             ]);
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException('erreurs validerCandidatureEtudiant');
         }
     }
@@ -269,7 +298,7 @@ class PostulerRepository extends AbstractRepository
                 'idoffre' => $idOffre,
                 'idutilisateur' => $idUtilisateur,
             ]);
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException('erreurs validerCandidatureEntreprise');
         }
     }
@@ -283,9 +312,9 @@ class PostulerRepository extends AbstractRepository
             $sql = "SELECT nom,sujet,dates,idOffre, idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE CAST(statut as TEXT) = 'en attente tuteur prof' OR CAST(statut as TEXT) = 'en attente responsable' OR CAST(statut as TEXT) = 'en attente tuteur entreprise'";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute();
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $requete->setFetchMode(PDO::FETCH_ASSOC);
             return $requete->fetchAll();
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException('erreurs getByStatementAttenteTuteur');
         }
     }
@@ -293,7 +322,7 @@ class PostulerRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public function getByStatementTuteur(int $idutilisateur, string $string)
+    public function getByStatementTuteur(int $idutilisateur, string $string): bool|array
     {
         if ($string == 'validee') {
             try {
@@ -302,9 +331,9 @@ class PostulerRepository extends AbstractRepository
                 $requete->execute([
                     'idutilisateur' => $idutilisateur
                 ]);
-                $requete->setFetchMode(\PDO::FETCH_ASSOC);
+                $requete->setFetchMode(PDO::FETCH_ASSOC);
                 return $requete->fetchAll();
-            } catch (\Exception) {
+            } catch (Exception) {
                 throw new ServerErrorException('erreurs getByStatementTuteurValidee');
             }
         } else if ($string == 'refusee') {
@@ -319,16 +348,17 @@ class PostulerRepository extends AbstractRepository
                     $item['statut'] = 'refusee';
                 }
                 return $resultatRequete;
-            } catch (\Exception) {
+            } catch (Exception) {
                 throw new ServerErrorException('erreurs getByStatementTuteurRefusee');
             }
         }
+        return [];
     }
 
     /**
      * @throws ServerErrorException
      */
-    public function getIfStudentAlreadyAccepted(int $idOffre)
+    public function getIfStudentAlreadyAccepted(int $idOffre): bool
     {
         try {
             $sql = "SELECT COUNT(idUtilisateur) as nbAccepter FROM $this->nomTable WHERE idOffre=:idoffre AND (statut::text = 'validee' OR statut::text = 'en attente tuteur' OR statut::text = 'en attente responsable')";
@@ -336,11 +366,11 @@ class PostulerRepository extends AbstractRepository
             $requete->execute([
                 'idoffre' => $idOffre
             ]);
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $requete->setFetchMode(PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
             if ($resultat["nbaccepter"] == 1) return true;
             return false;
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException('erreurs getIfStudentAlreadyAccepted');
         }
     }

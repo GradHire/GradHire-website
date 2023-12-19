@@ -8,6 +8,8 @@ use app\src\model\Auth;
 use app\src\model\dataObject\Entreprise;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
+use Exception;
+use PDO;
 use PDOException;
 
 class EntrepriseRepository extends ProRepository
@@ -37,7 +39,7 @@ class EntrepriseRepository extends ProRepository
  </div>');
             Auth::generate_token($user, false);
             return true;
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
@@ -54,7 +56,7 @@ class EntrepriseRepository extends ProRepository
             $count = $statement->rowCount();
             if ($count == 0) return false;
             return true;
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
@@ -67,13 +69,13 @@ class EntrepriseRepository extends ProRepository
         try {
             $statement = Database::get_conn()->prepare("SELECT email FROM CreationCompteTuteur WHERE idUtilisateur = ?");
             $statement->execute([$id]);
-            $statement->setFetchMode(\PDO::FETCH_ASSOC);
+            $statement->setFetchMode(PDO::FETCH_ASSOC);
             $resultat = $statement->fetchAll();
             if (!$resultat) {
                 return [];
             }
             return $resultat;
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
@@ -106,9 +108,7 @@ class EntrepriseRepository extends ProRepository
             $sql = "SELECT email FROM hirchytsd.entreprisevue WHERE idutilisateur = :idutilisateur";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idutilisateur' => $id]);
-            $resultat = $requete->fetch();
-
-            return $resultat;
+            return $requete->fetch();
         } catch
         (PDOException) {
             throw new ServerErrorException("Erreur lors de la récupération de l'email de l'entreprise");
@@ -131,7 +131,7 @@ class EntrepriseRepository extends ProRepository
             $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE " . $this->getNomTable() . ".idUtilisateur = :idUtilisateur";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute(['idUtilisateur' => $idEntreprise]);
-            $requete->setFetchMode(\PDO::FETCH_ASSOC);
+            $requete->setFetchMode(PDO::FETCH_ASSOC);
             $resultat = $requete->fetch();
             if (!$resultat) {
                 return null;
@@ -182,12 +182,15 @@ class EntrepriseRepository extends ProRepository
         }
     }
 
-    public function getByName(mixed $nomEnt, mixed $pays, mixed $department)
+    /**
+     * @throws ServerErrorException
+     */
+    public function getByName(mixed $nomEnt, mixed $pays, mixed $department): ?array
     {
         $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE nom = :nomEnt AND pays = :pays AND codePostal LIKE :department";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['nomEnt' => $nomEnt, 'pays' => $pays, 'department' => $department . '%']);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
         $resultat = $requete->fetchAll();
         if (!$resultat) {
             return null;
@@ -199,12 +202,15 @@ class EntrepriseRepository extends ProRepository
         return $entreprises;
     }
 
-    public function getBySiret(mixed $siret, mixed $siren)
+    /**
+     * @throws ServerErrorException
+     */
+    public function getBySiret(mixed $siret, mixed $siren): ?array
     {
         $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE siret = :siret AND siret LIKE  :siren";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['siret' => $siret, 'siren' => $siren . '%']);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
         $resultat = $requete->fetchAll();
         if (!$resultat) {
             return null;
@@ -216,12 +222,15 @@ class EntrepriseRepository extends ProRepository
         return $entreprises;
     }
 
-    public function getByTel(mixed $tel, mixed $fax)
+    /**
+     * @throws ServerErrorException
+     */
+    public function getByTel(mixed $tel, mixed $fax): ?array
     {
         $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE numTelephone = :tel AND fax = :fax";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['tel' => $tel, 'fax' => $fax]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
         $resultat = $requete->fetchAll();
         if (!$resultat) {
             return null;
@@ -233,12 +242,15 @@ class EntrepriseRepository extends ProRepository
         return $entreprises;
     }
 
-    public function getByAdresse(mixed $adresse, mixed $codePostal, mixed $pays)
+    /**
+     * @throws ServerErrorException
+     */
+    public function getByAdresse(mixed $adresse, mixed $codePostal, mixed $pays): ?array
     {
         $sql = "SELECT * FROM " . $this->getNomTable() . " WHERE adresse = :adresse AND codePostal = :codePostal AND pays = :pays";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['adresse' => $adresse, 'codePostal' => $codePostal, 'pays' => $pays]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
         $resultat = $requete->fetchAll();
         if (!$resultat) {
             return null;
@@ -250,12 +262,15 @@ class EntrepriseRepository extends ProRepository
         return $entreprises;
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getCodePostal(int $idUtilisateur): ?string
     {
         $sql = "SELECT codePostal FROM " . $this->getNomTable() . " WHERE idUtilisateur = :idUtilisateur";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idUtilisateur' => $idUtilisateur]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
         $resultat = $requete->fetch();
         if (!$resultat) {
             return null;
@@ -263,12 +278,15 @@ class EntrepriseRepository extends ProRepository
         return $resultat['codepostal'];
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getVille(int $idUtilisateur): ?string
     {
         $sql = "SELECT nomVille FROM " . $this->getNomTable() . "  WHERE idUtilisateur = :idUtilisateur";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idUtilisateur' => $idUtilisateur]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
         $resultat = $requete->fetch();
         if (!$resultat) {
             return null;
@@ -276,12 +294,15 @@ class EntrepriseRepository extends ProRepository
         return $resultat['nomville'];
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function getPays(int $idUtilisateur): ?string
     {
         $sql = "SELECT pays FROM " . $this->getNomTable() . " WHERE idUtilisateur = :idUtilisateur";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idUtilisateur' => $idUtilisateur]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
         $resultat = $requete->fetch();
         if (!$resultat) {
             return null;
@@ -289,19 +310,25 @@ class EntrepriseRepository extends ProRepository
         return $resultat['pays'];
     }
 
-    public function create(mixed $nomEnt, mixed $email, mixed $tel, string $string, mixed $type, mixed $effectif, mixed $codeNaf, mixed $fax, mixed $web, mixed $voie, mixed $cedex, mixed $residence, mixed $codePostal, mixed $pays, mixed $nomville, mixed $siret)
+    /**
+     * @throws ServerErrorException
+     */
+    public function create(mixed $nomEnt, mixed $email, mixed $tel, string $string, mixed $type, mixed $effectif, mixed $codeNaf, mixed $fax, mixed $web, mixed $voie, mixed $cedex, mixed $residence, mixed $codePostal, mixed $pays, mixed $nomville, mixed $siret): void
     {
         $sql = "SELECT creerentimp(:nomEnt, :email, :tel, :string, :type, :effectif, :codeNaf, :fax, :web, :voie, :cedex, :residence, :codePostal, :pays, :nomville, :siret) ";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['nomEnt' => $nomEnt, 'email' => $email, 'tel' => $tel, 'string' => $string, 'type' => $type, 'effectif' => $effectif, 'codeNaf' => $codeNaf, 'fax' => $fax, 'web' => $web, 'voie' => $voie, 'cedex' => $cedex, 'residence' => $residence, 'codePostal' => $codePostal, 'pays' => $pays, 'nomville' => $nomville, 'siret' => $siret]);
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public static function getNomEntrepriseById(int $idUtilisateur): ?string
     {
         $sql = "SELECT nom FROM " . self::$view . " WHERE idUtilisateur = :idUtilisateur";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idUtilisateur' => $idUtilisateur]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
         $resultat = $requete->fetch();
         if (!$resultat) {
             return null;
@@ -309,11 +336,14 @@ class EntrepriseRepository extends ProRepository
         return $resultat['nom'];
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public static function getIdEntrepriseByIdOffre(int $id):int{
         $sql = "SELECT Distinct idUtilisateur FROM " . self::$view . " WHERE idOffre = :idOffre";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idOffre' => $id]);
-        $requete->setFetchMode(\PDO::FETCH_ASSOC);
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
         $resultat = $requete->fetch();
         if (!$resultat) {
             return 0;

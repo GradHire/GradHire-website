@@ -41,6 +41,9 @@ class DashboardController extends AbstractController
         NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez modifié les paramètres de votre dashboard", "/dashboard");
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function showDashboard(): string
     {
         $dashboardModel = new DashboardRepository();
