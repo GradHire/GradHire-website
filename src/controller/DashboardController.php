@@ -2,7 +2,6 @@
 
 namespace app\src\controller;
 
-use app\src\core\db\Database;
 use app\src\core\exception\ForbiddenException;
 use app\src\core\exception\NotFoundException;
 use app\src\core\exception\ServerErrorException;
@@ -12,11 +11,10 @@ use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 use app\src\model\repository\CompteRenduRepository;
 use app\src\model\repository\ConventionRepository;
+use app\src\model\repository\DashboardRepository;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\MailRepository;
-use app\src\model\repository\OffresRepository;
-use app\src\model\repository\PostulerRepository;
 use app\src\model\repository\SoutenanceRepository;
 use app\src\model\repository\StaffRepository;
 use app\src\model\repository\SuperviseRepository;
@@ -27,72 +25,21 @@ use app\src\model\repository\VisiteRepository;
 use app\src\model\Request;
 use app\src\view\components\calendar\Event;
 use app\src\view\components\ui\Notification;
+use DateTime;
 
 class DashboardController extends AbstractController
 {
 
-    private const TYPE_SECTIONS = 'sections';
-    private const TYPE_ACTIONS = 'actions';
-
-    /**
-     * Modifies the parameters based on the given request.
-     *
-     * @param Request $request The request object.
-     * @throws ServerErrorException If there is an error in the server.
-     */
     public function modifierParametres(Request $request): void
     {
-        $typeBlock = $request->getRouteParams()['type'];
-        $filteredParams = $this->filterRequestedParams($request->getBody(), $typeBlock);
-
-        if (!isset($_SESSION['parametres'])) {
-            $_SESSION['parametres'] = [
-                self::TYPE_SECTIONS => [],
-                self::TYPE_ACTIONS => []
-            ];
-        }
-
-        switch ($typeBlock) {
-            case self::TYPE_SECTIONS:
-            case self::TYPE_ACTIONS:
-                $_SESSION['parametres'][$typeBlock] = $filteredParams;
-                break;
-        }
-
-        $configJson = json_encode($_SESSION['parametres']);
-        $statement = Database::get_conn()->prepare("SELECT * FROM updateParametres(?, ?);");
-        $userId = Application::getUser()->id();
-        $statement->execute([$userId, $configJson]);
-        Application::redirectFromParam("/dashboard");
+        $dashboardModel = new DashboardRepository();
+        $dashboardModel->modifyParams($request);
     }
 
-    private function filterRequestedParams(array $body, string $typeBlock): array
-    {
-        $filteredParams = [];
-        if (in_array($typeBlock, [self::TYPE_SECTIONS, self::TYPE_ACTIONS])) {
-            $prefix = $typeBlock === self::TYPE_SECTIONS ? 'S' : 'A';
-            foreach ($body as $key => $value) if (str_starts_with($key, $prefix)) $filteredParams[] = $key;
-        }
-        return $filteredParams;
-    }
-
-    /**
-     * @throws ServerErrorException
-     */
     public function showDashboard(): string
     {
-        $data = [];
-        $conventionRepo = new ConventionRepository();
-        $offresRepo = new OffresRepository();
-        $postulerRepo = new PostulerRepository();
-
-        $data['percentageBlockData1'] = $conventionRepo->getPourcentageEtudiantsConventionCetteAnnee();
-        $data['numBlockData1'] = $offresRepo->getStatsDensembleStageEtAlternance();
-        $data['barChartHorizontalData1'] = $offresRepo->getTop5DomainesPlusDemandes();
-        $data['pieChartData1'] = $offresRepo->getStatsDistributionDomaine();
-        $data['barChartVerticalData1'] = $offresRepo->getMoyenneCandidaturesParOffreParDomaine();
-        $data['lineChartData1'] = $postulerRepo->getStatsCandidaturesParMois();
-        $data['lastActionsData1'] = $offresRepo->getOffresDernierSemaine();
+        $dashboardModel = new DashboardRepository();
+        $data = $dashboardModel->fetchDashboardData();
 
         return $this->render('dashboard/dashboard', [
             'data' => $data
@@ -146,7 +93,7 @@ class DashboardController extends AbstractController
      * @throws ForbiddenException
      * @throws ServerErrorException
      */
-    public function role(Request $req)
+    public function role(Request $req): void
     {
         if ($req->getMethod() !== 'post')
             throw new ForbiddenException();
@@ -251,12 +198,11 @@ class DashboardController extends AbstractController
             }
             $e = new Event($title, $visite->getDebutVisite(), $visite->getFinVisite(), "#1c4ed8");
             if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage) || (Auth::has_role(Roles::Student) && ConventionRepository::getStudentId($visite->getNumConvention()))) $e->setButton("Voir plus", "/visite/" . $visite->getNumConvention());
-            if ($visite->getFinVisite() < new \DateTime('now') && ConventionRepository::imOneOfTheTutor(Auth::get_user()->id(), $visite->getNumConvention())) {
-                if (!CompteRenduRepository::checkIfCompteRenduProfExist($visite->getNumConvention()) && Auth::has_role(Roles::TutorTeacher)) {
+            if ($visite->getFinVisite() < new DateTime('now') && ConventionRepository::imOneOfTheTutor(Auth::get_user()->id(), $visite->getNumConvention())) {
+                if (!CompteRenduRepository::checkIfCompteRenduProfExist($visite->getNumConvention()) && Auth::has_role(Roles::TutorTeacher))
                     $e->setButton("deposer compte rendu prof", "/compteRendu/" . $visite->getNumConvention());
-                } else if (!CompteRenduRepository::checkIfCompteRenduEntrepriseExist($visite->getNumConvention()) && Auth::has_role(Roles::Tutor)) {
+                else if (!CompteRenduRepository::checkIfCompteRenduEntrepriseExist($visite->getNumConvention()) && Auth::has_role(Roles::Tutor))
                     $e->setButton("deposer compte rendu entreprise", "/compteRendu/" . $visite->getNumConvention());
-                }
             }
             $events[] = $e;
         }
@@ -271,12 +217,11 @@ class DashboardController extends AbstractController
             $e = new Event($title, $soutenance->getDebutSoutenance(), $soutenance->getFinSoutenance(), "#1c4ed8");
             if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage)) $e->setButton("Voir plus", "/voirSoutenance/" . $soutenance->getNumConvention());
             if (Auth::has_role(Roles::Student) && Auth::get_user()->id() == ConventionRepository::getStudentId($soutenance->getNumConvention())) $e->setButton("Voir plus", "/voirSoutenance/" . $soutenance->getNumConvention());
-            if ($soutenance->getFinSoutenance() < new \DateTime('now') && ConventionRepository::getIfIdTuteurs($soutenance->getNumConvention(), Application::getUser()->id())) {
-                if (!CompteRenduRepository::checkIfCompteRenduSoutenanceProfExist($soutenance->getNumConvention()) && Auth::has_role(Roles::TutorTeacher)) {
+            if ($soutenance->getFinSoutenance() < new DateTime('now') && ConventionRepository::getIfIdTuteurs($soutenance->getNumConvention(), Application::getUser()->id())) {
+                if (!CompteRenduRepository::checkIfCompteRenduSoutenanceProfExist($soutenance->getNumConvention()) && Auth::has_role(Roles::TutorTeacher))
                     $e->setButton("deposer compte rendu soutenance prof", "/compteRenduSoutenance/" . $soutenance->getNumConvention());
-                } else if (!CompteRenduRepository::checkIfCompteRenduSoutenanceEntrepriseExist($soutenance->getNumConvention()) && Auth::has_role(Roles::Tutor)) {
+                else if (!CompteRenduRepository::checkIfCompteRenduSoutenanceEntrepriseExist($soutenance->getNumConvention()) && Auth::has_role(Roles::Tutor))
                     $e->setButton("deposer compte rendu soutenance entreprise", "/compteRenduSoutenance/" . $soutenance->getNumConvention());
-                }
             }
             $events[] = $e;
         }
