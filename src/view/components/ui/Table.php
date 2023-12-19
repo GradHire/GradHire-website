@@ -34,11 +34,6 @@ class Table
 <table class="min-w-full divide-y-2 divide-zinc-200 bg-white text-sm" id="$id">
         <thead class="ltr:text-left rtl:text-right">
         <tr>
-<th class="select-none cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900 hover:bg-gray-100" onclick="sortTable(\'' . $id . '\', this, ' . $i . ')">
-				<div class="flex justify-between items-center">
-				ID <i class="fa-solid fa-sort"></i>
-				</div>                
-            </th>
 HTML;
         for ($i = 0; $i < count($columns); $i++) {
             echo '<th class="select-none cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900 hover:bg-gray-100" onclick="sortTable(\'' . $id . '\', this, ' . $i . ')">
@@ -57,13 +52,9 @@ HTML;
 HTML;
         if (count($values) > 0) {
             for ($i = 0; $i < count($values); $i++) {
-                $colId = $i + 1;
                 $hidden = $i >= 20 ? "hidden" : "";
                 echo <<<HTML
 <tr class="odd:bg-zinc-50 $hidden">
-<td class="whitespace-nowrap px-4 py-2 font-medium text-zinc-900">
-$colId
-</td>
 HTML;
                 $callback($values[$i]);
                 echo <<<HTML
@@ -71,13 +62,15 @@ HTML;
 HTML;
             }
         }
+        $count = count($values);
         $style = count($values) > 0 ? "display: none" : '';
         echo <<<HTML
 </tbody>
     </table>
-    <div class="w-full flex justify-center gap-2 mt-4" id="$id-pagination">
+    <div class="w-full flex justify-center gap-2 pt-4" id="$id-pagination">
     $buttons
 </div>
+<p class="w-full text-center py-2">$count lignes</p>
     <p id="$empty" style="$style" class="pl-4 pt-2 text-zinc-800">Aucun résultats</p>
 <script src="/resources/js/table.js"></script>
 HTML;
