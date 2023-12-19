@@ -65,7 +65,7 @@ class NotificationController extends AbstractController
     /**
      * @throws ServerErrorException
      */
-    public function supprimerAllNotificationsNonLue(): void
+    public function supprimerAllNotificationsLue(): void
     {
         NotificationRepository::deleteAllNotificationLue(Application::getUser()->id());
         Application::redirectFromParam("/notifications");
