@@ -8,7 +8,6 @@ use app\src\model\Auth;
 use app\src\model\dataObject\Entreprise;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
-use Couchbase\IndexFailureException;
 use PDOException;
 
 class EntrepriseRepository extends ProRepository
@@ -28,7 +27,8 @@ class EntrepriseRepository extends ProRepository
                 $form->setError("Un compte existe déjà avec cette adresse mail ou ce numéro de siret.");
                 return false;
             }
-            $user = self::save([$body["name"], $body["siret"], $body["email"], password_hash($body["password"], PASSWORD_DEFAULT), $body["phone"]]);
+            $hash = self::hashPassword($body["password"]);
+            $user = self::save([$body["name"], $body["siret"], $body["email"], $hash, $body["phone"]]);
             $emails = (new StaffRepository([]))->getManagersEmail();
             MailRepository::send_mail($emails, "Nouvelle entreprise",
                 '<div>
