@@ -49,20 +49,21 @@ class CandidatureController extends AbstractController
                 $candidature->setStatutPostuler("refuser");
             }
         }
+        $postulerRepository = new PostulerRepository();
         if (Auth::has_role(Roles::Enterprise)) {
-            $array = ['candidaturesAttente' => (new PostulerRepository())->getCandidaturesAttenteEntreprise($entrepriseid),
-                'candidaturesAutres' => (new PostulerRepository())->getByIdEntreprise($entrepriseid)
+            $array = ['candidaturesAttente' => $postulerRepository::getCandidaturesAttenteEntreprise($entrepriseid),
+                'candidaturesAutres' => $postulerRepository::getByIdEntreprise($entrepriseid)
             ];
         } else if (Auth::has_role(Roles::Manager, Roles::Staff)) {
-            $array = ['candidaturesAttente' => (new PostulerRepository())->getByStatementAttente(),
-                'candidaturesAutres' => (new PostulerRepository())->getByStatementValideeOrRefusee()
+            $array = ['candidaturesAttente' => $postulerRepository::getByStatementAttente(),
+                'candidaturesAutres' => $postulerRepository::getByStatementValideeOrRefusee()
             ];
         } else if (Auth::has_role(Roles::Teacher, Roles::Tutor, Roles::TutorTeacher)) {
-            $array = ['candidaturesAttente' => (new PostulerRepository())->getByStatementAttenteTuteur()];
-            $array['candidaturesAutres'] = array_merge((new PostulerRepository())->getByStatementTuteur(Auth::get_user()->id(), 'validee'), (new PostulerRepository())->getByStatementTuteur(Auth::get_user()->id(), 'refusee'));
+            $array = ['candidaturesAttente' => $postulerRepository::getByStatementAttenteTuteur()];
+            $array['candidaturesAutres'] = array_merge($postulerRepository::getByStatementTuteur(Auth::get_user()->id(), 'validee'), $postulerRepository::getByStatementTuteur(Auth::get_user()->id(), 'refusee'));
         } else if (Auth::has_role(Roles::Student)) {
-            $array = ['candidaturesAttente' => (new PostulerRepository())->getCandidaturesAttenteEtudiant($userid),
-                'candidaturesAutres' => (new PostulerRepository())->getByIdEtudiant($userid)
+            $array = ['candidaturesAttente' => $postulerRepository::getCandidaturesAttenteEtudiant($userid),
+                'candidaturesAutres' => $postulerRepository::getByIdEtudiant($userid)
             ];
         } else throw new ForbiddenException();
         return $this->render(

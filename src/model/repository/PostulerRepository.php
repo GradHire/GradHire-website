@@ -16,7 +16,7 @@ class PostulerRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    private string $nomTable = "postulervue";
+    private static string $nomTable = "postulervue";
 
     /**
      * @throws ServerErrorException
@@ -41,7 +41,7 @@ class PostulerRepository extends AbstractRepository
      */
     public function getById($idOffre, $idUtilisateur): ?Postuler
     {
-        $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE idOffre=:idOffre AND idUtilisateur=:idUtilisateur";
+        $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM ". self::$nomTable ." WHERE idOffre=:idOffre AND idUtilisateur=:idUtilisateur";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idOffre' => $idOffre, 'idUtilisateur' => $idUtilisateur]);
         $requete->setFetchMode(PDO::FETCH_ASSOC);
@@ -60,9 +60,9 @@ class PostulerRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public function getByIdEntreprise($identreprise): ?array
+    public static function getByIdEntreprise($identreprise): ?array
     {
-        $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE identreprise= :id AND statut::text='validee' OR statut::text='refusee'";
+        $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM ". self::$nomTable ." WHERE identreprise= :id AND statut::text='validee' OR statut::text='refusee'";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['id' => $identreprise]);
         $requete->setFetchMode(PDO::FETCH_ASSOC);
@@ -72,9 +72,9 @@ class PostulerRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public function getCandidaturesAttenteEntreprise($identreprise): ?array
+    public static function getCandidaturesAttenteEntreprise($identreprise): ?array
     {
-        $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE identreprise= :id AND statut::text LIKE 'en attente%'";
+        $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM ". self::$nomTable." WHERE identreprise= :id AND statut::text LIKE 'en attente%'";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['id' => $identreprise]);
         $requete->setFetchMode(PDO::FETCH_ASSOC);
@@ -84,9 +84,9 @@ class PostulerRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public function getCandidaturesAttenteEtudiant($identreprise): ?array
+    public static function getCandidaturesAttenteEtudiant($identreprise): ?array
     {
-        $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE idUtilisateur= :id AND statut::text LIKE 'en attente%'";
+        $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM ". self::$nomTable ." WHERE idUtilisateur= :id AND statut::text LIKE 'en attente%'";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['id' => $identreprise]);
         $requete->setFetchMode(PDO::FETCH_ASSOC);
@@ -96,9 +96,9 @@ class PostulerRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public function getByIdEtudiant($idEtudiant): ?array
+    public static function getByIdEtudiant($idEtudiant): ?array
     {
-        $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM $this->nomTable  WHERE idUtilisateur= :id AND statut::text='validee' OR statut::text='refusee'";
+        $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM ". self::$nomTable ."  WHERE idUtilisateur= :id AND statut::text='validee' OR statut::text='refusee'";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['id' => $idEtudiant]);
         $requete->setFetchMode(PDO::FETCH_ASSOC);
@@ -110,7 +110,7 @@ class PostulerRepository extends AbstractRepository
      */
     public function setStatutPostuler(int $idutilisateur, int $idoffre, string $etat): void
     {
-        $sql = "UPDATE $this->nomTable SET statut=:etat WHERE idUtilisateur=:idutilisateur AND idOffre=:idoffre";
+        $sql = "UPDATE ". self::$nomTable ." SET statut=:etat WHERE idUtilisateur=:idutilisateur AND idOffre=:idoffre";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['etat' => $etat, 'idutilisateur' => $idutilisateur, 'idoffre' => $idoffre]);
     }
@@ -118,9 +118,9 @@ class PostulerRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public function getByStatementValideeOrRefusee(): array
+    public static function getByStatementValideeOrRefusee(): array
     {
-        $sql = "SELECT nom,sujet,dates,idOffre, idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE statut::text='validee' OR statut::text='refusee'";
+        $sql = "SELECT nom,sujet,dates,idOffre, idUtilisateur,idEntreprise,statut FROM ". self::$nomTable ." WHERE statut::text='validee' OR statut::text='refusee'";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute();
         $requete->setFetchMode(PDO::FETCH_ASSOC);
@@ -130,9 +130,9 @@ class PostulerRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public function getByStatementAttente(): array
+    public static function getByStatementAttente(): array
     {
-        $sql = "SELECT nom,sujet,dates,idOffre, idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE statut::text LIKE 'en attente%'";
+        $sql = "SELECT nom,sujet,dates,idOffre, idUtilisateur,idEntreprise,statut FROM ". self::$nomTable ." WHERE statut::text LIKE 'en attente%'";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute();
         $requete->setFetchMode(PDO::FETCH_ASSOC);
@@ -145,7 +145,7 @@ class PostulerRepository extends AbstractRepository
     public function getAll(): ?array
     {
         try {
-            $sql = "SELECT * FROM $this->nomTable;";
+            $sql = "SELECT * FROM ".self::$nomTable;
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute();
             $requete->setFetchMode(PDO::FETCH_ASSOC);
@@ -185,7 +185,7 @@ class PostulerRepository extends AbstractRepository
      */
     public function getByIdOffre(mixed $idOffre): ?array
     {
-        $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE idOffre=:idOffre";
+        $sql = "SELECT nom,sujet,dates,idOffre,idUtilisateur,idEntreprise,statut FROM ".self::$nomTable." WHERE idOffre=:idOffre";
         $requete = Database::get_conn()->prepare($sql);
         $requete->execute(['idOffre' => $idOffre]);
         $requete->setFetchMode(PDO::FETCH_ASSOC);
@@ -306,10 +306,10 @@ class PostulerRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public function getByStatementAttenteTuteur(): array
+    public static function getByStatementAttenteTuteur(): array
     {
         try {
-            $sql = "SELECT nom,sujet,dates,idOffre, idUtilisateur,idEntreprise,statut FROM $this->nomTable WHERE CAST(statut as TEXT) = 'en attente tuteur prof' OR CAST(statut as TEXT) = 'en attente responsable' OR CAST(statut as TEXT) = 'en attente tuteur entreprise'";
+            $sql = "SELECT nom,sujet,dates,idOffre, idUtilisateur,idEntreprise,statut FROM ". self::$nomTable ." WHERE CAST(statut as TEXT) = 'en attente tuteur prof' OR CAST(statut as TEXT) = 'en attente responsable' OR CAST(statut as TEXT) = 'en attente tuteur entreprise'";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute();
             $requete->setFetchMode(PDO::FETCH_ASSOC);
@@ -322,11 +322,11 @@ class PostulerRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public function getByStatementTuteur(int $idutilisateur, string $string): bool|array
+    public static function getByStatementTuteur(int $idutilisateur, string $string): bool|array
     {
         if ($string == 'validee') {
             try {
-                $sql = "SELECT nom,sujet,dates,p.idOffre, p.idUtilisateur, su.idUtilisateur as idTuteur,idEntreprise,p.statut FROM $this->nomTable p JOIN Supervise su ON su.idOffre=p.idOffre WHERE su.statut::text = 'validee' AND su.idutilisateur=:idutilisateur AND CAST(p.statut AS TEXT) = CAST(su.statut AS TEXT)";
+                $sql = "SELECT nom,sujet,dates,p.idOffre, p.idUtilisateur, su.idUtilisateur as idTuteur,idEntreprise,p.statut FROM ". self::$nomTable ." p JOIN Supervise su ON su.idOffre=p.idOffre WHERE su.statut::text = 'validee' AND su.idutilisateur=:idutilisateur AND CAST(p.statut AS TEXT) = CAST(su.statut AS TEXT)";
                 $requete = Database::get_conn()->prepare($sql);
                 $requete->execute([
                     'idutilisateur' => $idutilisateur
@@ -338,7 +338,7 @@ class PostulerRepository extends AbstractRepository
             }
         } else if ($string == 'refusee') {
             try {
-                $sql = "SELECT nom,sujet,dates,p.idOffre, p.idUtilisateur, su.idUtilisateur as idTuteur,idEntreprise,p.statut FROM $this->nomTable p JOIN Supervise su ON su.idOffre=p.idOffre WHERE su.idUtilisateur = :idutilisateur AND CAST(p.statut AS TEXT) != CAST(su.statut AS TEXT) AND su.statut::text = 'refusee'";
+                $sql = "SELECT nom,sujet,dates,p.idOffre, p.idUtilisateur, su.idUtilisateur as idTuteur,idEntreprise,p.statut FROM ". self::$nomTable ." p JOIN Supervise su ON su.idOffre=p.idOffre WHERE su.idUtilisateur = :idutilisateur AND CAST(p.statut AS TEXT) != CAST(su.statut AS TEXT) AND su.statut::text = 'refusee'";
                 $requete = Database::get_conn()->prepare($sql);
                 $requete->execute([
                     'idutilisateur' => $idutilisateur
@@ -361,7 +361,7 @@ class PostulerRepository extends AbstractRepository
     public function getIfStudentAlreadyAccepted(int $idOffre): bool
     {
         try {
-            $sql = "SELECT COUNT(idUtilisateur) as nbAccepter FROM $this->nomTable WHERE idOffre=:idoffre AND (statut::text = 'validee' OR statut::text = 'en attente tuteur' OR statut::text = 'en attente responsable')";
+            $sql = "SELECT COUNT(idUtilisateur) as nbAccepter FROM ".self::$nomTable." WHERE idOffre=:idoffre AND (statut::text = 'validee' OR statut::text = 'en attente tuteur' OR statut::text = 'en attente responsable')";
             $requete = Database::get_conn()->prepare($sql);
             $requete->execute([
                 'idoffre' => $idOffre
