@@ -14,16 +14,8 @@ class NotificationController extends AbstractController
      */
     public function listeNotifications(): string
     {
-        $notifications = (new NotificationRepository())->getAllNotificationByUserId(Application::getUser()->id());
-        $notificationsNonLues = [];
-        $notificationsLues = [];
-        foreach ($notifications as $notification) {
-            if ($notification->isLu() == 0) {
-                $notificationsNonLues[] = $notification;
-            } else {
-                $notificationsLues[] = $notification;
-            }
-        }
+        $notificationsNonLues = NotificationRepository::getNotificationNonLue(Application::getUser()->id());
+        $notificationsLues = NotificationRepository::getNotificationLue(Application::getUser()->id());
         return $this->render('notifications/notifications', [
             'notificationsNonLues' => $notificationsNonLues,
             'notificationsLues' => $notificationsLues
@@ -58,6 +50,24 @@ class NotificationController extends AbstractController
         if ($notification !== null) {
             NotificationRepository::deleteNotification($id);
         }
+        Application::redirectFromParam("/notifications");
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function supprimerAllNotificationsNonLue(): void
+    {
+        NotificationRepository::deleteAllNotificationNonLue(Application::getUser()->id());
+        Application::redirectFromParam("/notifications");
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public function supprimerAllNotificationsNonLue(): void
+    {
+        NotificationRepository::deleteAllNotificationLue(Application::getUser()->id());
         Application::redirectFromParam("/notifications");
     }
 }

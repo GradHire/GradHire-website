@@ -272,6 +272,8 @@ $app->router->post('/gererNote/modifier/{id}', [SoutenanceController::class, 'mo
 $app->router->get('/notifications', [NotificationController::class, 'listeNotifications']);
 $app->router->get('/notifications/lu/{id}', [NotificationController::class, 'lireNotification']);
 $app->router->get('/notifications/supprimer/{id}', [NotificationController::class, 'supprimerNotification']);
+$app->router->get('/deleteAllNotificationsNonLue', [NotificationController::class, 'supprimerAllNotificationsNonLue']);
+$app->router->get('/deleteAllNotificationsLue', [NotificationController::class, 'supprimerAllNotificationsLue']);
 
 
 $app->run();

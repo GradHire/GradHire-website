@@ -24,12 +24,12 @@ class NotificationRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public function getAllNotificationByUserId(int $id): ?array
+    public static function getNotificationLue(int $id)
     {
-        $sql = Database::get_conn()->prepare("SELECT * FROM " . $this->getNomTable() . " WHERE idutilisateur = :id ORDER BY date DESC");
+        $sql = Database::get_conn()->prepare("SELECT * FROM " . self::$nomTable . " WHERE idutilisateur = :id AND lu = true ORDER BY date ASC");
         $sql->execute(['id' => $id]);
         $dataObjects = [];
-        foreach ($sql as $dataObjectFormatTableau) $dataObjects[] = $this->construireDepuisTableau($dataObjectFormatTableau);
+        foreach ($sql as $dataObjectFormatTableau) $dataObjects[] = self::getInstance()->construireDepuisTableau($dataObjectFormatTableau);
         return $dataObjects;
     }
 
@@ -62,6 +62,32 @@ class NotificationRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
+    public static function deleteAllNotificationLue(int $id): void
+    {
+        try {
+            $sql = Database::get_conn()->prepare("DELETE FROM " . self::$nomTable . " WHERE idutilisateur =:id AND lu = true");
+            $sql->execute(['id' => $id]);
+        } catch (PDOException) {
+            throw new ServerErrorException("Erreur lors de la suppression de la notification");
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public static function deleteAllNotificationNonLue(int $id): void
+    {
+        try {
+            $sql = Database::get_conn()->prepare("DELETE FROM " . self::$nomTable . " WHERE idutilisateur =:id AND lu = false");
+            $sql->execute(['id' => $id]);
+        } catch (PDOException) {
+            throw new ServerErrorException("Erreur lors de la suppression de la notification");
+        }
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
     public static function setLuToTrue(int $id): void
     {
         try {
@@ -82,6 +108,18 @@ class NotificationRepository extends AbstractRepository
         $dataObjectFormatTableau = $sql->fetch();
         if ($dataObjectFormatTableau === false) return null;
         return self::getInstance()->construireDepuisTableau($dataObjectFormatTableau);
+    }
+
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getNotificationNonLue (int $id): ?array
+    {
+        $sql = Database::get_conn()->prepare("SELECT * FROM " . self::$nomTable . " WHERE idutilisateur = :id AND lu = false ORDER BY date ASC");
+        $sql->execute(['id' => $id]);
+        $dataObjects = [];
+        foreach ($sql as $dataObjectFormatTableau) $dataObjects[] = self::getInstance()->construireDepuisTableau($dataObjectFormatTableau);
+        return $dataObjects;
     }
 
     protected function getNomTable(): string

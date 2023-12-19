@@ -173,6 +173,26 @@ class EtudiantRepository extends LdapRepository
         }
     }
 
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getAllEleveNoConvention()
+    {
+        try {
+            $sql = "SELECT email, idutilisateur, nom, prenom FROM " . self::$view . " WHERE idUtilisateur NOT IN (SELECT idUtilisateur FROM Convention)";
+            $requete = Database::get_conn()->prepare($sql);
+            $requete->execute();
+            $resultat = $requete->fetchAll();
+            if (!$resultat) {
+                return null;
+            }
+            return $resultat;
+        } catch
+        (PDOException) {
+            throw new ServerErrorException();
+        }
+    }
+
     public function role(): Roles
     {
         return Roles::Student;

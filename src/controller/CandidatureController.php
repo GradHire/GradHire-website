@@ -162,14 +162,16 @@ class CandidatureController extends AbstractController
                 $mail = new MailRepository();
                 $mail->send_mail([$etudiant->getEmail()], "Vous n'avez pas encore de convention", "Bonjour,\nVous n'avez pas encore de convention de stage, il serait temps de s'en occuper !");
                 NotificationRepository::createNotification($idUtilisateur, "Vous n'avez pas encore de convention", "/conventions");
+                NotificationRepository::createNotification(Auth::get_user()->getId(), "Vous avez harcelé " .$etudiant->getNom()." ". $etudiant->getPrenom(),"");
                 Application::redirectFromParam("/harceler");
             }
             if (isset($_GET["isAdmin"])) {
-                $etudiants = (new EtudiantRepository([]))->getAll();
+                $etudiants = EtudiantRepository::getAllEleveNoConvention();
                 foreach ($etudiants as $etudiant) {
                     $mail = new MailRepository();
-                    $mail->send_mail([$etudiant->getEmail()], "Vous n'avez pas encore de convention", "Bonjour,\nVous n'avez pas encore de convention de stage, il serait temps de s'en occuper !");
-                    NotificationRepository::createNotification($etudiant->getIdutilisateur(), "Vous n'avez pas encore de convention", "/conventions");
+                    $mail->send_mail([$etudiant['email']], "Vous n'avez pas encore de convention", "Bonjour,\nVous n'avez pas encore de convention de stage, il serait temps de s'en occuper !");
+                    NotificationRepository::createNotification($etudiant['idutilisateur'], "Vous n'avez pas encore de convention", "/conventions");
+                    NotificationRepository::createNotification(Auth::get_user()->getId(), "Vous avez harcelé " .$etudiant['nom']." ". $etudiant['prenom'],"");
                 }
                 Application::redirectFromParam("/harceler");
             }

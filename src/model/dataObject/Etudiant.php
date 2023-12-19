@@ -51,9 +51,10 @@ class Etudiant extends Utilisateur
         $this->idutilisateur = $idUtilisateur;
     }
 
-    public function getPrenom(): ?string
+    public function getPrenom(): string
     {
-        return $this->prenom;
+        if ($this->prenom == null) return "";
+        else return $this->prenom;
     }
 
     public function setPrenom(string $prenom): void
