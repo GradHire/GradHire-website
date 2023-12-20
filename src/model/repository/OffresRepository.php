@@ -123,7 +123,15 @@ class OffresRepository extends AbstractRepository
 		return self::FetchAllAssoc("SELECT * FROM Offre WHERE idUtilisateur = :idUtilisateur AND statut = 'valider'", ['idUtilisateur' => $id]);
 	}
 
-	/**
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getSujetOffre($getIdOffre)
+    {
+        return self::Fetch("SELECT sujet FROM Offre WHERE idOffre = :idOffre", ['idOffre' => $getIdOffre]);
+    }
+
+    /**
 	 * @throws ServerErrorException
 	 */
 	public function getAll(): ?array
