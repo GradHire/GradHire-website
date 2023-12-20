@@ -2,10 +2,8 @@
 
 namespace app\src\model\repository;
 
-use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\Convention;
-use Exception;
 
 class ConventionRepository extends AbstractRepository
 {
@@ -16,15 +14,8 @@ class ConventionRepository extends AbstractRepository
 	 */
 	public static function getStudentId(int $conventionId): int|null
 	{
-		try {
-			$statement = Database::get_conn()->prepare("SELECT idetudiant FROM hirchytsd.\"conventionValideVue\" WHERE numconvention=?");
-			$statement->execute([$conventionId]);
-			$data = $statement->fetch();
-			if (!$data) return null;
-			return $data["idetudiant"];
-		} catch (Exception $e) {
-			throw new ServerErrorException("Erreur lors de la récupération de l'id de l'étudiant", 500, $e);
-		}
+		$data = self::Fetch("SELECT idutilisateur FROM convention WHERE numconvention=?", [$conventionId]);
+		return $data ? $data["idutilisateur"] : null;
 	}
 
 	/**
@@ -32,15 +23,8 @@ class ConventionRepository extends AbstractRepository
 	 */
 	public static function getAddress(int $conventionId): string|null
 	{
-		try {
-			$statement = Database::get_conn()->prepare("SELECT e.adresse, vi.codepostal, vi.nomville FROM entreprise e JOIN offre o ON o.idutilisateur = e.idutilisateur JOIN convention c ON c.idoffre = o.idoffre JOIN ville vi ON e.idville = vi.idville WHERE c.numconvention=?");
-			$statement->execute([$conventionId]);
-			$data = $statement->fetch();
-			if (!$data) return null;
-			return $data["adresse"] . ", " . $data["codepostal"] . " " . $data["nomville"];
-		} catch (Exception) {
-			throw new ServerErrorException();
-		}
+		$data = self::Fetch("SELECT adresse, codepostal, nomville FROM entreprise e JOIN offre o ON o.idutilisateur = e.idutilisateur JOIN convention c ON c.idoffre = o.idoffre JOIN ville vi ON e.idville = vi.idville WHERE c.numconvention=?", [$conventionId]);
+		return $data ? $data["adresse"] . ", " . $data["codepostal"] . " " . $data["nomville"] : null;
 	}
 
 	/**
@@ -48,15 +32,8 @@ class ConventionRepository extends AbstractRepository
 	 */
 	public static function getIdByStudent(int $id): int|null
 	{
-		try {
-			$statement = Database::get_conn()->prepare("SELECT numconvention FROM convention WHERE idutilisateur=?");
-			$statement->execute([$id]);
-			$num = $statement->fetch();
-			if (!$num) return null;
-			return $num["numconvention"];
-		} catch (Exception) {
-			throw new ServerErrorException();
-		}
+		$data = self::Fetch("SELECT numconvention FROM convention WHERE idutilisateur=?", [$id]);
+		return $data ? $data["numconvention"] : null;
 	}
 
 	/**
@@ -64,14 +41,7 @@ class ConventionRepository extends AbstractRepository
 	 */
 	public static function exist(int $numConvention): bool
 	{
-		try {
-			$statement = Database::get_conn()->prepare("SELECT numconvention FROM convention WHERE numconvention=?");
-			$statement->execute([$numConvention]);
-			$data = $statement->fetch();
-			return $data !== null;
-		} catch (Exception) {
-			throw new ServerErrorException();
-		}
+		return self::CheckExist("SELECT numconvention FROM convention WHERE numconvention=?", [$numConvention]);
 	}
 
 	/**
@@ -79,25 +49,15 @@ class ConventionRepository extends AbstractRepository
 	 */
 	public static function getByNumConvention(int $numConvention): array|null
 	{
-		try {
-			$statement = Database::get_conn()->prepare("SELECT * FROM \"conventionValideVue\" WHERE numconvention=?");
-			$statement->execute([$numConvention]);
-			return $statement->fetch();
-		} catch (Exception) {
-			throw new ServerErrorException();
-		}
+		return self::Fetch("SELECT * FROM convention WHERE numconvention=?", [$numConvention]);
 	}
 
-    /**
-     * @throws ServerErrorException
-     */
-    public static function getConventionXOffreById(mixed $id)
+	/**
+	 * @throws ServerErrorException
+	 */
+	public static function getConventionXOffreById(mixed $id): ?array
 	{
-		$statement = Database::get_conn()->prepare("SELECT c.idutilisateur as idetudiant, c.idoffre, o.idutilisateur, o.sujet FROM convention c JOIN Offre o ON c.idoffre = o.idoffre WHERE numconvention = :id");
-		$statement->execute([
-			'id' => $id
-		]);
-		return $statement->fetch();
+		return self::Fetch("SELECT c.idutilisateur as idetudiant, c.idoffre, o.idutilisateur, o.sujet FROM convention c JOIN Offre o ON c.idoffre = o.idoffre WHERE numconvention=?", [$id]);
 	}
 
 	/**
@@ -105,13 +65,7 @@ class ConventionRepository extends AbstractRepository
 	 */
 	public static function validerPedagogiquement(int $id): void
 	{
-		try {
-			$statement = Database::get_conn()->prepare("UPDATE " . static::$table . " SET conventionvalideepedagogiquement = 1 WHERE numconvention = :id");
-			$statement->bindParam(":id", $id);
-			$statement->execute();
-		} catch (Exception $e) {
-			throw new ServerErrorException("Erreur lors de la validation pédagogique de la convention", 500, $e);
-		}
+		self::Execute("UPDATE " . static::$table . " SET conventionvalideepedagogiquement = 1 WHERE numconvention = ?", [$id]);
 	}
 
 	/**
@@ -119,16 +73,7 @@ class ConventionRepository extends AbstractRepository
 	 */
 	public static function getById(int $id): ?array
 	{
-		try {
-			$statement = Database::get_conn()->prepare("SELECT * FROM " . static::$table . " WHERE numconvention = :id");
-			$statement->bindParam(":id", $id);
-			$statement->execute();
-			$data = $statement->fetch();
-			if (!$data) return null;
-			return $data;
-		} catch (Exception $e) {
-			throw new ServerErrorException("Erreur lors de la récupération de la convention", 500, $e);
-		}
+		return self::Fetch("SELECT * FROM " . static::$table . " WHERE numconvention = ?", [$id]);
 	}
 
 	/**
@@ -136,13 +81,7 @@ class ConventionRepository extends AbstractRepository
 	 */
 	public static function unvalidatePedagogiquement(mixed $id): void
 	{
-		try {
-			$statement = Database::get_conn()->prepare("UPDATE " . static::$table . " SET conventionvalideepedagogiquement = 0 WHERE numconvention = :id");
-			$statement->bindParam(":id", $id);
-			$statement->execute();
-		} catch (Exception $e) {
-			throw new ServerErrorException("Erreur lors de l'archivage pédagogique de la convention", 500, $e);
-		}
+		self::Execute("UPDATE " . static::$table . " SET conventionvalideepedagogiquement = 0 WHERE numconvention = ?", [$id]);
 	}
 
 	/**
@@ -150,41 +89,24 @@ class ConventionRepository extends AbstractRepository
 	 */
 	public static function unvalidate(mixed $id): void
 	{
-		try {
-			$statement = Database::get_conn()->prepare("UPDATE " . static::$table . " SET conventionvalidee = 0 WHERE numconvention = :id");
-			$statement->bindParam(":id", $id);
-			$statement->execute();
-		} catch (Exception $e) {
-			throw new ServerErrorException("Erreur lors de l'archivage de la convention", 500, $e);
-		}
+		self::Execute("UPDATE " . static::$table . " SET conventionvalidee = 0 WHERE numconvention = ?", [$id]);
 	}
 
-    /**
-     * @throws ServerErrorException
-     */
-    public static function getIfIdTuteurs(int $numconvention, int $idtuteur): bool
+	/**
+	 * @throws ServerErrorException
+	 */
+	public static function getIfIdTuteurs(int $numconvention, int $idtuteur): bool
 	{
-		$statement = Database::get_conn()->prepare("SELECT idtuteurprof, idtuteurentreprise FROM \"conventionValideVue\" WHERE numconvention = :numconvention");
-		$statement->execute([
-			'numconvention' => $numconvention
-		]);
-		$data = $statement->fetch();
-		if ($data["idtuteurprof"] == $idtuteur || $data["idtuteurentreprise"] == $idtuteur)
-			return true;
-		else
-			return false;
+		$data = self::Fetch("SELECT idtuteurprof, idtuteurentreprise FROM \"conventionValideVue\" WHERE numconvention=?", [$numconvention]);
+		return $data && ($data["idtuteurprof"] == $idtuteur || $data["idtuteurentreprise"] == $idtuteur);
 	}
 
-    /**
-     * @throws ServerErrorException
-     */
-    public static function getInformationByNumConvention(int $numconvention): array
+	/**
+	 * @throws ServerErrorException
+	 */
+	public static function getInformationByNumConvention(int $numconvention): array
 	{
-		$statement = Database::get_conn()->prepare("SELECT * FROM \"conventionValideVue\" WHERE numconvention = :numconvention");
-		$statement->execute([
-			'numconvention' => $numconvention
-		]);
-		return $statement->fetch();
+		return self::Fetch("SELECT * FROM \"conventionValideVue\" WHERE numconvention=?", [$numconvention]) ?? [];
 	}
 
 	/**
@@ -192,49 +114,28 @@ class ConventionRepository extends AbstractRepository
 	 */
 	public static function validate(mixed $id): void
 	{
-		try {
-			$statement = Database::get_conn()->prepare("UPDATE " . static::$table . " SET conventionvalidee = 1 WHERE numconvention = :id");
-			$statement->bindParam(":id", $id);
-			$statement->execute();
-		} catch (Exception $e) {
-			throw new ServerErrorException("Erreur lors de la validation de la convention", 500, $e);
-		}
+		self::Execute("UPDATE " . static::$table . " SET conventionvalidee = 1 WHERE numconvention = ?", [$id]);
 	}
 
-    /**
-     * @throws ServerErrorException
-     */
-    public static function imOneOfTheTutor(int $id, $numconvention): bool
-    {
-        $statement = Database::get_conn()->prepare("SELECT idtuteurprof, idtuteurentreprise FROM \"conventionValideVue\" WHERE numconvention = :numconvention");
-        $statement->execute([
-            'numconvention' => $numconvention
-        ]);
-        $data = $statement->fetch();
-        if (!$data) return false;
-        if ($data["idtuteurprof"] == $id || $data["idtuteurentreprise"] == $id)
-            return true;
-        else
-            return false;
-    }
+	/**
+	 * @throws ServerErrorException
+	 */
+	public static function imOneOfTheTutor(int $id, $numconvention): bool
+	{
+		$data = self::Fetch("SELECT idtuteurprof, idtuteurentreprise FROM \"conventionValideVue\" WHERE numconvention=?", [$numconvention]);
+		return $data && ($data["idtuteurprof"] == $id || $data["idtuteurentreprise"] == $id);
+	}
 
-    /**
+	/**
 	 * @throws ServerErrorException
 	 */
 	public function getAll(): array
 	{
-		try {
-			$statement = Database::get_conn()->prepare("SELECT * FROM " . static::$table);
-			$statement->execute();
-			$data = $statement->fetchAll();
-			$conventions = [];
-			foreach ($data as $row) {
-				$conventions[] = $this->construireDepuisTableau($row);
-			}
-			return $conventions;
-		} catch (Exception $e) {
-			throw new ServerErrorException("Erreur lors de la récupération des conventions", 500, $e);
-		}
+		$data = self::FetchAll("SELECT * FROM " . static::$table) ?? [];
+		$conventions = [];
+		foreach ($data as $row)
+			$conventions[] = $this->construireDepuisTableau($row);
+		return $conventions;
 	}
 
 	public function construireDepuisTableau(array $dataObjectFormatTableau): Convention
@@ -244,12 +145,12 @@ class ConventionRepository extends AbstractRepository
 		);
 	}
 
-    /**
-     * @throws ServerErrorException
-     */
-    public function getPourcentageEtudiantsConventionCetteAnnee(): false|array
+	/**
+	 * @throws ServerErrorException
+	 */
+	public function getPourcentageEtudiantsConventionCetteAnnee(): false|array
 	{
-		return Database::get_conn()->query("SELECT * FROM pourcentage_etudiants_convention_cette_annee_cache;")->fetch();
+		return self::Fetch("SELECT * FROM pourcentage_etudiants_convention_cette_annee_cache;");
 	}
 
 
