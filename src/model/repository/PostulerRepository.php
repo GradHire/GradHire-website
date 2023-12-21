@@ -263,7 +263,7 @@ class PostulerRepository extends AbstractRepository
 		return $data && $data["nbaccepter"] == 1;
 	}
 
-	public function getIfValideeInArray(?array $candidatures): bool
+	public static function getIfValideeInArray(?array $candidatures): bool
 	{
 		foreach ($candidatures as $candidature)
 			if ($candidature['statut'] == 'validee') return true;

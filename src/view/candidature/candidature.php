@@ -19,9 +19,10 @@ use app\src\view\components\ui\Table;
     <div class=" gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
         <div class="overflow-x-auto w-full">
             <?php
-            if (Auth::has_role(Roles::Teacher, Roles::Tutor, Roles::TutorTeacher) || !(new PostulerRepository())->getIfValideeInArray($candidatures)) {
+            $getifValideeInArray = PostulerRepository::getIfValideeInArray($candidatures);
+            if (Auth::has_role(Roles::Teacher, Roles::Tutor, Roles::TutorTeacher) || !$getifValideeInArray) {
                 $nameColonnes = ["Nom de l'entreprise", "Sujet de l'offre", "Email étudiant", "Dates de candidature", "Etat de la candidature"];
-            } else if ((new PostulerRepository())->getIfValideeInArray($candidatures)){
+            } else if ($getifValideeInArray){
                 $nameColonnes = ["Nom de l'entreprise", "Sujet de l'offre", "Email étudiant", "Dates de candidature", "Etat de la candidature", "Tuteur"];
             }
             Table::createTable($candidatures, $nameColonnes, function ($candidature) {
@@ -37,21 +38,31 @@ use app\src\view\components\ui\Table;
                     Table::cell($offre->getSujet());
                     Table::cell($etudiant->getEmail());
                     Table::cell($candidature['dates']);
-                    if ($candidature['statut'] == 'en attente entreprise') {
-                        Table::chip("En attente entreprise", "yellow");
-                    } elseif ($candidature['statut'] == 'en attente etudiant') {
-                        Table::chip("En attente etudiant", "yellow");
-                    } elseif ($candidature['statut'] == 'en attente tuteur prof') {
-                        Table::chip("En attente tuteur prof", "yellow");
-                    } elseif ($candidature['statut'] == 'en attente tuteur entreprise') {
-                        Table::chip("En attente tuteur entreprise", "yellow");
-                    } elseif ($candidature['statut'] == 'en attente responsable') {
-                        Table::chip("En attente responsable", "yellow");
-                    } elseif ($candidature['statut'] == 'refusee') {
-                        Table::chip("Refusé", "red");
-                    } elseif ($candidature['statut'] == 'validee') {
-                        Table::chip("Accepté", "green");
+
+                    switch($candidature['statut']){
+                        case "en attente entreprise":
+                            Table::chip("En attente entreprise", "yellow");
+                            break;
+                        case "en attente etudiant":
+                            Table::chip("En attente etudiant", "yellow");
+                            break;
+                        case "en attente tuteur prof":
+                            Table::chip("En attente tuteur prof", "yellow");
+                            break;
+                        case "en attente tuteur entreprise":
+                            Table::chip("En attente tuteur entreprise", "yellow");
+                            break;
+                        case "en attente responsable":
+                            Table::chip("En attente responsable", "yellow");
+                            break;
+                        case "refusee":
+                            Table::chip("Refusé", "red");
+                            break;
+                        case "validee":
+                            Table::chip("Accepté", "green");
+                            break;
                     }
+
                     if (Auth::has_role(Roles::Enterprise)) {
                         if ($candidature['statut'] == "en attente entreprise") {
                             Table::button("/candidatures/validerEntreprise/" . $candidature['idutilisateur'] . "/" . $candidature['idoffre'], "Valider");
