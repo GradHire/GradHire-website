@@ -19,6 +19,8 @@ class OfferCard implements ComponentInterface
         $date = date_create($offre['datecreation']);
         $date = date_format($date, 'd/m/Y');
 
+        $url = "https://yandex.com/map-widget/v1/?ll=3.850089%2C43.634623&mode=search&sll=10.854186%2C49.182076&sspn=73.212891%2C44.753627&text=" . urlencode($offre['adresse']) . "&z=16.97";
+
         echo <<<EOT
             <div class="h-[125px] w-full border-gray-200 border rounded-[8px] flex flex-col justify-between items-center bg-white relative px-6 py-3 mb-5">
                         <div class="w-full flex flex-row items-center justify-between">
@@ -47,7 +49,7 @@ class OfferCard implements ComponentInterface
                             </div>
                             <div class="h-full w-[1px] bg-zinc-300"></div>
                             <div class="rounded-[8px] border overflow-hidden">
-                                <iframe src="https://yandex.com/map-widget/v1/?ll=3.850089%2C43.634623&mode=search&sll=10.854186%2C49.182076&sspn=73.212891%2C44.753627&text={$offre['adresse']}&z=16.97" width="150" height="60"  allowfullscreen></iframe>
+                                <iframe src="$url" width="150" height="60"  allowfullscreen></iframe>
                             </div>
                         </div>
                         <div class="h-[50px] w-full border-zinc-200 border rounded-[8px] bg-zinc-50 absolute bottom-0 scale-[98%] translate-y-[8px] -z-[1]"></div>

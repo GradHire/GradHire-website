@@ -31,8 +31,8 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> GradHire | <?= $this->title ?></title>
-    <script type="text/javascript" src="/resources/js/side-menu.js"></script>
-    <script type="text/javascript" src="/resources/js/chatbot.js"></script>
+    <script src="/resources/js/side-menu.js"></script>
+    <script src="/resources/js/chatbot.js"></script>
     <link rel="stylesheet" href="/resources/css/input.css">
     <link rel="stylesheet" href="/resources/css/output.css">
     <link rel="icon" type="image/png" sizes="32x32" href="/resources/images/favicon-32x32.png">
@@ -110,13 +110,13 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
             </div>
         </div>
         <button type="submit" name="sidebar-icon" id="sidebar-button"
-                class=" h-full w-4 absolute right-0 group top-0 translate-x-[15px] ">
-            <div class="flex h-8 w-6 flex-col items-center absolute  duration-150 right-0 top-1/2 transform -translate-y-1/2 translate-x-1.5">
-                <div id="sideButtonFlash1"
-                     class=" h-3 w-1 rounded-full duration-150 bg-zinc-400 group-hover:bg-zinc-800 <?= $isOpen ? " group-hover:rotate-[15deg] group-hover:-translate-x-0.5 " : " group-hover:-rotate-[15deg] group-hover:translate-x-0.5 " ?> translate-y-0.5"></div>
-                <div id="sideButtonFlash2"
-                     class=" h-3 w-1 rounded-full duration-150 bg-zinc-400 group-hover:bg-zinc-800 <?= $isOpen ? " group-hover:-rotate-[15deg] group-hover:-translate-x-0.5 " : " group-hover:rotate-[15deg] group-hover:translate-x-0.5 " ?> -translate-y-0.5"></div>
-            </div>
+                class="h-full w-4 absolute right-0 group top-0 translate-x-[15px]">
+    <span class="flex h-8 w-6 flex-col items-center absolute duration-150 right-0 top-1/2 transform -translate-y-1/2 translate-x-1.5">
+        <span id="sideButtonFlash1"
+              class="h-3 w-1 rounded-full duration-150 bg-zinc-400 group-hover:bg-zinc-800 <?= $isOpen ? "group-hover:rotate-[15deg] group-hover:-translate-x-0.5" : "group-hover:-rotate-[15deg] group-hover:translate-x-0.5" ?> translate-y-0.5"></span>
+        <span id="sideButtonFlash2"
+              class="h-3 w-1 rounded-full duration-150 bg-zinc-400 group-hover:bg-zinc-800 <?= $isOpen ? "group-hover:-rotate-[15deg] group-hover:-translate-x-0.5" : "group-hover:rotate-[15deg] group-hover:translate-x-0.5" ?> -translate-y-0.5"></span>
+      </span>
         </button>
     </div>
     <div class="flex-col flex w-full">
