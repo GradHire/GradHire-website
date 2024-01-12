@@ -67,12 +67,13 @@ class SoutenanceController extends AbstractController
     {
         if (Auth::has_role(Roles::Teacher, Roles::TutorTeacher)) {
             $numConvention = $request->getRouteParam("numConvention");
-            $idtuteurprof = Application::getUser()->id();
-            SoutenanceRepository::seProposerCommeJury($idtuteurprof, $numConvention);
-            NotificationRepository::createNotification(Auth::get_user()->id(),"Vous vous êtes proposé comme jury pour une soutenance","/voirSoutenance/".$numConvention);
-            NotificationRepository::createNotification(ConventionRepository::getByNumConvention($numConvention)['idetudiant'],"Un professeur s'est proposé comme jury pour votre soutenance","/voirSoutenance/".$numConvention);
-            NotificationRepository::createNotification(ConventionRepository::getByNumConvention($numConvention)['idtuteurentreprise'],"Un professeur s'est proposé comme jury pour votre soutenance","/voirSoutenance/".$numConvention);
-            NotificationRepository::createNotification(ConventionRepository::getByNumConvention($numConvention)['idtuteurprof'],"Un professeur s'est proposé comme jury pour votre soutenance","/voirSoutenance/".$numConvention);
+            $idauth = Application::getUser()->id();
+            $convention = ConventionRepository::getByNumConvention($numConvention);
+            SoutenanceRepository::seProposerCommeJury($idauth, $numConvention);
+            NotificationRepository::createNotification($idauth,"Vous vous êtes proposé comme jury pour une soutenance","/voirSoutenance/".$numConvention);
+            NotificationRepository::createNotification($convention['idetudiant'],"Un professeur s'est proposé comme jury pour votre soutenance","/voirSoutenance/".$numConvention);
+            NotificationRepository::createNotification($convention['idtuteurentreprise'],"Un professeur s'est proposé comme jury pour votre soutenance","/voirSoutenance/".$numConvention);
+            NotificationRepository::createNotification($convention['idtuteurprof'],"Un professeur s'est proposé comme jury pour votre soutenance","/voirSoutenance/".$numConvention);
             Application::redirectFromParam("/conventions");
         } else {
             throw new ForbiddenException();
