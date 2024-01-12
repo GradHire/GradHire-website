@@ -2,17 +2,19 @@
 
 namespace app\src\model\dataObject;
 
+use app\src\model\dataObject\Utilisateur;
+
 class Etudiant extends Utilisateur
 {
     private static int $convId = 0;
     private int $idutilisateur;
     private ?string $prenom;
-    private ?string $loginLDAP;
+    private ?string $loginldap;
     private ?string $numetudiant;
     private ?string $adresse;
-    private ?string $dateNaissance;
+    private ?string $datenaissance;
     private ?string $emailperso;
-    private ?string $codeSexe;
+    private ?string $codesexe;
     private ?int $idgroupe;
     private ?string $nomville;
     private ?string $codepostal;
@@ -51,10 +53,9 @@ class Etudiant extends Utilisateur
         $this->idutilisateur = $idUtilisateur;
     }
 
-    public function getPrenom(): string
+    public function getPrenom(): ?string
     {
-        if ($this->prenom == null) return "";
-        else return $this->prenom;
+        return $this->prenom;
     }
 
     public function setPrenom(string $prenom): void
@@ -64,12 +65,12 @@ class Etudiant extends Utilisateur
 
     public function getLoginLDAP(): ?string
     {
-        return $this->loginLDAP;
+        return $this->loginldap;
     }
 
     public function setLoginLDAP(string $loginLDAP): void
     {
-        $this->loginLDAP = $loginLDAP;
+        $this->loginldap = $loginLDAP;
     }
 
     public function getNumEtudiant(): ?string
@@ -94,12 +95,12 @@ class Etudiant extends Utilisateur
 
     public function getDateNaissance(): ?string
     {
-        return $this->dateNaissance;
+        return $this->datenaissance;
     }
 
     public function setDateNaissance(?string $dateNaissance): void
     {
-        $this->dateNaissance = $dateNaissance;
+        $this->datenaissance = $dateNaissance;
     }
 
     public function getEmailPerso(): ?string
@@ -114,12 +115,12 @@ class Etudiant extends Utilisateur
 
     public function getCodeSexe(): ?string
     {
-        return $this->codeSexe;
+        return $this->codesexe;
     }
 
     public function setCodeSexe(?string $codeSexe): void
     {
-        $this->codeSexe = $codeSexe;
+        $this->codesexe = $codeSexe;
     }
 
     public function getIdgroupe(): ?int
@@ -189,6 +190,6 @@ class Etudiant extends Utilisateur
 
     protected function getValueColonne(string $nomColonne): string
     {
-        return strval($$nomColonne);
+        return $this->strval($$nomColonne);
     }
 }
