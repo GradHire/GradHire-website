@@ -7,13 +7,13 @@ use app\src\model\Form\FormModel;
 
 ?>
 
-<?php
-$form->start();
-?>
+
 <div class="w-full max-w-md gap-4 flex flex-col gap-4 mx-auto max-w-md">
 
     <h1 class="text-3xl font-bold text-center">Simulateur Pstage (<?php echo $nom ?>)</h1>
-
+    <?php
+    $form->start();
+    ?>
     <?php if ($nom != "Etudiant") : ?>
         <div class="w-full max-w-md gap-4 flex flex-col gap-4 mx-auto mx-auto max-w-md">
             <p> Le <?php echo $nom ?> n'existe pas encore </p>
@@ -47,7 +47,7 @@ $form->start();
             </div>
         </div>
     <?php endif; ?>
-    <div class="w-full gap-4 flex flex-col mt-2 mb-2 hidden" id="step2">
+    <div class="w-full gap-4 flex flex-col mt-2 mb-2 hidden">
         <?php
         $form->submit("Continuer");
         ?>

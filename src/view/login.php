@@ -8,7 +8,7 @@ $this->title = 'Login';
 
 ?>
 
-<div class="w-full max-w-md gap-4 mx-auto flex flex-col">
+<div class="w-full max-w-md gap-4 mx-auto flex flex-col py-[50px]">
 
     <h2 class="text-3xl">Connexion via LDAP</h2>
     <span class="text-zinc-600 mb-5">Pour les étudiants et personnel de l'IUT.</span>

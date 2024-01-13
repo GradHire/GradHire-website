@@ -40,7 +40,7 @@ use app\src\model\repository\UtilisateurRepository;
     <dl class="divide-y divide-zinc-100">
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Nom d'utilisateur</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="nom">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $nom = $utilisateur->getNom();
                 if ($nom != null) echo $nom;
@@ -49,7 +49,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Rôle</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $role = $utilisateur->getRole();
                 if ($role != null) echo $role;
@@ -58,7 +58,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Login LDAP</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $loginldap = $utilisateur->getLoginLDAP();
                 if ($loginldap != null) echo $loginldap;
@@ -67,7 +67,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Prénom</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $prenom = $utilisateur->getPrenom();
                 if ($prenom != null) echo $prenom;
@@ -85,7 +85,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Numéro de téléphone</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $tel = $utilisateur->getNumtelephone();
                 if ($tel != null) echo $tel;
@@ -94,7 +94,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Biographie</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $bio = $utilisateur->getBio();
                 if ($bio != null) echo $bio;
@@ -103,7 +103,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Archiver</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $archiver = $utilisateur->getArchiver();
                 if ($archiver == 1 || $archiver == 0) echo $archiver;

@@ -4,12 +4,14 @@
 use app\src\model\Application;
 use app\src\model\repository\UtilisateurRepository;
 
+$nom = strlen($utilisateur->getNom()) > 0 ? $utilisateur->getNom() : "Entreprise sans nom";
+
 ?>
 
 <div class="w-full gap-4 mx-auto">
     <div class="w-full flex md:flex-row flex-col justify-between items-start">
         <div class="px-4 sm:px-0">
-            <h3 class="text-lg font-semibold leading-7 text-zinc-900"><?= $utilisateur->getNom() ?></h3>
+            <h3 class="text-lg font-semibold leading-7 text-zinc-900"><?= $nom ?></h3>
         </div>
         <div class="flex flex-row gap-4">
             <?php
@@ -113,4 +115,4 @@ use app\src\model\repository\UtilisateurRepository;
             </div>
         </dl>
     </div>
-
+</div>

@@ -8,3 +8,4 @@ src/config.php
 public
 .phplint.cache
 yarn.lock
+.DS_Store

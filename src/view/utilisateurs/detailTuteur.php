@@ -40,7 +40,7 @@ use app\src\model\repository\UtilisateurRepository;
     <dl class="divide-y divide-zinc-100">
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Prenom</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $prenom = $utilisateur->getPrenom();
                 if ($prenom != null) echo $prenom;
@@ -76,7 +76,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Biographie</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $bio = $utilisateur->getBio();
                 if ($bio != null) echo $bio;
@@ -85,7 +85,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Fonction Tuteur</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $fonction = $utilisateur->getFonction();
                 if ($fonction != null) echo $fonction;
@@ -94,7 +94,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">ID Entreprise</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $entreprise = $utilisateur->getIdentreprise();
                 if ($entreprise != null) echo $entreprise;

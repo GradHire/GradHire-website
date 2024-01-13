@@ -41,7 +41,7 @@ use app\src\model\repository\UtilisateurRepository;
     <dl class="divide-y divide-zinc-100">
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Nom d'utilisateur</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="nom">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $nom = $utilisateur->getNom();
                 if ($nom != null) echo $nom;
@@ -50,7 +50,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Prenom Utilisateur</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="nom">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $prenom = $utilisateur->getPrenom();
                 if ($prenom != null) echo $prenom;
@@ -59,7 +59,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Login LDAP</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="nom">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $loginldap = $utilisateur->getLoginLDAP();
                 if ($loginldap != null) echo $loginldap;
@@ -68,7 +68,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Email</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $email = $utilisateur->getEmail();
                 if ($email != null) echo $email;
@@ -86,7 +86,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Numéro Etudiant</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $numEtu = $utilisateur->getNumEtudiant();
                 if ($numEtu != null) echo $numEtu;
@@ -95,7 +95,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Adresse</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $adresse = $utilisateur->getAdresse();
                 if ($adresse != null) echo $adresse;
@@ -104,7 +104,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Email Perso</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $emailPerso = $utilisateur->getEmailPerso();
                 if ($emailPerso != null) echo $emailPerso;
@@ -113,7 +113,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Sexe</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $sexe = $utilisateur->getCodeSexe();
                 if ($sexe != null) echo $sexe;
@@ -122,7 +122,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Groupe</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $groupe = $utilisateur->getIdgroupe();
                 if ($groupe != null) echo $groupe;
@@ -131,7 +131,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Nom Ville</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $ville = $utilisateur->getNomVille();
                 if ($ville != null) echo $ville;
@@ -140,7 +140,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Code Postal</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $codePostal = $utilisateur->getCodePostal();
                 if ($codePostal != null) echo $codePostal;
@@ -149,7 +149,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Pays</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $pays = $utilisateur->getPays();
                 if ($pays != null) echo $pays;
@@ -158,7 +158,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Biographie</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $bio = $utilisateur->getBio();
                 if ($bio != null) echo $bio;
@@ -167,7 +167,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Archiver</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $archiver = $utilisateur->getArchiver();
                 if ($archiver == 1 || $archiver == 0) echo $archiver;
@@ -176,7 +176,7 @@ use app\src\model\repository\UtilisateurRepository;
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt class="text-sm font-medium leading-6 text-zinc-900">Année</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0" id="tel">
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <?php
                 $annee = $utilisateur->getAnnee();
                 if ($annee != null) echo $annee;
