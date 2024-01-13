@@ -29,7 +29,8 @@ class CandidatureController extends AbstractController
         $userid = Application::getUser()->id();
         $idOffre = $request->getRouteParams()['idOffre'] ?? null;
         $idUtilisateur = $request->getRouteParams()['idUtilisateur'] ?? null;
-        $candidatures = (new PostulerRepository())->getById($idOffre, $idUtilisateur);
+        $postulerRepository = new PostulerRepository();
+        $candidatures = $postulerRepository->getById($idOffre, $idUtilisateur);
         $entrepriseid = null;
         if (Auth::has_role(Roles::Enterprise)) $entrepriseid = $userid;
         if ($candidatures != null && $idOffre != null && $idUtilisateur != null) {
@@ -42,14 +43,13 @@ class CandidatureController extends AbstractController
             $id = explode('_', $_POST['idcandidature']);
             $idOffre = $id[0] ?? null;
             $idUtilisateur = $id[1] ?? null;
-            $candidature = (new PostulerRepository())->getById($idOffre, $idUtilisateur);
+            $candidature = $postulerRepository->getById($idOffre, $idUtilisateur);
             if ($request->getBody()['action'] === 'Accepter') {
                 $candidature->setStatutPostuler("valider");
             } else {
                 $candidature->setStatutPostuler("refuser");
             }
         }
-        $postulerRepository = new PostulerRepository();
         if (Auth::has_role(Roles::Enterprise)) {
             $array = ['candidaturesAttente' => $postulerRepository::getCandidaturesAttenteEntreprise($entrepriseid),
                 'candidaturesAutres' => $postulerRepository::getByIdEntreprise($entrepriseid)
