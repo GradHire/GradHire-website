@@ -150,9 +150,35 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
         <div class="w-full flex flex-col justify-start items-start p-4 gap-4">
             <?php Notification::show(); ?>
             {{content}}
-            <?php Chatbot::render([]); ?>
+            <?php
+            Chatbot::render([]);
+            echo <<<HTML
+            <div id="cookie" class="fixed bottom-[20px] right-[20px] bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 rounded-lg p-3"> 
+                     <p class="text-center text-zinc-800">Ce site utilise des cookies pour améliorer votre expérience utilisateur.</p>
+                  <button id="bouton-accepter" class="w-full bg-zinc-800 hover:bg-zinc-900 focus:ring-zinc-300 rounded-lg p-3">Accepter</button>
+             </div>
+            HTML;
+            ?>
         </div>
     </div>
 </div>
 </body>
 </html>
+<script>
+    if (sessionStorage.getItem('cookieAccept') === 'true') {
+        const cookieDiv = document.getElementById('cookie');
+        if (cookieDiv) {
+            cookieDiv.style.display = 'none';
+        }
+    }
+    console.log(sessionStorage.getItem('cookieAccept'));
+    const boutonAccepter = document.querySelector('#bouton-accepter');
+    boutonAccepter.addEventListener('click', function () {
+        const cookieDiv = document.getElementById('cookie');
+        if (cookieDiv) {
+            cookieDiv.style.display = 'none';
+        }
+        sessionStorage.setItem('cookieAccept', 'true');
+        console.log(sessionStorage.getItem('cookieAccept'));
+    });
+</script>

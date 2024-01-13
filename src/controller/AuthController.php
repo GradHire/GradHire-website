@@ -128,7 +128,7 @@ class AuthController extends AbstractController
         ]);
     }
 
-    public function logout(Request $request,Response $response): void
+    public function logout(Request $request, Response $response): void
     {
         Auth::logout();
         $response->redirect('/');
