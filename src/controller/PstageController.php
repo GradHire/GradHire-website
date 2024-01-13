@@ -80,7 +80,6 @@ class PstageController extends AbstractController
                 $importer->importerligneScodoc($data);
         }
         Notification::createNotification("Importation réussi");
-        NotificationRepository::createNotification(Auth::get_user()->id(), "Importation Studea réussi", "/conventions");
     }
 
     /**

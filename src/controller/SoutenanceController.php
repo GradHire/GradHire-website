@@ -40,7 +40,6 @@ class SoutenanceController extends AbstractController
             ]);
             if ($request->getMethod() == "post") {
                 if ($form->validate($request->getBody())) {
-                    print_r($infosConvention);
                     $values = array_merge($form->getParsedBody(), [
                         'numconvention' => $infosConvention['numconvention'],
                         'idtuteurprof' => $infosConvention['idtuteurprof'],
