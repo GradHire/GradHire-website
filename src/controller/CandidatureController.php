@@ -23,21 +23,16 @@ class CandidatureController extends AbstractController
     /**
      * @throws ForbiddenException
      * @throws ServerErrorException
+     * @throws NotFoundException
      */
     public function candidatures(Request $request): string
     {
         $userid = Application::getUser()->id();
         $idOffre = $request->getRouteParams()['idOffre'] ?? null;
         $idUtilisateur = $request->getRouteParams()['idUtilisateur'] ?? null;
-        $candidatures = (new PostulerRepository())->getById($idOffre, $idUtilisateur);
         $entrepriseid = null;
         if (Auth::has_role(Roles::Enterprise)) $entrepriseid = $userid;
-        if ($candidatures != null && $idOffre != null && $idUtilisateur != null) {
-            $offre = (new OffresRepository())->getById($candidatures->getIdoffre());
-            if (Auth::has_role(Roles::Staff, Roles::Manager, Roles::Teacher, Roles::TutorTeacher, Roles::Tutor) || $candidatures->getIdutilisateur() == $userid || $offre->getIdutilisateur() == $entrepriseid) {
-                return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
-            } else throw new ForbiddenException();
-        }
+
         if ($request->getMethod() === 'post') {
             $id = explode('_', $_POST['idcandidature']);
             $idOffre = $id[0] ?? null;
@@ -49,25 +44,36 @@ class CandidatureController extends AbstractController
                 $candidature->setStatutPostuler("refuser");
             }
         }
-        $postulerRepository = new PostulerRepository();
-        if (Auth::has_role(Roles::Enterprise)) {
-            $array = ['candidaturesAttente' => $postulerRepository::getCandidaturesAttenteEntreprise($entrepriseid),
-                'candidaturesAutres' => $postulerRepository::getByIdEntreprise($entrepriseid)
-            ];
+
+        if ($idOffre != null && $idUtilisateur != null) {
+            $candidatures = (new PostulerRepository())->getById($idOffre, $idUtilisateur);
+            if ($candidatures == null) throw new NotFoundException();
+            $offre = (new OffresRepository())->getById($candidatures->getIdoffre());
+            if (!$offre) throw new NotFoundException();
+            if (Auth::has_role(Roles::Staff, Roles::Manager, Roles::Teacher, Roles::TutorTeacher, Roles::Tutor) || $candidatures->getIdutilisateur() == $userid || $offre->getIdutilisateur() == $entrepriseid) {
+                return $this->render('candidature/detailCandidature', ['candidatures' => $candidatures]);
+            } else throw new ForbiddenException();
+        }
+
+        $candidatures = [];
+
+        if (Auth::has_role(Roles::Student)) {
+            $candidatures = PostulerRepository::getByIdEtudiant($userid);
+        } elseif (Auth::has_role(Roles::Enterprise)) {
+            $candidatures = PostulerRepository::getByIdEntreprise($userid);
         } else if (Auth::has_role(Roles::Manager, Roles::Staff)) {
-            $array = ['candidaturesAttente' => $postulerRepository::getByStatementAttente(),
-                'candidaturesAutres' => $postulerRepository::getByStatementValideeOrRefusee()
-            ];
+            $candidatures = PostulerRepository::getAllCandidatures();
         } else if (Auth::has_role(Roles::Teacher, Roles::Tutor, Roles::TutorTeacher)) {
-            $array = ['candidaturesAttente' => $postulerRepository::getByStatementAttenteTuteur()];
-            $array['candidaturesAutres'] = array_merge($postulerRepository::getByStatementTuteur(Auth::get_user()->id(), 'validee'), $postulerRepository::getByStatementTuteur(Auth::get_user()->id(), 'refusee'));
-        } else if (Auth::has_role(Roles::Student)) {
-            $array = ['candidaturesAttente' => $postulerRepository::getCandidaturesAttenteEtudiant($userid),
-                'candidaturesAutres' => $postulerRepository::getByIdEtudiant($userid)
-            ];
-        } else throw new ForbiddenException();
+            $postulerRepository = new PostulerRepository();
+            $candidatures = array_merge($postulerRepository::getByStatementTuteur(Auth::get_user()->id(), 'validee'), $postulerRepository::getByStatementTuteur(Auth::get_user()->id(), 'refusee'), $postulerRepository::getByStatementAttenteTuteur());
+        }
+
+        $res = [
+            "candidaturesAttente" => array_values(array_filter($candidatures, fn($candidature) => str_starts_with($candidature["statut"], "en attente"))),
+            "candidaturesAutres" => array_values(array_filter($candidatures, fn($candidature) => !str_starts_with($candidature["statut"], "en attente")))
+        ];
         return $this->render(
-            'candidature/listCandidatures', $array);
+            'candidature/listCandidatures', $res);
     }
 
     /**
@@ -109,8 +115,8 @@ class CandidatureController extends AbstractController
             $idEtudiant = $request->getRouteParams()["idEtudiant"];
             $idOffre = $request->getRouteParams()["idOffre"];
             PostulerRepository::validerCandidatureEntreprise($idEtudiant, $idOffre);
-            NotificationRepository::createNotification($idEtudiant, "Votre candidature a été acceptée", "/candidatures/".$idOffre."/".$idEtudiant);
-            NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez accepté la candidature de " . EtudiantRepository::getFullNameByID($idEtudiant), "/candidatures/".$idOffre."/".$idEtudiant);
+            NotificationRepository::createNotification($idEtudiant, "Votre candidature a été acceptée", "/candidatures/" . $idOffre . "/" . $idEtudiant);
+            NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez accepté la candidature de " . EtudiantRepository::getFullNameByID($idEtudiant), "/candidatures/" . $idOffre . "/" . $idEtudiant);
             Application::redirectFromParam("/candidatures");
         }
     }
@@ -124,8 +130,8 @@ class CandidatureController extends AbstractController
             $idEtudiant = $request->getRouteParams()["idEtudiant"];
             $idOffre = $request->getRouteParams()["idOffre"];
             PostulerRepository::validerCandidatureEtudiant($idEtudiant, $idOffre);
-            NotificationRepository::createNotification(EntrepriseRepository::getIdEntrepriseByIdOffre($idOffre), "Votre candidature a été acceptée par l'etudiant ". EtudiantRepository::getFullNameByID($idEtudiant)  , "/candidatures/".$idOffre."/".$idEtudiant);
-            NotificationRepository::createNotification($idEtudiant, "Vous avez accepté la candidature de " . EtudiantRepository::getFullNameByID($idEtudiant), "/candidatures/".$idOffre."/".$idEtudiant);
+            NotificationRepository::createNotification(EntrepriseRepository::getIdEntrepriseByIdOffre($idOffre), "Votre candidature a été acceptée par l'etudiant " . EtudiantRepository::getFullNameByID($idEtudiant), "/candidatures/" . $idOffre . "/" . $idEtudiant);
+            NotificationRepository::createNotification($idEtudiant, "Vous avez accepté la candidature de " . EtudiantRepository::getFullNameByID($idEtudiant), "/candidatures/" . $idOffre . "/" . $idEtudiant);
             Application::redirectFromParam("/candidatures");
         }
     }
@@ -140,11 +146,11 @@ class CandidatureController extends AbstractController
             $idOffre = $request->getRouteParams()["idOffre"];
             PostulerRepository::refuserCandidature($idEtudiant, $idOffre);
             if (Auth::has_role(Roles::Enterprise)) {
-                NotificationRepository::createNotification($idEtudiant, "Votre candidature a été refusée", "/candidatures/".$idOffre."/".$idEtudiant);
-                NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez refusé la candidature de " . EtudiantRepository::getFullNameByID($idEtudiant), "/candidatures/".$idOffre."/".$idEtudiant);
+                NotificationRepository::createNotification($idEtudiant, "Votre candidature a été refusée", "/candidatures/" . $idOffre . "/" . $idEtudiant);
+                NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez refusé la candidature de " . EtudiantRepository::getFullNameByID($idEtudiant), "/candidatures/" . $idOffre . "/" . $idEtudiant);
             } else {
-                NotificationRepository::createNotification(EntrepriseRepository::getIdEntrepriseByIdOffre($idOffre), "Votre candidature a été refusée par l'etudiant ". EtudiantRepository::getFullNameByID($idEtudiant)  , "/candidatures/".$idOffre."/".$idEtudiant);
-                NotificationRepository::createNotification($idEtudiant, "Vous avez refusé la candidature de " . EtudiantRepository::getFullNameByID($idEtudiant), "/candidatures/".$idOffre."/".$idEtudiant);
+                NotificationRepository::createNotification(EntrepriseRepository::getIdEntrepriseByIdOffre($idOffre), "Votre candidature a été refusée par l'etudiant " . EtudiantRepository::getFullNameByID($idEtudiant), "/candidatures/" . $idOffre . "/" . $idEtudiant);
+                NotificationRepository::createNotification($idEtudiant, "Vous avez refusé la candidature de " . EtudiantRepository::getFullNameByID($idEtudiant), "/candidatures/" . $idOffre . "/" . $idEtudiant);
             }
             Application::redirectFromParam("/candidatures");
         }
@@ -156,14 +162,14 @@ class CandidatureController extends AbstractController
      */
     public function harceler(): string
     {
-        if (Auth::has_role(Roles::ChefDepartment, Roles::Manager,Roles::ManagerStage,Roles::ManagerAlternance, Roles::Staff)) {
+        if (Auth::has_role(Roles::ChefDepartment, Roles::Manager, Roles::ManagerStage, Roles::ManagerAlternance, Roles::Staff)) {
             if (isset($_GET["idUtilisateur"])) {
                 $idUtilisateur = $_GET["idUtilisateur"];
                 $etudiant = (new EtudiantRepository([]))->getByIdFull($idUtilisateur);
                 $mail = new MailRepository();
                 $mail->send_mail([$etudiant->getEmail()], "Vous n'avez pas encore de convention", "Bonjour,\nVous n'avez pas encore de convention de stage, il serait temps de s'en occuper !");
                 NotificationRepository::createNotification($idUtilisateur, "Vous n'avez pas encore de convention", "/conventions");
-                NotificationRepository::createNotification(Auth::get_user()->getId(), "Vous avez harcelé " .$etudiant->getNom()." ". $etudiant->getPrenom(),"");
+                NotificationRepository::createNotification(Auth::get_user()->getId(), "Vous avez harcelé " . $etudiant->getNom() . " " . $etudiant->getPrenom(), "");
                 Application::redirectFromParam("/harceler");
             }
             if (isset($_GET["isAdmin"])) {
@@ -172,7 +178,7 @@ class CandidatureController extends AbstractController
                     $mail = new MailRepository();
                     $mail->send_mail([$etudiant['email']], "Vous n'avez pas encore de convention", "Bonjour,\nVous n'avez pas encore de convention de stage, il serait temps de s'en occuper !");
                     NotificationRepository::createNotification($etudiant['idutilisateur'], "Vous n'avez pas encore de convention", "/conventions");
-                    NotificationRepository::createNotification(Auth::get_user()->getId(), "Vous avez harcelé " .$etudiant['nom']." ". $etudiant['prenom'],"");
+                    NotificationRepository::createNotification(Auth::get_user()->getId(), "Vous avez harcelé " . $etudiant['nom'] . " " . $etudiant['prenom'], "");
                 }
                 Application::redirectFromParam("/harceler");
             }

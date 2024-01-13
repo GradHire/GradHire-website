@@ -3,11 +3,8 @@
 
 /** @var $candidaturesAutres \app\src\model\dataObject\Postuler */
 
-use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
-use app\src\model\repository\OffresRepository;
-use app\src\model\repository\UtilisateurRepository;
 use app\src\model\View;
 
 View::setCurrentSection('Candidatures');
