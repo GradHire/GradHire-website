@@ -101,6 +101,8 @@ use app\src\model\dataObject\Roles;
                 </table>
             </div>
         </div>
-    <?php } ?>
+    <?php } else {
+        echo "<p class=\"text-center text-zinc-500\">Aucune offre n'a été trouvée</p>";
+    }?>
 </div>
 

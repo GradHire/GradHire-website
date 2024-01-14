@@ -105,7 +105,7 @@ class OffresRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public static function getAllByEnterprise(): array
+    public static function getAllByEnterprise(): null|array
     {
         $id = Application::getUser()->id();
         if (Auth::has_role(Roles::Tutor)) {
