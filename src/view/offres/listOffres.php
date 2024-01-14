@@ -41,14 +41,14 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
         <div class="w-full">
             <label for="default-search"
                    class="text-sm font-medium text-zinc-900 sr-only ">Search</label>
-            <div class="relative">
+            <div class="flex flex-row justify-center items-center gap-2">
                 <input value="<?= $_GET["sujet"] ?? '' ?>" type="search" id="default-search"
                        name="sujet"
-                       class="block w-full p-4 bg-white drop-shadow-[10px] text-sm text-zinc-900 border rounded-md focus:ring-zinc-500 focus:border-zinc-500 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500"
+                       class="block w-full p-2 bg-white drop-shadow-[10px] text-sm text-zinc-900 border rounded-md focus:ring-zinc-500 focus:border-zinc-500 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500"
                        placeholder="Rechercher une offre">
                 <button type="submit" onclick="search()"
-                        class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-md text-sm px-2 py-2 dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800">
-                    <?= I_Search::render("w-5 h-5");?>
+                        class="text-white bg-zinc-800 hover:bg-zinc-900 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-md text-sm px-2 py-2 dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800">
+                    <?= I_Search::render("w-5 h-5"); ?>
                 </button>
             </div>
         </div>
