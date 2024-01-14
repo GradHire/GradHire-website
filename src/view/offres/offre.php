@@ -13,7 +13,6 @@ use app\src\model\dataObject\Roles;
 use app\src\view\components\ui\Modal;
 
 $id_offre = $offre["idoffre"];
-
 ?>
 <div class="relative  <?php if (Auth::has_role(Roles::Staff, Roles::Manager)) { ?> offreBox <?php } ?>  ">
     <?php if (Auth::has_role(Roles::Staff, Roles::Manager)) { ?>

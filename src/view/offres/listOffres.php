@@ -102,7 +102,6 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                     <?php
                     $startIndex = 0;
                     $itemsPerPage = 10;
-
                     if ($offres != null) {
                         $visibleOffersValideCount = 0;
                         foreach ($offres as $offre) {

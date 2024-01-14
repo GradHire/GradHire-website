@@ -145,7 +145,7 @@ Non valide
                 </dl>
 
                 <div class="flex flex-col gap-2 md:flex-row">
-                    <?php if ($temp) { ?>
+                    <?php if ($temp && !Auth::has_role(Roles::ChefDepartment)) { ?>
                         <a href="/visite/<?php echo $convention['numconvention'] ?>"
                            class="btn btn-primary bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md text-center">Voir
                             la date de visite</a>
