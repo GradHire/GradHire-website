@@ -47,82 +47,81 @@ HTML;
 </div>
 <dl class=\"divide-y divide-zinc-100\">
 <div class=\"px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0\">
-                <dt class=\"text-sm font-medium leading-6 text-zinc-900\">Numéro de téléphone</dt>
-                <dd class=\"mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0\">";
+                <div class=\"text-sm font-medium leading-6 text-zinc-900\">Numéro de téléphone</div>
+                <div class=\"mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0\">";
         $numTel = $utilisateur->getNumtelephone();
         if ($numTel != null) echo $numTel;
         else echo("Non renseigné");
-        echo "</dd></div>
+        echo "</div></div>
 <div class=\"px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0\">
-    <dt class=\"text-sm font-medium leading-6 text-zinc-900\">Email</dt>
-    <dd class=\"mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0\">";
+    <div class=\"text-sm font-medium leading-6 text-zinc-900\">Email</div>
+    <div class=\"mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0\">";
         $email = $utilisateur->getEmail();
         if ($email != null) echo "<a href=\"mailto:" . $email . "\">" . $email . "</a>";
         else echo("Non renseigné");
-        echo "</dd></div>";
+        echo "</div></div>";
     }
 
     public static function addDetail(string $title, ?string $content): void
     {
         echo "
 <div class=\"px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0\">
-<dt class=\"text-sm font-medium leading-6 text-zinc-900\">$title</dt>
-<dd class=\"mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0\">";
+<div class=\"text-sm font-medium leading-6 text-zinc-900\">$title</div>
+<div class=\"mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0\">";
         if ($content != null) echo $content;
         else echo("Non renseigné");
-        echo "</dd></div>";
+        echo "</div></div>";
     }
 
     public static function start(): void
     {
         echo "<div class=\"mt-6 border-t border-zinc-100\">
-        <dl class=\"divide-y divide-zinc-100\">";
+        <div class=\"divide-y divide-zinc-100\">";
     }
 
     public static function end(): void
     {
-        echo "</dl></div>";
+        echo "</div></div>";
     }
 
-    public static function space()
+    public static function space(): void
     {
-        echo "<hr class=\"my-4\"/>";
+        echo "<div class=\"my-4\"></div>";
     }
 
-    public static function addDetailLink(string $title, null|string $link)
+    public static function addDetailLink(string $title, null|string $link): void
     {
         echo "
         <div class=\"px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0\">
-                <dt class=\"text-sm font-medium leading-6 text-zinc-900\">$title</dt>
-                <dd class=\"mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0\"> ";
+                <div class=\"text-sm font-medium leading-6 text-zinc-900\">$title</div>
+                <div class=\"mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0\"> ";
         if ($link != null) echo "<a target=\"_blank\" href=\"" . $link . "\">" . $link . "</a>";
         else echo("Non renseigné");
-        echo "</dd>
+        echo "</div>
 </div>
         ";
     }
 
-    public static function addDetailBool(string $title, null|bool $boolean)
+    public static function addDetailBool(string $title, null|bool $boolean): void
     {
         echo "<div class=\"px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0\">
-            <dt class=\"text-sm font-medium leading-6 text-zinc-900\">$title</dt>
-            <dd class=\"mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0\">";
+            <div class=\"text-sm font-medium leading-6 text-zinc-900\">$title</div>
+            <div class=\"mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0\">";
         if ($boolean == 1) echo "Oui";
         else if ($boolean == 0) echo "Non";
         else echo("Non renseigné");
-        echo "</dd>
+        echo "</div>
 </div>";
     }
 
-    public static function addDetailAvis(string $title, Avis|array $avisPublic)
+    public static function addDetailAvis(string $title, Avis|array $avisPublic): void
     {
         echo "<div class=\"px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0\">
-                        <dt class=\"text-sm font-medium leading-6 text-zinc-900\">$title</dt>
-                        <dd class=\"mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0\">";
+                        <div class=\"text-sm font-medium leading-6 text-zinc-900\">$title</div>
+                        <div class=\"mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0\">";
         foreach ($avisPublic as $avi) {
             echo "- " . $avi['avis'] . "<br>";
         }
-        echo "</dd>
-                    </div>";
+        echo "</div></div>";
     }
 }
