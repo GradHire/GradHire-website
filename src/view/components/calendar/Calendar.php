@@ -3,7 +3,6 @@
 namespace app\src\view\components\calendar;
 
 use app\src\core\exception\ServerErrorException;
-use app\src\view\components\ui\FormModal;
 use DateInterval;
 use DateTime;
 use IntlDateFormatter;
@@ -28,13 +27,13 @@ class Calendar
     {
         $padding = count($events) == 0 ? 'pb-4' : 'mb-12 ';
         echo <<<HTML
-            <div class="w-full $padding gap-2 pt-4 border-x-[1px] border-t-[1px] border-zinc-200 rounded flex flex-col relative">
+            <div class="w-full $padding gap-2 pt-4 border-x-[1px] border-t-[1px] border-zinc-200 rounded-md flex flex-col relative bg-white drop-shadow-[10px]">
                 <div class="absolute top-4 right-4 flex gap-2">
-                    <div class="calendar-arrow disabled bg-blue-700 hover:bg-blue-800 rounded-lg" id="calendar-prev" onclick="calendarPrev()">
-                        <i class="fa-solid fa-chevron-left"></i>
+                    <div class="calendar-arrow disabled bg-blue-500 hover:bg-blue-600 rounded-lg" id="calendar-prev" onclick="calendarPrev()">
+                        <span class="stroke-white text-white">&lt;</span>
                     </div>
-                    <div class="calendar-arrow bg-blue-700 hover:bg-blue-800 rounded-lg" id="calendar-next" onclick="calendarNext()">
-                        <i class="fa-solid fa-chevron-right"></i>
+                    <div class="calendar-arrow bg-blue-500 hover:bg-blue-600 rounded-lg" id="calendar-next" onclick="calendarNext()">
+                        <span class="stroke-white text-white">&gt;</span>
                     </div>
                 </div>
         HTML;
@@ -97,7 +96,7 @@ class Calendar
         echo <<<HTML
             <div class="flex flex-col calendar-week $hidden">
             <div class="flex justify-between border-b-[1px] border-zinc-200 pb-4 px-4">            
-                <p>Semaine du $start au $end</p>
+                <p class="max-md:text-[12px] max-w-[100px]">Semaine du $start au $end</p>
             </div>
         HTML;
         $lastDay = null;
@@ -149,23 +148,16 @@ class Calendar
     {
         echo <<<HTML
             <div class="flex cursor-pointer items-center hover:bg-zinc-100 p-2 gap-2 border-b-[1px] border-zinc-200">
-                <div class="min-w-[100px]">
+                <div class="min-w-[40px] md:min-w-[100px] text-[10px]">
                     {$event->getStart()->format('H:i')} - {$event->getEnd()->format('H:i')}
                 </div>
                 <div class="rounded-full h-[10px] w-[10px]" style="background: {$event->getColor()}"></div>
-                <div class="flex justify-between items-center w-full">                
+                <div class="flex justify-between items-center w-full min-w-[40px] md:min-w-[100px] text-[10px]">                
                     {$event->getTitle()}
                     {$event->printBtn()}
                 </div>
             </div>
         HTML;
-    }
-
-    public static function addModal(string $text, FormModal $modal): void
-    {
-        echo '<div class="w-full py-4 flex justify-end">
-            <button ' . $modal->Show() . ' class="bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 py-2 px-5 text-white focus:ring-4  font-medium rounded-lg text-sm text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-flex items-center justify-center"><i class="fa-solid fa-plus mr-2"></i>' . $text . '</button>
-</div>';
     }
 
 }

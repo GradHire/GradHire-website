@@ -87,10 +87,7 @@ class DashboardController extends AbstractController
             $tuteurs = (new TuteurRepository([]))->getAll();
             $staffs = (new StaffRepository([]))->getAll();
             $utilisateur = array_merge($utilisateur, $entreprises, $etudiants, $tuteurs, $staffs);
-        } else {
-            throw new ForbiddenException("Vous n'avez pas le droit de voir les utilisateurs");
-        }
-
+        } else throw new ForbiddenException("Vous n'avez pas le droit de voir les utilisateurs");
         return $this->render('utilisateurs/utilisateurs', ['utilisateurs' => $utilisateur]);
     }
 
@@ -164,9 +161,8 @@ class DashboardController extends AbstractController
                 NotificationRepository::createNotification(Auth::get_user()->getId(), "Vous avez désarchivé le compte de " . EtudiantRepository::getFullNameByID($user->getIdutilisateur()), "/utilisateurs/" . $user->getIdutilisateur());
                 NotificationRepository::createNotification($user->getIdutilisateur(), "Votre compte a été désarchivé", "/utilisateurs/" . $user->getIdutilisateur());
             }
-            if ((string)Application::getUser()->id() === $id)
-                Auth::logout();
-            Application::redirectFromParam('/');
+            if ((string)Application::getUser()->id() === $id) Auth::logout();
+            Application::redirectFromParam('/utilisateurs/' . $id);
             return '';
         } else throw new ForbiddenException();
     }

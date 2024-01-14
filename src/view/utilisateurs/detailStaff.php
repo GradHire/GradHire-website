@@ -1,7 +1,11 @@
 <?php
 /** @var $utilisateur \app\src\model\dataObject\Staff */
 
+use app\src\model\View;
 use app\src\view\components\ui\Detail;
+
+$this->title = 'Utilisateur';
+View::setCurrentSection('Utilisateurs');
 
 Detail::render([$utilisateur]);
 Detail::addDetail("Prenom", $utilisateur->getNom());

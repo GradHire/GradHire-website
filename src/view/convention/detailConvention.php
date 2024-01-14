@@ -9,12 +9,15 @@ use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\SoutenanceRepository;
 use app\src\model\repository\VisiteRepository;
+use app\src\model\View;
 
 $temp = false;
 if (Auth::has_role(Roles::Enterprise) && Auth::get_user()->id() != (new OffresRepository())->getById($convention['idoffre'])->getIdutilisateur()) {
     throw new Exception("Vous n'avez pas le droit d'accéder à cette convention car elle n'appartient pas à votre entreprise.");
 }
 
+$this->title = 'Convention';
+View::setCurrentSection('Conventions');
 ?>
 
 <div class="w-full gap-4 mx-auto">
@@ -136,31 +139,23 @@ Non valide
                     </dd>
                 </div>
                 <?php
-            } else {
-                $temp = true;
-            }
+            } else $temp = true;
             ?>
         </dl>
 
-        <div class="flex justify-center mt-8 gap-3">
-        <?php if ($temp) { ?>
-            <a href="/visite/<?php echo $convention['numconvention'] ?>"
-               class="btn btn-primary bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Voir
-                la
-                date de
-                visite</a>
+        <div class="flex flex-col gap-2 md:flex-row">
+            <?php if ($temp) { ?>
+                <a href="/visite/<?php echo $convention['numconvention'] ?>"
+                   class="btn btn-primary bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md text-center">Voir la date de visite</a>
             <?php } ?>
-
             <?php
             $getIfSoutenanceExist = SoutenanceRepository::getIfSoutenanceExist($convention['numconvention']);
             if (Auth::has_role(Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage, Roles::Staff)) {
                 if ($convention['conventionvalidee'] == "1" && $convention['conventionvalideepedagogiquement'] == "1" && !$getIfSoutenanceExist) {
-                    //Table::button("/createSoutenance/" . $getNumConvention, "Creer soutenance");
                     ?> <a href="/createSoutenance/<?php echo $convention['numconvention'] ?>"
-                          class="btn btn-primary bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Créer
+                          class="btn btn-primary bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md text-center">Créer
                         soutenance</a> <?php
                 } else {
-                    //Table::button("/voirSoutenance/" . $getNumConvention, "Voir soutenance");
                     ?> <a href="/voirSoutenance/<?php echo $convention['numconvention'] ?>"
                           class="btn btn-primary bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Voir
                         soutenance</a> <?php }
