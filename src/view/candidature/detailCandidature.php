@@ -61,7 +61,7 @@ View::setCurrentSection('Candidatures');
             <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0 bg-blue-500 hover:bg-blue-600 max-w-[125px] max-h-[40px] min-h-[40px] rounded-md flex flex-nowrap gap-2 text-md items-center justify-center">
                 <?php
                 $filepath = "/uploads/" . $candidatures->getIdoffre() . "_" . $candidatures->getIdutilisateur() . "/cv.pdf";
-                echo "<a class='flex flex-nowrap gap-2 text-md items-center justify-center' href=\" . $filepath . \" download target=\"_blank\">";
+                echo "<a class='flex flex-nowrap gap-2 text-md items-center justify-center' href=\"$filepath\" download target=\"_blank\">";
                 echo I_Download::render('w-5 h-5 fill-white') . "<span class='text-white'>Télécharger</span>";
                 echo "</a>";
                 ?>
@@ -72,7 +72,7 @@ View::setCurrentSection('Candidatures');
             <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0 bg-blue-500 hover:bg-blue-600 max-w-[125px] max-h-[40px] min-h-[40px] rounded-md flex flex-nowrap gap-2 text-md items-center justify-center">
                 <?php
                 $filepath = "/uploads/" . $candidatures->getIdoffre() . "_" . $candidatures->getIdutilisateur() . "/ltm.pdf";
-                echo "<a class='flex flex-nowrap gap-2 text-md items-center justify-center' href=\" . $filepath . \" download target='_blank'>";
+                echo "<a class='flex flex-nowrap gap-2 text-md items-center justify-center' href=\"$filepath\" download target='_blank'>";
                 echo I_Download::render('w-5 h-5 fill-white') . "<span class='text-white'>Télécharger</span>";
                 echo "</a>";
                 ?>

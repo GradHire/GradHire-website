@@ -136,3 +136,4 @@ View::setCurrentSection('Soutenances');
     }
     ?>
 </div>
+</div>
