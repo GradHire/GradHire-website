@@ -12,6 +12,7 @@ use app\src\view\components\dashboard\PercentageBlock;
 use app\src\view\components\dashboard\PieChartBlock;
 use app\src\view\components\dashboard\VerticalBarChartBlock;
 use app\src\view\components\ui\Separator;
+use app\src\view\resources\icons\I_File;
 
 /** @var array $data
  */
@@ -28,7 +29,7 @@ foreach ($scripts as $script) echo '<script src="' . PATH . $script . '"></scrip
 
 <div class="w-full flex md:flex-row flex-col justify-between items-start gap-4 mx-auto ">
     <div class="flex flex-col gap-4 w-full ">
-        <div class="relative w-full bg-zinc-50 isolate overflow-hidden md:border rounded-2xl text-[#1A2421] backdrop-blur-xl md:p-4 border-solid border-black  border-opacity-10 [ shadow-black/5 shadow-2xl ]">
+        <div class="relative w-full isolate overflow-hidden rounded-2xl text-[#1A2421] backdrop-blur-xl md:p-1">
             <div class="flex flex-col gap-4 items-start justify-start">
                 <?php
                 echo '<div class="w-full flex flex-col gap-2 md:gap-4">';
@@ -125,13 +126,9 @@ foreach ($scripts as $script) echo '<script src="' . PATH . $script . '"></scrip
                                             }
 
                                             $counter += 1;
-                                            echo <<<EOT
-                                                <div class="min-w-[18px] min-h-[18px] max-w-[18px] flex justify-center items-center max-h-[18px] border border-zinc-300 bg-white rounded-full">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"  class="w-3 h-3 stroke-zinc-500">
-                                                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                                                </svg>
-                                                </div>
-                                            EOT;
+                                            echo "<div class=\"min-w-[18px] min-h-[18px] max-w-[18px] flex justify-center items-center max-h-[18px] border border-zinc-300 bg-white rounded-full\">";
+                                            echo I_File::render('w-3 h-3 stroke-zinc-500');
+                                            echo "</div>";
 
                                             OfferCard::render([
                                                 'offer' => $offre,

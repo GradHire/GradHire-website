@@ -63,7 +63,7 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
                     </svg>
                 </a>
             </div>
-            <div class="h-full w-full z-40 flex gap-1.5 flex-col relative items-start">
+            <div class="h-full w-full z-40 flex gap-1.5 flex-col relative items-start max-md:max-h-[550px] overflow-y-auto example">
                 <div class="w-full flex flex-row justify-between items-center">
                     <span class="uppercase text-zinc-400 font-light text-[8px] duration-300 tracking-widest sectionText <?= $isOpen ? " text-[12px] " : " text-[8px] " ?>">Sections</span>
                     <button <?= $modalAddSection ? $modalAddSection->Show() : "" ?>
