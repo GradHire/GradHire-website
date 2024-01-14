@@ -29,7 +29,7 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
 <div class="w-full flex flex-col gap-4 mx-auto dark:bg-black">
     <div class="flex flex-row gap-2 w-full">
         <?php
-        if (Auth::has_role(Roles::Enterprise, Roles::Manager,Roles::ManagerAlternance,Roles::ManagerStage,Roles::Staff)) {
+        if (Auth::has_role(Roles::Enterprise, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage, Roles::Staff)) {
             echo " <a href=\"/offres/create\" class=\"border-2 border-zinc-200 rounded-lg bg-zinc-50 p-3 px-4 flex justify-center items-center cursor-pointer\">
             <svg class=\"w-5 h-5 text-zinc-500 dark:text-zinc-400\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"currentColor\">
                 <path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M12 4.5v15m7.5-7.5h-15\" />

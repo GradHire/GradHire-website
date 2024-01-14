@@ -102,7 +102,6 @@ $app->router->get('/offres/{id:\d+}/edit', [OffreController::class, 'editOffre']
 $app->router->get('/offres/{id:\d+}/validate', [OffreController::class, 'validateOffre']);
 $app->router->get('/offres/{id:\d+}/archive', [OffreController::class, 'archiveOffre']);
 
-
 // TestController
 
 $app->router->get('/user_test/{id}', [TestController::class, 'user_test']);
