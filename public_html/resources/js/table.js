@@ -1,5 +1,5 @@
 const tables = {}
-const nbRows = 20;
+const nbRows = 10;
 
 function sortTable(tableId, th, n) {
     let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
@@ -35,9 +35,7 @@ function sortTable(tableId, th, n) {
             switchcount++;
 
             let icon = th.querySelector('.fa-solid');
-            if (icon) {
-                icon.className = dir === 'asc' ? 'fa-solid fa-sort-up' : 'fa-solid fa-sort-down';
-            }
+            if (icon) icon.className = dir === 'asc' ? 'fa-solid fa-sort-up' : 'fa-solid fa-sort-down';
         } else {
             if (switchcount === 0 && dir === "asc") {
                 dir = "desc";

@@ -12,11 +12,15 @@ use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
 use app\src\model\repository\OffresRepository;
+use app\src\model\View;
+
+$this->title = 'Creation d\'offre';
+View::setCurrentSection('Offres');
 
 Auth::check_role(Roles::Enterprise, Roles::Manager, Roles::Staff);
 
 ?>
-<div class="w-full max-w-md flex flex-col gap-4 mx-auto select-none">
+<div class="w-full max-w-md gap-4 mx-auto flex flex-col md:py-[50px] pb-4">
     <?php
     if (Auth::has_role(Roles::Enterprise)) {
         $draft->start();
@@ -27,7 +31,7 @@ Auth::check_role(Roles::Enterprise, Roles::Manager, Roles::Staff);
     if (!Auth::has_role(Roles::Enterprise))
         $enterprises->print_all_fields();
     ?>
-    <div class="w-full gap-4 flex flex-col pt-6 mt-4 border-t-2 border-t-zinc-300">
+    <div class="w-full gap-4 flex flex-col">
         <?php
         $form->print_fields(["typeStage", "sujet", "theme"]);
         ?>

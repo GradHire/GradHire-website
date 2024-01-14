@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const {
         lienNoms, lienBlocks, lienTooltips, sectionAdds, sectionTexts, sidebarContainer,
-        sideButtonFlash1, sideButtonFlash2, logoBig, logoSmall, sidebarButton, centerContainer
+        sideButtonFlash1, sideButtonFlash2, logoBig, logoSmall, sidebarButton, centerContainer, contentToHide
     } = getDOMElements();
 
     let isSidebarOpen = getCookie('sidebar_open');
@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             logoSmall: document.getElementById('logo-small'),
             sidebarButton: document.getElementById('sidebar-button'),
             centerContainer: document.getElementById('centerContainer'),
+            contentToHide: document.getElementById('contentToHide')
         }
     }
 
@@ -56,6 +57,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         sideButtonFlash2.classList.replace('group-hover:-rotate-[15deg]', 'group-hover:rotate-[15deg]');
         sideButtonFlash2.classList.replace('group-hover:translate-x-0.5', 'group-hover:-translate-x-0.5');
         centerContainer.classList.replace('w-[calc(100%-275px)]', 'w-[calc(100%-75px)]');
+        contentToHide.classList.replace('max-md:opacity-0', 'max-md:opacity-100');
+        contentToHide.classList.replace('invisible', 'visible');
         for (let i = 0; i < sectionTexts.length; i++) {
             sectionTexts[i].classList.replace("text-[12px]", "text-[8px]")
             sectionAdds[i].style.display = 'none';
@@ -77,6 +80,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         sideButtonFlash2.classList.replace('group-hover:rotate-[15deg]', 'group-hover:-rotate-[15deg]');
         sideButtonFlash2.classList.replace('group-hover:-translate-x-0.5', 'group-hover:translate-x-0.5');
         centerContainer.classList.replace('w-[calc(100%-75px)]', 'w-[calc(100%-275px)]');
+        contentToHide.classList.replace('max-md:opacity-100', 'max-md:opacity-0')
+        contentToHide.classList.replace('visible', 'invisible');
+
         for (let i = 0; i < sectionTexts.length; i++) {
             sectionTexts[i].classList.replace("text-[8px]", "text-[12px]")
             sectionAdds[i].style.display = 'block';

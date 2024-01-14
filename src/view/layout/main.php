@@ -121,10 +121,11 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
       </span>
         </button>
     </div>
-    <div id="centerContainer" class="flex-col flex w-full  <?= $isOpen ? "max-w-[calc(100%-275px)]" : "w-[calc(100%-75px)]" ?> max-h-screen bg-white">
+    <div id="centerContainer"
+         class="flex-col flex w-full  <?= $isOpen ? "max-w-[calc(100%-275px)]" : "w-[calc(100%-75px)]" ?> max-h-screen bg-white">
         <div class="sticky top-0 z-10 flex items-start justify-between flex-row gap-4 w-full py-2 bg-white pr-4 md:pr-8">
             <div class="w-full flex flex-row items-center justify-between h-[40px] px-4">
-                <span class="md:text-lg text-[14px] tracking-widest font-bold uppercase md:first-letter:text-2xl first-letter:text-lg first-letter:font-extrabold max-md:max-w-[100px]">
+                <span class="md:text-lg text-[14px] tracking-widest font-bold uppercase md:first-letter:text-2xl first-letter:text-lg leading-3 first-letter:font-extrabold max-md:max-w-[100px]">
                 <?= $this->title ?>
                 </span>
             </div>
@@ -151,7 +152,8 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
                 </a>
             </div>
         </div>
-        <div class=" w-[calc(100%-16px)]  mr-4 flex flex-col justify-start items-start p-4 rounded-3xl gap-4 bg-zinc-50 border h-screen mb-4 overflow-auto example">
+        <div id="contentToHide"
+             class=" w-[calc(100%-16px)] mr-4 flex flex-col justify-start items-start p-4 rounded-3xl gap-4 bg-zinc-50 border h-screen mb-4 overflow-auto example duration-300 ease-out <?= $isOpen ? "max-md:opacity-0 invisible" : "max-md:opacity-100 visible" ?>">
             <?php Notification::show(); ?>
             {{content}}
             <?php
