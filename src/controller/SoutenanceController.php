@@ -185,7 +185,6 @@ class SoutenanceController extends AbstractController
         if ($request->getMethod() == "post") {
             if ($form->validate($request->getBody())) {
                 $notemodif = $form->getParsedBody();
-                print_r($notemodif);
                 (new NotesRepository())->modifierNote($idnote, $notemodif);
                 Application::$app->response->redirect("/gerervalidenote");
             }
