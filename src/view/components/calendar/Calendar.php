@@ -96,7 +96,7 @@ class Calendar
         echo <<<HTML
             <div class="flex flex-col calendar-week $hidden">
             <div class="flex justify-between border-b-[1px] border-zinc-200 pb-4 px-4">            
-                <p class="max-md:text-[12px] max-w-[100px]">Semaine du $start au $end</p>
+                <p class="max-md:text-[12px] max-md:max-w-[100px]">Semaine du $start au $end</p>
             </div>
         HTML;
         $lastDay = null;
