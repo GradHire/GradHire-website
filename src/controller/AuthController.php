@@ -233,7 +233,8 @@ class AuthController extends AbstractController
     public function home(): string
     {
         if (Application::isGuest()) return $this->render('info-pages/home');
-        Application::$app->response->redirect('/dashboard');
+        if (Auth::has_role(Roles::ManagerAlternance, Roles::ManagerStage, Roles::ChefDepartment, Roles::Manager, Roles::Staff, Roles::Teacher)) Application::$app->response->redirect('/dashboard');
+        else Application::$app->response->redirect('/offres');
         return '';
     }
 

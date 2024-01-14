@@ -46,12 +46,23 @@ class DashboardController extends AbstractController
      */
     public function showDashboard(): string
     {
-        $dashboardModel = new DashboardRepository();
-        $data = $dashboardModel->fetchDashboardData();
+        if (Application::isGuest()) throw new ForbiddenException();
+        // ManagerAlternance
+        //ManagerStage
+        //ChefDepartment
+        //Manager
+        //Staff
+        //Teacher
+        if (Auth::has_role(Roles::ManagerAlternance, Roles::ManagerStage, Roles::ChefDepartment, Roles::Manager, Roles::Staff, Roles::Teacher)) {
+            $dashboardModel = new DashboardRepository();
+            $data = $dashboardModel->fetchDashboardData();
 
-        return $this->render('dashboard/dashboard', [
-            'data' => $data
-        ]);
+            return $this->render('dashboard/dashboard', [
+                'data' => $data
+            ]);
+        } else {
+            throw new ForbiddenException();
+        }
     }
 
     /**
