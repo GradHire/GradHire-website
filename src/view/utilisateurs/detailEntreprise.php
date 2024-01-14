@@ -1,8 +1,6 @@
 <?php
 /** @var $utilisateur \app\src\model\dataObject\Entreprise */
 
-use app\src\model\Application;
-use app\src\model\repository\UtilisateurRepository;
 use app\src\view\components\ui\Detail;
 
 Detail::render([$utilisateur]);
