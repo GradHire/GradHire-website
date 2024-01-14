@@ -1,14 +1,16 @@
 function togglePasswordVisibility(button) {
+    const eye = button.firstElementChild;
+    const slash = eye.nextElementSibling;
     const passwordInput = button.previousElementSibling;
     let isPasswordVisible = (passwordInput.type === 'text');
 
     if (isPasswordVisible) {
         passwordInput.type = 'password';
-        button.classList.remove('fa-eye-slash');
-        button.classList.add('fa-eye');
+        eye.style.display = 'block';
+        slash.style.display = 'none';
     } else {
         passwordInput.type = 'text';
-        button.classList.remove('fa-eye');
-        button.classList.add('fa-eye-slash');
+        eye.style.display = 'none';
+        slash.style.display = 'block';
     }
 }

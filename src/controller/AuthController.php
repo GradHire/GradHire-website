@@ -30,8 +30,8 @@ class AuthController extends AbstractController
         try {
             if (!Application::isGuest()) header("Location: /");
             $loginForm = new FormModel([
-                "email" => FormModel::email("Adresse mail")->required(),
-                "password" => FormModel::password("Mot de passe")->min(8),
+                "email" => FormModel::email("Adresse mail")->required()->asterisk(),
+                "password" => FormModel::password("Mot de passe")->min(8)->asterisk(),
                 "remember" => FormModel::switch("Rester connecté")->default(true)->forget()
             ]);
             if ($request->getMethod() === 'post') {
@@ -58,8 +58,8 @@ class AuthController extends AbstractController
     {
         if (!Application::isGuest()) header("Location: /");
         $loginForm = new FormModel([
-            "username" => FormModel::string("Login ldap")->required(),
-            "password" => FormModel::password("Mot de passe")->required(),
+            "username" => FormModel::string("Login ldap")->required()->asterisk(),
+            "password" => FormModel::password("Mot de passe")->required()->asterisk(),
             "remember" => FormModel::switch("Rester connecté")->default(true)
         ]);
         if ($request->getMethod() === 'post') {
