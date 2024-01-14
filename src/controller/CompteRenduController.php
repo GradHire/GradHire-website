@@ -41,7 +41,6 @@ class CompteRenduController extends AbstractController
             if ($resquest->getMethod() == "post") {
                 if ($form->validate($resquest->getBody())) {
                     $data = $form->getParsedBody();
-                    print_r($data);
                     if (CompteRenduRepository::checkIfCompteRenduExist($informations['numconvention'])) {
                         if (Auth::has_role(Roles::TutorTeacher)) {
                             CompteRenduRepository::updateCompteRenduProf($informations['numconvention'], $data['compteRendu']);

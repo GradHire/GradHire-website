@@ -146,11 +146,11 @@ Non valide
         <div class="flex flex-col gap-2 md:flex-row">
             <?php if ($temp) { ?>
                 <a href="/visite/<?php echo $convention['numconvention'] ?>"
-                   class="btn btn-primary bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md text-center">Voir la date de visite</a>
-            <?php } ?>
-            <?php
+                   class="btn btn-primary bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md text-center">Voir
+                    la date de visite</a>
+            <?php }
             $getIfSoutenanceExist = SoutenanceRepository::getIfSoutenanceExist($convention['numconvention']);
-            if (Auth::has_role(Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage, Roles::Staff)) {
+            if (Auth::has_role(Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage, Roles::Staff) && $visiterepo) {
                 if ($convention['conventionvalidee'] == "1" && $convention['conventionvalideepedagogiquement'] == "1" && !$getIfSoutenanceExist) {
                     ?> <a href="/createSoutenance/<?php echo $convention['numconvention'] ?>"
                           class="btn btn-primary bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md text-center">Créer
@@ -161,14 +161,9 @@ Non valide
                         soutenance</a> <?php }
             }
             $imOneOfTheTutor = ConventionRepository::imOneOfTheTutor(Auth::get_user()->id, $convention['numconvention']);
-            if (!$getIfSoutenanceExist) {
-                if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor) && $convention['conventionvalidee'] == "1" && $convention['conventionvalideepedagogiquement'] == "1") {
-                    ?><?php } else if (!Auth::has_role(Roles::ManagerAlternance, Roles::Manager, Roles::ManagerStage, Roles::Staff)) {
-                    ?> <p>en attente de la validation </p> <?php
-                }
-            } else if (VisiteRepository::getIfVisiteExist($convention['numconvention']) && !$getIfSoutenanceExist) {
+            if (VisiteRepository::getIfVisiteExist($convention['numconvention']) && !$getIfSoutenanceExist) {
                 ?> <p>en attente de la soutenance </p> <?php
-            } else {
+            } else if ($getIfSoutenanceExist){
                 if (Auth::has_role(Roles::TutorTeacher, Roles::Teacher) && !SoutenanceRepository::getIfJuryExist(Auth::get_user()->id, $convention['numconvention'])) {
                     if (!SoutenanceRepository::getIfImTheTuteurProf(Auth::get_user()->id, $convention['numconvention'])) {
                         ?> <a href="/seProposerJury/<?php echo $convention['numconvention'] ?>"
@@ -183,7 +178,7 @@ Non valide
                     ?> <a href="/voirSoutenance/<?php echo $convention['numconvention'] ?>"
                           class="btn btn-primary bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Voir
                         soutenance</a> <?php
-                } else if (Auth::has_role(Roles::Student) && SoutenanceRepository::imTheEtudiant(Auth::get_user()->id, $convention['numconvention'])) {
+                } else if (Auth::has_role(Roles::Student) && Auth::get_user()->id == $convention['idutilisateur']){
                     ?> <a href="/voirSoutenance/<?php echo $convention['numconvention'] ?>"
                           class="btn btn-primary bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Voir
                         soutenance</a> <?php

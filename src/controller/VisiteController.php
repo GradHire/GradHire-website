@@ -50,7 +50,7 @@ class VisiteController extends AbstractController
         if (!$supervise) throw new NotFoundException();
         if (Auth::has_role(Roles::Tutor) && Application::getUser()->id() !== $supervise->getIdtuteurentreprise()) throw new ForbiddenException("vous n'êtes pas le tuteur de l'entreprise");
 
-        if (Auth::has_role(Roles::TutorTeacher, Roles::Tutor, Roles::Manager) && ConventionRepository::imOneOfTheTutor(Application::getUser()->id(), $numConvention)) {
+        if ((Auth::has_role(Roles::TutorTeacher, Roles::Tutor) && ConventionRepository::imOneOfTheTutor(Application::getUser()->id(), $numConvention)) || Auth::has_role(Roles::Manager,Roles::ManagerAlternance,Roles::ManagerStage)) {
             $form = new FormModel([
                 "start" => FormModel::date("Début de la visite")->withHour()->default($visite ? $visite->getDebutVisite()->format('Y-m-d H:i:s') : (new DateTime())->format('Y-m-d H:i:s'))->required(),
                 "end" => FormModel::date("Fin de la visite")->withHour()->default($visite ? $visite->getFinVisite()->format('Y-m-d H:i:s') : (new DateTime())->format('Y-m-d H:i:s'))->required(),

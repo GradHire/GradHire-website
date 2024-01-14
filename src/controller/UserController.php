@@ -103,8 +103,7 @@ class UserController extends AbstractController
                     NotificationRepository::createNotification(Auth::get_user()->id(), "Le profil de " . $user->full_name()
                         . " a été modifié", "/profile/" . $user->id());
                 }
-                Application::redirectFromParam('/profile');
-                return '';
+
             }
 
         }

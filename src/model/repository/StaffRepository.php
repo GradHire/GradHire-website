@@ -10,7 +10,7 @@ class StaffRepository extends LdapRepository
 {
 	protected static string $view = "StaffVue";
 	protected static string $create_function = "creerStaff";
-	protected static string $update_function = "updateStaff";
+	protected static string $update_function = "updatestaff";
 
 	/**
 	 * @throws ServerErrorException
