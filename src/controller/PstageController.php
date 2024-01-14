@@ -42,7 +42,7 @@ class PstageController extends AbstractController
                     NotificationRepository::createNotification(Auth::get_user()->id(), "Importation CSV réussi", "/conventions");
                 }
             }
-            return $this->render('Import', [
+            return $this->render('imports/import', [
                 'form' => $form
             ]);
         } else throw new ForbiddenException();

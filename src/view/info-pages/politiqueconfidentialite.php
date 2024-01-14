@@ -1,9 +1,16 @@
-<div class="container mx-auto p-4">
+<?php
+
+use app\src\model\View;
+
+$this->title = 'Politique de confidentialité';
+?>
+
+<div class="w-full gap-4 mx-auto flex flex-col md:py-[50px]">
     <h1 class="text-2xl font-bold mb-4">Politique de confidentialité</h1>
 
-    <p class="mb-4">Gradhire<br>
+    <p class="mb-4">GradHire<br>
         IUT Montpellier<br>
-        Type de site : blog</p>
+        Type de site : Plateforme de recherche de stages et d'alternance<br>
 
     <h2 class="text-xl font-bold mb-2">Le but de cette politique de confidentialité</h2>
     <p class="mb-4">Le but de cette politique de confidentialité est d'informer les utilisateurs de notre site des
@@ -213,7 +220,10 @@
         veuillez
         communiquer avec notre agent de protection de la vie privée ici :</p>
     <p class="mb-4">Giovanni Gozzo</p>
-    <p class="mb-4">03 84 72 83 49</p>
+    <a class="mb-4 text-blue-500 underline"
+       href="mailto:gio.gozzo84@gmail.com">
+        gio.gozzo84@gmail.com
+    </a>
 
     <h2 class="text-xl font-bold mb-2">Politique sur les cookies</h2>
     <p class="mb-4">Un cookie est un petit fichier, stocké sur le disque dur d'un utilisateur par le site Web. Son but
@@ -245,11 +255,14 @@
     <h2 class="text-xl font-bold mb-2">Contact</h2>
     <p class="mb-4">Si vous avez des questions à nous poser, n'hésitez pas à communiquer avec nous en utilisant ce qui
         suit :</p>
-    <p class="mb-4">09 23 72 98 23</p>
-    <p class="mb-4">Feur@quoifeur.com</p>
-    <p class="mb-4">220 rue du pioch de boutonnet</p>
+    <a class="mb-4 text-blue-500 underline"
+       href="mailto:hirchyts.daniil@gmail.com">
+        hirchyts.daniil@gmail.com
+    </a>
+    <a class="mb-4 text-blue-500 underline"
+       href="mailto:gio.gozzo84@gmail.com">
+        gio.gozzo84@gmail.com
+    </a>
 
-    <p class="mb-4">Date d'entrée en vigueur : le</p>
-
-    <p class="mb-4">© 2002-2023, DocumentsLégauxTM (Sequiter Inc.)</p>
+    <p class="mb-4">© 2023-2024, GradHire</p>
 </div>

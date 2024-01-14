@@ -14,6 +14,7 @@ use app\src\model\Form\FormModel;
 use app\src\model\repository\StaffRepository;
 use app\src\model\View;
 use app\src\view\components\ui\Modal;
+use app\src\view\components\ui\Separator;
 use app\src\view\components\ui\Table;
 
 View::setCurrentSection('Tuteurs');
@@ -41,8 +42,7 @@ $modal = new Modal("Voulez vous vraiment supprimer ce tuteur ?", "Supprimer", ""
     ?>
     <h2 class="font-bold text-lg">Liste des tuteurs</h2>
     <?php
-    if (empty($tuteurs))
-        echo "<p>Aucun tuteur</p>";
+    if (empty($tuteurs)) echo "<p>Aucun tuteur</p>";
     else {
         Table::createTable($tuteurs, ["nom", "prénom", "email", "numtelephone", "fonction"], function ($tuteur) {
             Table::cell($tuteur->getNom());
@@ -50,11 +50,8 @@ $modal = new Modal("Voulez vous vraiment supprimer ce tuteur ?", "Supprimer", ""
             Table::cell($tuteur->getEmail());
             Table::cell($tuteur->getNumtelephone());
             Table::cell($tuteur->getFonction());
-            if (Auth::has_role(Roles::Manager, Roles::Staff)) {
-                Table::button("/utilisateurs/" . $tuteur->getIdutilisateur());
-            } else {
-                Table::button("/utilisateurs/" . $tuteur->getIdutilisateur() . "/archiver?" . Application::getRedirect());
-            }
+            if (Auth::has_role(Roles::Manager, Roles::Staff)) Table::button("/utilisateurs/" . $tuteur->getIdutilisateur());
+            else Table::button("/utilisateurs/" . $tuteur->getIdutilisateur() . "/archiver?" . Application::getRedirect());
         });
     } ?>
 
@@ -73,7 +70,8 @@ if (count($waiting) > 0) { ?>
 if (Auth::has_role(Roles::Manager, Roles::Staff)) {
 ?>
 <div class=" w-full example">
-    <h2 class="font-bold text-lg">Liste des tuteurs Universitaire</h2>
+    <?php Separator::render([]); ?>
+    <h2 class="font-bold text-lg mt-4">Liste des tuteurs Universitaire</h2>
     <?php
     $tuteurs = new StaffRepository([]);
     $tuteurs = $tuteurs->getAllTuteurProf();

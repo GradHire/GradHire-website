@@ -56,9 +56,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         sideButtonFlash1.classList.replace('group-hover:translate-x-0.5', 'group-hover:-translate-x-0.5');
         sideButtonFlash2.classList.replace('group-hover:-rotate-[15deg]', 'group-hover:rotate-[15deg]');
         sideButtonFlash2.classList.replace('group-hover:translate-x-0.5', 'group-hover:-translate-x-0.5');
-        centerContainer.classList.replace('w-[calc(100%-275px)]', 'w-[calc(100%-75px)]');
-        contentToHide.classList.replace('max-md:opacity-0', 'max-md:opacity-100');
-        contentToHide.classList.replace('invisible', 'visible');
+        centerContainer.classList.replace('max-w-[calc(100%-275px)]', 'max-w-[calc(100%-75px)]');
+        contentToHide.classList.replace('max-sm:opacity-0', 'max-sm:opacity-100');
+        contentToHide.classList.replace('max-sm:invisible', 'max-sm:visible');
         for (let i = 0; i < sectionTexts.length; i++) {
             sectionTexts[i].classList.replace("text-[12px]", "text-[8px]")
             sectionAdds[i].style.display = 'none';
@@ -79,9 +79,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         sideButtonFlash1.classList.replace('group-hover:-translate-x-0.5', 'group-hover:translate-x-0.5');
         sideButtonFlash2.classList.replace('group-hover:rotate-[15deg]', 'group-hover:-rotate-[15deg]');
         sideButtonFlash2.classList.replace('group-hover:-translate-x-0.5', 'group-hover:translate-x-0.5');
-        centerContainer.classList.replace('w-[calc(100%-75px)]', 'w-[calc(100%-275px)]');
-        contentToHide.classList.replace('max-md:opacity-100', 'max-md:opacity-0')
-        contentToHide.classList.replace('visible', 'invisible');
+        centerContainer.classList.replace('max-w-[calc(100%-75px)]', 'max-w-[calc(100%-275px)]');
+        contentToHide.classList.replace('max-sm:opacity-100', 'max-sm:opacity-0')
+        contentToHide.classList.replace('max-sm:visible', 'max-sm:invisible');
 
         for (let i = 0; i < sectionTexts.length; i++) {
             sectionTexts[i].classList.replace("text-[8px]", "text-[12px]")
