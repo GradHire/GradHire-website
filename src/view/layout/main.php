@@ -26,7 +26,6 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
 
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,6 +34,7 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
     <script src="/resources/js/cookie.js"></script>
     <script src="/resources/js/side-menu.js"></script>
     <script src="/resources/js/chatbot.js"></script>
+    <script src="/resources/js/table.js"></script>
     <link rel="stylesheet" href="/resources/css/input.css">
     <link rel="stylesheet" href="/resources/css/output.css">
     <link rel="icon" type="image/png" sizes="32x32" href="/resources/images/favicon-32x32.png">
@@ -63,7 +63,7 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
                     </svg>
                 </a>
             </div>
-            <div class="h-full w-full z-40 flex gap-1.5 flex-col relative items-start max-md:max-h-[550px] overflow-y-auto example">
+            <div class="h-full w-full z-40 flex gap-1.5 flex-col relative items-start max-sm:max-h-[550px] overflow-y-auto example">
                 <div class="w-full flex flex-row justify-between items-center">
                     <span class="uppercase text-zinc-400 font-light text-[8px] duration-300 tracking-widest sectionText <?= $isOpen ? " text-[12px] " : " text-[8px] " ?>">Sections</span>
                     <button <?= $modalAddSection ? $modalAddSection->Show() : "" ?>
@@ -121,10 +121,10 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
       </span>
         </button>
     </div>
-    <div class="flex-col flex w-full max-w-[calc(100%-75px)] max-h-screen bg-white">
+    <div id="centerContainer" class="flex-col flex w-full  <?= $isOpen ? "max-w-[calc(100%-275px)]" : "w-[calc(100%-75px)]" ?> max-h-screen bg-white">
         <div class="sticky top-0 z-10 flex items-start justify-between flex-row gap-4 w-full py-2 bg-white pr-4 md:pr-8">
             <div class="w-full flex flex-row items-center justify-between h-[40px] px-4">
-                <span class="text-lg tracking-widest font-bold uppercase first-letter:text-2xl first-letter:font-extrabold ">
+                <span class="md:text-lg text-[14px] tracking-widest font-bold uppercase md:first-letter:text-2xl first-letter:text-lg first-letter:font-extrabold max-md:max-w-[100px]">
                 <?= $this->title ?>
                 </span>
             </div>
@@ -132,14 +132,14 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
                 <div class="w-2 h-2 absolute top-1 right-1 bg-blue-500 rounded-full border"></div>
                 <div class="w-2 h-2 absolute top-1 right-1 bg-blue-500 rounded-full animate-ping "></div>
                 <a href="/notifications">
-                    <?= I_Notification::render('w-6 h-6 fill-zinc-500 group-hover:fill-blue-600 duration-150 '); ?>
+                    <?= I_Notification::render('md:w-6 md:h-6 w-5 h-5 fill-zinc-500 group-hover:fill-blue-600 duration-150 '); ?>
                 </a>
             </div>
             <?php Separator::render(['orientation' => 'vertical', 'height' => '[40px]']) ?>
             <div class="flex items-center justify-center h-[40px] ">
                 <a class="flex flex-row gap-4 items-center justify-center min-w-fit text-sm font-medium text-zinc-600 hover:text-zinc-800"
                    href="/profile">
-                    <div class="rounded-full overflow-hidden min-h-[35px] min-w-[35px] max-h-[35px] max-w-[35px] border">
+                    <div class="rounded-full overflow-hidden min-h-[30px] min-w-[30px] max-h-[30px] max-w-[30px] md:min-h-[35px] md:min-w-[35px] md:max-h-[35px] md:max-w-[35px] border">
                         <img src="<?= Application::getUser()->get_picture() ?>" alt="Photo de profil"
                              class="w-full h-full object-cover rounded-full aspect-square">
                     </div>
@@ -151,7 +151,7 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
                 </a>
             </div>
         </div>
-        <div class="w-[calc(100%-16px)] mr-4 flex flex-col justify-start items-start p-4 rounded-3xl gap-4 bg-zinc-50 border h-screen mb-4 overflow-auto example">
+        <div class=" w-[calc(100%-16px)]  mr-4 flex flex-col justify-start items-start p-4 rounded-3xl gap-4 bg-zinc-50 border h-screen mb-4 overflow-auto example">
             <?php Notification::show(); ?>
             {{content}}
             <?php
