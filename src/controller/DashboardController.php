@@ -172,6 +172,7 @@ class DashboardController extends AbstractController
      */
     public function calendar(): string
     {
+        if (Application::isGuest()) throw new ForbiddenException();
         $events = [];
         $visites = [];
         if (Auth::has_role(Roles::Student)) {
