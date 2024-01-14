@@ -11,6 +11,7 @@ use app\src\model\Form\FormModel;
 use app\src\model\View;
 use app\src\view\components\ui\Modal;
 
+
 $this->title = 'Offres';
 View::setCurrentSection('Offres');
 
@@ -25,7 +26,7 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
 }
 ?>
 
-<div class="w-full flex flex-col gap-4 mx-auto gap-4">
+<div class="w-full flex flex-col gap-4 mx-auto gap-4 dark:bg-black">
     <div class="flex flex-row gap-2 w-full">
         <?php
         if (Auth::has_role(Roles::Enterprise, Roles::Manager,Roles::ManagerAlternance,Roles::ManagerStage,Roles::Staff)) {

@@ -13,7 +13,7 @@
 
 <nav aria-label="Top"
      class="fixed z-20 w-full border-b border-gray-200">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 top-0 z-50">
+    <div class="mx-auto bg-white max-w-7xl px-4 sm:px-6 lg:px-8 top-0 z-50">
         <div class="flex h-16 gap-4 items-center">
             <div class="flex lg:ml-0">
                 <a href="/">
@@ -34,7 +34,6 @@
         </div>
     </div>
 </nav>
-<div id="blur-background" class="hidden w-screen h-screen fixed z-50 top-0 left-0 backdrop-blur-md"></div>
 <div class="w-full flex  justify-center items-center flex-col">
     <div class="w-full flex flex-col justify-center items-center py-0 max-w-7xl mt-[65px] px-4 sm:px-6 lg:px-8">
         {{content}}
@@ -42,7 +41,7 @@
             <h2 id="footer-heading" class="sr-only">Footer</h2>
             <div class="mx-auto max-w-7xl ">
                 <div class="border-t border-zinc-200 py-10">
-                    <p class="text-sm text-zinc-500">Copyright &copy; 2023 -
+                    <p class="text-sm text-zinc-500">Copyright &copy; 2024 -
                         <span class="text-zinc-900">GradHire</span>
                     </p>
                 </div>

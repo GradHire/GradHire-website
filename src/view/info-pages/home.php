@@ -6,10 +6,12 @@ $this->title = 'Home';
         <div class="pb-80 pt-16 sm:pb-40 sm:pt-24 lg:pb-48 lg:pt-40">
             <div class="relative w-full">
                 <div class="sm:max-w-lg">
-                    <h1 class="text-4xl font-bold tracking-tight text-zinc-900 sm:text-6xl">Trouvez votre stage ou
-                        alternance facilement</h1>
+                    <h1 class="text-4xl font-bold tracking-tight text-zinc-900 sm:text-6xl">Trouvez votre
+                        stage et alternance.</h1>
+                    <h1 class="text-4xl font-bold tracking-tight text-zinc-900 sm:text-6xl">Ou trouvez des candidats
+                        pour votre entreprise!</h1>
                     <p class="mt-4 text-xl text-zinc-500">GradHire est un site de recherche de stage et d'alternance
-                        pour les étudiants et les entreprises.</p>
+                        pour les étudiants. Il permet également aux entreprises de trouver des candidats.</p>
                 </div>
                 <div>
                     <div class="mt-10">
@@ -55,10 +57,14 @@ $this->title = 'Home';
                             </div>
                         </div>
 
-                        <a href="/offres"
-                           class="inline-block rounded-md border border-transparent px-8 py-3 text-center font-medium text-white hover:bg-blue-800 bg-blue-600">Trouver
-                            une
-                            offre</a>
+                        <div class="flex md:flex-row flex-col md:gap-4 gap-2 w-fit">
+                            <a href="/offres"
+                               class="inline-block rounded-md border border-transparent px-8 py-3 text-center font-medium text-white hover:bg-blue-800 bg-blue-600">Trouver
+                                un stage</a>
+                            <a href="/offres"
+                               class="inline-block rounded-md border border-transparent px-8 py-3 text-center font-medium text-white hover:bg-blue-800 bg-blue-600">Créer
+                                une offre</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -151,7 +157,7 @@ $this->title = 'Home';
             </div>
 
             <div class="mt-6 px-4 sm:hidden">
-                <a href="#" class="block text-sm font-semibold text-zinc-600 hover:text-zinc-500">
+                <a href="/offres" class="block text-sm font-semibold text-zinc-600 hover:text-zinc-500">
                     Voir toutes les catégories
                     <span aria-hidden="true"> &rarr;</span>
                 </a>

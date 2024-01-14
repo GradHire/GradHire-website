@@ -11,7 +11,7 @@ use app\src\view\components\ui\Table;
     <a href="/creerTuteur"
        class="ml-3 inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">Créer-le</a>
 </div>
-<div class="overflow-x-auto w-full pb-24">
+<div class=" overflow-x-auto w-full example  pb-24">
     <?php
     Table::createTable($listTuteur, ["Nom", "Prénom", "Fonction", "Tel/Mail"], function ($tuteur) {
         Table::cell($tuteur->getNom());

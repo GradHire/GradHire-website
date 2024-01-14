@@ -70,4 +70,10 @@ class NotificationController extends AbstractController
         NotificationRepository::deleteAllNotificationLue(Application::getUser()->id());
         Application::redirectFromParam("/notifications");
     }
+
+    public function cookieAccept(): void
+    {
+        $_SESSION['cookieAccept'] = true;
+    }
+
 }

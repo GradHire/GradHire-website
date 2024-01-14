@@ -32,7 +32,7 @@ class LineChartBlock implements ComponentInterface
             return;
         }
         echo <<<EOT
-            <div class="border rounded-[8px] shadow w-full min-w-[300px] max-h-[380px] bg-white p-4 relative">
+            <div class="border rounded-[8px] shadow w-full min-w-[200px] max-h-[380px] bg-white p-4 relative">
         EOT;
         TitleBlock::render(['title' => 'Candidatures', 'subtitle' => 'Nombre de candidatures de 4 derniers mois']);
 
@@ -68,7 +68,7 @@ class LineChartBlock implements ComponentInterface
         $gradientId = $chartId . "_gradient";
 
         echo <<<EOT
-            <svg id="$chartId" width="100%" height="100%" viewBox="0 0 $width $height" class="line-chart translate-y-4 -translate-x-1.5">
+            <svg id="$chartId" width="100%" height="100%" viewBox="0 0 $width $height" class="line-chart translate-y-4 -translate-x-1.5 max-h-[250px]">
             <defs>
             <linearGradient id="$gradientId" x1="0%" y1="100%" x2="0%" y2="0%">
                 <stop offset="10%" style="stop-opacity:0.15;stop-color:$color" />

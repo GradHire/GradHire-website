@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const {
         lienNoms, lienBlocks, lienTooltips, sectionAdds, sectionTexts, sidebarContainer,
-        sideButtonFlash1, sideButtonFlash2, logoBig, logoSmall, sidebarButton
+        sideButtonFlash1, sideButtonFlash2, logoBig, logoSmall, sidebarButton, centerContainer
     } = getDOMElements();
 
     let isSidebarOpen = getCookie('sidebar_open');
@@ -41,7 +41,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             sideButtonFlash2: document.getElementById('sideButtonFlash2'),
             logoBig: document.getElementById('logo-big'),
             logoSmall: document.getElementById('logo-small'),
-            sidebarButton: document.getElementById('sidebar-button')
+            sidebarButton: document.getElementById('sidebar-button'),
+            centerContainer: document.getElementById('centerContainer'),
         }
     }
 
@@ -54,6 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         sideButtonFlash1.classList.replace('group-hover:translate-x-0.5', 'group-hover:-translate-x-0.5');
         sideButtonFlash2.classList.replace('group-hover:-rotate-[15deg]', 'group-hover:rotate-[15deg]');
         sideButtonFlash2.classList.replace('group-hover:translate-x-0.5', 'group-hover:-translate-x-0.5');
+        centerContainer.classList.replace('w-[calc(100%-275px)]', 'w-[calc(100%-75px)]');
         for (let i = 0; i < sectionTexts.length; i++) {
             sectionTexts[i].classList.replace("text-[12px]", "text-[8px]")
             sectionAdds[i].style.display = 'none';
@@ -74,6 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         sideButtonFlash1.classList.replace('group-hover:-translate-x-0.5', 'group-hover:translate-x-0.5');
         sideButtonFlash2.classList.replace('group-hover:rotate-[15deg]', 'group-hover:-rotate-[15deg]');
         sideButtonFlash2.classList.replace('group-hover:-translate-x-0.5', 'group-hover:translate-x-0.5');
+        centerContainer.classList.replace('w-[calc(100%-75px)]', 'w-[calc(100%-275px)]');
         for (let i = 0; i < sectionTexts.length; i++) {
             sectionTexts[i].classList.replace("text-[8px]", "text-[12px]")
             sectionAdds[i].style.display = 'block';
@@ -92,4 +95,6 @@ function getCookie(name) {
     const parts = value.split("; " + name + "=");
     if (parts.length === 2) return parts.pop().split(";").shift();
 }
+
+
 

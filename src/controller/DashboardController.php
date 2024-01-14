@@ -80,9 +80,6 @@ class DashboardController extends AbstractController
         }
         if (Auth::has_role(Roles::ChefDepartment)) {
             $utilisateur = (new StaffRepository([]))->getAll();
-            $utilisateur = array_filter($utilisateur, function ($user) {
-                return $user->getRole() !== Roles::ChefDepartment->value;
-            });
         } else if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::ManagerStage, Roles::ManagerAlternance)) {
             $utilisateur = [];
             $entreprises = (new EntrepriseRepository([]))->getAll();

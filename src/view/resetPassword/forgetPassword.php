@@ -8,7 +8,7 @@ use app\src\model\Form\FormModel;
 
 ?>
 
-<div class="w-full gap-4 mx-auto gap-2 flex flex-col">
+<div class="w-full gap-4 mx-auto flex flex-col mt-4 py-[50px]">
     <h2 class="text-3xl">Modifier mon mot de passe</h2>
 
     <?php

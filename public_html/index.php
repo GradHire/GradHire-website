@@ -102,7 +102,6 @@ $app->router->get('/offres/{id:\d+}/edit', [OffreController::class, 'editOffre']
 $app->router->get('/offres/{id:\d+}/validate', [OffreController::class, 'validateOffre']);
 $app->router->get('/offres/{id:\d+}/archive', [OffreController::class, 'archiveOffre']);
 
-$app->router->get('/offres/maps', [OffreController::class, 'mapsOffres']);
 
 // TestController
 
@@ -274,5 +273,7 @@ $app->router->get('/notifications/lu/{id}', [NotificationController::class, 'lir
 $app->router->get('/notifications/supprimer/{id}', [NotificationController::class, 'supprimerNotification']);
 $app->router->get('/deleteAllNotificationsNonLue', [NotificationController::class, 'supprimerAllNotificationsNonLue']);
 $app->router->get('/deleteAllNotificationsLue', [NotificationController::class, 'supprimerAllNotificationsLue']);
+
+$app->router->get('/cookie-accept', [NotificationController::class, 'cookieAccept']);
 
 $app->run();
