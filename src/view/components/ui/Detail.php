@@ -88,7 +88,7 @@ HTML;
         echo "</dl></div>";
     }
 
-    public static function addDetailLink(string $title, ?string $link)
+    public static function addDetailLink(string $title, null|string $link)
     {
         echo "
         <div class=\"px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0\">
@@ -101,7 +101,7 @@ HTML;
         ";
     }
 
-    public static function addDetailBool(string $title, ?bool $boolean)
+    public static function addDetailBool(string $title,null|bool $boolean)
     {
           echo "<div class=\"px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0\">
             <dt class=\"text-sm font-medium leading-6 text-zinc-900\">$title</dt>
