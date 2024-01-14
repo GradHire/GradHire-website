@@ -34,7 +34,7 @@ function getRoleBasedData($role, &$sections, &$actions): array
             $actionsId = ['A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07'],
         ],
         Roles::Manager => [
-            $selectedIds = ['S02', 'S04', 'S05', 'S13', 'S14', 'S01', 'S10', 'S03', 'S07', 'S06'],
+            $selectedIds = ['S02', 'S04', 'S05', 'S13', 'S14', 'S01', 'S10', 'S08', 'S03', 'S07', 'S06'],
             $actionsId = ['A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07'],
         ],
         Roles::ChefDepartment => [
