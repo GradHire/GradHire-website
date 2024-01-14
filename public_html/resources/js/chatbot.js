@@ -3,8 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
         credentials: 'include'
     })
         .then(response => {
-            if (!response.ok)
-                throw new Error(`HTTP error! Status: ${response.status}`);
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
             return response.json();
         })
         .then(data => {
@@ -66,7 +65,7 @@ function addMessage(message, authorName) {
 					<div class="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg">
 						<p class="text-sm">${message}</p>
 					</div>
-					<span class="text-xs text-gray-500 leading-none text-right">${authorName}</span>
+					<span class="text-xs text-zinc-500 leading-none text-right">${authorName}</span>
 				</div>
 			</div>`;
     } else {
@@ -74,10 +73,10 @@ function addMessage(message, authorName) {
         if(loading) loading.remove();
         messageElement.innerHTML = `<div class="flex w-full mt-2 space-x-3 max-w-xs">
         <div class="flex flex-col gap-2">
-            <div class="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
+            <div class="bg-zinc-200 p-3 rounded-r-lg rounded-bl-lg">
                 <p class="text-sm">${message}</p>
             </div>
-            <span class="text-xs text-gray-500 leading-none">${authorName}</span>
+            <span class="text-xs text-zinc-300 leading-none">${authorName}</span>
         </div>
     </div>`;}
     messages.appendChild(messageElement);
@@ -88,12 +87,12 @@ function showLoading() {
     const messages = document.getElementById("chatbot-chat");
     messages.innerHTML+= `<div class="flex w-full mt-2 space-x-3 max-w-xs" id="chatbot-loading">
                         <div class="flex flex-col gap-2">
-                            <div class="flex gap-1 bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
+                            <div class="flex gap-1 bg-zinc-200 p-3 rounded-r-lg rounded-bl-lg">
                                 <div class='h-2 w-2 bg-zinc-700 rounded-full animate-bounce [animation-delay:-0.3s]'></div>
                                 <div class='h-2 w-2 bg-zinc-700 rounded-full animate-bounce [animation-delay:-0.15s]'></div>
                                 <div class='h-2 w-2 bg-zinc-700 rounded-full animate-bounce'></div>
                             </div>
-                            <span class="text-xs text-gray-500 leading-none">Gilou</span>
+                            <span class="text-xs text-zinc-300 leading-none">Gilou</span>
                         </div>
                     </div>`
     messages.scrollTop = messages.scrollHeight;

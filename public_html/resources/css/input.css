@@ -164,13 +164,6 @@ input[type="range"]:active::-webkit-slider-thumb {
     cursor: pointer;
 }
 
-nav {
-    background-color: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(20px) saturate(160%) contrast(45%) brightness(140%);
-    -webkit-backdrop-filter: blur(20px) saturate(160%) contrast(45%) brightness(140%);
-}
-
-
 @keyframes slideIn {
     0% {
         transform: translateX(-100%);
@@ -266,4 +259,13 @@ nav {
 .calendar-arrow.disabled {
     pointer-events: none;
     opacity: 0.4;
+}
+
+.example::-webkit-scrollbar {
+    display: none;
+}
+
+.example {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }

@@ -30,7 +30,8 @@ class OffreController extends AbstractController
      */
     public function offres(): string
     {
-        if (Application::isGuest() || Auth::has_role(Roles::ChefDepartment)) throw new ForbiddenException();
+        if (Application::isGuest()) Application::$app->response->redirect('/login');
+        if (Auth::has_role(Roles::ChefDepartment)) throw new ForbiddenException();
         if (Auth::has_role(Roles::Enterprise, Roles::Tutor))
             return $this->render('entreprise/offres', ['offres' => OffresRepository::getAllByEnterprise()]);
         $form = new FormModel([
@@ -101,7 +102,7 @@ class OffreController extends AbstractController
                 "theme" => $body["theme"]
             ]);
             Notification::createNotification("Vous êtes maintenant inscrit à la newsletter");
-            NotificationRepository::createNotification(Auth::get_user()->id(), "Vous êtes maintenant inscrit à la newsletter", "/offres?".parse_url($_SERVER["REQUEST_URI"], PHP_URL_QUERY));
+            NotificationRepository::createNotification(Auth::get_user()->id(), "Vous êtes maintenant inscrit à la newsletter", "/offres?" . parse_url($_SERVER["REQUEST_URI"], PHP_URL_QUERY));
             header("Location: /offres?" . parse_url($_SERVER["REQUEST_URI"], PHP_URL_QUERY));
         } else {
             throw new NotFoundException();
@@ -136,8 +137,8 @@ class OffreController extends AbstractController
             ]);
             $form = new FormModel($attr);
             (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmail()], "Modification de votre offre", "Votre offre a été modifiée");
-            NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez modifié une offre", "/offres/".$id);
-            NotificationRepository::createNotification($offre->getIdutilisateur(), "Une de vos offres a été modifiée", "/offres/".$id);
+            NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez modifié une offre", "/offres/" . $id);
+            NotificationRepository::createNotification($offre->getIdutilisateur(), "Une de vos offres a été modifiée", "/offres/" . $id);
             return $this->render('/offres/edit', ['offre' => $offre, 'form' => $form]);
         }
     }

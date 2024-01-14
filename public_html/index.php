@@ -275,4 +275,6 @@ $app->router->get('/notifications/supprimer/{id}', [NotificationController::clas
 $app->router->get('/deleteAllNotificationsNonLue', [NotificationController::class, 'supprimerAllNotificationsNonLue']);
 $app->router->get('/deleteAllNotificationsLue', [NotificationController::class, 'supprimerAllNotificationsLue']);
 
+$app->router->get('/cookie-accept', [NotificationController::class, 'cookieAccept']);
+
 $app->run();
