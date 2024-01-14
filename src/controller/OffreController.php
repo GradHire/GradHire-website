@@ -116,7 +116,7 @@ class OffreController extends AbstractController
      */
     public function editOffre(Request $request): string
     {
-        if (!Auth::has_role(Roles::Staff, Roles::Manager,Roles::ManagerAlternance,Roles::ManagerStage,Roles::Enterprise)) {
+        if (!Auth::has_role(Roles::Staff, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage, Roles::Enterprise)) {
             throw new ForbiddenException();
         } else {
             $id = $request->getRouteParams()['id'] ?? null;
@@ -136,9 +136,24 @@ class OffreController extends AbstractController
                 "description" => FormModel::string("Description")->default($offre->getDescription()),
             ]);
             $form = new FormModel($attr);
-            if(!Auth::has_role(Roles::Enterprise)) (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmail()], "Modification de votre offre", "Votre offre a été modifiée");
+            if ($request->getMethod() === 'post') {
+                if ($form->validate($request->getBody())) {
+                    $body = $form->getParsedBody();
+                    $getDateDebut = explode("-", $body["dateDebut"])[0];
+                    $getDateFin = explode("-", $body["dateFin"])[0];
+                    $annee = $getDateDebut == $getDateFin ? $getDateDebut : $getDateDebut . "/" . $getDateFin;
+                    $o = new Offre(["idoffre" => $id, "thematique" => $body["thematique"], "sujet" => $body["sujet"], "nbjourtravailhebdo" => $body["nbJourTravailHebdo"], "nbheuretravailhebdo" => $body["nbHeureTravailHebdo"], "gratification" => $body["gratification"], "avantagesnature" => $body["avantageNature"], "datedebut" => $body["dateDebut"], "datefin" => $body["dateFin"], "datecreation" => date("Y-m-d H:i:s"), "statut" => "en attente", "pourvue" => 0, "anneevisee" => $body["anneeVisee"], "annee" => $annee, "idutilisateur" => $offre->getIdutilisateur(), "description" => $body["description"], "duree" => $offre->getDuree()]);
+                    $_SESSION["offre"] = $o;
+                    OffreForm::updateOffre($o, null);
+                    Notification::createNotification("Offre modifiée");
+                    NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez modifié une offre", "/offres/" . $id);
+                    if (!Auth::has_role(Roles::Enterprise)) NotificationRepository::createNotification($offre->getIdutilisateur(), "Une de vos offres a été modifiée", "/offres/" . $id);
+                    header("Location: /offres/" . $id);
+                }
+            }
+            if (!Auth::has_role(Roles::Enterprise)) (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmail()], "Modification de votre offre", "Votre offre a été modifiée");
             NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez modifié une offre", "/offres/" . $id);
-            if(!Auth::has_role(Roles::Enterprise)) NotificationRepository::createNotification($offre->getIdutilisateur(), "Une de vos offres a été modifiée", "/offres/" . $id);
+            if (!Auth::has_role(Roles::Enterprise)) NotificationRepository::createNotification($offre->getIdutilisateur(), "Une de vos offres a été modifiée", "/offres/" . $id);
             return $this->render('/offres/edit', ['offre' => $offre, 'form' => $form]);
         }
     }

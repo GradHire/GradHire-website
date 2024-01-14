@@ -72,7 +72,7 @@ class OffreForm extends Model
 
     public static function updateOffre(Offre $offre, ?float $distanciel)
     {
-        $sql = "UPDATE Offre SET duree=:dureeTag, thematique=:thematiqueTag, sujet=:sujetTag, nbJourTravailHebdo=:nbJourTravailHebdoTag, nbHeureTravailHebdo=:nbHeureTravailHebdoTag, gratification=:gratificationTag, uniteGratification=:unitegratificationTag, avantageNature=:avantageNatureTag, dateDebut=:dateDebutTag, dateFin=:dateFinTag, anneeVisee=:anneeViseeTag, idAnnee=:idAnneeTag, idUtilisateur=:idUtilisateurTag, description=:descriptionTag, statut=:statutTag WHERE idOffre=:idOffreTag";
+        $sql = "UPDATE Offre SET duree=:dureeTag, thematique=:thematiqueTag, sujet=:sujetTag, nbjourtravailhebdo=:nbJourTravailHebdoTag, nbheuretravailhebdo=:nbHeureTravailHebdoTag, gratification=:gratificationTag, avantagesnature=:avantageNatureTag, datedebut=:dateDebutTag, datefin=:dateFinTag, anneevisee=:anneeViseeTag, annee=:idAnneeTag, idutilisateur=:idUtilisateurTag, description=:descriptionTag, statut=:statutTag WHERE idoffre=:idOffreTag";
         $pdoStatement = Database::get_conn()->prepare($sql);
         $values = array(
             "idOffreTag" => $offre->getIdOffre(),
@@ -109,7 +109,6 @@ class OffreForm extends Model
                 return false;
             }
         }
-
     }
 
     public static function deleteOffre(mixed $idOffre)
