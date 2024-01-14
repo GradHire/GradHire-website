@@ -93,9 +93,9 @@ HTML;
     {
         $c = "bg-zinc-800 hover:bg-zinc-900";
         if ($color == "red")
-            $c = "bg-red-600 hover:bg-red-700";
+            $c = "bg-red-500 hover:bg-red-600";
         elseif ($color == "green")
-            $c = "bg-green-600 hover:bg-green-700";
+            $c = "bg-green-500 hover:bg-green-600";
         self::cell(<<<HTML
 	<a href="$link"
 	   class="inline-block rounded  px-4 py-2 text-xs font-medium text-white $c">$text</a>

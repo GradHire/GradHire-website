@@ -3,6 +3,8 @@
 use app\src\model\View;
 
 $this->title = 'Politique de confidentialité';
+View::setCurrentSection('Politique de confidentialité');
+
 ?>
 
 <div class="w-full gap-4 mx-auto flex flex-col md:py-[50px]">

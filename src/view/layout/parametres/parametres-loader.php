@@ -22,34 +22,48 @@ function getRoleBasedData($role, &$sections, &$actions): array
 {
     match ($role) {
         Roles::Student => [
-            $selectedIds = ['S01', 'S02', 'S05', 'S09', 'S08'],
-            $actionsId = ['A01', 'A02', 'A03'],
-            array_push($sections, 'S02', 'S05'),
-            $actions[] = 'A03'
+            $selectedIds = ['S02', 'S04', 'S05', 'S13', 'S14', 'S08', 'S09', 'S10'],
+            $actionsId = ['A01', 'A02', 'A03', 'A07'],
         ],
-        Roles::Tutor, Roles::Teacher => [
-            $selectedIds = ['S01', 'S02', 'S05'],
-            $actionsId = ['A01', 'A02', 'A03'],
-            $sections[] = 'S05'
+        Roles::Teacher => [
+            $selectedIds = ['S02', 'S04', 'S05', 'S13', 'S14', 'S01', 'S10', 'S03', 'S07', 'S06'],
+            $actionsId = ['A01', 'A02', 'A07'],
         ],
-        Roles::Enterprise => [
-            $selectedIds = ['S05', 'S06'],
-            $actionsId = ['A01', 'A02', 'A03'],
-            array_push($sections, 'S01', 'S06', 'S08')
+        Roles::Staff => [
+            $selectedIds = ['S02', 'S04', 'S05', 'S13', 'S14', 'S01', 'S10', 'S03', 'S07', 'S06'],
+            $actionsId = ['A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07'],
         ],
-        Roles::Staff, Roles::Manager => [
-            $selectedIds = ['S01', 'S02', 'S03', 'S05', 'S06', 'S07', 'S08'],
-            $actionsId = ['A01', 'A02', 'A04', 'A05'],
-            array_push($sections, 'S03', 'S05', 'S06', 'S07', 'S08')
+        Roles::Manager => [
+            $selectedIds = ['S02', 'S04', 'S05', 'S13', 'S14', 'S01', 'S10', 'S03', 'S07', 'S06'],
+            $actionsId = ['A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07'],
         ],
         Roles::ChefDepartment => [
-            $selectedIds = ['S01', 'S02', 'S03', 'S04', 'S05', 'S06', 'S07', 'S08', 'S10'],
-            $actionsId = ['A01', 'A02', 'A04', 'A05'],
-            array_push($sections, 'S01', 'S02', 'S03', 'S04', 'S05', 'S06', 'S07', 'S08', 'S10')
+            $selectedIds = ['S01', 'S02', 'S03', 'S04', 'S05', 'S06', 'S07', 'S08', 'S09', 'S10', 'S11', 'S12', 'S13', 'S14'],
+            $actionsId = ['A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07'],
+        ],
+        Roles::ManagerStage => [
+            $selectedIds = ['S02', 'S04', 'S05', 'S13', 'S14', 'S01', 'S10', 'S03', 'S07', 'S06'],
+            $actionsId = ['A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07'],
+        ],
+        Roles::ManagerAlternance => [
+            $selectedIds = ['S02', 'S04', 'S05', 'S13', 'S14', 'S01', 'S10', 'S03', 'S07', 'S06'],
+            $actionsId = ['A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07'],
+        ],
+        Roles::Enterprise => [
+            $selectedIds = ['S02', 'S04', 'S05', 'S13', 'S14', 'S06', 'S08', 'S10'],
+            $actionsId = ['A04', 'A07'],
+        ],
+        Roles::Tutor => [
+            $selectedIds = ['S02', 'S04', 'S05', 'S13', 'S14', 'S10'],
+            $actionsId = ['A01', 'A02', 'A07'],
+        ],
+        Roles::TutorTeacher => [
+            $selectedIds = ['S02', 'S04', 'S05', 'S13', 'S14', 'S10'],
+            $actionsId = ['A01', 'A02', 'A07'],
         ],
         default => [
-            $selectedIds = [],
-            $actionsId = []
+            $selectedIds = ['S02', 'S04', 'S05', 'S13', 'S14'],
+            $actionsId = ['A07'],
         ],
     };
     return [$selectedIds, $actionsId];

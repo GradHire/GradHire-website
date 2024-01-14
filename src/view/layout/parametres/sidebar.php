@@ -4,6 +4,8 @@ use app\src\view\resources\icons\I_Calendrier;
 use app\src\view\resources\icons\I_Candidatures;
 use app\src\view\resources\icons\I_Conventions;
 use app\src\view\resources\icons\I_Dashboard;
+use app\src\view\resources\icons\I_Docs;
+use app\src\view\resources\icons\I_Docs2;
 use app\src\view\resources\icons\I_Entreprises;
 use app\src\view\resources\icons\I_ExplicationSimu;
 use app\src\view\resources\icons\I_Importer;
@@ -74,7 +76,17 @@ $allSections = [
         'href' => 'edit_profile',
         'nom' => 'Paramètres',
         'svg' => I_Parametres::render('w-4 h-4')
-    ]
+    ],
+    'S13' => [
+        'href' => 'conditionutilisation',
+        'nom' => 'Condition d\'utilisation',
+        'svg' => I_Docs::render('w-4 h-4')
+    ],
+    'S14' => [
+        'href' => 'politiqueconfidentialite',
+        'nom' => 'Politique de confidentialité',
+        'svg' => I_Docs2::render('w-4 h-4')
+    ],
 ];
 
 $allActions = [
@@ -102,5 +114,15 @@ $allActions = [
         'href' => 'harceler',
         'nom' => 'Harceler',
         'svg' => I_Link::render('w-4 h-4'),
-    ]
+    ],
+    'A06' => [
+        'href' => 'gerervalidenote',
+        'nom' => 'Gerer validation note',
+        'svg' => I_Link::render('w-4 h-4'),
+    ],
+    'A07' => [
+        'href' => 'apropos',
+        'nom' => 'A propos',
+        'svg' => I_Link::render('w-4 h-4'),
+    ],
 ];

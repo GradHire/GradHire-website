@@ -16,7 +16,7 @@ $id_offre = $offre["idoffre"];
 <div class="relative  <?php if (Auth::has_role(Roles::Staff, Roles::Manager)) { ?> offreBox <?php } ?>  ">
     <?php if (Auth::has_role(Roles::Staff, Roles::Manager)) { ?>
         <div class="absolute top-0 right-0 flex flex-row gap-1 mt-11 mr-4 z-10">
-            <div class="formAdminSupprimer flex items-center justify-center w-7 h-7 border-[1px] border-zinc-100 duration-150 bg-zinc-50 hover:invert rounded-full">
+            <div class="formAdminSupprimer flex items-center justify-center w-7 h-7 border bg-white drop-shadow-[10px] duration-150 hover:invert rounded-full">
                 <a href="/offres/<?= $id_offre ?>/edit" class="btn btn-danger">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                          stroke="currentColor" class="w-5 h-5">
@@ -36,7 +36,7 @@ $id_offre = $offre["idoffre"];
             </p>
         </div>
     <?php } ?>
-    <div class=" rounded-[10px] relative cursor-pointer group bg-white p-4 shadow-sm hover:shadow min-w-[200px] shrink duration-150 border-2 border-zinc-200 hover:border-zinc-300">
+    <div class=" rounded-[10px] relative cursor-pointer group bg-white p-4 shadow-sm hover:shadow min-w-[200px] shrink duration-150 border drop-shadow-[10px] hover:border-zinc-300">
         <a href="/offres/<?= $id_offre ?>">
             <div class="w-full flex flex-row justify-between items-center">
     <span class="whitespace-nowrap rounded-md bg-zinc-100 px-2.5 py-0.5 text-center flex justify-center items-center text-xs text-zinc-600">

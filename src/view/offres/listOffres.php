@@ -30,8 +30,8 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
     <div class="flex flex-row gap-2 w-full">
         <?php
         if (Auth::has_role(Roles::Enterprise, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage, Roles::Staff)) {
-            echo " <a href=\"/offres/create\" class=\"border-2 border-zinc-200 rounded-lg bg-zinc-50 p-3 px-4 flex justify-center items-center cursor-pointer\">
-            <svg class=\"w-5 h-5 text-zinc-500 dark:text-zinc-400\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"currentColor\">
+            echo " <a href=\"/offres/create\" class=\"border rounded-md bg-white drop-shadow-[10px] p-3 px-4 flex justify-center items-center cursor-pointer\">
+            <svg class=\"w-5 h-5 text-zinc-500 \" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"currentColor\">
                 <path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M12 4.5v15m7.5-7.5h-15\" />
             </svg>
         </a>";
@@ -39,9 +39,9 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
         ?>
         <div class="w-full">
             <label for="default-search"
-                   class="text-sm font-medium text-zinc-900 sr-only dark:text-white">Search</label>
+                   class="text-sm font-medium text-zinc-900 sr-only ">Search</label>
             <div class="relative">
-                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none ">
                     <svg class="w-4 h-4 text-zinc-500 dark:text-zinc-400" aria-hidden="true"
                          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -50,7 +50,7 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                 </div>
                 <input value="<?= $_GET["sujet"] ?? '' ?>" type="search" id="default-search"
                        name="sujet"
-                       class="block w-full p-4 pl-10 text-sm text-zinc-900 border-2 border-zinc-200 rounded-lg bg-zinc-50 focus:ring-zinc-500 focus:border-zinc-500 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500"
+                       class="block w-full p-4 pl-10 bg-white drop-shadow-[10px] text-sm text-zinc-900 border rounded-md focus:ring-zinc-500 focus:border-zinc-500 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500"
                        placeholder="Rechercher une offre">
                 <button type="submit" onclick="search()"
                         class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800">
@@ -60,7 +60,7 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
         </div>
     </div>
     <div class="grid grid-cols-1 gap-4 lg:grid-cols-4">
-        <div class="rounded-lg p-4 border-2 border-zinc-200 w-full">
+        <div class="rounded-lg p-4 bg-white drop-shadow-[10px] border w-full h-fit">
             <?php
             $form->start();
             ?>
@@ -316,4 +316,3 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
             });
         });
     </script>
-    }

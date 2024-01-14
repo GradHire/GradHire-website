@@ -1,3 +1,10 @@
+<?php
+
+use app\src\model\View;
+
+$this->title = 'Conditions générales d\'utilisation';
+View::setCurrentSection('Condition d\'utilisation');
+?>
 <div class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold mb-4">CONDITIONS GÉNÉRALES D'UTILISATION</h1>
     <p class="mb-4">En vigueur au 19/12/2023</p>
