@@ -202,23 +202,22 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
         </div>
     </div>
     <script>
+        let startIndexValide = 0;
+        let itemsPerPageValide = 10;
+        let totalOffersValide = <?php echo json_encode($visibleOffersValideCount); ?>;
 
-        var startIndexValide = 0;
-        var itemsPerPageValide = 10;
-        var totalOffersValide = <?php echo json_encode($visibleOffersValideCount); ?>;
+        let startIndexAttente = 0;
+        let itemsPerPageAttente = 10;
+        let totalOffersAttente = <?php echo json_encode($visibleOffersAttenteCount); ?>;
 
-        var startIndexAttente = 0;
-        var itemsPerPageAttente = 10;
-        var totalOffersAttente = <?php echo json_encode($visibleOffersAttenteCount); ?>;
-
-        var startIndexRefuser = 0;
-        var itemsPerPageRefuser = 10;
-        var totalOffersRefuser = <?php echo json_encode($visibleOffersRefuserCount); ?>;
+        let startIndexRefuser = 0;
+        let itemsPerPageRefuser = 10;
+        let totalOffersRefuser = <?php echo json_encode($visibleOffersRefuserCount); ?>;
 
         function showOffers() {
-            var offersValide = document.querySelectorAll('#offres-container-valide > div');
-            var offersAttente = document.querySelectorAll('#offres-container-attente > div');
-            var offersRefuser = document.querySelectorAll('#offres-container-refuser > div');
+            let offersValide = document.querySelectorAll('#offres-container-valide > div');
+            let offersAttente = document.querySelectorAll('#offres-container-attente > div');
+            let offersRefuser = document.querySelectorAll('#offres-container-refuser > div');
             offersValide.forEach(function (offer, index) {
                 if (index >= startIndexValide && index < startIndexValide + itemsPerPageValide) {
                     offer.classList.remove('hidden');
