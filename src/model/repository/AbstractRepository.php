@@ -43,7 +43,8 @@ abstract class AbstractRepository
     private static function filterHtml(array $data): array
     {
         foreach ($data as $key => $value)
-            $data[$key] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+            if ($value && is_string($value))
+                $data[$key] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
         return $data;
     }
 
