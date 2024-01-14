@@ -40,7 +40,7 @@ function closeChatbot() {
 }
 
 function sendMessage() {
-    const message = document.getElementById("chatbot-input").value;
+    const message = removeHtmlTags(document.getElementById("chatbot-input").value);
     if (message !== "") {
         document.getElementById("chatbot-input").value = "";
         addMessage(message, "Vous")
@@ -64,6 +64,10 @@ function sendMessage() {
             .catch(error => addMessage("Oups on dirait qu'il y a eu un problème. Renvois ton message plustard.", "Gilou"));
 
     }
+}
+
+function removeHtmlTags(str) {
+    return str.replace(/<[^>]*>?/gm, '');
 }
 
 function addMessage(message, authorName) {
