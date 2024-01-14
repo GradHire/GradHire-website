@@ -306,3 +306,4 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
             });
         });
     </script>
+</div>

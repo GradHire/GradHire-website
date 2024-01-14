@@ -21,6 +21,9 @@ class OfferCard implements ComponentInterface
 
         $url = "https://yandex.com/map-widget/v1/?ll=3.850089%2C43.634623&mode=search&sll=10.854186%2C49.182076&sspn=73.212891%2C44.753627&text=" . urlencode($offre['adresse']) . "&z=16.97";
 
+        $email = urlencode($offre['emailentreprise']);
+        $telephone = urlencode($offre['telephoneentreprise']);
+
         echo <<<EOT
             <div class="h-[125px] w-full border-gray-200 border rounded-[8px] flex flex-col justify-between items-center bg-white relative px-6 py-3 mb-5">
                         <div class="w-full flex flex-row items-center justify-between">
@@ -42,10 +45,10 @@ class OfferCard implements ComponentInterface
                             <p class="font-light text-zinc-400">Description : </p>
                                                 <p>$description</p>
                             <p class="font-light text-zinc-400">Email : </p>
-                                                <p><a class="underline text-blue-500" href="mailto:{$offre['emailentreprise']}">$mail</a></p>
+                                                <p><a class="underline text-blue-500" href="mailto:$email">$mail</a></p>
             
                             <p class="font-light text-zinc-400">Telephone : </p>
-                            <p><a class="underline text-blue-500" href="tel:{$offre['telephoneentreprise']}">{$offre['telephoneentreprise']}</a></p>
+                            <p><a class="underline text-blue-500" href="tel:$telephone">{$offre['telephoneentreprise']}</a></p>
                             </div>
                             <div class="h-full w-[1px] bg-zinc-300"></div>
                             <div class="rounded-[8px] border overflow-hidden">

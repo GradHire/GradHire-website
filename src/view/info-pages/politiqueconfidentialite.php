@@ -35,56 +35,67 @@ View::setCurrentSection('Politique de confidentialité');
         confidentialité est conforme aux règlements suivants :</p>
     <ul class="list-disc ml-8 mb-4">
         <li>Les données à caractère personnel doivent être :</li>
-        <ul class="list-disc ml-8">
-            <li>Traitées de manière licite, loyale et transparente au regard de la personne concernée (licéité, loyauté,
-                transparence)
-            </li>
-            <li>Collectées pour des finalités déterminées, explicites et légitimes, et ne pas être traitées
-                ultérieurement
-                d'une manière incompatible avec ces finalités
-            </li>
-            <li>Adéquates, pertinentes et limitées à ce qui est nécessaire au regard des finalités pour lesquelles elles
-                sont
-                traitées (minimisation des données)
-            </li>
-            <li>Exactes et, si nécessaire, tenues à jour</li>
-            <li>Conservées pendant une durée n'excédant pas celle nécessaire au regard des finalités pour lesquelles
-                elles sont
-                traitées
-            </li>
-            <li>Traitées de façon à garantir une sécurité appropriée des données à caractère personnel</li>
-        </ul>
+        <li class="list-none">
+            <ul class="list-disc ml-8">
+                <li>Traitées de manière licite, loyale et transparente au regard de la personne concernée (licéité,
+                    loyauté,
+                    transparence)
+                </li>
+                <li>Collectées pour des finalités déterminées, explicites et légitimes, et ne pas être traitées
+                    ultérieurement
+                    d'une manière incompatible avec ces finalités
+                </li>
+                <li>Adéquates, pertinentes et limitées à ce qui est nécessaire au regard des finalités pour lesquelles
+                    elles
+                    sont
+                    traitées (minimisation des données)
+                </li>
+                <li>Exactes et, si nécessaire, tenues à jour</li>
+                <li>Conservées pendant une durée n'excédant pas celle nécessaire au regard des finalités pour lesquelles
+                    elles sont
+                    traitées
+                </li>
+                <li>Traitées de façon à garantir une sécurité appropriée des données à caractère personnel</li>
+            </ul>
+        </li>
         <li>Le traitement n'est licite que si, et dans la mesure où, au moins une des conditions suivantes est remplie
             :
         </li>
-        <ul class="list-disc ml-8">
-            <li>La personne concernée a consenti au traitement de ses données à caractère personnel pour une ou
-                plusieurs
-                finalités spécifiques
-            </li>
-            <li>Le traitement est nécessaire à l'exécution d'un contrat auquel la personne concernée est partie ou à
-                l'exécution
-                de mesures précontractuelles prises à la demande de celle-ci
-            </li>
-            <li>Le traitement est nécessaire au respect d'une obligation légale à laquelle le responsable du traitement
-                est
-                soumis
-            </li>
-            <li>Le traitement est nécessaire à la sauvegarde des intérêts vitaux de la personne concernée ou d'une autre
-                personne
-                physique
-            </li>
-            <li>Le traitement est nécessaire à l'exécution d'une mission d'intérêt public ou relevant de l'exercice de
-                l'autorité publique dont est investi le responsable du traitement
-            </li>
-            <li>Le traitement est nécessaire aux fins des intérêts légitimes poursuivis par le responsable du traitement
-                ou par un
-                tiers, à moins que ne prévalent les intérêts ou les libertés et droits fondamentaux de la personne
-                concernée qui
-                exigent une protection des données à caractère personnel, notamment lorsque la personne concernée est un
-                enfant
-            </li>
-        </ul>
+        <li class="list-none">
+            <ul class="list-disc ml-8">
+                <li>La personne concernée a consenti au traitement de ses données à caractère personnel pour une ou
+                    plusieurs
+                    finalités spécifiques
+                </li>
+                <li>Le traitement est nécessaire à l'exécution d'un contrat auquel la personne concernée est partie ou à
+                    l'exécution
+                    de mesures précontractuelles prises à la demande de celle-ci
+                </li>
+                <li>Le traitement est nécessaire au respect d'une obligation légale à laquelle le responsable du
+                    traitement
+                    est
+                    soumis
+                </li>
+                <li>Le traitement est nécessaire à la sauvegarde des intérêts vitaux de la personne concernée ou d'une
+                    autre
+                    personne
+                    physique
+                </li>
+                <li>Le traitement est nécessaire à l'exécution d'une mission d'intérêt public ou relevant de l'exercice
+                    de
+                    l'autorité publique dont est investi le responsable du traitement
+                </li>
+                <li>Le traitement est nécessaire aux fins des intérêts légitimes poursuivis par le responsable du
+                    traitement
+                    ou par un
+                    tiers, à moins que ne prévalent les intérêts ou les libertés et droits fondamentaux de la personne
+                    concernée qui
+                    exigent une protection des données à caractère personnel, notamment lorsque la personne concernée
+                    est un
+                    enfant
+                </li>
+            </ul>
+        </li>
     </ul>
 
     <p class="mb-4">Pour les résidents de l'État de Californie, cette politique de confidentialité vise à se conformer à

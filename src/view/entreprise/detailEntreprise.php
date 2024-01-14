@@ -49,23 +49,26 @@ if (empty($nom) || $nom == "") $nom = "Sans nom";
         }
     }
     if (Auth::has_role(Roles::TutorTeacher, Roles::Teacher, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage, Roles::Student) && AvisRepository::checkIfAvisPosted($entreprise->getIdutilisateur(), Application::getUser()->id())) {
-        Table::button("/entreprises/" . $entreprise->getIdutilisateur() . "/modifierAvis", "Modifier l'avis");
+        echo '<a href="/entreprises/' . $entreprise->getIdutilisateur() . '/modifierAvis" class="inline-block rounded  px-4 py-2 text-xs font-medium text-white bg-zinc-800 hover:bg-zinc-900">Modifier l\'avis</a>';
     } else if (Auth::has_role(Roles::TutorTeacher, Roles::Teacher, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage, Roles::Student)) {
-        Table::button("/entreprises/" . $entreprise->getIdutilisateur() . "/posterAvis", "Poster un avis");
+        echo '<a href="/entreprises/' . $entreprise->getIdutilisateur() . '/posterAvis" class="inline-block rounded  px-4 py-2 text-xs font-medium text-white bg-zinc-800 hover:bg-zinc-900">Poster un avis</a>';
+
     }
 
-    if ($offres != null)
-        Table::createTable($offres, ['sujet', 'thematique', 'dateCreation', 'statut'], function ($offre) {
-            Table::cell($offre->getSujet());
-            Table::cell($offre->getThematique());
-            Table::cell($offre->getDatecreation());
-            $statut = $offre->getStatut();
+    if ($offres != null) {
+        Detail::space();
+        Table::createTable($offres, ['sujet', 'thematique', 'dateCreation', 'status'], function ($offre) {
+            Table::cell($offre["sujet"]);
+            Table::cell($offre["thematique"]);
+            Table::cell($offre["datecreation"]);
+            $statut = $offre["statut"];
             if ($statut == "en attente") Table::chip("En attente", "yellow");
             else if ($statut == "valider") Table::chip("Validée", "green");
             else if ($statut == "archiver") Table::chip("Archivée", "red");
             else if ($statut == "brouillon") Table::chip("Brouillon", "gray");
-            Table::cell("<a href=\"/offres/" . $offre->getIdOffre() . "\" class=\"inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700\">Voir plus</a>");
+            Table::cell("<a href=\"/offres/" . $offre["idoffre"] . "\" class=\"inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700\">Voir plus</a>");
         });
+    }
     Detail::end();
     ?>
 </div>

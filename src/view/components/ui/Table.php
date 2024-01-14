@@ -130,23 +130,25 @@ HTML
 
     public static function link($link): void
     {
+        $link = urlencode($link ?? "");
         self::cell(($link == null || $link == "") ? "" : <<<HTML
 <a target="_blank" href="$link" class="text-blue-600">$link</a>
 HTML
         );
     }
 
-    public static function mail($mail)
+    public static function mail($mail): void
     {
+        $mail = urlencode($mail ?? "");
         self::cell(($mail == null || $mail == "") ? "" : <<<HTML
 <a href="mailto:$mail">$mail</a>
 HTML
         );
     }
 
-    public static function phone($phone)
+    public static function phone($phone): void
     {
-        $p = str_replace(' ', '', $phone);
+        $p = urlencode(str_replace(' ', '', $phone) ?? "");
         $phone = self::formatPhone($phone);
         self::cell(($phone == null || $phone == "") ? "" : <<<HTML
 <a href="tel:$p">$phone</a>
@@ -154,7 +156,7 @@ HTML
         );
     }
 
-    private static function formatPhone($phone)
+    private static function formatPhone($phone): string
     {
         if (strlen($phone) % 2 != 0)
             $phone = '0' . $phone;
@@ -163,8 +165,9 @@ HTML
         return implode(' ', $phone);
     }
 
-    public static function pdfLink($link, $text)
+    public static function pdfLink($link, $text): void
     {
+        $link = urlencode($link ?? "");
         self::cell(($link == null || $link == "") ? "" : <<<HTML
         <a target="_blank" href="$link" class="text-blue-600"> $text </a>
     HTML
