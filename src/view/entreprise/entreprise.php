@@ -24,11 +24,6 @@ if (Auth::has_role(Roles::Enterprise)) {
         Table::phone($entreprise->getNumtelephone());
         Table::link($entreprise->getSiteWeb());
         Table::button("/entreprises/" . $entreprise->getIdutilisateur());
-        if (Auth::has_role(Roles::TutorTeacher, Roles::Teacher,Roles::Manager,Roles::ManagerAlternance,Roles::ManagerStage,Roles::Student) && AvisRepository::checkIfAvisPosted($entreprise->getIdutilisateur(), Application::getUser()->id())) {
-            Table::button("/entreprises/" . $entreprise->getIdutilisateur() . "/modifierAvis", "Modifier l'avis");
-        } else if (Auth::has_role(Roles::TutorTeacher, Roles::Teacher,Roles::Manager,Roles::ManagerAlternance,Roles::ManagerStage,Roles::Student)){
-            Table::button("/entreprises/" . $entreprise->getIdutilisateur() . "/posterAvis", "Poster un avis");
-        }
     });
     ?>
 </div>

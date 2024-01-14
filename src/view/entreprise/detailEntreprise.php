@@ -11,6 +11,7 @@ use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\repository\AvisRepository;
 use app\src\view\components\ui\Table;
+use app\src\view\components\ui\Detail;
 
 $nom = $entreprise->getNom();
 if (empty($nom) || $nom == "") $nom = "Sans nom";
@@ -24,131 +25,51 @@ if (empty($nom) || $nom == "") $nom = "Sans nom";
                 Structure: <?= $entreprise->getTypestructure() ?? "" ?></p>
         </div>
     </div>
-    <div class="mt-6 border-t border-zinc-100">
-        <dl class="divide-y divide-zinc-100">
-            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-zinc-900">Effectif</dt>
-                <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
-                    <?php
-                    $effectif = $entreprise->getEffectif();
-                    if ($effectif != null) echo $effectif;
-                    else echo("Non renseigné");
-                    ?></dd>
-            </div>
-            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-zinc-900">Code NAF</dt>
-                <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
-                    <?php
-                    $codeNaf = $entreprise->getCodenaf();
-                    if ($codeNaf != null) echo $codeNaf;
-                    else echo("Non renseigné");
-                    ?></dd>
-            </div>
-            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-zinc-900">Fax</dt>
-                <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
-                    <?php
-                    $fax = $entreprise->getFax();
-                    if ($fax != null) echo $fax;
-                    else echo("Non renseigné");
-                    ?></dd>
-            </div>
-            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-zinc-900">Site web</dt>
-                <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
-                    <?php
-                    $siteWeb = $entreprise->getSiteweb();
-                    if ($siteWeb != null) echo "<a target=\"_blank\" href=\"" . $siteWeb . "\">" . $siteWeb . "</a>";
-                    else echo("Non renseigné");
-                    ?></dd>
-            </div>
-            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-zinc-900">Numéro de téléphone</dt>
-                <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
-                    <?php
-                    $numTel = $entreprise->getNumtelephone();
-                    if ($numTel != null) echo $numTel;
-                    else echo("Non renseigné");
-                    ?></dd>
-            </div>
-            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-zinc-900">Email</dt>
-                <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
-                    <?php
-                    $email = $entreprise->getEmail();
-                    if ($email != null) echo "<a href=\"mailto:" . $email . "\">" . $email . "</a>";
-                    else echo("Non renseigné");
-                    ?></dd>
-            </div>
-            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-zinc-900">SIRET</dt>
-                <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
-                    <?php
-                    $siret = $entreprise->getSiret();
-                    if ($siret != null) echo $siret;
-                    else echo("Non renseigné");
-                    ?></dd>
-            </div>
-            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-zinc-900">Statut juridique</dt>
-                <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
-                    <?php
-                    $statutJuridique = $entreprise->getStatutjuridique();
-                    if ($statutJuridique != null) echo $statutJuridique;
-                    else echo("Non renseigné");
-                    ?></dd>
-            </div>
-            <?php
-            if (Auth::has_role(Roles::ManagerAlternance, Roles::Manager, Roles::TutorTeacher, Roles::Student, Roles::ManagerStage, Roles::Teacher, Roles::Staff)) {
-                $avisPublic = AvisRepository::getAvisEntreprisePublic($entreprise->getIdutilisateur());
-                $avisPriver = AvisRepository::getAvisEntreprisePriver($entreprise->getIdutilisateur());
-                if ($avisPublic != null) {
-                    ?>
-                    <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                        <dt class="text-sm font-medium leading-6 text-zinc-900">Avis public sur l'entreprise :</dt>
-                        <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
-                            <?php
-                            foreach ($avisPublic as $avi) {
-                                echo "- " . $avi['avis'] . "<br>";
-                            }
-                            ?>
-                    </div>
-                <?php }
-                if ($avisPriver != null && Auth::has_role(Roles::ManagerAlternance, Roles::Manager, Roles::TutorTeacher, Roles::ManagerStage, Roles::Teacher, Roles::Staff)) {
-                    ?>
-                    <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                        <dt class="text-sm font-medium leading-6 text-zinc-900">Avis Professeur sur l'entreprise :</dt>
-                        <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
-                            <?php
-                            foreach ($avisPriver as $avi) {
-                                echo "- " . $avi['avis'] . "<br>";
-                            }
-                            ?>
-                    </div>
-                    <?php
-                }
-            }
-            /**
-             * @param $offre
-             * @return void
-             */
-            function print_cell($offre): void
-            {
-                Table::cell($offre['sujet']);
-                Table::cell($offre['thematique']);
-                Table::cell($offre['datecreation']);
-                if ($offre['statut'] == "en attente") Table::chip("En attente", "yellow");
-                else if ($offre['statut'] == "valider") Table::chip("Validée", "green");
-                else if ($offre['statut'] == "archiver") Table::chip("Archivée", "red");
-                else if ($offre['statut'] == "brouillon") Table::chip("Brouillon", "gray");
-                Table::cell("<a href=\"/offres/" . $offre['idoffre'] . "\" class=\"inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700\">Voir plus</a>");
-            }
+    <?php
+    Detail::start();
+    Detail::addDetail("Effectif", $entreprise->getEffectif());
+    Detail::addDetail("Code NAF", $entreprise->getCodenaf());
+    Detail::addDetail("Fax", $entreprise->getFax());
+    Detail::addDetailLink("Site web", $entreprise->getSiteweb());
+    Detail::addDetail("Numéro de téléphone", $entreprise->getNumtelephone());
+    Detail::addDetail("Email", $entreprise->getEmail());
+    Detail::addDetail("SIRET", $entreprise->getSiret());
+    Detail::addDetail("Statut juridique", $entreprise->getStatutjuridique());
+    if (Auth::has_role(Roles::ManagerAlternance, Roles::Manager, Roles::TutorTeacher, Roles::Student, Roles::ManagerStage, Roles::Teacher, Roles::Staff)) {
+        $avisPublic = AvisRepository::getAvisEntreprisePublic($entreprise->getIdutilisateur());
+        $avisPriver = AvisRepository::getAvisEntreprisePriver($entreprise->getIdutilisateur());
+        if ($avisPublic != null) {
+            Detail::addDetailAvis("Avis Public sur l'entreprise : ", $avisPublic);
+        }
+        if ($avisPriver != null && Auth::has_role(Roles::ManagerAlternance, Roles::Manager, Roles::TutorTeacher, Roles::ManagerStage, Roles::Teacher, Roles::Staff)) {
+            Detail::addDetailAvis("Avis Privé sur l'entreprise : ", $avisPriver);
+        }
+    }
+    if (Auth::has_role(Roles::TutorTeacher, Roles::Teacher,Roles::Manager,Roles::ManagerAlternance,Roles::ManagerStage,Roles::Student) && AvisRepository::checkIfAvisPosted($entreprise->getIdutilisateur(), Application::getUser()->id())) {
+        Table::button("/entreprises/" . $entreprise->getIdutilisateur() . "/modifierAvis", "Modifier l'avis");
+    } else if (Auth::has_role(Roles::TutorTeacher, Roles::Teacher,Roles::Manager,Roles::ManagerAlternance,Roles::ManagerStage,Roles::Student)) {
+        Table::button("/entreprises/" . $entreprise->getIdutilisateur() . "/posterAvis", "Poster un avis");
+    }
+    /**
+     * @param $offre
+     * @return void
+     */
+    function print_cell($offre): void
+    {
+        Table::cell($offre['sujet']);
+        Table::cell($offre['thematique']);
+        Table::cell($offre['datecreation']);
+        if ($offre['statut'] == "en attente") Table::chip("En attente", "yellow");
+        else if ($offre['statut'] == "valider") Table::chip("Validée", "green");
+        else if ($offre['statut'] == "archiver") Table::chip("Archivée", "red");
+        else if ($offre['statut'] == "brouillon") Table::chip("Brouillon", "gray");
+        Table::cell("<a href=\"/offres/" . $offre['idoffre'] . "\" class=\"inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700\">Voir plus</a>");
+    }
 
-            if ($offres != null)
-            Table::createTable($offres, ['sujet', 'thematique', 'dateCreation', 'statut'], function ($offre) {
-                print_cell($offre);
-            });
-            ?>
-        </dl>
-    </div>
+    if ($offres != null)
+        Table::createTable($offres, ['sujet', 'thematique', 'dateCreation', 'statut'], function ($offre) {
+            print_cell($offre);
+        });
+    Detail::end();
+    ?>
 </div>

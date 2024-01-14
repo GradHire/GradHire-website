@@ -4,6 +4,7 @@ namespace app\src\view\components\ui;
 
 use app\src\core\exception\ServerErrorException;
 use app\src\model\Application;
+use app\src\model\dataObject\Avis;
 use app\src\model\repository\UtilisateurRepository;
 use app\src\view\components\ComponentInterface;
 
@@ -76,6 +77,12 @@ HTML;
         echo "</dd></div>";
     }
 
+    public static function start(): void
+    {
+        echo "<div class=\"mt-6 border-t border-zinc-100\">
+        <dl class=\"divide-y divide-zinc-100\">";
+    }
+
     public static function end(): void
     {
         echo "</dl></div>";
@@ -104,5 +111,17 @@ HTML;
                 else echo("Non renseigné");
                 echo"</dd>
 </div>";
+    }
+
+    public static function addDetailAvis(string $title, Avis|array $avisPublic)
+    {
+        echo "<div class=\"px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0\">
+                        <dt class=\"text-sm font-medium leading-6 text-zinc-900\">$title</dt>
+                        <dd class=\"mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0\">";
+                            foreach ($avisPublic as $avi) {
+                                echo "- " . $avi['avis'] . "<br>";
+                            }
+                            echo "</dd>
+                    </div>";
     }
 }
