@@ -15,7 +15,7 @@ class PieChartBlock implements ComponentInterface
         $total = array_sum(array_column($data, $row_1)) ?? 0;
         $colors = $params['colors'] ?? ["#3d348b", "#7678ed", "#f7b801", "#f18701", "#f35b04", "#f542ad", "#4296f5", "#42f54e", "#f5df42"];
 
-        echo '<div class="w-full flex flex-col gap-1.5 min-w-[300px] max-h-[380px] rounded-[8px] shadow p-4 bg-white border relative items-start justify-start">';
+        echo '<div class="w-full flex flex-col gap-1.5 min-w-[200px] max-h-[380px] rounded-[8px] shadow p-4 bg-white border relative items-start justify-start">';
 
         $pieChartStyle = self::createPieChartStyle($data, $row_1, $total, $colors);
         ob_start();
@@ -23,14 +23,14 @@ class PieChartBlock implements ComponentInterface
         <div class="items-start flex flex-col justify-between h-full w-full">
             <?php TitleBlock::render(['title' => 'Distribution', 'subtitle' => 'Des offres par domaine']); ?>
             <div class="flex flex-col gap-8 items-center justify-around w-full">
-                <div class="pie-chart shadow border min-w-[185px] min-h-[185px] max-w-[185px] max-h-[185px]"
-                     style="width: 200px; height: 200px; border-radius: 50%; background: conic-gradient(<?= $pieChartStyle ?>);"></div>
-                <div class="pie-chart-legend uppercase text-[12px] grid grid-cols-3 gap-y-2 gap-x-4">
+                <div class="pie-chart shadow border min-w-[120px] min-h-[120px] max-w-[120px] max-h-[120px] lg:min-w-[185px] lg:min-h-[185px] lg:max-w-[185px] lg:max-h-[185px]"
+                     style="border-radius: 50%; background: conic-gradient(<?= $pieChartStyle ?>);"></div>
+                <div class="pie-chart-legend uppercase text-[12px] grid grid-cols-3 lg:gap-y-2 gap-x-1 lg:gap-x-4">
                     <?php foreach ($data as $index => $row): ?>
                         <div class="flex flex-row gap-1">
                     <span class="w-[14px] h-[14px] rounded-[2px] shadow"
                           style="background-color: <?= $colors[$index] ?? '#000'; ?>;
-                                  "></span><span> <?= ' - ' . htmlspecialchars(substr($row[$row_2], 0, 3) . '…' . substr($row[$row_2], -3)) ?? 'Autre' ?></span>
+                                  "></span><span class="text-nowrap text-[10px] md:text-md"> <?= ' - ' . htmlspecialchars(substr($row[$row_2], 0, 6) . '…') ?? 'Autre' ?></span>
                         </div>
                     <?php endforeach; ?>
                 </div>

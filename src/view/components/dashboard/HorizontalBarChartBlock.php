@@ -32,7 +32,7 @@ class HorizontalBarChartBlock implements ComponentInterface
 
     private static function getStartHtmlBlock(): string
     {
-        return '<div class="w-full min-w-[300px] max-h-[150px] flex flex-col gap-1.5 rounded-[8px] shadow p-4 bg-white border relative">';
+        return '<div class="w-full min-w-[200px] max-h-[150px] flex flex-col gap-1.5 rounded-[8px] shadow p-4 bg-white border relative">';
     }
 
     private static function getChartDataHtml($row, $row_1, $row_2, $maxValue, $colors): string

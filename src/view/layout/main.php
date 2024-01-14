@@ -122,7 +122,7 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
         </button>
     </div>
     <div class="flex-col flex w-full max-w-[calc(100%-75px)] max-h-screen bg-white">
-        <div class="sticky top-0 z-10 flex items-start justify-between flex-row gap-4 w-full py-2 bg-white pr-8">
+        <div class="sticky top-0 z-10 flex items-start justify-between flex-row gap-4 w-full py-2 bg-white pr-4 md:pr-8">
             <div class="w-full flex flex-row items-center justify-between h-[40px] px-4">
                 <span class="text-lg tracking-widest font-bold uppercase first-letter:text-2xl first-letter:font-extrabold ">
                 <?= $this->title ?>

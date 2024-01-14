@@ -34,7 +34,7 @@ class VerticalBarChartBlock implements ComponentInterface
 
         $gradientId = $chartId . "_gradient";
         echo <<<EOT
-            <div class="border rounded-[8px] shadow w-full min-w-[300px] max-h-[380px] bg-white p-4 relative flex flex-col gap-4">
+            <div class="border rounded-[8px] shadow w-full min-w-[200px] max-h-[380px] bg-white p-4 relative flex flex-col gap-4">
         EOT;
         TitleBlock::render(['title' => 'Moyenne', 'subtitle' => 'Des candidatures par offre par domaine']);
 
