@@ -312,19 +312,4 @@ class OffreController extends AbstractController
             'form' => $form
         ]);
     }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public function mapsOffres(): string
-    {
-        $offres = (new OffresRepository())->getAll();
-        $adresseList = [];
-        foreach ($offres as $offre) {
-            if (!in_array($offre->getAdresse(), $adresseList)) {
-                $adresseList[] = $offre->getAdresse();
-            }
-        }
-        return $this->render('offres/mapOffre', ['adresseList' => $adresseList]);
-    }
 }
