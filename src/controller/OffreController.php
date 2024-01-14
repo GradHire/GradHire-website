@@ -116,7 +116,7 @@ class OffreController extends AbstractController
      */
     public function editOffre(Request $request): string
     {
-        if (!Auth::has_role(Roles::Staff, Roles::Manager)) {
+        if (!Auth::has_role(Roles::Staff, Roles::Manager,Roles::ManagerAlternance,Roles::ManagerStage,Roles::Enterprise)) {
             throw new ForbiddenException();
         } else {
             $id = $request->getRouteParams()['id'] ?? null;
@@ -136,9 +136,9 @@ class OffreController extends AbstractController
                 "description" => FormModel::string("Description")->default($offre->getDescription()),
             ]);
             $form = new FormModel($attr);
-            (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmail()], "Modification de votre offre", "Votre offre a été modifiée");
+            if(!Auth::has_role(Roles::Enterprise)) (new MailRepository())->send_mail([(new UtilisateurRepository([]))->getUserById($offre->getIdutilisateur())->getEmail()], "Modification de votre offre", "Votre offre a été modifiée");
             NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez modifié une offre", "/offres/" . $id);
-            NotificationRepository::createNotification($offre->getIdutilisateur(), "Une de vos offres a été modifiée", "/offres/" . $id);
+            if(!Auth::has_role(Roles::Enterprise)) NotificationRepository::createNotification($offre->getIdutilisateur(), "Une de vos offres a été modifiée", "/offres/" . $id);
             return $this->render('/offres/edit', ['offre' => $offre, 'form' => $form]);
         }
     }

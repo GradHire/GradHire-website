@@ -30,7 +30,7 @@ View::setCurrentSection('Conventions');
     }
 
 
-    Table::createTable($filteredConventions, ["Origine Convention", "idEtudiant", "IdOffre", "Validité Entreprise", "Validité Pédagogique", ""], function ($convention) {
+    Table::createTable($filteredConventions, ["Origine Convention", "idEtudiant", "IdOffre", "Validité Entreprise", "Validité Pédagogique"], function ($convention) {
         $getConventionValidee = $convention['conventionvalidee'];
         $getConventionValideePedagogiquement = $convention['conventionvalideepedagogiquement'];
         $getNumConvention = $convention['numconvention'];
