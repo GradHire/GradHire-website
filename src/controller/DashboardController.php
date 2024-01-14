@@ -232,6 +232,6 @@ class DashboardController extends AbstractController
             }
             $events[] = $e;
         }
-        return $this->render('calendar', ['events' => $events]);
+        return $this->render('candidature/calendar', ['events' => $events]);
     }
 }

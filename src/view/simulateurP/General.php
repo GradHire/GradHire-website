@@ -1,156 +1,123 @@
 <?php
-/* @var $vueChemin */
+/* @var $vueChemin
+ */
+
 /* @var $nom */
+
+use app\src\model\View;
+
+$this->title = 'Simulateur';
+View::setCurrentSection('Simulateur');
+
+function getMenuElement($href, $label, $activeConditions, $vueChemin, $nom = null, $sessionKey = null): string
+{
+    $isActive = isset($nom)
+        ? $activeConditions['vueChemin'] === $vueChemin && $activeConditions['nom'] === $nom
+        : $activeConditions['vueChemin'] === $vueChemin;
+
+    $color = match (true) {
+        $isActive => 'text-zinc-500 bg-white shadow border font-bold">' . $label,
+        isset($_SESSION[$sessionKey]) => ' text-blue-500">' . $label . '<a href="' . $href . '">' . '</a>',
+        default => 'text-zinc-400 px-3 py-1">' . $label,
+    };
+    return '<div class="flex items-center justify-center text-sm text-nowrap"><span class="px-3 py-1 rounded-md ' . $color . '</span></div>';
+}
+
+$menuItems = [
+    [
+        'href' => 'explicationSimu',
+        'label' => 'Explication',
+        'activeConditions' => [
+            'vueChemin' => 'explicationSimu.php',
+            'nom' => ''
+        ],
+        'sessionKey' => 'simulateurExplication'
+    ],
+    [
+        'href' => 'simulateur',
+        'label' => 'Etudiant',
+        'activeConditions' => [
+            'vueChemin' => 'simulateur.php',
+            'nom' => 'Etudiant'
+        ],
+        'sessionKey' => 'simulateurEtu',
+    ],
+    [
+        'href' => 'listEntreprise',
+        'label' => 'Entreprise',
+        'activeConditions' => [
+            'vueChemin' => 'listEntreprise.php',
+            'nom' => ''
+        ],
+        'sessionKey' => 'idEntreprise',
+    ],
+    [
+        'href' => 'simulateurServiceAccueil',
+        'label' => 'Service d\'accueil',
+        'activeConditions' => [
+            'vueChemin' => 'simulateur.php',
+            'nom' => 'Service'
+        ],
+        'sessionKey' => 'accueil',
+    ],
+    [
+        'href' => 'simulateurTuteur',
+        'label' => 'Tuteur',
+        'activeConditions' => [
+            'vueChemin' => 'listTiteur.php',
+            'nom' => ''
+        ],
+        'sessionKey' => 'idTuteur',
+    ],
+    [
+        'href' => 'simulateurCandidature',
+        'label' => 'Stage',
+        'activeConditions' => [
+            'vueChemin' => 'simulateurCandidature.php',
+            'nom' => ''
+        ],
+        'sessionKey' => 'simulateurCandidature',
+    ],
+    [
+        'href' => 'simulateurProfReferent',
+        'label' => 'Professeur référent',
+        'activeConditions' => [
+            'vueChemin' => '',
+            'nom' => 'listProf.php'
+        ],
+        'sessionKey' => 'idProfRef',
+    ],
+    [
+        'href' => 'simulateurSignataire',
+        'label' => 'Signataire',
+        'activeConditions' => [
+            'vueChemin' => 'simulateur.php',
+            'nom' => 'Signataire'
+        ],
+        'sessionKey' => 'signataire',
+    ],
+    [
+        'href' => 'visuRecapConv',
+        'label' => 'Récapitulatif',
+        'activeConditions' => [
+            'vueChemin' => 'visuRecapConv.php',
+            'nom' => ''
+        ]
+    ],
+];
 ?>
-<div class="flex w-full mt-3 ml-10">
-    <div class="">
-        <?php
-        if ($vueChemin == "explicationSimu.php") {
-            ?>
-            <p class="text-blue-500">Explication</p>
-            <?php
-        } else {
-            ?>
-            <a href="explicationSimu">Explication</a>
-            <?php
-        }
-        ?>
-    </div>
-    <div class="ml-5">
-        <?php
-        if ($vueChemin == "simulateur.php" && $nom == "Etudiant") {
-            ?>
-            <p class="text-blue-500">Etudiant</p>
-            <?php
-        } else if (isset($_SESSION["simulateurEtu"])) {
-            ?>
-            <a href="simulateur">Etudiant</a>
-            <?php
-        } else {
-            ?>
-            <p class="text-gray-500">Etudiant</p>
-            <?php
-        }
-        ?>
-    </div>
-    <div class="ml-5">
-        <?php
-        if ($vueChemin == "listEntreprise.php" || ($vueChemin == "preview.php" && isset($array["Nom Entreprise"])) || $vueChemin == "creerEntreprise.php") {
-            ?>
-            <p class="text-blue-500">Entreprise</p>
-            <?php
-        } else if (isset($_SESSION["idEntreprise"])) {
-            ?>
-            <a href="listEntreprise">Entreprise</a>
-            <?php
-        } else {
-            ?>
-            <p class="text-gray-500">Entreprise</p>
-            <?php
-        }
-        ?>
-    </div>
-    <div class="ml-5">
-        <?php
-        if (($vueChemin == "simulateur.php" && $nom == "Service") || ($vueChemin == "creer.php" && $nom == "Créer un service d'accueil") || ($vueChemin == "preview.php" && isset($array["Nom Accueil"]))) {
-            ?>
-            <p class="text-blue-500">Service d'accueil</p>
-            <?php
-        } else if (isset($_SESSION["accueil"])) {
-            ?>
-            <a href="simulateurServiceAccueil">Service d'accueil</a>
-            <?php
-        } else {
-            ?>
-            <p class="text-gray-500">Service d'accueil</p>
-            <?php
-        }
-        ?>
-    </div>
-    <div class="ml-5">
-        <?php
-        if (($vueChemin == "listTuteur.php") || ($vueChemin == "creer.php" && $nom == "Créer un tuteur")) {
-            ?>
-            <p class="text-blue-500">Tuteur</p>
-            <?php
-        } else if (isset($_SESSION["idTuteur"])) {
-            ?>
-            <a href="simulateurTuteur">Tuteur</a>
-            <?php
-        } else {
-            ?>
-            <p class="text-gray-500">Tuteur</p>
-            <?php
-        }
-        ?>
-    </div>
-    <div class="ml-5">
-        <?php
-        if ($vueChemin == "simulateurCandidature.php" || isset($_GET["idTuteur"])) {
-            ?>
-            <p class="text-blue-500">Stage</p>
-            <?php
-        } else if (isset($_SESSION["simulateurCandidature"])) {
-            ?>
-            <a href="simulateurCandidature">Stage</a>
-            <?php
-        } else {
-            ?>
-            <p class="text-gray-500">Stage</p>
-            <?php
-        }
-        ?>
-    </div>
-    <div class="ml-5">
-        <?php
-        if ($vueChemin == "listProf.php") {
-            ?>
-            <p class="text-blue-500">Professeur référent</p>
-            <?php
-        } else if (isset($_SESSION["idProfRef"])) {
-            ?>
-            <a href="simulateurProfReferent">Professeur référent</a>
-            <?php
-        } else {
-            ?>
-            <p class="text-gray-500">Professeur référent</p>
-            <?php
-        }
-        ?>
-    </div>
-    <div class="ml-5">
-        <?php
-        if (($vueChemin == "simulateur.php" && $nom == "Signataire") || ($vueChemin == "creer.php" && $nom == "Créer un signataire") || ($vueChemin == "preview.php" && isset($array["Nom Signataire"]))) {
-            ?>
-            <p class="text-blue-500">Signataire</p>
-            <?php
-        } else if (isset($_SESSION["signataire"])) {
-            ?>
-            <a href="simulateurSignataire">Signataire</a>
-            <?php
-        } else {
-            ?>
-            <p class="text-gray-500">Signataire</p>
-            <?php
-        }
-        ?>
-    </div>
-    <div class="ml-5">
-        <?php
-        if ($vueChemin == "visuRecapConv.php") {
-            ?>
-            <p class="text-blue-500">Récapitulatif</p>
-            <?php
-        } else if (isset($_SESSION["simulateurEtu"]) && isset($_SESSION["idEntreprise"]) && isset($_SESSION["accueil"]) && isset($_SESSION["idTuteur"]) && isset($_SESSION["simulateurCandidature"]) && isset($_SESSION["idProfRef"]) && isset($_SESSION["signataire"])) {
-            ?>
-            <a href="visuRecapConv">Récapitulatif</a>
-            <?php
-        } else {
-            ?>
-            <p class="text-gray-500">Récapitulatif</p>
-            <?php
-        }
-        ?>
+<div class="w-full flex items-center justify-center">
+    <div class="h-10 items-center justify-start rounded-lg bg-zinc-100 p-1 w-fit flex overflow-x-scroll example border">
+        <?php foreach ($menuItems as $item) {
+            echo getMenuElement(
+                $item['href'],
+                $item['label'],
+                $item['activeConditions'],
+                $vueChemin,
+                $nom ?? null,
+                $item['sessionKey'] ?? null
+            );
+        } ?>
     </div>
 </div>
 <?php

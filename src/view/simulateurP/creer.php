@@ -16,11 +16,13 @@ use app\src\model\Form\FormModel;
         $form->print_all_fields();
     } else {
         $form->print_fields(["nomService", "memeAdresse"]); ?>
-        <div class="w-full gap-4 flex flex-col hidden" id="adr">
+        <div class="w-full gap-4 flex flex-col" id="adr">
             <?php $form->print_fields(["voie", "residence", "cp", "ville", "pays"]); ?>
         </div>
     <?php }
+    echo "<div class='mt-4'>";
     $form->submit("Créer");
+    echo "</div>";
     $form->getError();
     $form->end();
     ?>

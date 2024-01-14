@@ -1,4 +1,4 @@
-<div class="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+<div class="max-w-md mx-auto p-6 bg-white rounded-md border drop-shadow-[10px]">
     <h2 class="text-2xl font-bold mb-4">Explication du simulateur de Pstage</h2>
 
     <p class="mb-4">Le simulateur de Pstage permet de simuler la création d'une convention de stage.</p>
@@ -25,7 +25,9 @@
 
     <p class="mb-4">Si vous avez des questions, n'hésitez pas à contacter le secrétariat.</p>
 
-    <a href="/simulateur" class="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Commencer le
+    <a href="/simulateur"
+       class="inline-block px-4 py-2 bg-blue-500 w-full text-center text-white rounded-md hover:bg-blue-600">Commencer
+        le
         simulateur PStage</a>
 </div>
 

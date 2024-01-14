@@ -242,7 +242,7 @@ class PstageController extends AbstractController
             $pays = $entreprise->getPays();
             $form = new FormModel([
                 "nomService" => FormModel::string("Nom du service")->required(),
-                "memeAdresse" => FormModel::radio("Adresse identique à l'entreprise", ["Oui" => "Oui", "Non" => "Non"])->required()->default("Oui")->id("memeAdresse"),
+                "memeAdresse" => FormModel::radio("Adresse identique à l'entreprise", ["Oui" => "Oui", "Non" => "Non"])->required()->default("Non")->id("memeAdresse"),
                 "voie" => FormModel::string("Adresse Voie")->id("voie")->default($adresse),
                 "residence" => FormModel::string("Bâtiment / Résidence / Z.I.")->default(""),
                 "cp" => FormModel::string("Code postal")->length(5)->id("cp")->default($cp),
