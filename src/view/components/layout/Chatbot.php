@@ -38,7 +38,7 @@ class Chatbot implements ComponentInterface
            $i_close_render
         </button>
     </div>
-    <div id="chatbot-chat" class="w-full flex flex-col gap-2 h-[400px] overflow-y-auto">
+    <div id="chatbot-chat" class="w-full flex flex-col gap-2 h-[400px] overflow-y-auto example">
         <div class="flex w-full mt-2 space-x-3 max-w-xs">
             <div class="flex flex-col gap-2">
                 <div class="bg-zinc-200 p-3 rounded-r-lg rounded-bl-lg">
