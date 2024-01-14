@@ -33,68 +33,70 @@ foreach ($scripts as $script) echo '<script src="' . PATH . $script . '"></scrip
             <div class="flex flex-col gap-4 items-start justify-start">
                 <?php
                 echo '<div class="w-full flex flex-col gap-2 md:gap-4">';
-                    echo '<div class="w-full flex flex-col lg:flex-row gap-2">';
-                        PercentageBlock::render([
-                                'title' => 'Conventions signées',
-                                'text' => 'General',
-                                'text2' => 'BUT2',
-                                'text3' => 'BUT3',
-                                'value' => ($data['percentageBlockData1']['pourcentageannuel'] ?? 0),
-                                'value2' => ($data['percentageBlockData1']['pourcentageannuel2'] ?? 0),
-                                'value3' => ($data['percentageBlockData1']['pourcentageannuel3'] ?? 0),
-                            ]);
-                            HorizontalBarChartBlock::render([
-                                'data' => $data['barChartHorizontalData1'] ?? [],
-                                'row_1' => 'nombrecandidatures',
-                                'row_2' => 'thematique',
-                            ]);
-                            echo '<div class="w-full flex flex-col gap-2">';
-                            echo '<div class="w-full flex flex-col lg:flex-row gap-2">';
-                                NumBlock::render([
-                                    'title' => 'Stages',
-                                    'value' => $data['numBlockData1']['nombreoffresstageactives'] ?? 0,
-                                ]);
-                                NumBlock::render([
-                                    'title' => 'Alternances',
-                                    'value' => $data['numBlockData1']['nombreoffresalternanceactives'] ?? 0,
-                                ]);
-                                echo '</div><div class="w-full">';
-                                    NumBlock::render([
-                                        'title' => 'Pourvues',
-                                        'value' => $data['numBlockData1']['nombrepositionspourvues'] ?? 0,
-                                    ]);
-                                echo '
+                echo '<div class="w-full flex flex-col lg:flex-row gap-2">';
+                PercentageBlock::render([
+                    'title' => 'Conventions signées',
+                    'text' => 'General',
+                    'text2' => 'BUT2',
+                    'text3' => 'BUT3',
+                    'value' => ($data['percentageBlockData1']['pourcentageannuel'] ?? 0),
+                    'value2' => ($data['percentageBlockData1']['pourcentageannuel2'] ?? 0),
+                    'value3' => ($data['percentageBlockData1']['pourcentageannuel3'] ?? 0),
+                ]);
+                HorizontalBarChartBlock::render([
+                    'data' => $data['barChartHorizontalData1'] ?? [],
+                    'row_1' => 'nombrecandidatures',
+                    'row_2' => 'thematique',
+                ]);
+                echo '<div class="w-full flex flex-col gap-2">';
+                echo '<div class="w-full flex flex-col lg:flex-row gap-2">';
+                NumBlock::render([
+                    'title' => 'Stages',
+                    'value' => $data['numBlockData1']['nombreoffresstageactives'] ?? 0,
+                ]);
+                NumBlock::render([
+                    'title' => 'Alternances',
+                    'value' => $data['numBlockData1']['nombreoffresalternanceactives'] ?? 0,
+                ]);
+                echo '</div><div class="w-full">';
+                NumBlock::render([
+                    'title' => 'Pourvues',
+                    'value' => $data['numBlockData1']['nombrepositionspourvues'] ?? 0,
+                ]);
+                echo '
                                 </div>
                                 </div>
                                 </div>';
-                    echo '<div class="w-full max-md:hidden">';Separator::render([]);echo '</div><div class="w-full flex flex-col lg:flex-row gap-2">';
-                    VerticalBarChartBlock::render([
-                        'data' => $data['barChartVerticalData1'] ?? [],
-                        'row_1' => 'moyennecandidaturesparoffre',
-                        'row_2' => 'thematique',
-                    ]);
-                    PieChartBlock::render([
-                        'data' => $data['pieChartData1'] ?? [],
-                        'row_1' => 'nombreoffres',
-                        'row_2' => 'thematique',
-                    ]);
-                    LineChartBlock::render([
-                        'data' => $data['lineChartData1'] ?? [],
-                        'row_1' => 'nombrecandidatures',
-                        'row_2' => 'mois'
-                    ]);
-                    echo '</div><div class="w-full max-md:hidden">';
-                        try {
-                            if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::ChefDepartment)) Separator::render([]);
-                        } catch (ServerErrorException $e) {
-                            echo $e->getMessage();
-                        }
-                    echo '</div>';
-                    echo '<div class="flex flex-row w-full gap-2">';
-                    echo '</div>';
-                    ?>
-                </div>
+                echo '<div class="w-full max-md:hidden">';
+                Separator::render([]);
+                echo '</div><div class="w-full flex flex-col lg:flex-row gap-2">';
+                VerticalBarChartBlock::render([
+                    'data' => $data['barChartVerticalData1'] ?? [],
+                    'row_1' => 'moyennecandidaturesparoffre',
+                    'row_2' => 'thematique',
+                ]);
+                PieChartBlock::render([
+                    'data' => $data['pieChartData1'] ?? [],
+                    'row_1' => 'nombreoffres',
+                    'row_2' => 'thematique',
+                ]);
+                LineChartBlock::render([
+                    'data' => $data['lineChartData1'] ?? [],
+                    'row_1' => 'nombrecandidatures',
+                    'row_2' => 'mois'
+                ]);
+                echo '</div><div class="w-full max-md:hidden">';
+                try {
+                    if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::ChefDepartment)) Separator::render([]);
+                } catch (ServerErrorException $e) {
+                    echo $e->getMessage();
+                }
+                echo '</div>';
+                echo '<div class="flex flex-row w-full gap-2">';
+                echo '</div>';
+                ?>
             </div>
+        </div>
         <?php try {
             if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::ChefDepartment)) { ?>
                 <div class="relative grow isolate overflow-hidden w-full gap-4 flex flex-col text-[#1A2421] bg-white p-8 border rounded-[8px] shadow max-lg:hidden">
@@ -149,4 +151,5 @@ foreach ($scripts as $script) echo '<script src="' . PATH . $script . '"></scrip
             echo $e->getMessage();
         } ?>
     </div>
+</div>
 </div>

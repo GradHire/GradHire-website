@@ -22,40 +22,40 @@ $this->title = 'Tuteurs';
 
 $modal = new Modal("Voulez vous vraiment supprimer ce tuteur ?", "Supprimer", "");
 ?>
-<div class=" w-full example">
-    <?php
+    <div class=" w-full example">
+        <?php
 
-    if (Auth::has_role(Roles::Enterprise)) {
-        $form->start();
-        echo '<div class="flex gap-3"><div class="flex items-end gap-2 flex-grow">';
-        $form->field('email');
-        echo '</div>';
-        echo '<div class="flex items-end">';
-        $form->submit("Ajouter");
-        echo '</div></div>';
-        $form->getError();
-        $form->getSuccess();
-        $form->end();
-    }
+        if (Auth::has_role(Roles::Enterprise)) {
+            $form->start();
+            echo '<div class="flex gap-3"><div class="flex items-end gap-2 flex-grow">';
+            $form->field('email');
+            echo '</div>';
+            echo '<div class="flex items-end">';
+            $form->submit("Ajouter");
+            echo '</div></div>';
+            $form->getError();
+            $form->getSuccess();
+            $form->end();
+        }
 
 
-    ?>
-    <h2 class="font-bold text-lg">Liste des tuteurs</h2>
-    <?php
-    if (empty($tuteurs)) echo "<p>Aucun tuteur</p>";
-    else {
-        Table::createTable($tuteurs, ["nom", "prénom", "email", "numtelephone", "fonction"], function ($tuteur) {
-            Table::cell($tuteur->getNom());
-            Table::cell($tuteur->getPrenom());
-            Table::cell($tuteur->getEmail());
-            Table::cell($tuteur->getNumtelephone());
-            Table::cell($tuteur->getFonction());
-            if (Auth::has_role(Roles::Manager, Roles::Staff)) Table::button("/utilisateurs/" . $tuteur->getIdutilisateur());
-            else Table::button("/utilisateurs/" . $tuteur->getIdutilisateur() . "/archiver?" . Application::getRedirect());
-        });
-    } ?>
+        ?>
+        <h2 class="font-bold text-lg">Liste des tuteurs</h2>
+        <?php
+        if (empty($tuteurs)) echo "<p>Aucun tuteur</p>";
+        else {
+            Table::createTable($tuteurs, ["nom", "prénom", "email", "numtelephone", "fonction"], function ($tuteur) {
+                Table::cell($tuteur->getNom());
+                Table::cell($tuteur->getPrenom());
+                Table::cell($tuteur->getEmail());
+                Table::cell($tuteur->getNumtelephone());
+                Table::cell($tuteur->getFonction());
+                if (Auth::has_role(Roles::Manager, Roles::Staff)) Table::button("/utilisateurs/" . $tuteur->getIdutilisateur());
+                else Table::button("/utilisateurs/" . $tuteur->getIdutilisateur() . "/archiver?" . Application::getRedirect());
+            });
+        } ?>
 
-</div>
+    </div>
 <?php
 if (count($waiting) > 0) { ?>
     <div class="w-full ">
@@ -68,8 +68,8 @@ if (count($waiting) > 0) { ?>
     </div>
 <?php }
 if (Auth::has_role(Roles::Manager, Roles::Staff)) {
-?>
-<div class=" w-full example">
+    ?>
+    <div class=" w-full example">
     <?php Separator::render([]); ?>
     <h2 class="font-bold text-lg mt-4">Liste des tuteurs Universitaire</h2>
     <?php
@@ -89,7 +89,5 @@ if (Auth::has_role(Roles::Manager, Roles::Staff)) {
             Table::button("/utilisateurs/" . $tuteur->getIdutilisateur());
         });
     }
-    }
-    ?>
-</div>
-
+}
+?>
