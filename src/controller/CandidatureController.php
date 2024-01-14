@@ -65,7 +65,8 @@ class CandidatureController extends AbstractController
             $candidatures = PostulerRepository::getAllCandidatures();
         } else if (Auth::has_role(Roles::Teacher, Roles::Tutor, Roles::TutorTeacher)) {
             $postulerRepository = new PostulerRepository();
-            $candidatures = array_merge($postulerRepository::getByStatementTuteur(Auth::get_user()->id(), 'validee'), $postulerRepository::getByStatementTuteur(Auth::get_user()->id(), 'refusee'), $postulerRepository::getByStatementAttenteTuteur());
+            if ($postulerRepository::getByStatementTuteur(Auth::get_user()->id(), 'validee') != null)
+                $candidatures = array_merge($postulerRepository::getByStatementTuteur(Auth::get_user()->id(), 'validee'), $postulerRepository::getByStatementTuteur(Auth::get_user()->id(), 'refusee'), $postulerRepository::getByStatementAttenteTuteur());
         }
 
         $res = [
