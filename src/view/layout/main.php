@@ -31,6 +31,8 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> GradHire | <?= $this->title ?></title>
+    <script src="/resources/js/theme.js"></script>
+    <script src="/resources/js/cookie.js"></script>
     <script src="/resources/js/side-menu.js"></script>
     <script src="/resources/js/chatbot.js"></script>
     <link rel="stylesheet" href="/resources/css/input.css">
@@ -42,9 +44,9 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
 <div id="blur-background"
      class="hidden w-screen h-screen fixed z-50 top-0 left-0 bg-white/50 backdrop-blur-[4px]"></div>
 <?php require_once __DIR__ . '/parametres/modal-loader.php'; ?>
-<div class="w-full flex justify-start items-start bg-zinc-50 flex-row duration-300">
+<div class="w-full flex justify-start items-start flex-row duration-300 max-h-screen overflow-y-hidden">
     <div id="sidebar-container"
-         class="duration-300 ease-out relative text-[14px] w-full <?= $isOpen ? " max-w-[275px] " : " max-w-[75px] " ?> m-0 bg-white justify-around border-r text-[#1A2421] backdrop-blur-xl p-4 [ shadow-black/5 shadow-2xl ] sticky top-0 left-0 z-40 h-screen ">
+         class="duration-300 ease-out relative text-[14px] w-full <?= $isOpen ? " max-w-[275px] " : " max-w-[75px] " ?> m-0 bg-white justify-around text-[#1A2421]  p-4 sticky top-0 left-0 z-40 h-screen ">
         <div class="h-full justify-between items-start w-full flex gap-8 flex-col relative ">
             <div class="flex flex-row w-full items-center justify-center ">
                 <a class="w-full " href="/">
@@ -119,43 +121,49 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
       </span>
         </button>
     </div>
-    <div class="flex-col flex w-full">
-        <div class="sticky top-0 z-10 flex items-start justify-between flex-row gap-4 w-full py-2 border-b bg-white pr-4">
+    <div class="flex-col flex w-full max-w-[calc(100%-75px)] max-h-screen bg-white">
+        <div class="sticky top-0 z-10 flex items-start justify-between flex-row gap-4 w-full py-2 bg-white pr-8">
             <div class="w-full flex flex-row items-center justify-between h-[40px] px-4">
                 <span class="text-lg tracking-widest font-bold uppercase first-letter:text-2xl first-letter:font-extrabold ">
                 <?= $this->title ?>
                 </span>
             </div>
             <div class="h-[40px] max-w-[40px] w-full bg-white flex relative items-center group justify-center cursor-pointer">
-                <div class="w-2 h-2 absolute top-1 right-1 bg-orange-500 rounded-full border"></div>
-                <div class="w-2 h-2 absolute top-1 right-1 bg-orange-500 rounded-full animate-ping "></div>
+                <div class="w-2 h-2 absolute top-1 right-1 bg-blue-500 rounded-full border"></div>
+                <div class="w-2 h-2 absolute top-1 right-1 bg-blue-500 rounded-full animate-ping "></div>
                 <a href="/notifications">
-                    <?= I_Notification::render('w-6 h-6 fill-zinc-600 group-hover:fill-orange-600 duration-150 '); ?>
+                    <?= I_Notification::render('w-6 h-6 fill-zinc-500 group-hover:fill-blue-600 duration-150 '); ?>
                 </a>
             </div>
             <?php Separator::render(['orientation' => 'vertical', 'height' => '[40px]']) ?>
-            <a class="flex flex-row gap-4 items-center justify-center min-w-fit text-sm font-medium text-zinc-600 hover:text-zinc-800"
-               href="/profile">
-                <div class="rounded-full overflow-hidden h-8 w-8 border">
-                    <img src="<?= Application::getUser()->get_picture() ?>" alt="Photo de profil"
-                         class="w-full h-full object-cover rounded-full aspect-square">
-                </div>
-                <div class="flex flex-col justify-start items-start">
-                    <span><?= Application::getUser()->full_name() ?></span>
-                    <span class="whitespace-nowrap rounded-full bg-zinc-100 px-2 text-center flex justify-center items-center text-xs text-zinc-500">
+            <div class="flex items-center justify-center h-[40px] ">
+                <a class="flex flex-row gap-4 items-center justify-center min-w-fit text-sm font-medium text-zinc-600 hover:text-zinc-800"
+                   href="/profile">
+                    <div class="rounded-full overflow-hidden min-h-[35px] min-w-[35px] max-h-[35px] max-w-[35px] border">
+                        <img src="<?= Application::getUser()->get_picture() ?>" alt="Photo de profil"
+                             class="w-full h-full object-cover rounded-full aspect-square">
+                    </div>
+                    <div class="flex flex-col justify-start items-start max-md:hidden w-full">
+                        <span class="text-nowrap"><?= Application::getUser()->full_name() ?></span>
+                        <span class="whitespace-nowrap rounded-full bg-zinc-100 px-2 text-center flex justify-center items-center text-xs text-zinc-500">
                                     <?= Application::getUser()->role()->value ?>
                                     </span></div>
-            </a>
+                </a>
+            </div>
         </div>
-        <div class="w-full flex flex-col justify-start items-start p-4 gap-4">
+        <div class="w-[calc(100%-16px)] mr-4 flex flex-col justify-start items-start p-4 rounded-3xl gap-4 bg-zinc-50 border h-screen mb-4 overflow-auto example">
             <?php Notification::show(); ?>
             {{content}}
             <?php
             Chatbot::render([]);
             echo <<<HTML
-            <div id="cookie" class="fixed bottom-[20px] right-[20px] bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 rounded-lg p-3"> 
-                     <p class="text-center text-zinc-800">Ce site utilise des cookies pour améliorer votre expérience utilisateur.</p>
-                  <button id="bouton-accepter" class="w-full bg-zinc-800 hover:bg-zinc-900 focus:ring-zinc-300 rounded-lg p-3">Accepter</button>
+            <div id="cookie" class="fixed bottom-[20px] right-[20px] w-full bg-white max-w-[calc(100%-140px)] md:max-w-[300px] border rounded-3xl p-3 flex flex-col gap-2 drop-shadow"> 
+                  <p class="text-center text-zinc-800 text-[14px]">Ce site utilise des cookies pour améliorer votre expérience utilisateur.</p>
+                  <div class="flex flex-row gap-2 items-center justify-center">
+                  <button id="bouton-refuser" class="w-full bg-blue-500 focus:ring-red-800 rounded-lg px-3 py-1 text-[14px] text-white">Refuser</button>
+                  <button id="bouton-accepter" class="w-full bg-blue-500 focus:ring-green-800 rounded-lg px-3 py-1 text-[14px] text-white">Accepter</button>
+                  </div>
+                  <p class="text-center text-zinc-500 text-[10px] leading-3">En cliquant sur "Accepter", vous acceptez l'utilisation de cookies, les <a class="text-blue-500 underline" target="_blank" href="/conditionutilisation">conditions d'utilisation</a> et la <a class="text-blue-500 underline" target="_blank" href="/politiqueconfidentialite">politique de confidentialité</a>.</p>
              </div>
             HTML;
             ?>
@@ -164,21 +172,3 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
 </div>
 </body>
 </html>
-<script>
-    if (sessionStorage.getItem('cookieAccept') === 'true') {
-        const cookieDiv = document.getElementById('cookie');
-        if (cookieDiv) {
-            cookieDiv.style.display = 'none';
-        }
-    }
-    console.log(sessionStorage.getItem('cookieAccept'));
-    const boutonAccepter = document.querySelector('#bouton-accepter');
-    boutonAccepter.addEventListener('click', function () {
-        const cookieDiv = document.getElementById('cookie');
-        if (cookieDiv) {
-            cookieDiv.style.display = 'none';
-        }
-        sessionStorage.setItem('cookieAccept', 'true');
-        console.log(sessionStorage.getItem('cookieAccept'));
-    });
-</script>

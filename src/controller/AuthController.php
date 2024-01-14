@@ -232,9 +232,7 @@ class AuthController extends AbstractController
 
     public function home(): string
     {
-        if (Application::isGuest()) {
-            return $this->render('home');
-        }
+        if (Application::isGuest()) return $this->render('info-pages/home');
         Application::$app->response->redirect('/dashboard');
         return '';
     }
