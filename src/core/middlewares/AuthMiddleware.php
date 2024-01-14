@@ -4,7 +4,6 @@ namespace app\src\core\middlewares;
 
 use app\src\core\exception\ForbiddenException;
 use app\src\model\Application;
-use app\src\model\Token;
 
 class AuthMiddleware extends BaseMiddleware
 {

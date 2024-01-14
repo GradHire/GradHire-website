@@ -10,8 +10,8 @@ use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\repository\AvisRepository;
-use app\src\view\components\ui\Table;
 use app\src\view\components\ui\Detail;
+use app\src\view\components\ui\Table;
 
 $nom = $entreprise->getNom();
 if (empty($nom) || $nom == "") $nom = "Sans nom";

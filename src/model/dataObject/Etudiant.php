@@ -2,8 +2,6 @@
 
 namespace app\src\model\dataObject;
 
-use app\src\model\dataObject\Utilisateur;
-
 class Etudiant extends Utilisateur
 {
     private static int $convId = 0;

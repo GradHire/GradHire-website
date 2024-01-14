@@ -36,8 +36,6 @@ try {
 }
 
 $app->router->get('/', [AuthController::class, 'home']);
-$app->router->get('/about', 'about');
-
 
 // AuthController
 
@@ -200,7 +198,6 @@ $app->router->get('/validersimulation', [PstageController::class, 'validersimula
 $app->router->get('/gererSimulPstage', [PstageController::class, 'gererSimulPstage']);
 $app->router->get('/gererSimulPstage/valide/{id}', [PstageController::class, 'gererSimulPstagevalide']);
 $app->router->get('/gererSimulPstage/refuse/{id}', [PstageController::class, 'gererSimulPstagerefuse']);
-
 
 // ConventionController
 

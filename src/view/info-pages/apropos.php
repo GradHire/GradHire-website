@@ -1,7 +1,5 @@
 <?php
 
-use app\src\model\View;
-
 $this->title = 'A propos';
 ?>
 

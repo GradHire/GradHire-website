@@ -1,14 +1,9 @@
 <?php
 /** @var $conventions array */
 
-use app\src\model\Application;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
-use app\src\model\repository\ConventionRepository;
-use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\OffresRepository;
-use app\src\model\repository\SoutenanceRepository;
-use app\src\model\repository\VisiteRepository;
 use app\src\model\View;
 use app\src\view\components\ui\Table;
 

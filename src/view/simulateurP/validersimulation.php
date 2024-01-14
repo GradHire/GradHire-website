@@ -2,7 +2,6 @@
 
 
 use app\src\core\FPDF\FPDF;
-use app\src\model\Auth;
 use app\src\model\repository\EntrepriseRepository;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\ServiceAccueilRepository;
