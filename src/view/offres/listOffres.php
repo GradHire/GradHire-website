@@ -103,95 +103,217 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
         <div class="lg:col-span-3 rounded-lg flex flex-col gap-4">
             <div class="flex flex-col gap-1 w-full">
                 <h2 class="font-bold text-lg">Offres validées</h2>
-                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
+                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch"
+                     id="offres-container-valide">
                     <?php
+                    $startIndex = 0;
+                    $itemsPerPage = 10;
+
                     if ($offres != null) {
+                        $visibleOffersValideCount = 0;
+
                         foreach ($offres as $offre) {
-                            if ($offre["statut"] === "valider") {
-                                if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher, Roles::TutorTeacher)) require __DIR__ . '/offre.php';
-                                else if (!Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Teacher, Roles::Tutor, Roles::TutorTeacher) && $offre["statut"] !== "archiver") {
-                                    if (Application::getUser()->attributes()["annee"] == 3 && $offre["anneevisee"] == 2) continue;
-                                    else require __DIR__ . '/offre.php';
-                                } else if (Auth::has_role(Roles::Enterprise, Roles::Tutor) && $offre->getIdutilisateur() == Application::getUser()->id()) require __DIR__ . '/offre.php';
+                            if ($offre["statut"] !== "valider") {
+                                continue; // Skip non-validated offers
                             }
+
+                            // Display the offer
+                            if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher, Roles::TutorTeacher)) {
+                                require __DIR__ . '/offre.php';
+                            } else if (!Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Teacher, Roles::Tutor, Roles::TutorTeacher) && $offre["statut"] !== "archiver") {
+                                if (Application::getUser()->attributes()["annee"] == 3 && $offre["anneevisee"] == 2) {
+                                    continue;
+                                } else {
+                                    require __DIR__ . '/offre.php';
+                                }
+                            } else if (Auth::has_role(Roles::Enterprise, Roles::Tutor) && $offre->getIdutilisateur() == Application::getUser()->id()) {
+                                require __DIR__ . '/offre.php';
+                            }
+
+                            $visibleOffersValideCount++;
                         }
-                    } else require __DIR__ . '/errorOffre.php';
+                    } else {
+                        require __DIR__ . '/errorOffre.php';
+                    }
                     ?>
                 </div>
-            </div>
-            <?php if (Auth::has_role(Roles::Manager, Roles::Staff)) {
-                echo '<div class="w-full bg-zinc-200 h-[1px] rounded-full"></div>';
-                echo '<div class="flex flex-col gap-1 w-full">';
-                echo '<h2 class="font-bold text-lg">Offres en attente</h2>';
-            }
-            ?>
-            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
-                <?php
-                if ($offres != null) foreach ($offres as $offre) {
-                    if ($offre["statut"] === "en attente" && Auth::has_role(Roles::Manager, Roles::Staff)) require __DIR__ . '/offre.php';
+                <div class="w-full flex justify-center gap-2 pt-4">
+                    <!-- Add your pagination buttons here -->
+                    <?php if ($visibleOffersValideCount > $itemsPerPage): ?>
+                        <button onclick="prevPageValide()">Previous</button>
+                        <button onclick="nextPageValide()">Next</button>
+                    <?php endif; ?>
+                </div>
+                <?php if (Auth::has_role(Roles::Manager, Roles::Staff)) {
+                    echo '<div class="w-full bg-zinc-200 h-[1px] rounded-full"></div>';
+                    echo '<div class="flex flex-col gap-1 w-full">';
+                    echo '<h2 class="font-bold text-lg">Offres en attente</h2>';
                 }
-                echo "</div>"; ?>
-            </div>
-            <?php if (Auth::has_role(Roles::Manager, Roles::Staff)) {
-                echo '<div class="w-full bg-zinc-200 h-[1px] rounded-full"></div>';
-                echo '<div class="flex flex-col gap-1 w-full">';
-                echo '<h2 class="font-bold text-lg">Offres Archiver</h2>';
-            }
-            ?>
-            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch">
-                <?php
-                if ($offres != null) foreach ($offres as $offre) {
-                    if ($offre["statut"] === "archiver" && Auth::has_role(Roles::Manager, Roles::Staff)) require __DIR__ . '/offre.php';
+                ?>
+                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch"
+                     id="offres-container-attente">
+                    <?php
+                    if ($offres != null) {
+                        $visibleOffersAttenteCount = 0;
+                        foreach ($offres as $offre) {
+                            if ($offre["statut"] === "en attente" && Auth::has_role(Roles::Manager, Roles::Staff)) {
+                                require __DIR__ . '/offre.php';
+                                $visibleOffersAttenteCount++;
+                            }
+                        }
+                    }
+                    echo "</div>"; ?>
+                </div>
+                <div class="w-full flex justify-center gap-2 pt-4">
+                    <!-- Add your pagination buttons here -->
+                    <?php if ($visibleOffersAttenteCount > $itemsPerPage): ?>
+                        <button onclick="prevPageAttente()">Previous</button>
+                        <button onclick="nextPageAttente()">Next</button>
+                    <?php endif; ?>
+                </div>
+                <?php if (Auth::has_role(Roles::Manager, Roles::Staff)) {
+                    echo '<div class="w-full bg-zinc-200 h-[1px] rounded-full"></div>';
+                    echo '<div class="flex flex-col gap-1 w-full">';
+                    echo '<h2 class="font-bold text-lg">Offres Archiver</h2>';
                 }
-
-                echo "</div>"; ?>
+                ?>
+                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch" id="offres-container-refuser">
+                    <?php
+                    if ($offres != null){
+                        $visibleOffersRefuserCount = 0;
+                        foreach ($offres as $offre) {
+                            if ($offre["statut"] === "archiver" && Auth::has_role(Roles::Manager, Roles::Staff)) {
+                                require __DIR__ . '/offre.php';
+                                $visibleOffersRefuserCount++;
+                            }
+                        }
+                    }
+                    echo "</div>"; ?>
+                </div>
+                <div class="w-full flex justify-center gap-2 pt-4">
+                    <!-- Add your pagination buttons here -->
+                    <?php if ($visibleOffersRefuserCount > $itemsPerPage): ?>
+                        <button onclick="prevPageRefuser()">Previous</button>
+                        <button onclick="nextPageRefuser()">Next</button>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<script>
-    function search() {
-        //add parameter sujet to url
-        let url = new URL(window.location.href);
-        let searchParams = new URLSearchParams(url.search);
-        searchParams.set("sujet", document.getElementById("default-search").value);
-        url.search = searchParams.toString();
+    <script>
 
-        //reload page
-        window.location.href = url.toString();
-    }
+        var startIndexValide = 0;
+        var itemsPerPageValide = 10;
+        var totalOffersValide = <?php echo json_encode($visibleOffersValideCount); ?>;
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const checkbox = document.querySelector('#AcceptConditions');
-        let forms = document.querySelectorAll('.formAdminSupprimer');
-        let linkTag = document.querySelectorAll('.offreBox');
-        let checked = localStorage.getItem('AcceptConditions');
+        var startIndexAttente = 0;
+        var itemsPerPageAttente = 10;
+        var totalOffersAttente = <?php echo json_encode($visibleOffersAttenteCount); ?>;
 
-        if (checked !== null) checkbox.checked = (checked === 'true');
+        var startIndexRefuser = 0;
+        var itemsPerPageRefuser = 10;
+        var totalOffersRefuser = <?php echo json_encode($visibleOffersRefuserCount); ?>;
 
-        forms.forEach((form) => {
-            form.style.display = checkbox.checked ? "flex" : "none";
-        });
+        function showOffers() {
+            var offersValide = document.querySelectorAll('#offres-container-valide > div');
+            var offersAttente = document.querySelectorAll('#offres-container-attente > div');
+            var offersRefuser = document.querySelectorAll('#offres-container-refuser > div');
+            offersValide.forEach(function (offer, index) {
+                if (index >= startIndexValide && index < startIndexValide + itemsPerPageValide) {
+                    offer.classList.remove('hidden');
+                } else {
+                    offer.classList.add('hidden');
+                }
+            });
+            offersAttente.forEach(function (offer, index) {
+                if (index >= startIndexAttente && index < startIndexAttente + itemsPerPageAttente) {
+                    offer.classList.remove('hidden');
+                } else {
+                    offer.classList.add('hidden');
+                }
+            });
+            offersRefuser.forEach(function (offer, index) {
+                if (index >= startIndexRefuser && index < startIndexRefuser + itemsPerPageRefuser) {
+                    offer.classList.remove('hidden');
+                } else {
+                    offer.classList.add('hidden');
+                }
+            });
+        }
 
-        linkTag.forEach((link) => {
-            if (checkbox.checked) link.classList.add('animate-wiggle');
-            else link.classList.remove('animate-wiggle');
-        });
+        function nextPageValide() {
+            startIndexValide = Math.min(startIndexValide + itemsPerPageValide, totalOffersValide - itemsPerPageValide);
+            showOffers();
+        }
 
-        checkbox.addEventListener('change', function () {
-            localStorage.setItem('AcceptConditions', this.checked);
-            forms = document.querySelectorAll('.formAdminSupprimer');
+        function prevPageValide() {
+            startIndexValide = Math.max(startIndexValide - itemsPerPageValide, 0);
+            showOffers();
+        }
+
+        function nextPageAttente() {
+            startIndexAttente = Math.min(startIndexAttente + itemsPerPageAttente, totalOffersAttente - itemsPerPageAttente);
+            showOffers();
+        }
+
+        function prevPageAttente() {
+            startIndexAttente = Math.max(startIndexAttente - itemsPerPageAttente, 0);
+            showOffers();
+        }
+
+        function nextPageRefuser() {
+            startIndexRefuser = Math.min(startIndexRefuser + itemsPerPageRefuser, totalOffersRefuser - itemsPerPageRefuser);
+            showOffers();
+        }
+
+        function prevPageRefuser() {
+            startIndexRefuser = Math.max(startIndexRefuser - itemsPerPageRefuser, 0);
+            showOffers();
+        }
+
+        // Initial display
+        showOffers();
+
+        function search() {
+            //add parameter sujet to url
+            let url = new URL(window.location.href);
+            let searchParams = new URLSearchParams(url.search);
+            searchParams.set("sujet", document.getElementById("default-search").value);
+            url.search = searchParams.toString();
+
+            //reload page
+            window.location.href = url.toString();
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const checkbox = document.querySelector('#AcceptConditions');
+            let forms = document.querySelectorAll('.formAdminSupprimer');
+            let linkTag = document.querySelectorAll('.offreBox');
+            let checked = localStorage.getItem('AcceptConditions');
+
+            if (checked !== null) checkbox.checked = (checked === 'true');
+
             forms.forEach((form) => {
-                form.style.display = this.checked ? "flex" : "none";
+                form.style.display = checkbox.checked ? "flex" : "none";
             });
 
             linkTag.forEach((link) => {
-                if (this.checked) link.classList.add('animate-wiggle');
+                if (checkbox.checked) link.classList.add('animate-wiggle');
                 else link.classList.remove('animate-wiggle');
             });
+
+            checkbox.addEventListener('change', function () {
+                localStorage.setItem('AcceptConditions', this.checked);
+                forms = document.querySelectorAll('.formAdminSupprimer');
+                forms.forEach((form) => {
+                    form.style.display = this.checked ? "flex" : "none";
+                });
+
+                linkTag.forEach((link) => {
+                    if (this.checked) link.classList.add('animate-wiggle');
+                    else link.classList.remove('animate-wiggle');
+                });
+            });
         });
-    });
-</script>
-
-
-
+    </script>
+    }

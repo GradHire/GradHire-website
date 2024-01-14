@@ -118,7 +118,7 @@ class OffresRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public static function getOffresByIdEntreprisePublic(mixed $id): ?array
+    public static function getOffresByIdEntreprisePublic(mixed $id): null|array
     {
         return self::FetchAllAssoc("SELECT * FROM Offre WHERE idUtilisateur = :idUtilisateur AND statut = 'valider'", ['idUtilisateur' => $id]);
     }
