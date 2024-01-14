@@ -50,7 +50,7 @@ function getRoleBasedData($role, &$sections, &$actions): array
             $actionsId = ['A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07'],
         ],
         Roles::Enterprise => [
-            $selectedIds = ['S02', 'S04', 'S05', 'S13', 'S14', 'S06', 'S08', 'S10'],
+            $selectedIds = ['S02', 'S05', 'S13', 'S14', 'S06', 'S08', 'S10'],
             $actionsId = ['A04', 'A07'],
         ],
         Roles::Tutor => [
