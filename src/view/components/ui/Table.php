@@ -11,7 +11,6 @@ class Table
     public static function createTable(array $values, array $columns, callable $callback): void
     {
         $i = (time() + rand(0, 1000));
-        echo $i;
         $id = "table-" . $i;
         $cols = count($columns);
         $empty = 'empty-' . $i;

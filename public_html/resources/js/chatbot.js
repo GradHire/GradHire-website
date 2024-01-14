@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function () {
             addMessage("Une erreur est survenue lors du chargement de l'historique", "Gilou")
         });
 
-    // add event listener to chatbot input when enter is pressed
     document.getElementById("chatbot-input").addEventListener("keyup", function (event) {
         if (event.key === "Enter") {
             sendMessage();
@@ -110,12 +109,6 @@ function showLoading() {
                     </div>`
     messages.scrollTop = messages.scrollHeight;
 }
-
-document.getElementById("chatbot-input").addEventListener("keyup", function (event) {
-    if (event.key === "Enter") {
-        sendMessage();
-    }
-});
 
 function getToken() {
     return "Bearer " + document.cookie.split("; ").find(row => row.startsWith("token")).split("=")[1];
