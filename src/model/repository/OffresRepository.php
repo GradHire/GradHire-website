@@ -177,11 +177,7 @@ class OffresRepository extends AbstractRepository
     public
     function getOffresByIdEntreprise($idEntreprise): ?array
     {
-        $data = self::FetchAllAssoc("SELECT * FROM Offre WHERE idUtilisateur = :idUtilisateur", ['idUtilisateur' => $idEntreprise]) ?? [];
-        $offres = [];
-        foreach ($data as $offre_data)
-            $offres[] = $this->construireDepuisTableau($offre_data);
-        return $offres;
+        return self::FetchAllAssoc("SELECT * FROM Offre WHERE idUtilisateur = :idUtilisateur", ['idUtilisateur' => $idEntreprise]) ?? [];
     }
 
     /**

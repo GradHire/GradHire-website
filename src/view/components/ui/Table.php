@@ -130,18 +130,18 @@ HTML
 
     public static function link($link): void
     {
-        $link = urlencode($link ?? "");
+        $l = urlencode($link ?? "");
         self::cell(($link == null || $link == "") ? "" : <<<HTML
-<a target="_blank" href="$link" class="text-blue-600">$link</a>
+<a target="_blank" href="$l" class="text-blue-600">$link</a>
 HTML
         );
     }
 
     public static function mail($mail): void
     {
-        $mail = urlencode($mail ?? "");
+        $m = urlencode($mail ?? "");
         self::cell(($mail == null || $mail == "") ? "" : <<<HTML
-<a href="mailto:$mail">$mail</a>
+<a href="mailto:$m">$mail</a>
 HTML
         );
     }
