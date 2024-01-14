@@ -144,7 +144,7 @@ class CompteRenduRepository extends AbstractRepository
         $data = self::Fetch($sql, [
             "numconvention" => $getNumConvention
         ]) ?? [];
-        return $data !== null && $data['commentairesoutenanceprof'] !== null;
+        return $data !== null && isset($data['commentairesoutenanceprof']);
     }
 
     /**
