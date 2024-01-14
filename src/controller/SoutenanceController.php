@@ -46,9 +46,9 @@ class SoutenanceController extends AbstractController
                         'idtuteurentreprise' => $infosConvention['idtuteurentreprise'],
                     ]);
                     SoutenanceRepository::createSoutenance($values);
-                    NotificationRepository::createNotification(Auth::get_user()->id(),"Vous avez créé une soutenance","/voirSoutenance/".$numConvention);
-                    NotificationRepository::createNotification($infosConvention['idetudiant'],"Une soutenance a été créée pour votre convention","/voirSoutenance/".$numConvention);
-                    NotificationRepository::createNotification($infosConvention['idtuteurentreprise'],"Une soutenance a été créée pour votre convention","/voirSoutenance/".$numConvention);
+                    NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez créé une soutenance", "/voirSoutenance/" . $numConvention);
+                    NotificationRepository::createNotification($infosConvention['idetudiant'], "Une soutenance a été créée pour votre convention", "/voirSoutenance/" . $numConvention);
+                    NotificationRepository::createNotification($infosConvention['idtuteurentreprise'], "Une soutenance a été créée pour votre convention", "/voirSoutenance/" . $numConvention);
                     Application::redirectFromParam("/conventions");
                 }
             }
@@ -69,10 +69,10 @@ class SoutenanceController extends AbstractController
             $idauth = Application::getUser()->id();
             $convention = ConventionRepository::getByNumConvention($numConvention);
             SoutenanceRepository::seProposerCommeJury($idauth, $numConvention);
-            NotificationRepository::createNotification($idauth,"Vous vous êtes proposé comme jury pour une soutenance","/voirSoutenance/".$numConvention);
-            NotificationRepository::createNotification($convention['idetudiant'],"Un professeur s'est proposé comme jury pour votre soutenance","/voirSoutenance/".$numConvention);
-            NotificationRepository::createNotification($convention['idtuteurentreprise'],"Un professeur s'est proposé comme jury pour votre soutenance","/voirSoutenance/".$numConvention);
-            NotificationRepository::createNotification($convention['idtuteurprof'],"Un professeur s'est proposé comme jury pour votre soutenance","/voirSoutenance/".$numConvention);
+            NotificationRepository::createNotification($idauth, "Vous vous êtes proposé comme jury pour une soutenance", "/voirSoutenance/" . $numConvention);
+            NotificationRepository::createNotification($convention['idetudiant'], "Un professeur s'est proposé comme jury pour votre soutenance", "/voirSoutenance/" . $numConvention);
+            NotificationRepository::createNotification($convention['idtuteurentreprise'], "Un professeur s'est proposé comme jury pour votre soutenance", "/voirSoutenance/" . $numConvention);
+            NotificationRepository::createNotification($convention['idtuteurprof'], "Un professeur s'est proposé comme jury pour votre soutenance", "/voirSoutenance/" . $numConvention);
             Application::redirectFromParam("/conventions");
         } else {
             throw new ForbiddenException();
@@ -130,8 +130,8 @@ class SoutenanceController extends AbstractController
                     'idsoutenance' => $soutenance->getIdSoutenance(),
                 ]);
                 (new NotesRepository())->create($values);
-                NotificationRepository::createNotification(Auth::get_user()->id(),"Vous avez noté une soutenance","/voirSoutenance/".$numConvention);
-                NotificationRepository::createNotification($soutenance->getIdetudiant(),"Votre soutenance a été notée","/voirSoutenance/".$numConvention);
+                NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez noté une soutenance", "/voirSoutenance/" . $numConvention);
+                NotificationRepository::createNotification($soutenance->getIdetudiant(), "Votre soutenance a été notée", "/voirSoutenance/" . $numConvention);
                 header("Location: /voirSoutenance/$numConvention");
             }
         }
