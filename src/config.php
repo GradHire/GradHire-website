@@ -1,6 +1,6 @@
 <?php
 
-const HOST = 'http://localhost:8080';
+const HOST = 'http://16.171.195.93';
 const DB_HOSTNAME = '162.38.222.142';
 const DB_DB = 'iut';
 const DB_PORT = '5673';
