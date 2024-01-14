@@ -84,6 +84,11 @@ HTML;
         echo "</dl></div>";
     }
 
+    public static function space()
+    {
+        echo "<hr class=\"my-4\"/>";
+    }
+
     public static function addDetailLink(string $title, null|string $link)
     {
         echo "
