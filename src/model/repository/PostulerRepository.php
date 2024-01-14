@@ -145,7 +145,7 @@ class PostulerRepository extends AbstractRepository
     /**
      * @throws ServerErrorException
      */
-    public static function getByStatementTuteur(int $idutilisateur, string $string): array
+    public static function getByStatementTuteur(int $idutilisateur, string $string): ?array
     {
         if ($string == 'validee') {
             $sql = "SELECT p.nom,p.sujet,p.dates,p.idOffre, p.idUtilisateur, su.idUtilisateur as idTuteur,idEntreprise,p.statut, u.nom AS nomEntreprise, et.email AS emailEtudiant,su.idUtilisateur AS idTutor FROM " . self::$nomTable . " p JOIN utilisateur u ON u.idUtilisateur = p.idEntreprise JOIN utilisateur et ON et.idUtilisateur = p.idUtilisateur JOIN Supervise su ON su.idOffre=p.idOffre WHERE su.statut::text = 'validee' AND su.idutilisateur=:idutilisateur AND CAST(p.statut AS TEXT) = CAST(su.statut AS TEXT)";
