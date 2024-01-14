@@ -11,6 +11,7 @@ class Table
     public static function createTable(array $values, array $columns, callable $callback): void
     {
         $i = (time() + rand(0, 1000));
+        echo $i;
         $id = "table-" . $i;
         $cols = count($columns);
         $empty = 'empty-' . $i;
@@ -21,8 +22,8 @@ class Table
             if (count($values) > 10) {
                 $buttons = "<button onclick='previousTable(`$id`)' disabled class='h-[36px] rounded-md hover:bg-zinc-100 disabled:opacity-50 px-2 text-[14px] max-md:hidden'> &lt; Précédent</button>";
                 $nbButtons = ceil(count($values) / 10);
-                for ($i = 1; $i <= $nbButtons && $i <= 5; $i++) {
-                    $buttons .= "<button onclick='goToTable(`$id`, $i)' class='h-[36px] w-[36px] rounded-md hover:bg-zinc-100 duration-200 text-[14px] " . ($i === 1 ? "active" : "") . " [&.active]:drop-shadow-[16px] [&.active]:bg-white [&.active]:border [&.active]:border-zinc-300'>$i</button>";
+                for ($e = 1; $e <= $nbButtons && $e <= 5; $e++) {
+                    $buttons .= "<button onclick='goToTable(`$id`, $e)' class='h-[36px] w-[36px] rounded-md hover:bg-zinc-100 duration-200 text-[14px] " . ($e === 1 ? "active" : "") . " [&.active]:drop-shadow-[16px] [&.active]:bg-white [&.active]:border [&.active]:border-zinc-300'>$e</button>";
                 }
                 if ($nbButtons > 5)
                     $buttons .= "<p>…</p>";

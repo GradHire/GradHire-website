@@ -13,7 +13,6 @@ class Modal
      */
     public function __construct(string $body, string $btn, string $svg = "")
     {
-        echo '<script src="/resources/js/modal.js"></script>';
         try {
             $this->id = bin2hex(random_bytes(5));
             echo <<<HTML

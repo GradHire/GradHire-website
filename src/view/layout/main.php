@@ -30,11 +30,6 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> GradHire | <?= $this->title ?></title>
-    <script src="/resources/js/theme.js"></script>
-    <script src="/resources/js/cookie.js"></script>
-    <script src="/resources/js/side-menu.js"></script>
-    <script src="/resources/js/chatbot.js"></script>
-    <script src="/resources/js/table.js"></script>
     <link rel="stylesheet" href="/resources/css/input.css">
     <link rel="stylesheet" href="/resources/css/output.css">
     <link rel="icon" type="image/png" sizes="32x32" href="/resources/images/favicon-32x32.png">
@@ -174,5 +169,11 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
         </div>
     </div>
 </div>
+<script src="/resources/js/theme.js"></script>
+<script src="/resources/js/cookie.js"></script>
+<script src="/resources/js/side-menu.js"></script>
+<script src="/resources/js/chatbot.js"></script>
+<script src="/resources/js/table.js"></script>
+<script src="/resources/js/modal.js"></script>
 </body>
 </html>

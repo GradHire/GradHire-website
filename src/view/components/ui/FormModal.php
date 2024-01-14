@@ -19,7 +19,6 @@ class FormModal
 
     public function render(callable|string $body)
     {
-        echo '<script src="/resources/js/modal.js"></script>';
         try {
             $this->id = bin2hex(random_bytes(5));
             echo '
