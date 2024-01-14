@@ -11,6 +11,7 @@ use app\src\model\Form\FormModel;
 use app\src\model\View;
 use app\src\view\components\ui\Modal;
 
+
 $this->title = 'Offres';
 View::setCurrentSection('Offres');
 
