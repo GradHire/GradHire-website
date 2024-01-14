@@ -67,7 +67,7 @@ class Supervise extends AbstractDataObject
     {
         $this->statut = $statut;
     }
-    
+
 
     protected function getValueColonne(string $nomColonne): string
     {

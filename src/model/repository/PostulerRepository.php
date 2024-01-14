@@ -162,6 +162,13 @@ class PostulerRepository extends AbstractRepository
         return [];
     }
 
+    public static function getIfValideeInArray(?array $candidatures): bool
+    {
+        foreach ($candidatures as $candidature)
+            if ($candidature['statut'] == 'validee') return true;
+        return false;
+    }
+
     /**
      * @throws ServerErrorException
      */
@@ -270,13 +277,6 @@ class PostulerRepository extends AbstractRepository
             'idoffre' => $idOffre
         ]);
         return $data && $data["nbaccepter"] == 1;
-    }
-
-    public static function getIfValideeInArray(?array $candidatures): bool
-    {
-        foreach ($candidatures as $candidature)
-            if ($candidature['statut'] == 'validee') return true;
-        return false;
     }
 
     protected

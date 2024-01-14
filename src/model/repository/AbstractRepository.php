@@ -6,6 +6,8 @@ namespace app\src\model\repository;
 use app\src\core\db\Database;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\dataObject\AbstractDataObject;
+use PDO;
+use PDOException;
 
 abstract class AbstractRepository
 {
@@ -17,10 +19,10 @@ abstract class AbstractRepository
         try {
             $statement = Database::get_conn()->prepare($sql);
             $statement->execute(self::filterHtml($params));
-            $data = $statement->fetchAll(\PDO::FETCH_ASSOC);
+            $data = $statement->fetchAll(PDO::FETCH_ASSOC);
             if (!$data) return null;
             return $data;
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             throw new ServerErrorException();
         }
     }
@@ -33,9 +35,16 @@ abstract class AbstractRepository
         try {
             $statement = Database::get_conn()->prepare($sql);
             $statement->execute(self::filterHtml($params));
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             throw new ServerErrorException();
         }
+    }
+
+    private static function filterHtml(array $data): array
+    {
+        foreach ($data as $key => $value)
+            $data[$key] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+        return $data;
     }
 
     /**
@@ -49,7 +58,7 @@ abstract class AbstractRepository
             $data = $statement->fetchAll();
             if (!$data) return null;
             return $data;
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             throw new ServerErrorException();
         }
     }
@@ -62,10 +71,10 @@ abstract class AbstractRepository
         try {
             $statement = Database::get_conn()->prepare($sql);
             $statement->execute(self::filterHtml($params));
-            $data = $statement->fetch(\PDO::FETCH_ASSOC);
+            $data = $statement->fetch(PDO::FETCH_ASSOC);
             if (!$data) return null;
             return $data;
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             throw new ServerErrorException();
         }
     }
@@ -81,7 +90,7 @@ abstract class AbstractRepository
             $data = $statement->fetch();
             if (!$data) return null;
             return $data;
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             throw new ServerErrorException();
         }
     }
@@ -103,18 +112,10 @@ abstract class AbstractRepository
             $statement = Database::get_conn()->prepare($sql);
             $statement->execute(self::filterHtml($params));
             return $statement->rowCount();
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             throw new ServerErrorException();
         }
     }
-
-    private static function filterHtml(array $data): array
-    {
-        foreach ($data as $key => $value)
-            $data[$key] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
-        return $data;
-    }
-
 
     /**
      * @throws ServerErrorException
@@ -126,7 +127,7 @@ abstract class AbstractRepository
             $dataObjects = [];
             foreach ($sql as $dataObjectFormatTableau) $dataObjects[] = $this->construireDepuisTableau($dataObjectFormatTableau);
             return $dataObjects;
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             throw new ServerErrorException();
         }
     }

@@ -8,10 +8,10 @@ use app\src\model\Form\FormValidationException;
 
 class RuleMinNumber extends FormAttributeRule
 {
-	public function process(FormInputValue $value): void
-	{
-		$number = $this->getOption('min');
-		if ($value->getValue() < $number)
-			throw new FormValidationException(sprintf('Ce champs doit être >= %d', $number));
-	}
+    public function process(FormInputValue $value): void
+    {
+        $number = $this->getOption('min');
+        if ($value->getValue() < $number)
+            throw new FormValidationException(sprintf('Ce champs doit être >= %d', $number));
+    }
 }

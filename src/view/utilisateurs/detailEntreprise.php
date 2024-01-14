@@ -1,6 +1,7 @@
 <?php
-/** @var $utilisateur \app\src\model\dataObject\Entreprise */
+/** @var $utilisateur Entreprise */
 
+use app\src\model\dataObject\Entreprise;
 use app\src\model\View;
 use app\src\view\components\ui\Detail;
 

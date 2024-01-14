@@ -1,8 +1,9 @@
 <?php
-/** @var $notificationsNonLues  \app\src\model\dataObject\Notifications[] */
+/** @var $notificationsNonLues  Notifications[] */
 
-/** @var $notificationsLues  \app\src\model\dataObject\Notifications[] */
+/** @var $notificationsLues  Notifications[] */
 
+use app\src\model\dataObject\Notifications;
 use app\src\model\View;
 use app\src\view\components\ui\Separator;
 use app\src\view\components\ui\Table;

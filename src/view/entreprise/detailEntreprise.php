@@ -1,13 +1,16 @@
 <?php
 
-/** @var $entreprise \app\src\model\dataObject\Entreprise
- * @var $offres \app\src\model\dataObject\Offre
- * @var $avisPublic \app\src\model\dataObject\Avis
- * @var $avisPriver \app\src\model\dataObject\Avis
+/** @var $entreprise Entreprise
+ * @var $offres Offre
+ * @var $avisPublic Avis
+ * @var $avisPriver Avis
  */
 
 use app\src\model\Application;
 use app\src\model\Auth;
+use app\src\model\dataObject\Avis;
+use app\src\model\dataObject\Entreprise;
+use app\src\model\dataObject\Offre;
 use app\src\model\dataObject\Roles;
 use app\src\model\repository\AvisRepository;
 use app\src\view\components\ui\Detail;
@@ -45,9 +48,9 @@ if (empty($nom) || $nom == "") $nom = "Sans nom";
             Detail::addDetailAvis("Avis Privé sur l'entreprise : ", $avisPriver);
         }
     }
-    if (Auth::has_role(Roles::TutorTeacher, Roles::Teacher,Roles::Manager,Roles::ManagerAlternance,Roles::ManagerStage,Roles::Student) && AvisRepository::checkIfAvisPosted($entreprise->getIdutilisateur(), Application::getUser()->id())) {
+    if (Auth::has_role(Roles::TutorTeacher, Roles::Teacher, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage, Roles::Student) && AvisRepository::checkIfAvisPosted($entreprise->getIdutilisateur(), Application::getUser()->id())) {
         Table::button("/entreprises/" . $entreprise->getIdutilisateur() . "/modifierAvis", "Modifier l'avis");
-    } else if (Auth::has_role(Roles::TutorTeacher, Roles::Teacher,Roles::Manager,Roles::ManagerAlternance,Roles::ManagerStage,Roles::Student)) {
+    } else if (Auth::has_role(Roles::TutorTeacher, Roles::Teacher, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage, Roles::Student)) {
         Table::button("/entreprises/" . $entreprise->getIdutilisateur() . "/posterAvis", "Poster un avis");
     }
     /**

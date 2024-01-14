@@ -30,7 +30,8 @@ class PieChartBlock implements ComponentInterface
                         <div class="flex flex-row gap-1">
                     <span class="w-[14px] h-[14px] rounded-[2px] shadow"
                           style="background-color: <?= $colors[$index] ?? '#000'; ?>;
-                                  "></span><span class="text-nowrap text-[10px] md:text-md"> <?= ' - ' . htmlspecialchars(substr($row[$row_2], 0, 6) . '…') ?? 'Autre' ?></span>
+                                  "></span><span
+                                    class="text-nowrap text-[10px] md:text-md"> <?= ' - ' . htmlspecialchars(substr($row[$row_2], 0, 6) . '…') ?? 'Autre' ?></span>
                         </div>
                     <?php endforeach; ?>
                 </div>

@@ -518,8 +518,8 @@ class PstageController extends AbstractController
                         $simul->updaterefuse($id);
                         $simul->updateMotif($id, $formData['motif']);
                         $idetudiant = SimulationPstageRepository::getStudentId($id);
-                        NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez refusé une simulation de convention avec pour motif ". $formData['motif'], "/gererSimulPstage");
-                        NotificationRepository::createNotification($idetudiant, "Votre simulation de convention a été refusé avec pour motif ". $formData['motif'] , "/gererSimulPstage");
+                        NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez refusé une simulation de convention avec pour motif " . $formData['motif'], "/gererSimulPstage");
+                        NotificationRepository::createNotification($idetudiant, "Votre simulation de convention a été refusé avec pour motif " . $formData['motif'], "/gererSimulPstage");
                         Application::$app->response->redirect("/gererSimulPstage");
                     }
                 }

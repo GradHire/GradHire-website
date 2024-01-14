@@ -1,8 +1,9 @@
 <?php
 
-/** @var $candidatures \app\src\model\dataObject\Postuler */
+/** @var $candidatures Postuler */
 
 use app\src\model\Auth;
+use app\src\model\dataObject\Postuler;
 use app\src\model\dataObject\Roles;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\OffresRepository;

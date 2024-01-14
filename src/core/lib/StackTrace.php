@@ -35,8 +35,7 @@ HTML;
         $i = 0;
 
         foreach ($trace as $item) {
-            if (!isset($item['file']) || htmlspecialchars($item['file']) === "")
-                continue;
+            if (!isset($item['file']) || htmlspecialchars($item['file']) === "") continue;
             echo '<tr>';
 
             echo '<td class="border px-4 py-2 w-[20px]">';
@@ -44,15 +43,11 @@ HTML;
             echo '</td>';
 
             echo '<td class="border px-4 py-2 w-[300px]">';
-            if (isset($item['function'])) {
-                echo htmlspecialchars($item['function']);
-            }
+            if (isset($item['function'])) echo htmlspecialchars($item['function']);
             echo '</td>';
 
             echo '<td class="border px-4 py-2 w-[100px]">';
-            if (isset($item['line'])) {
-                echo $item['line'];
-            }
+            if (isset($item['line'])) echo $item['line'];
             echo '</td>';
 
             echo '<td class="border px-4 py-2">';
@@ -60,9 +55,7 @@ HTML;
             echo '</td>';
 
             echo '<td class="border px-4 py-2">';
-            if (isset($item['args'])) {
-                print_r($item['args']);
-            }
+            if (isset($item['args'])) print_r($item['args']);
             echo '</td>';
 
             echo '</tr>';

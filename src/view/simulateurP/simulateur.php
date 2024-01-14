@@ -16,7 +16,10 @@ use app\src\model\Form\FormModel;
     ?>
     <?php if ($nom != "Etudiant") : ?>
         <div class="w-full max-w-md gap-4 flex flex-col gap-4 mx-auto mx-auto max-w-md">
-            <div class="flex flex-row gap-2 items-center justify-between"><p> Le <?php echo $nom ?> n'existe pas encore </p> <a href="/creer<?php echo $nom ?>" class="ml-3 inline-block rounded bg-zinc-800 px-4 py-2 text-xs font-medium w-fit text-white hover:bg-zinc-900">Créer-le</a></div>
+            <div class="flex flex-row gap-2 items-center justify-between"><p> Le <?php echo $nom ?> n'existe pas
+                    encore </p> <a href="/creer<?php echo $nom ?>"
+                                   class="ml-3 inline-block rounded bg-zinc-800 px-4 py-2 text-xs font-medium w-fit text-white hover:bg-zinc-900">Créer-le</a>
+            </div>
             <?php $form->print_all_fields(); ?>
         </div>
     <?php else : ?>

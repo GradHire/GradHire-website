@@ -5,6 +5,7 @@ namespace app\src\model;
 use app\src\controller\AbstractController;
 use app\src\core\exception\ServerErrorException;
 use app\src\model\repository\UtilisateurRepository;
+use Exception;
 
 class Application
 {
@@ -51,12 +52,8 @@ class Application
 
     public static function getUser(): UtilisateurRepository|null
     {
-        if (!is_null(self::$user)) {
-            return self::$user;
-        }
-        if (self::isGuest()) {
-            return null;
-        }
+        if (!is_null(self::$user)) return self::$user;
+        if (self::isGuest()) return null;
         return unserialize($_SESSION["user"]);
     }
 
@@ -93,7 +90,7 @@ class Application
         $this->triggerEvent(self::EVENT_BEFORE_REQUEST);
         try {
             echo $this->router->resolve();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             echo $this->router->renderView('errors/_error', ['exception' => $e,]);
         }
     }

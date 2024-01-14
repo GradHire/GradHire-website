@@ -1,8 +1,9 @@
 <?php
 
-/** @var $offre \app\src\model\dataObject\Offre */
+/** @var $offre Offre */
 
 use app\src\model\Auth;
+use app\src\model\dataObject\Offre;
 use app\src\model\dataObject\Roles;
 use app\src\model\repository\PostulerRepository;
 

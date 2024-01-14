@@ -1,11 +1,12 @@
 <?php
-/** @var $user \app\src\model\repository\UtilisateurRepository */
+/** @var $user UtilisateurRepository */
 
 /** @var $form FormModel */
 
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\Form\FormModel;
+use app\src\model\repository\UtilisateurRepository;
 use app\src\view\components\ui\Modal;
 
 $this->title = 'Profile';
@@ -126,5 +127,5 @@ $modal = new Modal("Voulez vous vraiment archiver votre compte ?", "Oui, archive
                 </div>
             <?php } ?>
         </div>
-</div>
+    </div>
 </div>

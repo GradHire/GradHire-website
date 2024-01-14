@@ -5,6 +5,7 @@ namespace app\src\core\db;
 use app\src\core\exception\ServerErrorException;
 use PDO;
 use PDOException;
+use PDOStatement;
 
 class Database
 {
@@ -43,7 +44,7 @@ class Database
     /**
      * @throws ServerErrorException
      */
-    public function prepare($sql): \PDOStatement
+    public function prepare($sql): PDOStatement
     {
         return self::get_conn()->prepare($sql);
     }

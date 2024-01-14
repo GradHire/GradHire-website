@@ -18,7 +18,8 @@
         <button type="button" id="modifyButton" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
             Modifier
         </button>
-        <button type="button" id="confirmButton" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
+        <button type="button" id="confirmButton"
+                class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
             Confirmez
         </button>
     </div>

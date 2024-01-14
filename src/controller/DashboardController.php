@@ -47,12 +47,6 @@ class DashboardController extends AbstractController
     public function showDashboard(): string
     {
         if (Application::isGuest()) throw new ForbiddenException();
-        // ManagerAlternance
-        //ManagerStage
-        //ChefDepartment
-        //Manager
-        //Staff
-        //Teacher
         if (Auth::has_role(Roles::ManagerAlternance, Roles::ManagerStage, Roles::ChefDepartment, Roles::Manager, Roles::Staff, Roles::Teacher)) {
             $dashboardModel = new DashboardRepository();
             $data = $dashboardModel->fetchDashboardData();
@@ -60,9 +54,7 @@ class DashboardController extends AbstractController
             return $this->render('dashboard/dashboard', [
                 'data' => $data
             ]);
-        } else {
-            throw new ForbiddenException();
-        }
+        } else throw new ForbiddenException();
     }
 
     /**
@@ -134,11 +126,7 @@ class DashboardController extends AbstractController
         if (Auth::has_role(Roles::Manager, Roles::Staff)) $tuteurs = (new TuteurEntrepriseRepository([]))->getAll();
         else if (Auth::has_role(Roles::Enterprise)) $tuteurs = (new TuteurEntrepriseRepository([]))->getAllTuteursByIdEntreprise(Application::getUser()->id());
         else throw new ForbiddenException();
-        if ($request->getMethod() === 'post') {
-            if ($form->validate($request->getBody())) {
-                TuteurEntrepriseRepository::generateAccountToken(Application::getUser(), $form->getParsedBody()["email"], $form);
-            }
-        }
+        if ($request->getMethod() === 'post') if ($form->validate($request->getBody())) TuteurEntrepriseRepository::generateAccountToken(Application::getUser(), $form->getParsedBody()["email"], $form);
         $waiting = EntrepriseRepository::getTuteurWaitingList(Application::getUser()->id());
         return $this->render('tuteurPro/listeTuteurPro', ['tuteurs' => $tuteurs, 'form' => $form, 'waiting' => $waiting]);
     }

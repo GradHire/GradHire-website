@@ -1,9 +1,10 @@
 <?php
 
-/** @var $offres \app\src\model\dataObject\Offre
+/** @var $offres Offre
  */
 
 use app\src\model\Auth;
+use app\src\model\dataObject\Offre;
 use app\src\model\dataObject\Roles;
 
 
@@ -35,8 +36,8 @@ use app\src\model\dataObject\Roles;
                     <?php
                     if ($offres != null)
                         foreach ($offres as $offre) {
-                            if(Auth::has_role(Roles::Tutor)){
-                                if($offre["statut"] != "valider"){
+                            if (Auth::has_role(Roles::Tutor)) {
+                                if ($offre["statut"] != "valider") {
                                     continue;
                                 }
                             }
@@ -79,8 +80,7 @@ use app\src\model\dataObject\Roles;
                                         echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-zinc-100 text-zinc-800\">
     Archivée
     </span>";
-                                    }
-                                    else if ($status == "brouillon") {
+                                    } else if ($status == "brouillon") {
                                         echo "<span class=\"inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-blue-300 text-zinc-800\">
     Brouillon
     </span>";
@@ -103,6 +103,6 @@ use app\src\model\dataObject\Roles;
         </div>
     <?php } else {
         echo "<p class=\"text-center text-zinc-500\">Aucune offre n'a été trouvée</p>";
-    }?>
+    } ?>
 </div>
 

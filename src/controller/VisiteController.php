@@ -50,7 +50,7 @@ class VisiteController extends AbstractController
         if (!$supervise) throw new NotFoundException();
         if (Auth::has_role(Roles::Tutor) && Application::getUser()->id() !== $supervise->getIdtuteurentreprise()) throw new ForbiddenException("vous n'êtes pas le tuteur de l'entreprise");
 
-        if ((Auth::has_role(Roles::TutorTeacher, Roles::Tutor) && ConventionRepository::imOneOfTheTutor(Application::getUser()->id(), $numConvention)) || Auth::has_role(Roles::Manager,Roles::ManagerAlternance,Roles::ManagerStage)) {
+        if ((Auth::has_role(Roles::TutorTeacher, Roles::Tutor) && ConventionRepository::imOneOfTheTutor(Application::getUser()->id(), $numConvention)) || Auth::has_role(Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage)) {
             $form = new FormModel([
                 "start" => FormModel::date("Début de la visite")->withHour()->default($visite ? $visite->getDebutVisite()->format('Y-m-d H:i:s') : (new DateTime())->format('Y-m-d H:i:s'))->required(),
                 "end" => FormModel::date("Fin de la visite")->withHour()->default($visite ? $visite->getFinVisite()->format('Y-m-d H:i:s') : (new DateTime())->format('Y-m-d H:i:s'))->required(),
@@ -68,15 +68,14 @@ class VisiteController extends AbstractController
                             NotificationRepository::createNotification($convention["idtuteurentreprise"], "Une visite a été créée pour votre convention", "/visite/" . $numConvention);
                         if (!Auth::has_role(Roles::TutorTeacher))
                             NotificationRepository::createNotification($convention["idtuteurprof"], "Une visite a été créée pour votre convention", "/visite/" . $numConvention);
-                    }
-                    else {
+                    } else {
                         VisiteRepository::update($numConvention, $data["start"], $data["end"]);
-                        NotificationRepository::createNotification(Auth::get_user()->id(),"Vous avez modifié une visite","/visite/".$numConvention);
-                        NotificationRepository::createNotification($studentId,"Une visite a été modifiée pour votre convention","/visite/".$numConvention);
+                        NotificationRepository::createNotification(Auth::get_user()->id(), "Vous avez modifié une visite", "/visite/" . $numConvention);
+                        NotificationRepository::createNotification($studentId, "Une visite a été modifiée pour votre convention", "/visite/" . $numConvention);
                         if (!Auth::has_role(Roles::Tutor))
-                            NotificationRepository::createNotification($convention["idtuteurentreprise"],"Une visite a été modifiée pour votre convention","/visite/".$numConvention);
+                            NotificationRepository::createNotification($convention["idtuteurentreprise"], "Une visite a été modifiée pour votre convention", "/visite/" . $numConvention);
                         if (!Auth::has_role(Roles::TutorTeacher))
-                            NotificationRepository::createNotification($convention["idtuteurprof"],"Une visite a été modifiée pour votre convention","/visite/".$numConvention);
+                            NotificationRepository::createNotification($convention["idtuteurprof"], "Une visite a été modifiée pour votre convention", "/visite/" . $numConvention);
                     }
                     header("Location: /visite/" . $numConvention);
                 }

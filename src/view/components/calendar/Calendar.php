@@ -5,6 +5,7 @@ namespace app\src\view\components\calendar;
 use app\src\core\exception\ServerErrorException;
 use DateInterval;
 use DateTime;
+use Exception;
 use IntlDateFormatter;
 
 const DAYS = [
@@ -139,7 +140,7 @@ class Calendar
                 $firstDayOfWeek,
                 $lastDayOfWeek,
             ];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new ServerErrorException();
         }
     }

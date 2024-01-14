@@ -1,14 +1,16 @@
 <?php
-/** @var $offre \app\src\model\dataObject\Offre
+/** @var $offre Offre
  * @var $utilisateurs array
  * @var $currentFilterURL string
  */
 
-/** @var $modal \app\src\view\components\ui\Modal */
+/** @var $modal Modal */
 
 use app\src\model\Application;
 use app\src\model\Auth;
+use app\src\model\dataObject\Offre;
 use app\src\model\dataObject\Roles;
+use app\src\view\components\ui\Modal;
 
 $id_offre = $offre["idoffre"];
 

@@ -1,8 +1,9 @@
 <?php
 
-/** @var $convention \app\src\model\dataObject\Convention */
+/** @var $convention Convention */
 
 use app\src\model\Auth;
+use app\src\model\dataObject\Convention;
 use app\src\model\dataObject\Roles;
 use app\src\model\repository\ConventionRepository;
 use app\src\model\repository\EntrepriseRepository;
@@ -163,7 +164,7 @@ Non valide
             $imOneOfTheTutor = ConventionRepository::imOneOfTheTutor(Auth::get_user()->id, $convention['numconvention']);
             if (VisiteRepository::getIfVisiteExist($convention['numconvention']) && !$getIfSoutenanceExist) {
                 ?> <p>en attente de la soutenance </p> <?php
-            } else if ($getIfSoutenanceExist){
+            } else if ($getIfSoutenanceExist) {
                 if (Auth::has_role(Roles::TutorTeacher, Roles::Teacher) && !SoutenanceRepository::getIfJuryExist(Auth::get_user()->id, $convention['numconvention'])) {
                     if (!SoutenanceRepository::getIfImTheTuteurProf(Auth::get_user()->id, $convention['numconvention'])) {
                         ?> <a href="/seProposerJury/<?php echo $convention['numconvention'] ?>"
@@ -178,7 +179,7 @@ Non valide
                     ?> <a href="/voirSoutenance/<?php echo $convention['numconvention'] ?>"
                           class="btn btn-primary bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Voir
                         soutenance</a> <?php
-                } else if (Auth::has_role(Roles::Student) && Auth::get_user()->id == $convention['idutilisateur']){
+                } else if (Auth::has_role(Roles::Student) && Auth::get_user()->id == $convention['idutilisateur']) {
                     ?> <a href="/voirSoutenance/<?php echo $convention['numconvention'] ?>"
                           class="btn btn-primary bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Voir
                         soutenance</a> <?php

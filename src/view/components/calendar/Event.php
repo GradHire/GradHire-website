@@ -2,16 +2,18 @@
 
 namespace app\src\view\components\calendar;
 
+use DateTime;
+
 class Event
 {
     private string $title;
-    private \DateTime $start;
-    private \DateTime $end;
+    private DateTime $start;
+    private DateTime $end;
     private string $color;
     private string $btn;
     private string $url;
 
-    public function __construct(string $title, \DateTime $start, \DateTime $end, string $color)
+    public function __construct(string $title, DateTime $start, DateTime $end, string $color)
     {
         $this->title = $title;
         $this->start = $start;
@@ -25,12 +27,12 @@ class Event
         return $this->title;
     }
 
-    public function getStart(): \DateTime
+    public function getStart(): DateTime
     {
         return $this->start;
     }
 
-    public function getEnd(): \DateTime
+    public function getEnd(): DateTime
     {
         return $this->end;
     }

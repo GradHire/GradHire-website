@@ -37,7 +37,9 @@ use app\src\model\Form\FormModel;
             <?php
             $form->print_fields(["etudiant", "presenttuteur"]);
             ?>
-            <button type="button" class="bg-blue-600 hover:bg-blue-700 rounded-lg p-2 text-white" onclick="nextStep('step1', 'step2')">Suivant</button>
+            <button type="button" class="bg-blue-600 hover:bg-blue-700 rounded-lg p-2 text-white"
+                    onclick="nextStep('step1', 'step2')">Suivant
+            </button>
         </div>
     </div>
 </div>
@@ -66,8 +68,11 @@ use app\src\model\Form\FormModel;
             <?php
             $form->print_fields(["renduretard", "noterapport", "commentairerapport"]);
             ?>
-            <button type="button" class="bg-zinc-500 rounded-lg p-2" onclick="prevStep('step2', 'step1')">Précédent</button>
-            <button type="button" class="bg-blue-600 hover:bg-blue-700 rounded-lg p-2 text-white" onclick="nextStep('step2', 'step3')">Suivant</button>
+            <button type="button" class="bg-zinc-500 rounded-lg p-2" onclick="prevStep('step2', 'step1')">Précédent
+            </button>
+            <button type="button" class="bg-blue-600 hover:bg-blue-700 rounded-lg p-2 text-white"
+                    onclick="nextStep('step2', 'step3')">Suivant
+            </button>
         </div>
     </div>
 </div>
@@ -89,8 +94,12 @@ use app\src\model\Form\FormModel;
             <?php
             $form->print_fields(["noteoral", "commentaireoral"]);
             ?>
-            <button type="button" onclick="prevStep('step3', 'step2')" class="bg-zinc-500 hover:bg-zinc-600 rounded-lg p-2 text-white">Précédent</button>
-            <button type="button" class="bg-blue-600 hover:bg-blue-700 rounded-lg p-2 text-white" onclick="nextStep('step3', 'step4')">Suivant</button>
+            <button type="button" onclick="prevStep('step3', 'step2')"
+                    class="bg-zinc-500 hover:bg-zinc-600 rounded-lg p-2 text-white">Précédent
+            </button>
+            <button type="button" class="bg-blue-600 hover:bg-blue-700 rounded-lg p-2 text-white"
+                    onclick="nextStep('step3', 'step4')">Suivant
+            </button>
         </div>
     </div>
 </div>
@@ -115,8 +124,12 @@ use app\src\model\Form\FormModel;
             <?php
             $form->print_fields(["noterelation"]);
             ?>
-            <button type="button" onclick="prevStep('step4', 'step3')" class="bg-zinc-500 hover:bg-zinc-600 rounded-lg p-2 text-white">Précédent</button>
-            <button type="button" class="bg-blue-600 hover:bg-blue-700 rounded-lg p-2 text-white" onclick="nextStep('step4', 'step5')">Suivant</button>
+            <button type="button" onclick="prevStep('step4', 'step3')"
+                    class="bg-zinc-500 hover:bg-zinc-600 rounded-lg p-2 text-white">Précédent
+            </button>
+            <button type="button" class="bg-blue-600 hover:bg-blue-700 rounded-lg p-2 text-white"
+                    onclick="nextStep('step4', 'step5')">Suivant
+            </button>
         </div>
     </div>
 </div>
@@ -141,8 +154,12 @@ use app\src\model\Form\FormModel;
             <?php
             $form->print_fields(["langage", "nouveau", "difficulte", "notedemarche"]);
             ?>
-            <button type="button" class="bg-zinc-500 hover:bg-zinc-600 rounded-lg p-2 text-white" onclick="prevStep('step5', 'step4')">Précédent</button>
-            <button type="button" class="bg-blue-600 hover:bg-blue-700 rounded-lg p-2 text-white" onclick="nextStep('step5', 'step6')">Suivant</button>
+            <button type="button" class="bg-zinc-500 hover:bg-zinc-600 rounded-lg p-2 text-white"
+                    onclick="prevStep('step5', 'step4')">Précédent
+            </button>
+            <button type="button" class="bg-blue-600 hover:bg-blue-700 rounded-lg p-2 text-white"
+                    onclick="nextStep('step5', 'step6')">Suivant
+            </button>
         </div>
     </div>
 </div>
@@ -168,8 +185,12 @@ use app\src\model\Form\FormModel;
             <?php
             $form->print_fields(["noteresultat", "commentaireresultat"]);
             ?>
-            <button type="button" class="bg-zinc-500 hover:bg-zinc-600 rounded-lg p-2 text-white" onclick="prevStep('step6', 'step5')">Précédent</button>
-            <button type="button" class="bg-blue-600 hover:bg-blue-700 rounded-lg p-2 text-white" onclick="nextStep('step6', 'step7')">Suivant</button>
+            <button type="button" class="bg-zinc-500 hover:bg-zinc-600 rounded-lg p-2 text-white"
+                    onclick="prevStep('step6', 'step5')">Précédent
+            </button>
+            <button type="button" class="bg-blue-600 hover:bg-blue-700 rounded-lg p-2 text-white"
+                    onclick="nextStep('step6', 'step7')">Suivant
+            </button>
         </div>
     </div>
 </div>
@@ -184,7 +205,9 @@ use app\src\model\Form\FormModel;
             <?php
             $form->print_fields(["recherche", "recontact"]);
             ?>
-            <button type="button" class="bg-zinc-500 hover:bg-zinc-600 rounded-lg p-2 text-white" onclick="prevStep('step7', 'step6')">Précédent</button>
+            <button type="button" class="bg-zinc-500 hover:bg-zinc-600 rounded-lg p-2 text-white"
+                    onclick="prevStep('step7', 'step6')">Précédent
+            </button>
             <?php
             $form->submit("Envoyer");
             ?>

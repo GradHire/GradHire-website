@@ -11,6 +11,7 @@ use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurRepository;
 use app\src\model\repository\UtilisateurRepository;
+use Exception;
 
 
 class Auth
@@ -70,7 +71,7 @@ class Auth
                 case "staff":
                     return StaffRepository::find_by_id($id);
             }
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
 

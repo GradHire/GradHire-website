@@ -9,14 +9,14 @@ use app\src\model\Form\FormValidationException;
 class RuleMaxLength extends FormAttributeRule
 {
 
-	/**
-	 * @inheritDoc
-	 */
-	public function process(FormInputValue $value): void
-	{
-		$number = $this->getOption('max');
-		$length = strlen($value->getValue());
-		if ($length > $number)
-			throw new FormValidationException(sprintf('Ce champs doit faire au maximum %d charactères', $number));
-	}
+    /**
+     * @inheritDoc
+     */
+    public function process(FormInputValue $value): void
+    {
+        $number = $this->getOption('max');
+        $length = strlen($value->getValue());
+        if ($length > $number)
+            throw new FormValidationException(sprintf('Ce champs doit faire au maximum %d charactères', $number));
+    }
 }

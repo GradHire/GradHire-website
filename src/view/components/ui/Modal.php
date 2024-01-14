@@ -3,6 +3,7 @@
 namespace app\src\view\components\ui;
 
 use app\src\core\exception\ServerErrorException;
+use Exception;
 
 class Modal
 {
@@ -53,7 +54,7 @@ HTML;
         </div>
     </div>
 HTML;
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }

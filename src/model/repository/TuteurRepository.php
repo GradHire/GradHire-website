@@ -148,6 +148,19 @@ class TuteurRepository extends ProRepository
         ]);
     }
 
+    /**
+     * @throws ServerErrorException
+     */
+    public static function getNomsTuteurs(): array
+    {
+        $resultat = self::FetchAll("SELECT nom, prenom,st.idutilisateur FROM Supervise s JOIN StaffVue st ON s.idUtilisateur = st.idUtilisateur") ?? [];
+        $list = [];
+        foreach ($resultat as $tuteur) {
+            $list[$tuteur["idutilisateur"]] = $tuteur["prenom"] . " " . $tuteur["nom"];
+        }
+        return $list;
+    }
+
     public function role(): Roles
     {
         return Roles::Tutor;
@@ -198,19 +211,6 @@ class TuteurRepository extends ProRepository
             'idOffre' => $idoffre
         ]);
         return $resultat ? $resultat["prenom"] . " " . $resultat["nom"] : null;
-    }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public static function getNomsTuteurs(): array
-    {
-        $resultat = self::FetchAll("SELECT nom, prenom,st.idutilisateur FROM Supervise s JOIN StaffVue st ON s.idUtilisateur = st.idUtilisateur") ?? [];
-        $list = [];
-        foreach ($resultat as $tuteur) {
-            $list[$tuteur["idutilisateur"]] = $tuteur["prenom"] . " " . $tuteur["nom"];
-        }
-        return $list;
     }
 
     /**

@@ -1,9 +1,10 @@
 <?php
-/** @var $candidaturesAttente \app\src\model\dataObject\Postuler */
+/** @var $candidaturesAttente Postuler */
 
-/** @var $candidaturesAutres \app\src\model\dataObject\Postuler */
+/** @var $candidaturesAutres Postuler */
 
 use app\src\model\Auth;
+use app\src\model\dataObject\Postuler;
 use app\src\model\dataObject\Roles;
 use app\src\model\View;
 use app\src\view\components\ui\Separator;

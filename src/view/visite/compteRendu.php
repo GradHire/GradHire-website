@@ -1,6 +1,8 @@
 <div class="mt-12 w-full">
     <?php
-    /** @var $form  \app\src\model\Form\FormModel */
+    /** @var $form  FormModel */
+
+    use app\src\model\Form\FormModel;
 
     $form->start();
     $form->print_all_fields();

@@ -7,6 +7,7 @@ use app\src\core\exception\ServerErrorException;
 use app\src\core\lib\StackTrace;
 use app\src\model\Auth;
 use app\src\model\Form\FormModel;
+use Exception;
 
 class LdapRepository extends UtilisateurRepository
 {
@@ -69,7 +70,7 @@ class LdapRepository extends UtilisateurRepository
             }
             return false;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             StackTrace::print($e);
             return false;
         }

@@ -1,8 +1,9 @@
 <?php
 /** @var $postulations array */
 
-/** @var $idOffre \app\src\model\dataObject\Offre */
+/** @var $idOffre Offre */
 
+use app\src\model\dataObject\Offre;
 use app\src\model\repository\StaffRepository;
 use app\src\model\repository\TuteurRepository;
 

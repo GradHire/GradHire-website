@@ -3,6 +3,7 @@
 namespace app\src\view\components\ui;
 
 use app\src\core\exception\ServerErrorException;
+use Exception;
 
 class FormModal
 {
@@ -45,7 +46,7 @@ clip-rule="evenodd"></path>
         </div>
     </div>
 HTML;
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new ServerErrorException();
         }
     }
