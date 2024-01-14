@@ -16,7 +16,7 @@ $this->title = 'Conventions';
 View::setCurrentSection('Conventions');
 
 ?>
-<div class="overflow-x-auto w-full gap-4 mx-auto">
+<div class=" overflow-x-auto w-full example  gap-4 mx-auto">
     <?php
     $filteredConventions = [];
     if (!Auth::has_role(Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage, Roles::Staff)) {

@@ -2,6 +2,10 @@
 
 namespace app\src\view\components\ui;
 
+use app\src\view\resources\icons\I_Chevron;
+use app\src\view\resources\icons\I_Close;
+use app\src\view\resources\icons\I_Search;
+
 class Table
 {
     public static function createTable(array $values, array $columns, callable $callback): void
@@ -14,31 +18,41 @@ class Table
         $buttons = "";
 
         if (count($values) > 0) {
-            $buttons = "<button onclick='previousTable(`$id`)' disabled class='h-[40px] w-[40px] border-2 border-zinc-500 rounded-md enabled:hover:text-white enabled:hover:bg-zinc-500 disabled:opacity-50'>&lt;</button>";
-            $nbButtons = ceil(count($values) / 20);
-            for ($i = 1; $i <= $nbButtons && $i <= 5; $i++) {
-                $buttons .= "<button onclick='goToTable(`$id`, $i)' class='h-[40px] w-[40px] border-2 border-zinc-500 rounded-md hover:text-white hover:bg-zinc-500 " . ($i === 1 ? "active" : "") . " [&.active]:text-white [&.active]:bg-zinc-500'>$i</button>";
+            if (count($values) > 20) {
+                $buttons = "<button onclick='previousTable(`$id`)' disabled class='h-[36px] rounded-md hover:bg-zinc-100 disabled:opacity-50 px-2 text-[14px] max-md:hidden'> &lt; Précédent</button>";
+                $nbButtons = ceil(count($values) / 20);
+                for ($i = 1; $i <= $nbButtons && $i <= 5; $i++) {
+                    $buttons .= "<button onclick='goToTable(`$id`, $i)' class='h-[36px] w-[36px] rounded-md hover:bg-zinc-100 duration-200 text-[14px] " . ($i === 1 ? "active" : "") . " [&.active]:drop-shadow-[16px] [&.active]:bg-white [&.active]:border [&.active]:border-zinc-300'>$i</button>";
+                }
+                if ($nbButtons > 5)
+                    $buttons .= "<p>…</p>";
+                $enabled = $nbButtons > 1 ? "" : "disabled";
+                $buttons .= "<button onclick='nextTable(`$id`)' $enabled class='h-[36px] rounded-md hover:bg-zinc-100 disabled:opacity-50 px-2 text-[14px] max-md:hidden '>Suivant &gt;</button>";
             }
-            if ($nbButtons > 5)
-                $buttons .= "<p>...</p>";
-            $enabled = $nbButtons > 1 ? "" : "disabled";
-            $buttons .= "<button onclick='nextTable(`$id`)' $enabled class='h-[40px] w-[40px] border-2 border-zinc-500 rounded-md enabled:hover:text-white enabled:hover:bg-zinc-500 disabled:opacity-50'>&gt;</button>";
         }
 
         echo <<<HTML
-<div class="flex pt-4 mb-4 gap-2 pr-2 w-full">
-    <input onkeydown="if(event.key === 'Enter')search('search-$i', '$id', $cols, '$empty', 'clear-$i')" type="text" id="search-$i" placeholder="Rechercher" class="shadow-sm w-full bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block px-2.5 py-2 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-zinc-500 dark:focus:border-zinc-500 dark:shadow-sm-light">
-   <button onclick="search('search-$i', '$id', $cols, '$empty', 'clear-$i')" class="text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:focus:ring-zinc-800">Rechercher</button>
-<button style="display: none" id="clear-$i" onclick="clearInput('search-$i');search('search-$i', '$id', $cols, '$empty', 'clear-$i')" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">X</button>
+<div class="flex flex-col w-full justify-center items-start overflow-hidden overflow-x-auto example">
+<div class="flex gap-2 w-full mb-2">
+    <input onkeydown="if(event.key === 'Enter')search('search-$i', '$id', $cols, '$empty', 'clear-$i')" type="text" id="search-$i" placeholder="Rechercher" class=" w-full bg-white border text-zinc-900 text-sm rounded-md focus:ring-zinc-500 focus:border-zinc-500 block px-2.5 py-2 ">
+HTML;
+        echo "<button onclick=\"search('search-$i', '$id', $cols, '$empty', 'clear-$i')\" class=\"text-white bg-zinc-700 hover:bg-zinc-800 focus:ring-4 focus:outline-none focus:ring-zinc-300 font-medium rounded-md text-sm px-2.5 py-2.5 text-center\">";
+        echo I_Search::render("w-5 h-5");
+        echo "</button>";
+        echo "<button style=\"display: none\" id=\"clear-$i\" onclick=\"clearInput('search-$i');search('search-$i', '$id', $cols, '$empty', 'clear-$i')\" class=\"text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-md text-sm px-2.5 py-2 text-center\">";
+        echo I_Close::render("w-5 h-5");
+        echo "</button>";
+        echo <<<HTML
 </div>
-<table class="min-w-full divide-y-2 divide-zinc-200 bg-white text-sm" id="$id">
+<div class="rounded-md border w-full overflow-hidden overflow-x-auto example">
+<table class=" divide-y-[1px] divide-zinc-200 bg-white text-sm w-full example" id="$id">
         <thead class="ltr:text-left rtl:text-right">
         <tr>
 HTML;
         for ($i = 0; $i < count($columns); $i++) {
-            echo '<th class="select-none cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-left text-zinc-900 hover:bg-gray-100" onclick="sortTable(\'' . $id . '\', this, ' . $i . ')">
+            echo '<th class="select-none cursor-pointer whitespace-nowrap px-2 py-2 font-medium text-left text-zinc-900 hover:bg-gray-100" onclick="sortTable(\'' . $id . '\', this, ' . $i . ')">
 				<div class="flex justify-between items-center">
-				' . $columns[$i] . ' <i class="fa-solid fa-sort"></i>
+				' . $columns[$i] . I_Chevron::render("w-4 h-4 fa-solid fa-sort ") . '
 				</div>                
             </th>';
         }
@@ -48,7 +62,7 @@ HTML;
         </tr>
         </thead>
 
-        <tbody class="divide-y divide-zinc-200">
+        <tbody class="divide-y-[1px] divide-zinc-100 overflow-hidden w-full ">
 HTML;
         if (count($values) > 0) {
             for ($i = 0; $i < count($values); $i++) {
@@ -62,23 +76,22 @@ HTML;
 HTML;
             }
         }
-        $count = count($values);
         $style = count($values) > 0 ? "display: none" : '';
         echo <<<HTML
 </tbody>
     </table>
+    </div>
     <div class="w-full flex justify-center gap-2 pt-4" id="$id-pagination">
     $buttons
 </div>
-<p class="w-full text-center py-2">$count lignes</p>
     <p id="$empty" style="$style" class="pl-4 pt-2 text-zinc-800">Aucun résultats</p>
-<script src="/resources/js/table.js"></script>
+</div>
 HTML;
     }
 
     public static function button($link, $text = "Voir plus", $color = ""): void
     {
-        $c = "bg-zinc-600 hover:bg-zinc-700";
+        $c = "bg-zinc-800 hover:bg-zinc-900";
         if ($color == "red")
             $c = "bg-red-600 hover:bg-red-700";
         elseif ($color == "green")
@@ -97,11 +110,9 @@ HTML
             $value = "(Vide)";
             $color = "text-zinc-400";
         }
-        echo <<<HTML
-<td class="whitespace-nowrap px-4 py-2 font-medium $color">
-$value
-</td>
-HTML;
+        echo "<td class=\"whitespace-nowrap px-4 py-2 font-medium $color\">";
+        echo $value;
+        echo "</td>";
     }
 
     public static function chip($value, $color): void

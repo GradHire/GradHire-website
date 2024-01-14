@@ -19,9 +19,8 @@ $modal = new Modal("Voulez vous vraiment archiver votre compte ?", "Oui, archive
             </svg>');
 ?>
 
-
-<div class="mx-auto gap-4 mx-auto w-full lg:flex lg:gap-x-16 mx-auto max-w-md">
-    <main class="px-4 sm:px-6 lg:flex-auto lg:px-0">
+<div class="w-full max-w-md gap-4 mx-auto flex flex-col py-[50px]">
+    <div class="px-2">
         <div class="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
             <?php
             if (!is_null($form)) {
@@ -119,7 +118,7 @@ $modal = new Modal("Voulez vous vraiment archiver votre compte ?", "Oui, archive
                                     Changer mot de passe</a>
                             <?php } ?>
                             <p <?= $modal->Show("/utilisateurs/" . $user->id() . "/archiver") ?>
-                                    class="cursor-pointer inline-block rounded-md border border-transparent px-5 py-2 text-center font-medium text-white hover:bg-red-800 bg-red-600 text-sm">
+                                    class="cursor-pointer inline-block rounded-md border border-transparent px-5 py-2 max-md:w-full text-center font-medium text-white hover:bg-red-800 bg-red-600 text-sm">
                                 Archiver
                                 mon compte</p>
                         </div>

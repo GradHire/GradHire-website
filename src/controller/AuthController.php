@@ -43,7 +43,7 @@ class AuthController extends AbstractController
                     }
                 }
             }
-            return $this->render('pro_login', [
+            return $this->render('auth/pro_login', [
                 'form' => $loginForm
             ]);
         } catch (Exception) {
@@ -71,7 +71,7 @@ class AuthController extends AbstractController
                 }
             }
         }
-        return $this->render('login', [
+        return $this->render('auth/login', [
             'form' => $loginForm
         ]);
     }
@@ -166,7 +166,7 @@ class AuthController extends AbstractController
                 }
             }
 
-            return $this->render('register_tutor', [
+            return $this->render('auth/register_tutor', [
                 'enterprise' => $data['nom'],
                 'form' => $form
             ]);
@@ -198,7 +198,7 @@ class AuthController extends AbstractController
                 }
             }
         }
-        return $this->render('register', [
+        return $this->render('auth/register', [
             'form' => $form
         ]);
     }
@@ -225,7 +225,7 @@ class AuthController extends AbstractController
                 }
             }
         }
-        return $this->render('passwordChange', [
+        return $this->render('profile/passwordChange', [
             'form' => $form
         ]);
     }
@@ -239,16 +239,16 @@ class AuthController extends AbstractController
 
     public function aboutreal(): string
     {
-        return $this->render('apropos');
+        return $this->render('info-pages/apropos');
     }
 
     public function conditionutilisation(): string
     {
-        return $this->render('conditionutilisation');
+        return $this->render('info-pages/conditionutilisation');
     }
 
     public function politiqueconfidentialite(): string
     {
-        return $this->render('politiqueconfidentialite');
+        return $this->render('info-pages/politiqueconfidentialite');
     }
 }

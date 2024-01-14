@@ -37,7 +37,7 @@ class LdapRepository extends UtilisateurRepository
             curl_close($curl);
             if ($response !== false) {
                 $response = json_decode($response);
-                if ($response->success) {
+                if ($response && $response->success) {
                     $user = $response->type === "staff" ? StaffRepository::find_by_attribute($response->uid) : EtudiantRepository::find_by_attribute($response->uid);
                     if (!$user) {
                         $user = $response->type === "staff" ? StaffRepository::save([

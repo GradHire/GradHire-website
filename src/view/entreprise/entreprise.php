@@ -16,7 +16,7 @@ if (Auth::has_role(Roles::Enterprise)) {
     throw new ForbiddenException("Vous n'avez pas le droit de voir cette page");
 }
 ?>
-<div class="overflow-x-auto w-full gap-4 mx-auto">
+<div class=" overflow-x-auto w-full example  gap-4 mx-auto">
     <?php
     Table::createTable($entreprises, ["Nom d'entreprise", "Email", "Téléphone", "Site web"], function ($entreprise) {
         Table::cell($entreprise->getNom());
