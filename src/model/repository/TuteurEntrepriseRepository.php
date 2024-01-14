@@ -86,7 +86,7 @@ class TuteurEntrepriseRepository extends ProRepository
 
 	public function getAll(bool $getArchived = false): ?array
 	{
-		$sql = "SELECT * FROM $this->nomtable JOIN Utilisateur u ON u.idUtilisateur=$this->nomtable.idUtilisateur WHERE u.archiver = 0";
+		$sql = "SELECT * FROM \"tuteurvue\" t JOIN Utilisateur u ON u.idUtilisateur=t.idUtilisateur WHERE u.archiver = 0";
 		$data = self::FetchAllAssoc($sql);
 		if (!$data) return null;
 		$resultat = [];

@@ -148,11 +148,11 @@ class Calendar
     {
         echo <<<HTML
             <div class="flex cursor-pointer items-center hover:bg-zinc-100 p-2 gap-2 border-b-[1px] border-zinc-200">
-                <div class="min-w-[40px] md:min-w-[100px] text-[10px]">
+                <div class="min-w-[40px] md:min-w-[100px] text-[10px] md:text-[14px]">
                     {$event->getStart()->format('H:i')} - {$event->getEnd()->format('H:i')}
                 </div>
                 <div class="rounded-full h-[10px] w-[10px]" style="background: {$event->getColor()}"></div>
-                <div class="flex justify-between items-center w-full min-w-[40px] md:min-w-[100px] text-[10px]">                
+                <div class="flex justify-between items-center w-full min-w-[40px] md:min-w-[100px] text-[10px] md:text-[14px]">                
                     {$event->getTitle()}
                     {$event->printBtn()}
                 </div>
