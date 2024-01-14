@@ -92,7 +92,7 @@ use app\src\model\repository\PostulerRepository;
     }
     ?>
     <div class="mt-6 border-t border-zinc-100">
-        <dl class="divide-y divide-zinc-100">
+        <div class="divide-y divide-zinc-100">
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <div class="text-sm font-medium leading-6 text-zinc-900">Statut</div>
                 <div class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
@@ -132,52 +132,54 @@ use app\src\model\repository\PostulerRepository;
                 <div class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><a
                             href="/entreprises/<?= $offre->getIdutilisateur() ?>"><?= $offre->getNomEntreprise() ?></a>
                 </div>
-                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                    <div class="text-sm font-medium leading-6 text-zinc-900">Durée</div>
-                    <div class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?= $offre->getDuree() ?>
-                    </div>
+            </div>
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <div class="text-sm font-medium leading-6 text-zinc-900">Durée</div>
+                <div class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?= $offre->getDuree() ?>
                 </div>
-                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                    <div class="text-sm font-medium leading-6 text-zinc-900">Dates</div>
-                    <div class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?php
-                        try {
-                            $dateDebut = new DateTime($offre->getDatedebut());
-                            if ($offre->getDatefin() != null) $dateFin = new DateTime($offre->getDatefin());
-                            else $dateFin = null;
-                            if ($dateFin == null) echo 'Date non renseignée';
-                            else if ($dateFin < new DateTime()) echo "Terminée";
-                            else if (is_null($offre->getDatefin())) echo "Indéterminée";
-                            else echo "Du " . $dateDebut->format('d/m/Y') . " au " . $dateFin->format('d/m/Y');
-                        } catch (Exception $e) {
-                            echo "Something went wrong.";
-                        }
-                        ?>
-                    </div>
-                    <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                        <div class="text-sm font-medium leading-6 text-zinc-900">Année visée</div>
-                        <div class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?= $offre->getAnneeVisee() ?>
-                            A
-                        </div>
-                    </div>
-                    <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                        <div class="text-sm font-medium leading-6 text-zinc-900">Gratification</div>
-                        <div class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?= $offre->getGratification() ?>
-                            €/h
-                        </div>
-                    </div>
-                    <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                        <div class="text-sm font-medium leading-6 text-zinc-900">Description</div>
-                        <div class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?= $offre->getDescription() ?></div>
-                    </div>
-                    <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                        <div class="text-sm font-medium leading-6 text-zinc-900">Adresse</div>
-                        <div class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
-                            <?php
-                            $adr = $offre->getAdresse();
-                            if ($adr != null) echo $adr;
-                            else echo "Non renseignée";
-                            ?></div>
-                    </div>
-        </dl>
+            </div>
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <div class="text-sm font-medium leading-6 text-zinc-900">Dates</div>
+                <div class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?php
+                    try {
+                        $dateDebut = new DateTime($offre->getDatedebut());
+                        if ($offre->getDatefin() != null) $dateFin = new DateTime($offre->getDatefin());
+                        else $dateFin = null;
+                        if ($dateFin == null) echo 'Date non renseignée';
+                        else if ($dateFin < new DateTime()) echo "Terminée";
+                        else if (is_null($offre->getDatefin())) echo "Indéterminée";
+                        else echo "Du " . $dateDebut->format('d/m/Y') . " au " . $dateFin->format('d/m/Y');
+                    } catch (Exception $e) {
+                        echo "Something went wrong.";
+                    }
+                    ?>
+                </div>
+            </div>
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <div class="text-sm font-medium leading-6 text-zinc-900">Année visée</div>
+                <div class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?= $offre->getAnneeVisee() ?>
+                    A
+                </div>
+            </div>
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <div class="text-sm font-medium leading-6 text-zinc-900">Gratification</div>
+                <div class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?= $offre->getGratification() ?>
+                    €/h
+                </div>
+            </div>
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <div class="text-sm font-medium leading-6 text-zinc-900">Description</div>
+                <div class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?= $offre->getDescription() ?></div>
+            </div>
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <div class="text-sm font-medium leading-6 text-zinc-900">Adresse</div>
+                <div class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
+                    <?php
+                    $adr = $offre->getAdresse();
+                    if ($adr != null) echo $adr;
+                    else echo "Non renseignée";
+                    ?></div>
+            </div>
+        </div>
     </div>
 </div>
