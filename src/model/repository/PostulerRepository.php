@@ -138,23 +138,23 @@ class PostulerRepository extends AbstractRepository
      */
     public static function getByStatementAttenteTuteur(): array
     {
-        $sql = "SELECT nom,sujet,dates,idOffre, idUtilisateur,idEntreprise,statut FROM " . self::$nomTable . " WHERE CAST(statut as TEXT) = 'en attente tuteur prof' OR CAST(statut as TEXT) = 'en attente responsable' OR CAST(statut as TEXT) = 'en attente tuteur entreprise'";
-        return self::FetchAllAssoc($sql);
+        $sql = "SELECT e.nom,e.sujet,e.dates,e.idOffre,e.idUtilisateur,e.idEntreprise,e.statut,u.nom AS nomEntreprise, et.email AS emailEtudiant,s.idUtilisateur AS idTutor FROM " . self::$nomTable . " e JOIN utilisateur u ON u.idUtilisateur = e.idEntreprise JOIN utilisateur et ON et.idUtilisateur = e.idUtilisateur LEFT JOIN Supervise s ON s.idOffre = e.idOffre WHERE CAST(e.statut as TEXT) = 'en attente tuteur prof' OR CAST(e.statut as TEXT) = 'en attente responsable' OR CAST(e.statut as TEXT) = 'en attente tuteur entreprise'";
+        return self::FetchAllAssoc($sql) ?? [];
     }
 
     /**
      * @throws ServerErrorException
      */
-    public static function getByStatementTuteur(int $idutilisateur, string $string): bool|array
+    public static function getByStatementTuteur(int $idutilisateur, string $string): array
     {
         if ($string == 'validee') {
-            $sql = "SELECT nom,sujet,dates,p.idOffre, p.idUtilisateur, su.idUtilisateur as idTuteur,idEntreprise,p.statut FROM " . self::$nomTable . " p JOIN Supervise su ON su.idOffre=p.idOffre WHERE su.statut::text = 'validee' AND su.idutilisateur=:idutilisateur AND CAST(p.statut AS TEXT) = CAST(su.statut AS TEXT)";
+            $sql = "SELECT p.nom,p.sujet,p.dates,p.idOffre, p.idUtilisateur, su.idUtilisateur as idTuteur,idEntreprise,p.statut, u.nom AS nomEntreprise, et.email AS emailEtudiant,su.idUtilisateur AS idTutor FROM " . self::$nomTable . " p JOIN utilisateur u ON u.idUtilisateur = p.idEntreprise JOIN utilisateur et ON et.idUtilisateur = p.idUtilisateur JOIN Supervise su ON su.idOffre=p.idOffre WHERE su.statut::text = 'validee' AND su.idutilisateur=:idutilisateur AND CAST(p.statut AS TEXT) = CAST(su.statut AS TEXT)";
             return self::FetchAllAssoc($sql, ['idutilisateur' => $idutilisateur]);
         } else if ($string == 'refusee') {
-            $sql = "SELECT nom,sujet,dates,p.idOffre, p.idUtilisateur, su.idUtilisateur as idTuteur,idEntreprise,p.statut FROM " . self::$nomTable . " p JOIN Supervise su ON su.idOffre=p.idOffre WHERE su.idUtilisateur = :idutilisateur AND CAST(p.statut AS TEXT) != CAST(su.statut AS TEXT) AND su.statut::text = 'refusee'";
+            $sql = "SELECT p.nom,p.sujet,p.dates,p.idOffre, p.idUtilisateur, su.idUtilisateur as idTuteur,idEntreprise,p.statut, u.nom AS nomEntreprise, et.email AS emailEtudiant,su.idUtilisateur AS idTutor FROM " . self::$nomTable . " p JOIN utilisateur u ON u.idUtilisateur = p.idEntreprise JOIN utilisateur et ON et.idUtilisateur = p.idUtilisateur JOIN Supervise su ON su.idOffre=p.idOffre WHERE su.idUtilisateur = :idutilisateur AND CAST(p.statut AS TEXT) != CAST(su.statut AS TEXT) AND su.statut::text = 'refusee'";
             $data = self::FetchAll($sql, [
                 'idutilisateur' => $idutilisateur
-            ]);
+            ]) ?? [];
             foreach ($data as $item)
                 $item['statut'] = 'refusee';
             return $data;
