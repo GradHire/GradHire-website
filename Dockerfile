@@ -9,8 +9,19 @@ RUN apt-get update && \
     apt-get install -y libpq-dev && \
     docker-php-ext-install pdo pdo_pgsql
 
+# Installer Node.js et npm
+RUN apt-get install curl && \
+    curl -sL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs
+
+
 # Copier le code source dans l'image
 COPY . /var/www/html
+
+# Installer les dépendances Node.js et exécuter le build
+
+RUN npm install && \
+    npm run build
 
 # Exposer le port 8080
 EXPOSE 8080
