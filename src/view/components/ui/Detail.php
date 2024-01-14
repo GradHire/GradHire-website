@@ -45,7 +45,7 @@ HTML;
         }
         echo "</span></div>
 </div>
-<dl class=\"divide-y divide-zinc-100\">
+<div class=\"divide-y divide-zinc-100\"></div>
 <div class=\"px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0\">
                 <div class=\"text-sm font-medium leading-6 text-zinc-900\">Numéro de téléphone</div>
                 <div class=\"mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0\">";

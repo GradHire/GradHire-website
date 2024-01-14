@@ -26,8 +26,8 @@ View::setCurrentSection('Candidatures');
     ?>
     <dl class="divide-y divide-zinc-100">
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt class="text-sm font-medium leading-6 text-zinc-900">Statut</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
+            <div class="text-sm font-medium leading-6 text-zinc-900">Statut</div>
+            <div class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
                 <div>
                     <?php
                     if ($candidatures->getStatut() == "en attente") {
@@ -51,33 +51,33 @@ View::setCurrentSection('Candidatures');
                     }
                     ?>
                 </div>
-            </dd>
+            </div>
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt class="text-sm font-bold leading-6 text-zinc-900">Nom de l'offre :</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?= $offre->getSujet() ?></dd>
+            <div class="text-sm font-bold leading-6 text-zinc-900">Nom de l'offre :</div>
+            <div class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?= $offre->getSujet() ?></div>
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt class="text-sm font-bold leading-6 text-zinc-900">CV de l'étudiant :</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0 bg-blue-500 hover:bg-blue-600 max-w-[125px] max-h-[40px] min-h-[40px] rounded-md flex flex-nowrap gap-2 text-md items-center justify-center">
+            <div class="text-sm font-bold leading-6 text-zinc-900">CV de l'étudiant :</div>
+            <div class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0 bg-blue-500 hover:bg-blue-600 max-w-[125px] max-h-[40px] min-h-[40px] rounded-md flex flex-nowrap gap-2 text-md items-center justify-center">
                 <?php
                 $filepath = "/uploads/" . $candidatures->getIdoffre() . "_" . $candidatures->getIdutilisateur() . "/cv.pdf";
                 echo "<a class='flex flex-nowrap gap-2 text-md items-center justify-center' href=\"$filepath\" download target=\"_blank\">";
                 echo I_Download::render('w-5 h-5 fill-white') . "<span class='text-white'>Télécharger</span>";
                 echo "</a>";
                 ?>
-            </dd>
+            </div>
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt class="text-sm font-bold leading-6 text-zinc-900">Lettre de motivation de l'étudiant :</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0 bg-blue-500 hover:bg-blue-600 max-w-[125px] max-h-[40px] min-h-[40px] rounded-md flex flex-nowrap gap-2 text-md items-center justify-center">
+            <div class="text-sm font-bold leading-6 text-zinc-900">Lettre de motivation de l'étudiant :</div>
+            <div class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0 bg-blue-500 hover:bg-blue-600 max-w-[125px] max-h-[40px] min-h-[40px] rounded-md flex flex-nowrap gap-2 text-md items-center justify-center">
                 <?php
                 $filepath = "/uploads/" . $candidatures->getIdoffre() . "_" . $candidatures->getIdutilisateur() . "/ltm.pdf";
                 echo "<a class='flex flex-nowrap gap-2 text-md items-center justify-center' href=\"$filepath\" download target='_blank'>";
                 echo I_Download::render('w-5 h-5 fill-white') . "<span class='text-white'>Télécharger</span>";
                 echo "</a>";
                 ?>
-            </dd>
+            </div>
         </div>
     </dl>
 </div>
