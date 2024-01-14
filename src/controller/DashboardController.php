@@ -185,14 +185,15 @@ class DashboardController extends AbstractController
         } else if (Auth::has_role(Roles::TutorTeacher)) {
             $visites = VisiteRepository::getAllByUniversityTutorId(Application::getUser()->id());
             $soutenances = SoutenanceRepository::getAllSoutenancesByIdTuteurProf(Application::getUser()->id());
-        } else if (Auth::has_role(Roles::Teacher, Roles::Manager, Roles::ManagerStage, Roles::ManagerAlternance)) {
+        } else if (Auth::has_role(Roles::Teacher, Roles::Manager, Roles::ManagerStage, Roles::ManagerAlternance, Roles::Staff)) {
             $soutenances = SoutenanceRepository::getAllSoutenances();
             $visites = VisiteRepository::getAllVisites();
         } else if (Auth::has_role(Roles::Enterprise)) {
             $visites = VisiteRepository::getAllByEnterpriseId(Application::getUser()->id());
             $soutenances = [];
-        } else
-            throw new ForbiddenException("Vous n'avez pas le droit de voir le calendrier");
+        } else {
+            $soutenances = [];
+        }
 
         foreach ($visites as $visite) {
             if ($visite == null) continue;
