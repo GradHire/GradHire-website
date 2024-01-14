@@ -31,8 +31,8 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
     <div class="flex flex-row gap-2 w-full">
         <?php
         if (Auth::has_role(Roles::Enterprise, Roles::Manager, Roles::ManagerAlternance, Roles::ManagerStage, Roles::Staff)) {
-            echo " <a href=\"/offres/create\" class=\"max-md:hidden border rounded-md bg-white drop-shadow-[10px] p-3 px-4 flex justify-center items-center cursor-pointer\">
-            <svg class=\"w-5 h-5 text-zinc-500 \" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"currentColor\">
+            echo " <a href=\"/offres/create\" class=\"max-md:hidden border rounded-md bg-white drop-shadow-[10px] p-2 px-2.5 flex justify-center items-center cursor-pointer\">
+            <svg class=\"w-4 h-4 text-zinc-500 \" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"currentColor\">
                 <path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M12 4.5v15m7.5-7.5h-15\" />
             </svg>
         </a>";
