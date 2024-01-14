@@ -19,7 +19,7 @@ class PercentageBlock implements ComponentInterface
         $color1 = $params['color1'] ?? '#ffab61';
         $color2 = $params['color2'] ?? '#ff773d';
 
-        echo '<div class="w-full min-w-[300px] max-h-[150px] border rounded-[8px] p-4 flex flex-col items-center justify-start shadow relative " style="background: linear-gradient(90deg, ' . $color1 . ' 0%, ' . $color2 . ' 100%);">
+        echo '<div class="w-full min-w-[200px] max-h-[150px] border rounded-[8px] p-4 flex flex-col items-center justify-start shadow relative " style="background: linear-gradient(90deg, ' . $color1 . ' 0%, ' . $color2 . ' 100%);">
                       <div class="flex flex-row gap-2 justify-center items-center w-full mb-2">
                           <div class="w-[40px] h-[40px] min-h-[40px] min-w-[40px] max-h-[40px] shadow max-w-[40px] rounded-[4px] bg-white border gap-[3px] flex flex-row justify-center items-center">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="' . $color2 . '" stroke-width="1.5" class="w-6 h-6">
@@ -33,17 +33,17 @@ class PercentageBlock implements ComponentInterface
                           </div>
                       </div>
                       <div class="px-4 py-2 min-w-[80px] w-full min-h-[40px] border border-zinc-200 bg-white rounded-[4px] flex flex-row items-center justify-around">
-                          <div class="flex flex-row justify-center items-center w-[30%] ">
-                              <p class="text-5xl font-bold text-zinc-800"><span class="counter" data-target="' . $value . '">0</span></p>
-                              <p class="text-2xl font-medium text-zinc-800 -translate-y-2">%</p>
+                          <div class="flex flex-row justify-center items-center w-[30%]">
+                              <p class="text-3xl lg:text-5xl font-bold text-zinc-800"><span class="counter" data-target="' . $value . '">0</span></p>
+                              <p class="text-xl lg:text-5xl font-medium text-zinc-800 -translate-y-2">%</p>
                           </div>';
         Separator::render(['orientation' => 'vertical', 'height' => '[40px]']);
-        echo '<div class="grid grid-cols-2 gap-2 content-center w-[50%] px-6">
-                        <p class="text-xs font-medium text-zinc-400 place-self-start self-center">' . $text2 . '</p>
-                        <p class="text-md font-medium text-zinc-800 place-self-end self-center flex flex-row">
+        echo '<div class="grid grid-cols-2 gap-2 content-center lg:w-[50%] px-6">
+                        <p class="lg:text-xs text-[10px] font-medium text-zinc-400 place-self-start self-center">' . $text2 . '</p>
+                        <p class="lg:text-md text-[10px] font-medium text-zinc-800 place-self-end self-center flex flex-row">
                         <span class="counter" data-target="' . $value2 . '">0</span><span>%</span></p>
-                        <p class="text-xs font-medium text-zinc-400 place-self-start self-center">' . $text3 . '</p>
-                        <p class="text-md font-medium text-zinc-800 place-self-end self-center flex flex-row"><span class="counter" data-target="' . $value3 . '">0</span><span>%</span></p>
+                        <p class="lg:text-xs text-[10px] font-medium text-zinc-400 place-self-start self-center">' . $text3 . '</p>
+                        <p class="lg:text-md text-[10px] font-medium text-zinc-800 place-self-end self-center flex flex-row"><span class="counter" data-target="' . $value3 . '">0</span><span>%</span></p>
                     </div>
                   </div>
                 </div>';

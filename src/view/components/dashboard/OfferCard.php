@@ -30,7 +30,7 @@ class OfferCard implements ComponentInterface
                         <div class="w-full flex flex-row justify-between items-center text-xs">
                             <div class="grid grid-cols-2 max-w-[200px]">
                             <p class="font-light text-zinc-400">Nom Entreprise : </p>
-                                                <a class="hover:underline" href="/entreprises/{$offre['idutilisateur']}">{$offre['nomentreprise']}</a>
+                                                <a class="underline text-blue-500" href="/entreprises/{$offre['idutilisateur']}">{$offre['nomentreprise']}</a>
                             <p class="font-light text-zinc-400">Sujet : </p>
                                                 <p>{$offre['sujet']}</p>
             
@@ -42,10 +42,10 @@ class OfferCard implements ComponentInterface
                             <p class="font-light text-zinc-400">Description : </p>
                                                 <p>$description</p>
                             <p class="font-light text-zinc-400">Email : </p>
-                                                <p><a class="hover:underline" href="mailto:{$offre['emailentreprise']}">$mail</a></p>
+                                                <p><a class="underline text-blue-500" href="mailto:{$offre['emailentreprise']}">$mail</a></p>
             
                             <p class="font-light text-zinc-400">Telephone : </p>
-                            <p><a class="hover:underline" href="tel:{$offre['telephoneentreprise']}">{$offre['telephoneentreprise']}</a></p>
+                            <p><a class="underline text-blue-500" href="tel:{$offre['telephoneentreprise']}">{$offre['telephoneentreprise']}</a></p>
                             </div>
                             <div class="h-full w-[1px] bg-zinc-300"></div>
                             <div class="rounded-[8px] border overflow-hidden">

@@ -21,7 +21,7 @@ $this->title = 'Tuteurs';
 
 $modal = new Modal("Voulez vous vraiment supprimer ce tuteur ?", "Supprimer", "");
 ?>
-<div class="overflow-x-auto w-full pt-12">
+<div class=" overflow-x-auto w-full example  pt-12">
     <?php
 
     if (Auth::has_role(Roles::Enterprise)) {
@@ -61,7 +61,7 @@ $modal = new Modal("Voulez vous vraiment supprimer ce tuteur ?", "Supprimer", ""
 </div>
 <?php
 if (count($waiting) > 0) { ?>
-    <div class="overflow-x-auto w-full pt-6">
+    <div class=" overflow-x-auto w-full example  pt-6">
         <h2 class="font-bold text-lg mt-4">Liste des tuteurs en attente</h2>
         <?php
         Table::createTable($waiting, ["email"], function ($tuteur) {
@@ -72,7 +72,7 @@ if (count($waiting) > 0) { ?>
 <?php }
 if (Auth::has_role(Roles::Manager, Roles::Staff)) {
 ?>
-<div class="overflow-x-auto w-full pt-12">
+<div class=" overflow-x-auto w-full example  pt-12">
     <h2 class="font-bold text-lg">Liste des tuteurs Universitaire</h2>
     <?php
     $tuteurs = new StaffRepository([]);

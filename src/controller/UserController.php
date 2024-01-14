@@ -33,7 +33,7 @@ class UserController extends AbstractController
             if (is_null($user)) throw new ForbiddenException();
             $user->setId($user->attributes["idutilisateur"]);
         }
-        return $this->render('/profile', [
+        return $this->render('profile/profile', [
             'user' => $user,
             'form' => null
         ]);
@@ -108,7 +108,7 @@ class UserController extends AbstractController
             }
 
         }
-        return $this->render('profile', [
+        return $this->render('profile/profile', [
             'form' => $form,
             'user' => $user
         ]);

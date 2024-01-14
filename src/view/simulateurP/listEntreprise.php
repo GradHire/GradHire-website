@@ -11,7 +11,7 @@ $entreprises = $entreprises->getAll();
     <a href="/creerEntreprise"
        class="ml-3 inline-block rounded bg-zinc-600 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700">Créer-la</a>
 </div>
-<div class="overflow-x-auto w-full pb-24">
+<div class=" overflow-x-auto w-full example  pb-24">
     <?php
     Table::createTable($entreprises, ["Nom d'entreprise", "Numéro Siret", "Adresse", "Code Postal", "Commune", "Pays"], function ($entreprise) {
         Table::cell($entreprise->getNom());

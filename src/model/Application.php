@@ -94,7 +94,7 @@ class Application
         try {
             echo $this->router->resolve();
         } catch (\Exception $e) {
-            echo $this->router->renderView('_error', ['exception' => $e,]);
+            echo $this->router->renderView('errors/_error', ['exception' => $e,]);
         }
     }
 

@@ -1,12 +1,7 @@
-let oldTh = null;
 const tables = {}
 const nbRows = 20;
 
 function sortTable(tableId, th, n) {
-    if (oldTh != null) {
-        oldTh.querySelector('.fa-solid').className = 'fa-solid fa-sort';
-    }
-    oldTh = th;
     let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
     table = document.getElementById(tableId);
     switching = true;
@@ -118,12 +113,12 @@ function updateTablePagination(id) {
     pagination.innerHTML = ''
 
     const previous = document.createElement('button');
-    previous.innerText = '<';
+    previous.innerText = '< Précédent';
     previous.disabled = !(tables[id].currentPage > 1 && tables[id].pages > 1);
     previous.onclick = function () {
         previousTable(id)
     }
-    previous.className = 'h-[40px] w-[40px] border-2 border-zinc-500 rounded-md enabled:hover:text-white enabled:hover:bg-zinc-500 disabled:opacity-50'
+    previous.className = 'h-[36px] rounded-md hover:bg-zinc-100 disabled:opacity-50 px-2 text-[14px] max-md:hidden'
     pagination.appendChild(previous)
 
     let start = tables[id].currentPage - 2;
@@ -132,7 +127,7 @@ function updateTablePagination(id) {
 
     if (start > 1) {
         const p = document.createElement('p');
-        p.innerText = '...';
+        p.innerText = '…';
         pagination.appendChild(p)
     }
 
@@ -142,7 +137,7 @@ function updateTablePagination(id) {
         button.onclick = function () {
             goToTable(id, i)
         }
-        button.className = 'h-[40px] w-[40px] border-2 border-zinc-500 rounded-md hover:text-white hover:bg-zinc-500 [&.active]:text-white [&.active]:bg-zinc-500'
+        button.className = 'h-[36px] w-[36px] rounded-md hover:bg-zinc-100 duration-200 text-[14px] [&.active]:drop-shadow-[16px] [&.active]:bg-white [&.active]:border [&.active]:border-zinc-300'
 
         if (i === tables[id].currentPage)
             button.classList.add('active')
@@ -151,17 +146,17 @@ function updateTablePagination(id) {
 
     if (tables[id].pages - tables[id].currentPage > 2) {
         const p = document.createElement('p');
-        p.innerText = '...';
+        p.innerText = '…';
         pagination.appendChild(p)
     }
 
     const next = document.createElement('button');
-    next.innerText = '>';
+    next.innerText = 'Suivant >';
     next.disabled = tables[id].currentPage >= tables[id].pages;
     next.onclick = function () {
         nextTable(id)
     }
-    next.className = 'h-[40px] w-[40px] border-2 border-zinc-500 rounded-md enabled:hover:text-white enabled:hover:bg-zinc-500 disabled:opacity-50'
+    next.className = 'h-[36px] rounded-md hover:bg-zinc-100 disabled:opacity-50 px-2 text-[14px] max-md:hidden'
     pagination.appendChild(next)
 }
 

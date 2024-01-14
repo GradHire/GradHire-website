@@ -30,7 +30,7 @@ class Chatbot implements ComponentInterface
         echo <<<HTML
 <div id="chatbot"
      style="display: none"
-     class="w-[300px] md:w-[350px] !fixed bottom-[20px] right-[20px] bg-white shadow-xl rounded-3xl border border-zinc-200 p-4 z-20">
+     class="w-[250px] md:w-[350px] !fixed bottom-[20px] right-[20px] bg-white shadow-xl rounded-3xl border border-zinc-200 p-4 z-20">
     <div class="flex justify-between w-full pb-2">
         <p class="text-zinc-800 font-bold">Gilou bot</p>
         <button class="p-1 rounded bg-zinc-800"
@@ -62,7 +62,7 @@ class Chatbot implements ComponentInterface
 </div>
 <button id="chatbot-button"
         onclick="openChatbot()"
-        class="fixed bottom-[20px] right-[20px] bg-blue-500 hover:bg-blue-600 focus:ring-blue-300 rounded-full p-3"> 
+        class="fixed bottom-[20px] right-[20px] bg-blue-500 hover:bg-blue-600 focus:ring-blue-300 rounded-full p-3 drop-shadow"> 
         $i_chat_render
 </button>
 HTML;

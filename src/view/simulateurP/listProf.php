@@ -5,7 +5,7 @@ use app\src\view\components\ui\Table;
 
 ?>
 <h1 class=" mx-auto max-w-md font-medium text-2xl ">Simulateur Pstage (Professeur Référent)</h1>
-<div class="overflow-x-auto w-full pb-24">
+<div class=" overflow-x-auto w-full example  pb-24">
     <?php
     Table::createTable($listProf, ["Nom", "Prénom", "Téléphone", "Mail"], function ($prof) {
         Table::cell($prof->getNom());
