@@ -29,7 +29,7 @@ class Calendar
         $padding = count($events) == 0 ? 'pb-4' : 'mb-12 ';
         echo <<<HTML
             <div class="w-full $padding gap-2 pt-4 border-x-[1px] border-t-[1px] border-zinc-200 rounded-md flex flex-col relative bg-white drop-shadow-[10px]">
-                <div class="absolute top-4 right-4 flex gap-2">
+                <div class="absolute top-4 right-4 flex gap-2 select-none">
                     <div class="calendar-arrow disabled bg-blue-500 hover:bg-blue-600 rounded-lg" id="calendar-prev" onclick="calendarPrev()">
                         <span class="stroke-white text-white">&lt;</span>
                     </div>
