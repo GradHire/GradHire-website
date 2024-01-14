@@ -140,8 +140,8 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                 <div class="w-full flex justify-center gap-2 pt-4">
                     <!-- Add your pagination buttons here -->
                     <?php if ($visibleOffersValideCount > $itemsPerPage): ?>
-                        <button onclick="prevPageValide()">Previous</button>
-                        <button onclick="nextPageValide()">Next</button>
+                        <button onclick="prevPageValide()">Précédent</button>
+                        <button onclick="nextPageValide()">Suivant</button>
                     <?php endif; ?>
                 </div>
                 <?php if (Auth::has_role(Roles::Manager, Roles::Staff)) {
@@ -167,8 +167,8 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                 <div class="w-full flex justify-center gap-2 pt-4">
                     <!-- Add your pagination buttons here -->
                     <?php if ($visibleOffersAttenteCount > $itemsPerPage): ?>
-                        <button onclick="prevPageAttente()">Previous</button>
-                        <button onclick="nextPageAttente()">Next</button>
+                        <button onclick="prevPageAttente()">Précédent</button>
+                        <button onclick="nextPageAttente()">Suivant</button>
                     <?php endif; ?>
                 </div>
                 <?php if (Auth::has_role(Roles::Manager, Roles::Staff)) {
@@ -177,9 +177,10 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                     echo '<h2 class="font-bold text-lg">Offres Archiver</h2>';
                 }
                 ?>
-                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch" id="offres-container-refuser">
+                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch"
+                     id="offres-container-refuser">
                     <?php
-                    if ($offres != null){
+                    if ($offres != null) {
                         $visibleOffersRefuserCount = 0;
                         foreach ($offres as $offre) {
                             if ($offre["statut"] === "archiver" && Auth::has_role(Roles::Manager, Roles::Staff)) {
@@ -193,8 +194,8 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                 <div class="w-full flex justify-center gap-2 pt-4">
                     <!-- Add your pagination buttons here -->
                     <?php if ($visibleOffersRefuserCount > $itemsPerPage): ?>
-                        <button onclick="prevPageRefuser()">Previous</button>
-                        <button onclick="nextPageRefuser()">Next</button>
+                        <button onclick="prevPageRefuser()">Précédent</button>
+                        <button onclick="nextPageRefuser()">Suivant</button>
                     <?php endif; ?>
                 </div>
             </div>
