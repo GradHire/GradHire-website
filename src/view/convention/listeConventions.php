@@ -53,7 +53,7 @@ View::setCurrentSection('Conventions');
             else if ($getConventionValideePedagogiquement == "1" && $getConventionValidee == "0")
                 Table::button("/unvalidateConventionPedagogiquement/" . $getNumConvention, "Invalider");
             else
-                Table::cell("");
+                Table::cell("déja validée");
 
         } else if (Auth::has_role(Roles::Enterprise)) {
             if ($getConventionValidee == "0" && $getConventionValideePedagogiquement == "1")
