@@ -1,6 +1,5 @@
 <?php
 
-use app\src\core\components\Modal;
 use app\src\model\Auth;
 use app\src\model\dataObject\Roles;
 use app\src\model\repository\EtudiantRepository;

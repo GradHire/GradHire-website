@@ -105,37 +105,26 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
 
                     if ($offres != null) {
                         $visibleOffersValideCount = 0;
-
                         foreach ($offres as $offre) {
-                            if ($offre["statut"] !== "valider") {
-                                continue; // Skip non-validated offers
-                            }
-
-                            // Display the offer
-                            if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher, Roles::TutorTeacher)) {
-                                require __DIR__ . '/offre.php';
-                            } else if (!Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Teacher, Roles::Tutor, Roles::TutorTeacher) && $offre["statut"] !== "archiver") {
-                                if (Application::getUser()->attributes()["annee"] == 3 && $offre["anneevisee"] == 2) {
-                                    continue;
-                                } else {
-                                    require __DIR__ . '/offre.php';
-                                }
-                            } else if (Auth::has_role(Roles::Enterprise, Roles::Tutor) && $offre->getIdutilisateur() == Application::getUser()->id()) {
-                                require __DIR__ . '/offre.php';
-                            }
-
+                            if ($offre["statut"] !== "valider") continue;
+                            if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher, Roles::TutorTeacher)) require __DIR__ . '/offre.php';
+                            else if (!Auth::has_role(Roles::Manager, Roles::Staff, Roles::Enterprise, Roles::Teacher, Roles::Tutor, Roles::TutorTeacher) && $offre["statut"] !== "archiver") {
+                                if (Application::getUser()->attributes()["annee"] == 3 && $offre["anneevisee"] == 2) continue;
+                                else require __DIR__ . '/offre.php';
+                            } else if (Auth::has_role(Roles::Enterprise, Roles::Tutor) && $offre->getIdutilisateur() == Application::getUser()->id()) require __DIR__ . '/offre.php';
                             $visibleOffersValideCount++;
                         }
-                    } else {
-                        require __DIR__ . '/errorOffre.php';
-                    }
+                    } else require __DIR__ . '/errorOffre.php';
                     ?>
                 </div>
                 <div class="w-full flex justify-center gap-2 pt-4">
-                    <!-- Add your pagination buttons here -->
                     <?php if ($visibleOffersValideCount > $itemsPerPage): ?>
-                        <button onclick="prevPageValide()">Précédent</button>
-                        <button onclick="nextPageValide()">Suivant</button>
+                        <button class="hover:bg-zinc-200 px-2 py-1 rounded-md duration-200" onclick="prevPageValide()">
+                            Précédent
+                        </button>
+                        <button class="hover:bg-zinc-200 px-2 py-1 rounded-md duration-200" onclick="nextPageValide()">
+                            Suivant
+                        </button>
                     <?php endif; ?>
                 </div>
                 <?php if (Auth::has_role(Roles::Manager, Roles::Staff)) {
@@ -161,8 +150,12 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                 <div class="w-full flex justify-center gap-2 pt-4">
                     <!-- Add your pagination buttons here -->
                     <?php if ($visibleOffersAttenteCount > $itemsPerPage): ?>
-                        <button onclick="prevPageAttente()">Précédent</button>
-                        <button onclick="nextPageAttente()">Suivant</button>
+                        <button class="hover:bg-zinc-200 px-2 py-1 rounded-md duration-200" onclick="prevPageAttente()">
+                            Précédent
+                        </button>
+                        <button class="hover:bg-zinc-200 px-2 py-1 rounded-md duration-200" onclick="nextPageAttente()">
+                            Suivant
+                        </button>
                     <?php endif; ?>
                 </div>
                 <?php if (Auth::has_role(Roles::Manager, Roles::Staff)) {
@@ -186,10 +179,13 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                     echo "</div>"; ?>
                 </div>
                 <div class="w-full flex justify-center gap-2 pt-4">
-                    <!-- Add your pagination buttons here -->
                     <?php if ($visibleOffersRefuserCount > $itemsPerPage): ?>
-                        <button onclick="prevPageRefuser()">Précédent</button>
-                        <button onclick="nextPageRefuser()">Suivant</button>
+                        <button class="hover:bg-zinc-200 px-2 py-1 rounded-md duration-200" onclick="prevPageRefuser()">
+                            Précédent
+                        </button>
+                        <button class="hover:bg-zinc-200 px-2 py-1 rounded-md duration-200" onclick="nextPageRefuser()">
+                            Suivant
+                        </button>
                     <?php endif; ?>
                 </div>
             </div>

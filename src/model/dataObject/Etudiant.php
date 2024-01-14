@@ -26,9 +26,8 @@ class Etudiant extends Utilisateur
     {
         parent::__construct($attributes);
         foreach ($attributes as $key => $value)
-            if (property_exists($this, $key)) {
-                $this->$key = $value;
-            }
+            if (property_exists($this, $key)) $this->$key = $value;
+
     }
 
     public static function getConvId(): int
@@ -189,5 +188,11 @@ class Etudiant extends Utilisateur
     protected function getValueColonne(string $nomColonne): string
     {
         return $this->strval($$nomColonne);
+    }
+
+    private function strval($param): string
+    {
+        if (is_null($param)) return "NULL";
+        else return "'" . $param . "'";
     }
 }

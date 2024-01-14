@@ -9,7 +9,7 @@ use app\src\model\repository\PostulerRepository;
 ?>
 
 <div class="w-full gap-4 mx-auto">
-    <div class="w-full pb-6 flex md:flex-row flex-col justify-between items-start">
+    <div class="w-full pb-6 flex md:flex-row flex-col justify-between md:items-start items-center">
         <div class="px-4 sm:px-0">
             <h3 class="text-xl font-semibold leading-7 text-zinc-900"><?= $offre->getSujet() ?></h3>
             <p class="mt-1 max-w-2xl text-sm leading-6 text-zinc-500">

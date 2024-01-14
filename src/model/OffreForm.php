@@ -8,7 +8,7 @@ use app\src\model\repository\MailRepository;
 use app\src\model\repository\StaffRepository;
 use PDOException;
 
-class OffreForm extends Model
+class OffreForm
 {
     public static function creerOffre(Offre $offre, ?string $typeStage, ?string $typeAlternance, ?float $distanciel)
     {
