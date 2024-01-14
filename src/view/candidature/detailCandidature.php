@@ -7,14 +7,17 @@ use app\src\model\dataObject\Roles;
 use app\src\model\repository\EtudiantRepository;
 use app\src\model\repository\OffresRepository;
 use app\src\model\repository\UtilisateurRepository;
+use app\src\model\View;
+use app\src\view\resources\icons\I_Download;
 
 $etudiant = (new EtudiantRepository([]))->getByIdFull($candidatures->getIdutilisateur());
 $nometudiant = (new UtilisateurRepository([]))->getUserById($candidatures->getIdutilisateur())->getNom();
 $offre = (new OffresRepository())->getById($candidatures->getIdoffre());
-
+$this->title = 'Candidature';
+View::setCurrentSection('Candidatures');
 ?>
 
-<div class="mt-6 border-zinc-100 gap-4 mx-auto max-w-md">
+<div class="w-full max-w-md gap-4 mx-auto flex flex-col md:py-[50px]">
     <?php
     echo '<h2 class="font-bold text-lg">Candidature de 
 ' . $etudiant->getPrenom() . " " . $etudiant->getNom() . '
@@ -50,35 +53,29 @@ $offre = (new OffresRepository())->getById($candidatures->getIdoffre());
             </dd>
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt class="text-sm font-medium leading-6 text-zinc-900">Nom de l'offre</dt>
+            <dt class="text-sm font-bold leading-6 text-zinc-900">Nom de l'offre :</dt>
             <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0"><?= $offre->getSujet() ?></dd>
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt class="text-sm font-medium leading-6 text-zinc-900">CV de l'étudiant</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
+            <dt class="text-sm font-bold leading-6 text-zinc-900">CV de l'étudiant :</dt>
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0 bg-blue-500 hover:bg-blue-600 max-w-[125px] max-h-[40px] min-h-[40px] rounded-md flex flex-nowrap gap-2 text-md items-center justify-center">
                 <?php
                 $filepath = "/uploads/" . $candidatures->getIdoffre() . "_" . $candidatures->getIdutilisateur() . "/cv.pdf";
-                echo "<a href='" . $filepath . "' download target='_blank'>"; ?>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                     stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
-                </svg>
-                </a>
+                echo "<a class='flex flex-nowrap gap-2 text-md items-center justify-center' href=\" . $filepath . \" download target=\"_blank\">";
+                echo I_Download::render('w-5 h-5 fill-white') . "<span class='text-white'>Télécharger</span>";
+                echo "</a>";
+                ?>
             </dd>
         </div>
         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt class="text-sm font-medium leading-6 text-zinc-900">Lettre de motivation de l'étudiant</dt>
-            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0">
+            <dt class="text-sm font-bold leading-6 text-zinc-900">Lettre de motivation de l'étudiant :</dt>
+            <dd class="mt-1 text-sm leading-6 text-zinc-700 sm:col-span-2 sm:mt-0 bg-blue-500 hover:bg-blue-600 max-w-[125px] max-h-[40px] min-h-[40px] rounded-md flex flex-nowrap gap-2 text-md items-center justify-center">
                 <?php
                 $filepath = "/uploads/" . $candidatures->getIdoffre() . "_" . $candidatures->getIdutilisateur() . "/ltm.pdf";
-                echo "<a href='" . $filepath . "' download target='_blank'>"; ?>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                     stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
-                </svg>
-                </a>
+                echo "<a class='flex flex-nowrap gap-2 text-md items-center justify-center' href=\" . $filepath . \" download target='_blank'>";
+                echo I_Download::render('w-5 h-5 fill-white') . "<span class='text-white'>Télécharger</span>";
+                echo "</a>";
+                ?>
             </dd>
         </div>
     </dl>

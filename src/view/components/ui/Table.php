@@ -18,9 +18,9 @@ class Table
         $buttons = "";
 
         if (count($values) > 0) {
-            if (count($values) > 20) {
+            if (count($values) > 10) {
                 $buttons = "<button onclick='previousTable(`$id`)' disabled class='h-[36px] rounded-md hover:bg-zinc-100 disabled:opacity-50 px-2 text-[14px] max-md:hidden'> &lt; Précédent</button>";
-                $nbButtons = ceil(count($values) / 20);
+                $nbButtons = ceil(count($values) / 10);
                 for ($i = 1; $i <= $nbButtons && $i <= 5; $i++) {
                     $buttons .= "<button onclick='goToTable(`$id`, $i)' class='h-[36px] w-[36px] rounded-md hover:bg-zinc-100 duration-200 text-[14px] " . ($i === 1 ? "active" : "") . " [&.active]:drop-shadow-[16px] [&.active]:bg-white [&.active]:border [&.active]:border-zinc-300'>$i</button>";
                 }
@@ -66,7 +66,7 @@ HTML;
 HTML;
         if (count($values) > 0) {
             for ($i = 0; $i < count($values); $i++) {
-                $hidden = $i >= 20 ? "hidden" : "";
+                $hidden = $i >= 10 ? "hidden" : "";
                 echo <<<HTML
 <tr class="odd:bg-zinc-50 $hidden">
 HTML;

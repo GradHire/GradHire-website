@@ -63,45 +63,47 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
                     </svg>
                 </a>
             </div>
-            <div class="h-full w-full z-40 flex gap-1.5 flex-col relative items-start max-sm:max-h-[550px] overflow-y-auto example">
-                <div class="w-full flex flex-row justify-between items-center">
-                    <span class="uppercase text-zinc-400 font-light text-[8px] duration-300 tracking-widest sectionText <?= $isOpen ? " text-[12px] " : " text-[8px] " ?>">Sections</span>
-                    <button <?= $modalAddSection ? $modalAddSection->Show() : "" ?>
-                            class="flex items-center justify-center">
+            <div class="h-full w-full">
+                <div class="h-full w-full z-40 flex gap-1.5 flex-col relative items-start max-md:max-h-[500px] max-h-[550px] overflow-y-auto example">
+                    <div class="w-full flex flex-row justify-between items-center">
+                        <span class="uppercase text-zinc-400 font-light text-[8px] duration-300 tracking-widest sectionText <?= $isOpen ? " text-[12px] " : " text-[8px] " ?>">Sections</span>
+                        <button <?= $modalAddSection ? $modalAddSection->Show() : "" ?>
+                                class="flex items-center justify-center">
                         <span class="sectionAdd" style="display: <?= $isOpen ? "block" : "none" ?>">
                         <?= I_More::render('w-5 h-5 hover:fill-zinc-800 fill-zinc-400 duration-300 ') ?>
                         </span>
-                    </button>
-                </div>
-                <?php
-                foreach ($sections as $sectionId) {
-                    if (isset($allSections[$sectionId])) {
-                        $section = $allSections[$sectionId];
-                        $filteredSections[$sectionId] = $section;
-                        if ($section['href'] === 'logout') continue;
-                        Lien::render($section);
+                        </button>
+                    </div>
+                    <?php
+                    foreach ($sections as $sectionId) {
+                        if (isset($allSections[$sectionId])) {
+                            $section = $allSections[$sectionId];
+                            $filteredSections[$sectionId] = $section;
+                            if ($section['href'] === 'logout') continue;
+                            Lien::render($section);
+                        }
                     }
-                }
-                Separator::render([]);
-                ?>
-                <div class="w-full flex flex-row justify-between items-center">
-                    <span class="uppercase text-zinc-400 font-light text-[8px] duration-300 tracking-widest sectionText <?= $isOpen ? " text-[12px] " : " text-[8px] " ?>">Actions</span>
-                    <button <?= $modalAddAction ? $modalAddAction->Show() : "" ?>
-                            class="flex items-center justify-center">
+                    Separator::render([]);
+                    ?>
+                    <div class="w-full flex flex-row justify-between items-center">
+                        <span class="uppercase text-zinc-400 font-light text-[8px] duration-300 tracking-widest sectionText <?= $isOpen ? " text-[12px] " : " text-[8px] " ?>">Actions</span>
+                        <button <?= $modalAddAction ? $modalAddAction->Show() : "" ?>
+                                class="flex items-center justify-center">
                         <span class="sectionAdd" style="display: <?= $isOpen ? "block" : "none" ?>">
                         <?= I_More::render('w-5 h-5 hover:fill-zinc-800 fill-zinc-400 duration-300 ') ?>
                         </span>
-                    </button>
-                </div>
-                <?php
-                foreach ($actions as $actionId) {
-                    if (isset($allActions[$actionId])) {
-                        $action = $allActions[$actionId];
-                        $filteredActions[$actionId] = $action;
-                        Lien::render($action);
+                        </button>
+                    </div>
+                    <?php
+                    foreach ($actions as $actionId) {
+                        if (isset($allActions[$actionId])) {
+                            $action = $allActions[$actionId];
+                            $filteredActions[$actionId] = $action;
+                            Lien::render($action);
+                        }
                     }
-                }
-                ?>
+                    ?>
+                </div>
             </div>
             <div class="flex items-start justify-start flex-col gap-4 w-full">
                 <?php Separator::render([]) ?>
@@ -121,10 +123,11 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
       </span>
         </button>
     </div>
-    <div id="centerContainer" class="flex-col flex w-full  <?= $isOpen ? "max-w-[calc(100%-275px)]" : "w-[calc(100%-75px)]" ?> max-h-screen bg-white">
+    <div id="centerContainer"
+         class="flex-col flex w-full  <?= $isOpen ? "max-w-[calc(100%-275px)]" : "max-w-[calc(100%-75px)]" ?> max-h-screen bg-white">
         <div class="sticky top-0 z-10 flex items-start justify-between flex-row gap-4 w-full py-2 bg-white pr-4 md:pr-8">
             <div class="w-full flex flex-row items-center justify-between h-[40px] px-4">
-                <span class="md:text-lg text-[14px] tracking-widest font-bold uppercase md:first-letter:text-2xl first-letter:text-lg first-letter:font-extrabold max-md:max-w-[100px]">
+                <span class="md:text-lg text-[14px] tracking-widest font-bold uppercase md:first-letter:text-2xl first-letter:text-lg leading-3 first-letter:font-extrabold max-md:max-w-[100px]">
                 <?= $this->title ?>
                 </span>
             </div>
@@ -151,7 +154,8 @@ $isOpen = isset($_COOKIE['sidebar_open']) && $_COOKIE['sidebar_open'] == 'true';
                 </a>
             </div>
         </div>
-        <div class=" w-[calc(100%-16px)]  mr-4 flex flex-col justify-start items-start p-4 rounded-3xl gap-4 bg-zinc-50 border h-screen mb-4 overflow-auto example">
+        <div id="contentToHide"
+             class=" w-[calc(100%-16px)] mr-4 flex flex-col justify-start items-start p-4 rounded-3xl gap-4 bg-zinc-50 border h-screen mb-4 overflow-auto example duration-300 ease-out <?= $isOpen ? "max-sm:opacity-0 max-sm:invisible" : "max-sm:opacity-100 max-sm:visible" ?>">
             <?php Notification::show(); ?>
             {{content}}
             <?php
