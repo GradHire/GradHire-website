@@ -2,7 +2,11 @@
 /** @var $utilisateur Etudiant */
 
 use app\src\model\dataObject\Etudiant;
+use app\src\model\View;
 use app\src\view\components\ui\Detail;
+
+$this->title = 'Etudiant';
+View::setCurrentSection('Utilisateurs');
 
 Detail::render([$utilisateur]);
 Detail::addDetail("Prenom", $utilisateur->getPrenom());

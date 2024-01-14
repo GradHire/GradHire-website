@@ -108,11 +108,11 @@ View::setCurrentSection('Soutenances');
             ?>
             <div class="w-full gap-2 md:gap-6 flex md:flex-row flex-col">
                 <a href="/calendar"
-                   class="btn btn-primary bg-blue-500 hover:bg-blue-600 text-center py-2 px-4 text-white rounded-md w-full">
+                   class="btn btn-primary bg-blue-500 hover:bg-blue-600 text-center py-2 px-4 max-h-[45px] text-white rounded-md w-full">
                     Retour au calendrier
                 </a>
                 <a href="/noteSoutenance/<?php echo $soutenance->getNumConvention() ?>"
-                   class="btn btn-primary bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md text-center w-full">Noter
+                   class="btn btn-primary bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 max-h-[45px] rounded-md text-center w-full">Noter
                     la
                     soutenance</a>
             </div>

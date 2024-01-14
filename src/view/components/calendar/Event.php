@@ -51,7 +51,7 @@ class Event
         if ($this->btn !== "") {
             return <<<HTML
 <a href="$this->url"
-	   class="inline-block rounded  px-4 py-2 text-xs font-medium text-white bg-zinc-600 hover:bg-zinc-700">$this->btn</a>
+	   class="inline-block rounded ml-2 px-2 py-1 md:px-4 md:py-2 text-[10px] text-center md:text-xs font-medium text-white bg-zinc-800 hover:bg-zinc-900">$this->btn</a>
 HTML;
         }
         return '';

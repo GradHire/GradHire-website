@@ -2,6 +2,7 @@
 
 use app\src\model\dataObject\Visite;
 use app\src\model\Form\FormModel;
+use app\src\model\View;
 
 /**
  * @var Visite|null $visite
@@ -10,62 +11,65 @@ use app\src\model\Form\FormModel;
  * @var string $addresse
  * @var array $commentaires
  */
+
+$this->title = 'Visite';
+View::setCurrentSection('Visites');
 ?>
+<div class="w-full gap-2 mx-auto flex flex-col md:pt-[50px] border bg-white p-2 md:p-4 rounded-md drop-shadow-[10px]">
+    <?php if ($visite != null) : ?>
+        <div class="mb-4 text-center">
+            <h2 class="md:text-3xl text-xl font-bold text-zinc-900">
+                Visite en entreprise - Convention <?= htmlspecialchars($visite->getNumConvention()) ?>
+            </h2>
+            <div class="text-gray-700 mt-2">
+                Prévue pour le <?= htmlspecialchars($visite->getDebutVisite()->format("d/m/Y")) ?>,
+                de <?= htmlspecialchars($visite->getDebutVisite()->format("H\hi")) ?>
+                à <?= htmlspecialchars($visite->getFinVisite()->format("H\hi")) ?>
+            </div>
+            <p class="font-semibold text-gray-800 mt-4">
+                <span class="text-lg">Adresse de l'entreprise:</span> <?= htmlspecialchars($addresse) ?>
+            </p>
+        </div>
 
-<div class="w-full flex flex-col justify-center content-center mt-5">
-    <?php if ($visite != null) { ?>
-        <h2 class="font-bold text-2xl ">Visite en entreprise pour la
-            convention <?= $visite->getNumConvention() ?> de <?= $name ?></h2>
-        <div class="text-gray-600 mb-4">
-            Elle se déroulera le <?= $visite->getDebutVisite()->format("d/m/Y") ?>
-            de <?= $visite->getDebutVisite()->format("H\hi") ?>
-            à <?php echo $visite->getFinVisite()->format("H\hi") ?>
+        <div class="map-container mb-8">
+            <iframe class="w-full h-[300px] rounded-md shadow" frameborder="0" scrolling="no" marginheight="0"
+                    marginwidth="0"
+                    src="https://maps.google.com/maps?q=<?= urlencode($addresse) ?>&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
         </div>
-        <p class="mb-2"><span class="font-bold">Adresse de l'entreprise:</span> <?= $addresse ?></p>
-        <iframe
-                class="w-full h-[300px] mb-10"
-                src="https://maps.google.com/maps?q=<?= $addresse ?>&t=&z=13&ie=UTF8&iwloc=&output=embed">
-        </iframe>
-        <?php
-        if (count($commentaires) > 0) {
-            ?>
-            <h2 class="font-bold text-2xl mb-4">Commentaires sur la visite</h2>
-            <?php
-            foreach ($commentaires as $commentaire) {
-                if ($commentaire['commentaireprof'] != null) {
-                    echo <<<HTML
-            <div class="flex flex-col gap-1 mb-4">
-                <span class="font-bold">Tuteur universitaire :</span>
-                 <p>{$commentaire['commentaireprof']}</p>
+
+        <?php if (count($commentaires) > 0) : ?>
+            <div class="comments-section ">
+                <h2 class="md:text-xl text-lg text-gray-800 mb-3">Commentaires sur la visite : </h2>
+                <?php foreach ($commentaires as $commentaire) : ?>
+                    <?php if (!empty($commentaire['commentaireprof'])) : ?>
+                        <div class="bg-gray-100 p-4 rounded-md shadow mb-4">
+                            <h3 class="font-bold">Tuteur universitaire :</h3>
+                            <p><?= htmlspecialchars($commentaire['commentaireprof']) ?></p>
+                        </div>
+                    <?php endif; ?>
+                    <?php if (!empty($commentaire['commentaireentreprise'])) : ?>
+                        <div class="bg-gray-100 p-4 rounded-md shadow mb-4">
+                            <h3 class="font-bold">Tuteur entreprise :</h3>
+                            <p><?= htmlspecialchars($commentaire['commentaireentreprise']) ?></p>
+                        </div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
             </div>
-            HTML;
-                }
-                if ($commentaire['commentaireentreprise'] != null) {
-                    echo <<<HTML
-            <div class="flex flex-col gap-1 mb-4">
-                <span class="font-bold">Tuteur entreprise :</span>
-                 <p>{$commentaire['commentaireentreprise']}</p>
+        <?php endif; ?>
+    <?php endif; ?>
+
+    <?php if (isset($form)) : ?>
+        <div class="form-section">
+            <?php $form->start(); ?>
+            <div class="grid grid-cols-1 gap-6 mb-6">
+                <?php $form->print_all_fields(); ?>
             </div>
-            HTML;
-                }
-            }
-            ?>
-            <?php
-        }
-    }
-    if (isset($form)) {
-        $form->start();
-        ?>
-        <div class="flex flex-col gap-4">
-            <?php
-            $form->print_all_fields();
-            $form->submit("Enregistrer");
-            $form->getError();
-            ?>
+            <?php $form->getError(); ?>
+            <div class="text-center">
+                <?php $form->submit("Enregistrer", "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer"); ?>
+            </div>
+            <?php $form->end(); ?>
         </div>
-        <?php
-        $form->end();
-    }
-    ?>
+    <?php endif; ?>
+
 </div>
-
