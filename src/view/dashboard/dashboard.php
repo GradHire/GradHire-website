@@ -52,16 +52,16 @@ foreach ($scripts as $script) echo '<script src="' . PATH . $script . '"></scrip
                 echo '<div class="w-full flex flex-col lg:flex-row gap-2">';
                 NumBlock::render([
                     'title' => 'Stages',
-                    'value' => $data['numBlockData1']['nombreoffresstageactives'] ?? 0,
+                    'value' => $data['numBlockData1'][0]['nombreoffresstageactives'] ?? 0,
                 ]);
                 NumBlock::render([
                     'title' => 'Alternances',
-                    'value' => $data['numBlockData1']['nombreoffresalternanceactives'] ?? 0,
+                    'value' => $data['numBlockData1'][0]['nombreoffresalternanceactives'] ?? 0,
                 ]);
                 echo '</div><div class="w-full">';
                 NumBlock::render([
                     'title' => 'Pourvues',
-                    'value' => $data['numBlockData1']['nombrepositionspourvues'] ?? 0,
+                    'value' => $data['numBlockData1'][0]['nombrepositionspourvues'] ?? 0,
                 ]);
                 echo '
                                 </div>
