@@ -6,8 +6,8 @@ WORKDIR /var/www/html
 
 # Installer les extensions nécessaires (ajoutez les extensions supplémentaires si nécessaire)
 RUN apt-get update && \
-    apt-get install -y libpq-dev && \
-    docker-php-ext-install pdo pdo_pgsql
+    apt-get install -y libpq-dev libicu-dev && \
+    docker-php-ext-install pdo pdo_pgsql intl
 
 # Installer Node.js et npm
 RUN apt-get install curl && \
