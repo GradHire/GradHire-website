@@ -126,16 +126,24 @@ d'utilisation, de copie, de modification, de fusion, de publication, de distribu
 des copies du Logiciel, et de permettre aux personnes à qui le Logiciel est
 fourni de le faire, sous réserve des conditions suivantes:
 
-La mention de copyright ci-dessus et cet avis de permission doivent être inclus dans tous
+* La mention de copyright ci-dessus et cet avis de permission doivent être inclus dans tous
 les copies ou portions substantielles du Logiciel.
 
-LE LOGICIEL EST FOURNI "TEL QUEL", SANS GARANTIE D'AUCUNE SORTE, EXPRESSE OU
-IMPLICITE, Y COMPRIS MAIS NON LIMITÉ AUX GARANTIES DE QUALITÉ MARCHANDE,
-D'ADÉQUATION À UN USAGE PARTICULIER ET D'ABSENCE DE CONTREFAÇON. EN AUCUN CAS, LES
-AUTEURS OU TITULAIRES DU DROIT D'AUTEUR SERONT RESPONSABLES DE TOUTE RÉCLAMATION, DOMMAGES OU AUTRE
-RESPONSABILITÉ, QUE CE SOIT DANS UNE ACTION DE CONTRAT, DE TORT OU AUTRE, DÉCOULANT DE,
-HORS DE OU EN RELATION AVEC LE LOGICIEL OU L'UTILISATION OU D'AUTRES TRANSACTIONS DANS LE
-LOGICIEL.
+* Le contenu du Site est mis à disposition pour une utilisation libre et sans restriction, en vertu des conditions énoncées ci-après.
+
+* L'Utilisateur qui souhaite réutiliser toute partie du code de projet doit obligatoirement spécifier le ou les auteurs originaux du Site.
+
+* Avant toute réutilisation du Site, que ce soit en totalité ou en partie, il est nécessaire de demander et d'obtenir la permission des auteurs de son contenu.
+
+* Il est interdit de réutiliser le Site ou une partie de son contenu dans un but lucratif, à moins que l'Utilisateur ait obtenu l'autorisation préalable et explicite des auteurs.
+
+* Toute violation de ces conditions pourrait entraîner des conséquences juridiques.
+
+Copyright (c) 2023-2024 GradHire
+- BROUTY Marius
+- GARRO Clément
+- GOZZO Giovanni
+- HIRCHYTS Daniil
 ---
 
 Pour une compréhension plus détaillée de GradHire et ses aspects techniques, veuillez vous référer au rapport complet.
