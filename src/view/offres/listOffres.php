@@ -102,8 +102,8 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                     <?php
                     $startIndex = 0;
                     $itemsPerPage = 10;
+                    $visibleOffersValideCount = 0;
                     if ($offres != null) {
-                        $visibleOffersValideCount = 0;
                         foreach ($offres as $offre) {
                             if ($offre["statut"] !== "valider") continue;
                             if (Auth::has_role(Roles::Manager, Roles::Staff, Roles::Teacher, Roles::TutorTeacher)) require __DIR__ . '/offre.php';
@@ -135,8 +135,8 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                 <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch"
                      id="offres-container-attente">
                     <?php
+                    $visibleOffersAttenteCount = 0;
                     if ($offres != null) {
-                        $visibleOffersAttenteCount = 0;
                         foreach ($offres as $offre) {
                             if ($offre["statut"] === "en attente" && Auth::has_role(Roles::Manager, Roles::Staff)) {
                                 require __DIR__ . '/offre.php';
@@ -166,8 +166,8 @@ if (Auth::has_role(Roles::Staff, Roles::Manager)) {
                 <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 grid-cols-1 content-start place-items-stretch justify-items-stretch"
                      id="offres-container-refuser">
                     <?php
+                    $visibleOffersRefuserCount = 0;
                     if ($offres != null) {
-                        $visibleOffersRefuserCount = 0;
                         foreach ($offres as $offre) {
                             if ($offre["statut"] === "archiver" && Auth::has_role(Roles::Manager, Roles::Staff)) {
                                 require __DIR__ . '/offre.php';
