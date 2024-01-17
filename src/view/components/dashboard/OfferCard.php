@@ -19,10 +19,10 @@ class OfferCard implements ComponentInterface
         $date = date_create($offre['datecreation']);
         $date = date_format($date, 'd/m/Y');
 
-        $url = "https://yandex.com/map-widget/v1/?ll=3.850089%2C43.634623&mode=search&sll=10.854186%2C49.182076&sspn=73.212891%2C44.753627&text=" . urlencode($offre['adresse']) . "&z=16.97";
+        $url = "https://yandex.com/map-widget/v1/?ll=3.850089%2C43.634623&mode=search&sll=10.854186%2C49.182076&sspn=73.212891%2C44.753627&text=" . urlencode($offre['adresse'] ?? "") . "&z=16.97";
 
-        $email = urlencode($offre['emailentreprise']);
-        $telephone = urlencode($offre['telephoneentreprise']);
+        $email = urlencode($offre['emailentreprise'] ?? "");
+        $telephone = urlencode($offre['telephoneentreprise'] ?? "");
 
         echo <<<EOT
             <div class="h-[125px] w-full border-gray-200 border rounded-[8px] flex flex-col justify-between items-center bg-white relative px-6 py-3 mb-5">

@@ -33,7 +33,7 @@ View::setCurrentSection('Visites');
 
         <div class="map-container mb-8">
             <iframe class="w-full h-[300px] rounded-md shadow" style="border:0;"
-                    src="https://maps.google.com/maps?q=<?= urlencode($addresse) ?>&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                    src="https://maps.google.com/maps?q=<?= urlencode($addresse ?? "") ?>&t=&z=13&ie=UTF8&iwloc=&output=embed"
                     allowfullscreen loading="lazy"></iframe>
         </div>
 

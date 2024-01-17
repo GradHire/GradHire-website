@@ -1618,7 +1618,7 @@ class FPDF
             return $param . '="' . $value . '"';
         if (!$isUTF8)
             $value = $this->_UTF8encode($value);
-        return $param . "*=UTF-8''" . rawurlencode($value);
+        return $param . "*=UTF-8''" . rawurlencode($value ?? "");
     }
 
     protected function _parsejpg($file)
